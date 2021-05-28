@@ -21,7 +21,7 @@ Seata 是一款开源的分布式事务解决方案，致力于提供高性能�
 
 三种角色关系如图：  
 
-![image_TC_TM_RM](../images/posts/seate_TC_TM_RM.png)
+![image_TC_TM_RM](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/seate_TC_TM_RM.png)
 
 - - -
 **使用**  

@@ -58,11 +58,11 @@ TCP（Transmission Control Protocol，传输控制协议）是面向连接的协
 
 第三次握手：主机A收到这个数据段后，再发送一个确认应答，确认已收到主机B 的数据段："我已收到回复，我现在要开始传输实际数据了，这样3次握手就完成了，主机A和主机B 就可以传输数据了。
 
-![TCP_three_ handshake_1](/images/posts/TCP_three_handshake_1.png)
+![TCP_three_ handshake_1](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/handshake_1.png)
 
-![TCP_three_ handshake_2](/images/posts/TCP_three_handshake_2.png)
+![TCP_three_ handshake_2](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/handshake_2.png)
 
-![TCP_three_ handshake_3](/images/posts/TCP_three_handshake_3.png)
+![TCP_three_ handshake_3](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/handshake_3.png)
 
 **三次握手的特点**  
 没有应用层的数据 ,SYN这个标志位只有在TCP建立连接时才会被置1 ,握手完成后SYN标志位被置0。
