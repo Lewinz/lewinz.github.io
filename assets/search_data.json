@@ -1,27 +1,286 @@
----
----
-{% capture json %}
+
+
 [
-  {% for pg in site.pages %}
-  {% if pg.title != nil %}
+  
+  
     {
-      "title"    : "{{ pg.title | escape }}",
-      "url"      : "{{ site.url }}{{ pg.url }}",
-      "keywords" : "{{ pg.keywords | escape }}"
+      "title"    : "页面没有找到",
+      "url"      : "https://lewinz.org/404.html",
+      "keywords" : "404"
     } ,
-  {% endif %}
-  {% endfor %}
-
-  {% for doc in site.documents %}
+  
+  
+  
     {
-      "title"    : "{{ doc.title | escape }}",
-      "category" : "{{ doc.categories[0] | xml_escape }}",
-      {% if site.simple_jekyll_search.fulltext %}"content": {{ doc.content | markdownify | strip_html | replace:'"','' | jsonify | replace:'\n',' ' | replace:'   ',' ' | replace:'  ',' ' | replace:'\',' ' }},{% endif %}
-      "url"      : "{{ site.url }}{{ doc.url }}",
-      "keywords" : "{{ doc.keywords | escape }}"
-    } {% unless forloop.last %},{% endunless %}
-  {% endfor %}
-]
-{% endcapture %}
+      "title"    : "About",
+      "url"      : "https://lewinz.org/about/",
+      "keywords" : "Zheng xianglin, 郑祥林"
+    } ,
+  
+  
+  
+    {
+      "title"    : "归档",
+      "url"      : "https://lewinz.org/archives/",
+      "keywords" : "归档"
+    } ,
+  
+  
+  
+    {
+      "title"    : "Categories",
+      "url"      : "https://lewinz.org/categories/",
+      "keywords" : "分类"
+    } ,
+  
+  
+  
+  
+  
+    {
+      "title"    : "Links",
+      "url"      : "https://lewinz.org/links/",
+      "keywords" : "友情链接"
+    } ,
+  
+  
+  
+    {
+      "title"    : "mindmap",
+      "url"      : "https://lewinz.org/mindmap-viewer/",
+      "keywords" : "mindmap"
+    } ,
+  
+  
+  
+    {
+      "title"    : "Open Source Projects",
+      "url"      : "https://lewinz.org/open-source/",
+      "keywords" : "开源,open-source,GitHub,开源项目"
+    } ,
+  
+  
+  
+  
+  
+    {
+      "title"    : "Wiki",
+      "url"      : "https://lewinz.org/wiki/",
+      "keywords" : "维基, Wiki"
+    } ,
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
-{{ json | lstrip }}
+  
+    {
+      "title"    : "分布式事务解决方案-seate",
+      "category" : "分布式",
+      
+      "url"      : "https://lewinz.org/2021/04/23/alibaba-seate-summary/",
+      "keywords" : "分布式, 事务"
+    } ,
+  
+    {
+      "title"    : "网络协议TCP与UDP区别",
+      "category" : "网络协议",
+      
+      "url"      : "https://lewinz.org/2021/04/25/http-tcp-udp/",
+      "keywords" : "网络协议, TCP, UDP"
+    } ,
+  
+    {
+      "title"    : "aolang中的值类型和引用类型",
+      "category" : "go",
+      
+      "url"      : "https://lewinz.org/2021/04/29/go-type-cite-value/",
+      "keywords" : "go,值类型,引用类型"
+    } ,
+  
+    {
+      "title"    : "gorm自动创建database",
+      "category" : "gorm",
+      
+      "url"      : "https://lewinz.org/2021/05/05/go-gorm-ddl/",
+      "keywords" : "gorm"
+    } ,
+  
+    {
+      "title"    : "golang基本类型",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/2021/05/06/go-type-detail/",
+      "keywords" : "golang,基本类型"
+    } ,
+  
+    {
+      "title"    : "各类文档地址汇总",
+      "category" : "文档",
+      
+      "url"      : "https://lewinz.org/2021/05/09/document-list/",
+      "keywords" : "文档,汇总"
+    } ,
+  
+    {
+      "title"    : "Golang Tag 汇总",
+      "category" : "golan",
+      
+      "url"      : "https://lewinz.org/2021/05/17/golang-tag/",
+      "keywords" : "golan,tag,汇总"
+    } ,
+  
+    {
+      "title"    : "虚拟机网络（四种网络连接方式）",
+      "category" : "虚拟机网络",
+      
+      "url"      : "https://lewinz.org/2021/05/17/network-link-mode/",
+      "keywords" : "虚拟机网络,连接"
+    } ,
+  
+    {
+      "title"    : "openstack 快照与镜像的区别",
+      "category" : "openstack",
+      
+      "url"      : "https://lewinz.org/2021/05/17/openstack-snapshoot-image/",
+      "keywords" : "openstack,快照,镜像"
+    } ,
+  
+    {
+      "title"    : "虚拟化技术KVM",
+      "category" : "虚拟化",
+      
+      "url"      : "https://lewinz.org/2021/05/17/virtualization-kvm/",
+      "keywords" : "虚拟化,KVM"
+    } ,
+  
+    {
+      "title"    : "性能剖析 PProf",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/2021/05/18/pprof-detail/",
+      "keywords" : "golang,PProf,性能"
+    } ,
+  
+    {
+      "title"    : "github review",
+      "category" : "github",
+      
+      "url"      : "https://lewinz.org/2021/05/26/github-review/",
+      "keywords" : "github,review"
+    } ,
+  
+    {
+      "title"    : "golang test",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/2021/05/26/golang-test/",
+      "keywords" : "golang,test"
+    } ,
+  
+    {
+      "title"    : "mtr 命令",
+      "category" : "mtr",
+      
+      "url"      : "https://lewinz.org/2021/05/26/mtr-instruct/",
+      "keywords" : "mtr,路由"
+    } ,
+  
+    {
+      "title"    : "跳板机使用",
+      "category" : "OpenSSH",
+      
+      "url"      : "https://lewinz.org/2021/05/26/openssh-jump/",
+      "keywords" : "OpenSSH,ProxyJump"
+    } ,
+  
+    {
+      "title"    : "块存储、文件存储、对象存储",
+      "category" : "block storage",
+      
+      "url"      : "https://lewinz.org/2021/05/28/block-file-object-storage/",
+      "keywords" : "block storage, file storage, object storage, 块存储, 文件存储, 对象存储"
+    } ,
+  
+    {
+      "title"    : "gin/gorm 报错记录",
+      "category" : "gin",
+      
+      "url"      : "https://lewinz.org/wiki/gin-gorm-err-record/",
+      "keywords" : "gin,gorm"
+    } ,
+  
+    {
+      "title"    : "git命令记录",
+      "category" : "git",
+      
+      "url"      : "https://lewinz.org/wiki/git_wike/",
+      "keywords" : "git"
+    } ,
+  
+    {
+      "title"    : "golang开发环境部署",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/wiki/golang_install/",
+      "keywords" : "golang, 开发环境"
+    } ,
+  
+    {
+      "title"    : "Linux命令备忘",
+      "category" : "Linux",
+      
+      "url"      : "https://lewinz.org/wiki/linux-command-summary/",
+      "keywords" : "Linux, 命令， 备忘"
+    } ,
+  
+    {
+      "title"    : "Mac各类配置记录",
+      "category" : "Mac",
+      
+      "url"      : "https://lewinz.org/wiki/mac-some-config/",
+      "keywords" : "Mac, 配置"
+    } ,
+  
+    {
+      "title"    : "中间件部署文档",
+      "category" : "中间件",
+      
+      "url"      : "https://lewinz.org/wiki/middleware/",
+      "keywords" : "中间件, 部署"
+    } ,
+  
+    {
+      "title"    : "mysql记录",
+      "category" : "mysql",
+      
+      "url"      : "https://lewinz.org/wiki/mysql_some/",
+      "keywords" : "mysql"
+    } ,
+  
+    {
+      "title"    : "Wiki Template",
+      "category" : "cate1",
+      
+      "url"      : "https://lewinz.org/wiki/template/",
+      "keywords" : "keyword1, keyword2"
+    } ,
+  
+    {
+      "title"    : "vscode设置",
+      "category" : "vscode",
+      
+      "url"      : "https://lewinz.org/wiki/vscode-wike/",
+      "keywords" : "vscode"
+    } 
+  
+]
+

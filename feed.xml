@@ -1,0 +1,1144 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-05-28T17:27:11+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">块存储、文件存储、对象存储</title><link href="https://lewinz.org/2021/05/28/block-file-object-storage/" rel="alternate" type="text/html" title="块存储、文件存储、对象存储" /><published>2021-05-28T00:00:00+08:00</published><updated>2021-05-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/28/block-file-object-storage</id><content type="html" xml:base="https://lewinz.org/2021/05/28/block-file-object-storage/">&lt;h2 id=&quot;块存储&quot;&gt;块存储&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;典型设备：磁盘阵列、硬盘&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;块存储主要是将裸磁盘空间整个映射给主机使用的。&lt;/p&gt;
+
+&lt;p&gt;就是说例如：&lt;br /&gt;
+磁盘阵列里面有5块硬盘，然后可以通过划逻辑盘、做Raid、或者LVM等方式逻辑划分出N个逻辑的硬盘。但是逻辑盘和物理盘是两个完全不同的概念。假设每个硬盘100G，共有5个硬盘，划分为逻辑盘也为5个，每个100G，但是这5个逻辑盘和原来的5个物理盘意义完全不同了。例如第一个逻辑盘第一个20G可能来自物理盘1，第二个20G来自物理盘2，所以逻辑盘是多个物理盘逻辑虚构出来的硬盘。&lt;/p&gt;
+
+&lt;p&gt;接着块存储会采用映射的方式将这几个逻辑盘映射给主机，主机上面的操作系统会识别到有5块硬盘，但是操作系统是无法区分到底是物理盘还是逻辑盘，它一概就认为只是5块裸的物理硬盘而已，跟直接拿一块物理硬盘挂载到操作系统没区别，至少操作系统感知上没有区别的。&lt;/p&gt;
+
+&lt;p&gt;在此方式下，操作系统还需要对挂载的裸硬盘进行分区、格式化后，才能使用，与平常主机内置的硬盘无差异。&lt;/p&gt;
+
+&lt;h3 id=&quot;优点&quot;&gt;优点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;这种方式的好处当然是因为通过了Raid与LVM等手段，对数据提供了保护；&lt;/li&gt;
+  &lt;li&gt;可以将多块廉价的硬盘组合起来，称为一个大容量的逻辑盘对外提供服务，提高了容量；&lt;/li&gt;
+  &lt;li&gt;写入数据时，由于是多块磁盘组合出来的逻辑盘，所以几块硬盘可以并行写入的，提升了读写效率；&lt;/li&gt;
+  &lt;li&gt;很多时候块存储采用SAN架构组网，传输速度以及封装协议的原因，使得传输速度和读写效率得到提升&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;缺点&quot;&gt;缺点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;采用SAN架构组网时，需要额外为主机购买光纤通道卡，还要购买光纤交换机，造价成本高；&lt;/li&gt;
+  &lt;li&gt;主机之间数据无法共享，在服务器不做集群的情况下，块存储裸盘映射给主机，在格式化使用后，对于主机来说相当于本地盘，那么主机A的本地盘根本不能给主机B去使用，无法共享数据&lt;/li&gt;
+  &lt;li&gt;不利于不同操作系统主机间的数据共享：因为操作系统使用不同的文件系统，格式化后，不同的文件系统间的数据是共享不了的。 例如一台win7，文件系统是FAT32/NTFS，而linux是EXT4，EXT4是无法识别NTFS的文件系统的。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;文件存储&quot;&gt;文件存储&lt;/h2&gt;
+&lt;p&gt;典型设备：&lt;a href=&quot;https://segmentfault.com/a/1190000019698532&quot;&gt;FTP服务器&lt;/a&gt;、&lt;a href=&quot;https://zhuanlan.zhihu.com/p/78114809&quot;&gt;NFS服务器&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;为了克服文件无法共享的问题，所以有了文件存储。&lt;/p&gt;
+
+&lt;p&gt;文件存储也有软硬一体化的设备，但是其实一台普通的PC机，只要装上合适的操作系统和软件，就可以假设FTP与NFS服务了，架上该类服务之后的服务器，就是文件存储的一种了。&lt;/p&gt;
+
+&lt;p&gt;主机A可以直接对文件存储进行文件的上传和下载，与块存储不同，主机A是不需要再对文件存储进行格式化的，因为文件管理功能已经由文件存储自己搞定了。&lt;/p&gt;
+
+&lt;h3 id=&quot;优点-1&quot;&gt;优点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;造价低：随便一台机器就可以，另外普通的以太网就可以，根本不需要专用的SAN网络，所以造价低&lt;/li&gt;
+  &lt;li&gt;方便文件共享&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;缺点-1&quot;&gt;缺点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;读写速率低，传输速率慢：以太网，上传下载速度较慢，另外所有读写都要1台服务器里面的硬盘来承受，相比起磁盘阵列动不动就十几上百块硬盘同时读写，速率慢了许多。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;对象存储&quot;&gt;对象存储&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;典型设备：内置大容量硬盘的分布式服务器&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;对象存储最常用的方案，就是多台服务器内置大容量硬盘，再装上对象存储软件，然后再额外搞几台服务作为管理节点，安装上对象存储管理软件。管理节点可以管理其他服务器对外提供读写访问功能。&lt;br /&gt;
+之所以出现对象存储这种东西，是为了克服块存储与文件存储各自的缺点，发扬各自的优点。简单来说块存储读写快，不利于共享，文件存储读写慢，利于共享。能否弄一个读写块，利于共享的存储出来呢？于是就有了对象存储。&lt;/p&gt;
+
+&lt;p&gt;首先，一个文件包含了属性（术语：metadata，元数据，例如该文件的大小、修改时间、存储路径等）以及内容（数据）。&lt;br /&gt;
+像FAT32这种文件系统，是直接将一份文件与metadata一起存储的，存储过程先将文件按照文件系统的最小块大小来打散（例如4M的文件，假设文件系统要求一个块4K，那么就将文件打散称为1000个小块），再写进硬盘里，过程中没有区分数据和metadata的。而每个块最后会告知你下一个要读取的块地址，然后一直这样顺序的按图索骥，最后完成整份文件的所有块的读取。
+这种情况下读写速率很慢，因为就算你有100个机械臂在读写，但是由于你只有读取到第一个块，才能知道下一个块在哪里，其实相当于只能有1个机械臂在实际工作。&lt;/p&gt;
+
+&lt;p&gt;而对象存储则将元数据独立出来了，控制节点叫元数据服务器（服务器+对象存储管理软件），里面主要负责存储对象的属性（主要是对象的数据被打散存放到了那几台分布式服务器中的信息）而其他负责存储数据的分布式服务器叫做OSD，主要负责存储文件的数据部分。当用户访问对象，会先访问元数据服务器，元数据服务器只负责反馈对象存储在哪里OSD，假设反馈文件A存储在B、C、D三台OSD，那么用户就会再次直接访问3台OSD服务器去读取数据。&lt;/p&gt;
+
+&lt;p&gt;这时候由于是3台OSD同时对外传输数据，所以传输的速度就会加快了，当OSD服务器数量越多，这种读写速度的提升就越大，通过此种方式，实现了读写快的目的。&lt;/p&gt;
+
+&lt;p&gt;另一方面，对象存储软件是有专门的文件系统的，所以OSD对外又相当于文件服务器，那么就不存在共享方面的困难了，也解决了文件共享方面的问题&lt;/p&gt;
+
+&lt;p&gt;所以对象存储的出现，很好的结合了块存储和文件存储的优点&lt;/p&gt;
+
+&lt;p&gt;为什么对象存储兼具块存储和文件存储的好处，还要使用块存储和文件存储呢？&lt;/p&gt;
+
+&lt;p&gt;（1）有一类应用是需要存储直接裸盘映射的，例如数据库。因为数据需要存储楼盘映射给自己后，再根据自己的数据库文件系统来对裸盘进行格式化的，所以是不能够采用其他已经被格式化为某种文件系统的存储的。此类应用更合适使用块存储。&lt;/p&gt;
+
+&lt;p&gt;（2）对象存储的成本比起普通的文件存储还要较高，需要购买专门的对象存储软件以及大容量硬盘。如果对数据量要求不是海量，只是为了做文件共享的时候，直接用文件存储的形式好了，性价比高。&lt;/p&gt;
+
+&lt;h2 id=&quot;相关博客&quot;&gt;相关博客&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/78114809&quot;&gt;NFS文件共享服务器使用&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="block storage" /><category term="file storage" /><category term="object storage" /><category term="块存储" /><category term="文件存储" /><category term="对象存储" /><summary type="html">块存储</summary></entry><entry><title type="html">github review</title><link href="https://lewinz.org/2021/05/26/github-review/" rel="alternate" type="text/html" title="github review" /><published>2021-05-26T00:00:00+08:00</published><updated>2021-05-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/26/github-review</id><content type="html" xml:base="https://lewinz.org/2021/05/26/github-review/">&lt;h3 id=&quot;code-review-缩写&quot;&gt;code review 缩写&lt;/h3&gt;
+&lt;p&gt;程序员这个行业，不管你是大佬还是小弟，代码code review是必不可少的。那么在github上，大家日常交流的缩写语，往往一下就能看出你道行的深浅，至少是入行时间，哈哈，不要露怯，勇敢的跟大佬过招拆招。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;简写&lt;/th&gt;
+      &lt;th&gt;全称（解释）&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;LGTM&lt;/td&gt;
+      &lt;td&gt;Looks Good To Me「对我来说，还不错」表示认可这次PR，同意merge合并代码到远程仓库&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;ASAP&lt;/td&gt;
+      &lt;td&gt;As Soon As Possible「尽快」&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;ACK&lt;/td&gt;
+      &lt;td&gt;Acknowledgement「承认，确认，同意」i.e. agreed/accepted change&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;NACK/NAK&lt;/td&gt;
+      &lt;td&gt;Negative acknowledgement「不同意」 i.e. disagree with change and/or concept&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;RFC&lt;/td&gt;
+      &lt;td&gt;Request For Comments「请求进行讨论」 i.e. I think this is a good idea, lets discuss&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;WIP&lt;/td&gt;
+      &lt;td&gt;Work In Progress 「进展中」常见词汇，这里作为 Best Practice 单独提出来，主要针对改动较多的 PR，可以先提交部分，标题或 Tag 加上 WIP，表示尚未完成，这样别人可以先 review 已提交的部分&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;AFAIK/AFAICT&lt;/td&gt;
+      &lt;td&gt;As Far As I Know / Can Tell 「据我所知；就我所知」&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;IIRC&lt;/td&gt;
+      &lt;td&gt;If I Recall Correctly「如果我没有记错的话」&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;IANAL&lt;/td&gt;
+      &lt;td&gt;I am not a lawyer , but I smell licensing issues「-」&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;IMO&lt;/td&gt;
+      &lt;td&gt;In My Opinion 「在我看来」&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;TL;DR&lt;/td&gt;
+      &lt;td&gt;Too Long; Didn’t Read 「太长懒得看」README 文档常见。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;PR&lt;/td&gt;
+      &lt;td&gt;Pull Request「合并请求」&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CR&lt;/td&gt;
+      &lt;td&gt;Code Review 「代码审查」&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;PTAL&lt;/td&gt;
+      &lt;td&gt;Please Take A Look.「你来瞅瞅？」用来提示别人来看一下&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;TBR&lt;/td&gt;
+      &lt;td&gt;To Be Reviewed「提示维护者进行 review」&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;TBD&lt;/td&gt;
+      &lt;td&gt;To Be Done(or Defined/Discussed/Decided/Determined). 「未完成，将被做」根据语境不同意义有所区别，但一般都是还没搞定的意思。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;TBH&lt;/td&gt;
+      &lt;td&gt;To Be Honest 「老实说」&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;atm&lt;/td&gt;
+      &lt;td&gt;at the moment 「现阶段」&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</content><author><name>Lewin</name></author><category term="github" /><category term="review" /><summary type="html">code review 缩写 程序员这个行业，不管你是大佬还是小弟，代码code review是必不可少的。那么在github上，大家日常交流的缩写语，往往一下就能看出你道行的深浅，至少是入行时间，哈哈，不要露怯，勇敢的跟大佬过招拆招。</summary></entry><entry><title type="html">golang test</title><link href="https://lewinz.org/2021/05/26/golang-test/" rel="alternate" type="text/html" title="golang test" /><published>2021-05-26T00:00:00+08:00</published><updated>2021-05-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/26/golang-test</id><content type="html" xml:base="https://lewinz.org/2021/05/26/golang-test/">&lt;h3 id=&quot;testing---单元测试&quot;&gt;testing - 单元测试&lt;/h3&gt;
+&lt;p&gt;testing 为 Go 语言 package 提供自动化测试的支持。通过 go test 命令，能够自动执行如下形式的任何函数：&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;func TestXxx(*testing.T)&lt;/code&gt;
+注意：Xxx 可以是任何字母数字字符串，但是第一个字母不能是小写字母。&lt;/p&gt;
+
+&lt;p&gt;在这些函数中，使用 Error、Fail 或相关方法来发出失败信号。&lt;/p&gt;
+
+&lt;p&gt;要编写一个新的测试套件，需要创建一个名称以 _test.go 结尾的文件，该文件包含 TestXxx 函数，如上所述。 将该文件放在与被测试文件相同的包中。该文件将被排除在正常的程序包之外，但在运行 go test 命令时将被包含。 有关详细信息，请运行 go help test 和 go help testflag 了解。&lt;/p&gt;
+
+&lt;p&gt;如果有需要，可以调用 *T 和 *B 的 Skip 方法，跳过该测试或基准测试：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TestTimeConsuming&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Short&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Skip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;skipping test in short mode.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;第一个单元测试&quot;&gt;第一个单元测试&lt;/h4&gt;
+&lt;p&gt;要测试的代码：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fib&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fib&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fib&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;测试代码：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TestFib&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;in&lt;/span&gt;       &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;7&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;13&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fib&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Errorf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Fib(%d) = %d; expected %d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;执行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go test .&lt;/code&gt;，输出：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;go &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+ok      chapter09/testing    0.007s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;表示测试通过。&lt;/p&gt;
+
+&lt;p&gt;我们将 Sum 函数改为：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fib&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fib&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fib&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;再执行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go test .&lt;/code&gt;，输出：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;go &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;---&lt;/span&gt; FAIL: TestSum &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    t_test.go:16: Fib&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;10&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 64&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; expected 13
+FAIL
+FAIL    chapter09/testing    0.009s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h4 id=&quot;table-driven-test&quot;&gt;Table-Driven Test&lt;/h4&gt;
+&lt;p&gt;测试讲究 case 覆盖，按上面的方式，当我们要覆盖更多 case 时，显然通过修改代码的方式很笨拙。这时我们可以采用 Table-Driven 的方式写测试，标准库中有很多测试是使用这种方式写的。&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TestFib&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fibTests&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;in&lt;/span&gt;       &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// input&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// expected result&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}{&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;13&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fibTests&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fib&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Errorf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Fib(%d) = %d; expected %d&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;由于我们使用的是 t.Errorf，即使其中某个 case 失败，也不会终止测试执行。&lt;/p&gt;
+
+&lt;h4 id=&quot;t-类型&quot;&gt;T 类型&lt;/h4&gt;
+&lt;p&gt;单元测试中，传递给测试函数的参数是 *testing.T 类型。它用于管理测试状态并支持格式化测试日志。测试日志会在执行测试的过程中不断累积，并在测试完成时转储至标准输出。&lt;/p&gt;
+
+&lt;p&gt;当测试函数返回时，或者当测试函数调用 FailNow、 Fatal、Fatalf、SkipNow、Skip、Skipf 中的任意一个时，则宣告该测试函数结束。跟 Parallel 方法一样，以上提到的这些方法只能在运行测试函数的 goroutine 中调用。&lt;/p&gt;
+
+&lt;p&gt;至于其他报告方法，比如 Log 以及 Error 的变种， 则可以在多个 goroutine 中同时进行调用。&lt;/p&gt;
+
+&lt;h5 id=&quot;报告方法&quot;&gt;报告方法&lt;/h5&gt;
+&lt;p&gt;上面提到的系列包括方法，带 f 的是格式化的，格式化语法参考 fmt 包。&lt;/p&gt;
+
+&lt;p&gt;T 类型内嵌了 common 类型，common 提供这一系列方法，我们经常会用到的（注意，这里说的测试中断，都是指当前测试函数）：&lt;/p&gt;
+
+&lt;p&gt;1）当我们遇到一个断言错误的时候，标识这个测试失败，会使用到：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Fail : 测试失败，测试继续，也就是之后的代码依然会执行&lt;/li&gt;
+  &lt;li&gt;FailNow : 测试失败，测试中断
+在 FailNow 方法实现的内部，是通过调用 runtime.Goexit() 来中断测试的。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;2）当我们遇到一个断言错误，只希望跳过这个错误，但是不希望标识测试失败，会使用到：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;SkipNow : 跳过测试，测试中断
+在 SkipNow 方法实现的内部，是通过调用 runtime.Goexit() 来中断测试的。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;3）当我们只希望打印信息，会用到 :&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Log : 输出信息&lt;/li&gt;
+  &lt;li&gt;Logf : 输出格式化的信息
+注意：默认情况下，单元测试成功时，它们打印的信息不会输出，可以通过加上 -v 选项，输出这些信息。但对于基准测试，它们总是会被输出。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;4）当我们希望跳过这个测试，并且打印出信息，会用到：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Skip : 相当于 Log + SkipNow&lt;/li&gt;
+  &lt;li&gt;Skipf : 相当于 Logf + SkipNow&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;5）当我们希望断言失败的时候，标识测试失败，并打印出必要的信息，但是测试继续，会用到：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Error : 相当于 Log + Fail&lt;/li&gt;
+  &lt;li&gt;Errorf : 相当于 Logf + Fail&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;6）当我们希望断言失败的时候，标识测试失败，打印出必要的信息，但中断测试，会用到：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Fatal : 相当于 Log + FailNow&lt;/li&gt;
+  &lt;li&gt;Fatalf : 相当于 Logf + FailNow&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;parallel-测试&quot;&gt;Parallel 测试&lt;/h5&gt;
+&lt;p&gt;包中的 Parallel 方法表示当前测试只会与其他带有 Parallel 方法的测试并行进行测试。&lt;/p&gt;
+
+&lt;p&gt;下面例子将演示 Parallel 的使用方法：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;   &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;locker&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sync&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RWMutex&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WriteToMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;locker&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Lock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;locker&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ReadFromMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;locker&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RLock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;locker&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RUnlock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;测试代码：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pairs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;k&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}{&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;polaris&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; 徐新华 &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;studygolang&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Go 语言中文网 &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stdlib&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Go 语言标准库 &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;polaris1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; 徐新华 1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;studygolang1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Go 语言中文网 1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stdlib1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Go 语言标准库 1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;polaris2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; 徐新华 2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;studygolang2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Go 语言中文网 2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stdlib2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Go 语言标准库 2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;polaris3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; 徐新华 3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;studygolang3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Go 语言中文网 3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stdlib3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Go 语言标准库 3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;polaris4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; 徐新华 4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;studygolang4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Go 语言中文网 4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stdlib4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Go 语言标准库 4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;// 注意 TestWriteToMap 需要在 TestReadFromMap 之前&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TestWriteToMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Parallel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pairs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;WriteToMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TestReadFromMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Parallel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pairs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ReadFromMap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Errorf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;the value of key(%s) is %s, expected: %s&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;试验步骤：&lt;/p&gt;
+
+&lt;p&gt;注释掉 WriteToMap 和 ReadFromMap 中 locker 保护的代码，同时注释掉测试代码中的 t.Parallel，执行测试，测试通过，即使加上 -race，测试依然通过；&lt;br /&gt;
+只注释掉 WriteToMap 和 ReadFromMap 中 locker 保护的代码，执行测试，测试失败（如果未失败，加上 -race 一定会失败）；&lt;br /&gt;
+如果代码能够进行并行测试，在写测试时，尽量加上 Parallel，这样可以测试出一些可能的问题。&lt;/p&gt;
+
+&lt;p&gt;关于 Parallel 的更多内容，会在 子测试 中介绍。&lt;/p&gt;
+
+&lt;p&gt;当你写完一个函数，结构体，main 之后，你下一步需要的就是测试了。testing 包提供了很简单易用的测试包。&lt;/p&gt;
+
+&lt;h3 id=&quot;写一个基本的测试用例&quot;&gt;写一个基本的测试用例&lt;/h3&gt;
+&lt;p&gt;测试文件的文件名需要以_test.go 为结尾，测试用例需要以 TestXxxx 的形式存在。&lt;/p&gt;
+
+&lt;p&gt;比如我要测试 utils 包的 sql.go 中的函数：&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GetOne&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;db&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sql&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;query&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;就需要创建一个 sql_test.go&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;utils&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;database/sql&quot;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;fmt&quot;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;github.com/go-sql-driver/mysql&quot;&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;strconv&quot;&lt;/span&gt;
+        &lt;span class=&quot;s&quot;&gt;&quot;testing&quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Test_GetOne&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sql&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Open&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;mysql&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;root:123.abc@tcp(192.168.33.10:3306)/test&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}()&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Fatal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;c&quot;&gt;// 测试 empty&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;car_brand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GetOne&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;select * from user where id = 999999&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;car_brand&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Fatal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;emtpy 测试错误 &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;testing-的测试用例形式&quot;&gt;testing 的测试用例形式&lt;/h3&gt;
+&lt;p&gt;测试用例有四种形式：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;TestXxxx(t *testing.T)    // 基本测试用例&lt;/li&gt;
+  &lt;li&gt;BenchmarkXxxx(b *testing.B) // 压力测试的测试用例&lt;/li&gt;
+  &lt;li&gt;Example_Xxx()  // 测试控制台输出的例子&lt;/li&gt;
+  &lt;li&gt;TestMain(m *testing.M) // 测试 Main 函数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;给个 Example 的例子 :（Example 需要在最后用注释的方式确认控制台输出和预期是不是一致的）&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Example_GetScore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;score&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getScore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;score&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;// Output:&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;// 31.1&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;testing-的变量&quot;&gt;testing 的变量&lt;/h3&gt;
+&lt;p&gt;gotest 的变量有这些：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;test.short : 一个快速测试的标记，在测试用例中可以使用 testing.Short() 来绕开一些测试&lt;/li&gt;
+  &lt;li&gt;test.outputdir : 输出目录&lt;/li&gt;
+  &lt;li&gt;test.coverprofile : 测试覆盖率参数，指定输出文件&lt;/li&gt;
+  &lt;li&gt;test.run : 指定正则来运行某个 / 某些测试用例&lt;/li&gt;
+  &lt;li&gt;test.memprofile : 内存分析参数，指定输出文件&lt;/li&gt;
+  &lt;li&gt;test.memprofilerate : 内存分析参数，内存分析的抽样率&lt;/li&gt;
+  &lt;li&gt;test.cpuprofile : cpu 分析输出参数，为空则不做 cpu 分析&lt;/li&gt;
+  &lt;li&gt;test.blockprofile : 阻塞事件的分析参数，指定输出文件&lt;/li&gt;
+  &lt;li&gt;test.blockprofilerate : 阻塞事件的分析参数，指定抽样频率&lt;/li&gt;
+  &lt;li&gt;test.timeout : 超时时间&lt;/li&gt;
+  &lt;li&gt;test.cpu : 指定 cpu 数量&lt;/li&gt;
+  &lt;li&gt;test.parallel : 指定运行测试用例的并行数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;testing-的结构体&quot;&gt;testing 的结构体&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;B : 压力测试&lt;/li&gt;
+  &lt;li&gt;BenchmarkResult : 压力测试结果&lt;/li&gt;
+  &lt;li&gt;Cover : 代码覆盖率相关结构体&lt;/li&gt;
+  &lt;li&gt;CoverBlock : 代码覆盖率相关结构体&lt;/li&gt;
+  &lt;li&gt;InternalBenchmark : 内部使用的结构体&lt;/li&gt;
+  &lt;li&gt;InternalExample : 内部使用的结构体&lt;/li&gt;
+  &lt;li&gt;InternalTest : 内部使用的结构体&lt;/li&gt;
+  &lt;li&gt;M : main 测试使用的结构体&lt;/li&gt;
+  &lt;li&gt;PB : Parallel benchmarks 并行测试使用的结构体&lt;/li&gt;
+  &lt;li&gt;T : 普通测试用例&lt;/li&gt;
+  &lt;li&gt;TB : 测试用例的接口&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;testing-的通用方法&quot;&gt;testing 的通用方法&lt;/h3&gt;
+&lt;p&gt;T 结构内部是继承自 common 结构，common 结构提供集中方法，是我们经常会用到的：&lt;/p&gt;
+
+&lt;p&gt;1）当我们遇到一个断言错误的时候，我们就会判断这个测试用例失败，就会使用到：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Fail : case 失败，测试用例继续&lt;/li&gt;
+  &lt;li&gt;FailedNow : case 失败，测试用例中断&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;2）当我们遇到一个断言错误，只希望跳过这个错误，但是不希望标示测试用例失败，会使用到：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;SkipNow : case 跳过，测试用例不继续&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;3）当我们只希望在一个地方打印出信息，我们会用到 :&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Log : 输出信息&lt;/li&gt;
+  &lt;li&gt;Logf : 输出有 format 的信息&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;4）当我们希望跳过这个用例，并且打印出信息 :&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Skip : Log + SkipNow&lt;/li&gt;
+  &lt;li&gt;Skipf : Logf + SkipNow&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;5）当我们希望断言失败的时候，测试用例失败，打印出必要的信息，但是测试用例继续：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Error : Log + Fail&lt;/li&gt;
+  &lt;li&gt;Errorf : Logf + Fail&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;6）当我们希望断言失败的时候，测试用例失败，打印出必要的信息，测试用例中断：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Fatal : Log + FailNow&lt;/li&gt;
+  &lt;li&gt;Fatalf : Logf + FailNow&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="test" /><summary type="html">testing - 单元测试 testing 为 Go 语言 package 提供自动化测试的支持。通过 go test 命令，能够自动执行如下形式的任何函数：</summary></entry><entry><title type="html">mtr 命令</title><link href="https://lewinz.org/2021/05/26/mtr-instruct/" rel="alternate" type="text/html" title="mtr 命令" /><published>2021-05-26T00:00:00+08:00</published><updated>2021-05-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/26/mtr-instruct</id><content type="html" xml:base="https://lewinz.org/2021/05/26/mtr-instruct/">&lt;h3 id=&quot;mtr&quot;&gt;MTR&lt;/h3&gt;
+&lt;p&gt;mtr 命令是 ping 和 tracert 命令的结合，同时具有 测试丢包率（ping） 和 跟踪路由（tracert） 的功能&lt;/p&gt;
+
+&lt;h3 id=&quot;安装&quot;&gt;安装&lt;/h3&gt;
+&lt;h4 id=&quot;mac&quot;&gt;mac&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;命令安装 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brew install mtr&lt;/code&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;MTR 安装之后并未把程序文件复制到 /usr/local/bin 目录下，需要手动复制
+    &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local/Cellar/mtr/0.92/sbin
+&lt;span class=&quot;nb&quot;&gt;cp &lt;/span&gt;mtr /usr/local/bin/
+&lt;span class=&quot;nb&quot;&gt;cp &lt;/span&gt;mtr-packet /usr/local/bin/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;MTR 命令的使用，需要管理员权限，所以在运行时必须加上 sudo&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo mtr www.baidu.com&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;命令详解&quot;&gt;命令详解&lt;/h3&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mtr &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; 提供帮助命令  
+
+mtr &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; 显示mtr的版本信息  
+
+mtr &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; 已报告模式显示  
+
+mtr &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; 设置每秒发送数据包的数量  
+
+mtr &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; 用来指定ping数据包的大小  
+
+mtr &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; no-dns不对IP地址做域名解析  
+
+mtr &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; 来设置发送数据包的IP地址 这个对一个主机由多个IP地址是有用的  
+
+mtr &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; 使用这个参数来设置ICMP返回之间的要求默认是1秒  
+
+mtr &lt;span class=&quot;nt&quot;&gt;-4&lt;/span&gt; IPv4  
+
+mtr &lt;span class=&quot;nt&quot;&gt;-6&lt;/span&gt; IPv6  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;数据含义：&lt;br /&gt;
+​Host 列是途经的IP或本机域名&lt;/p&gt;
+
+&lt;p&gt;Loss% 列就是对应IP行的丢包率了，值得一提的是，只有最后的目标丢包才算是真正的丢包&lt;/p&gt;
+
+&lt;p&gt;Last 列则是最后一次返回的延迟，按毫秒计算的&lt;/p&gt;
+
+&lt;p&gt;Avg 列是所有返回时延的一个平均值&lt;/p&gt;
+
+&lt;p&gt;Best 列是最快的一次返回时延&lt;/p&gt;
+
+&lt;p&gt;Wrst 列是最长的一次返回时延&lt;/p&gt;
+
+&lt;p&gt;StDev 列是标准偏差&lt;/p&gt;</content><author><name>Lewin</name></author><category term="mtr" /><category term="路由" /><summary type="html">MTR mtr 命令是 ping 和 tracert 命令的结合，同时具有 测试丢包率（ping） 和 跟踪路由（tracert） 的功能</summary></entry><entry><title type="html">跳板机使用</title><link href="https://lewinz.org/2021/05/26/openssh-jump/" rel="alternate" type="text/html" title="跳板机使用" /><published>2021-05-26T00:00:00+08:00</published><updated>2021-05-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/26/openssh-jump</id><content type="html" xml:base="https://lewinz.org/2021/05/26/openssh-jump/">&lt;h3 id=&quot;openssh&quot;&gt;OpenSSH&lt;/h3&gt;
+&lt;p&gt;OpenSSH 是 SSH （Secure SHell） 协议的免费开源实现。SSH协议族可以用来进行远程控制， 或在计算机之间传送文件。而实现此功能的传统方式，如telnet(终端仿真协议)、 rcp ftp、 rlogin、rsh都是极为不安全的，并且会使用明文传送密码。OpenSSH提供了服务端后台程序和客户端工具，用来加密远程控件和文件传输过程中的数据，并由此来代替原来的类似服务。&lt;/p&gt;
+
+&lt;h3 id=&quot;proxyjump&quot;&gt;ProxyJump&lt;/h3&gt;
+&lt;p&gt;需要 OpenSSH 7.3 以上版本才可以使用 ProxyJump, 使用下列命令查看OpenSSH 版本：&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh -V&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;ProxyJump 命令行使用方法：
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh -J [email protected]:port1,[email protected]:port2&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;可以直接使用上述命令通过跳板机直接登录内网机器，比如：&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh username@目标机器IP -p 22 -J username@跳板机IP:22&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;如果需要通过多个跳板机则以 , 分割：&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh username@目标机器IP -p 22 -J username1@跳板机IP1:22,username2@跳板机IP2:22&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;如果你觉得每次都需要加上 -J 的配置很多麻烦，可以写到配置文件里。修改配置文件 ~.ssh\config，默认没有需要自己创建。增加以下内容：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;Host target    # 代表目标机器的名字
+    HostName 目标机器 IP    # 这个是目标机器的 IP
+    Port 22    # 目标机器 ssh 的端口
+    User username_target    # 目标机器的用户名
+    ProxyJump username@跳板机IP:port
+
+Host 10.10.0.*    # 使用通配符 * 代表 10.10.0.1 - 10.10.0.255
+    Port 22    # 服务器端口
+    User username    # 服务器用户名
+    ProxyJump username@跳板机IP:port
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;也可以为跳板机器一个“别名”方便使用：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;Host tiaoban1    # 代表跳板机 1
+    HostName 跳板机 1 的 IP
+    Port 22    # ssh 连接端口
+    User username1    # 跳板机 1 的用户名
+
+Host tiaoban2    # 代表跳板机 2
+    HostName 跳板机 2 的 IP
+    Port 22    # ssh 连接端口
+    User username2    # 跳板机 2 的用户名
+
+Host target    # 代表目标机器的名字
+    HostName 目标机器 IP    # 这个是目标机器的 IP
+    Port 22    # 目标机器 ssh 的端口
+    User username_target    # 目标机器的用户名
+    ProxyJump tiaoban1,tiaoban2
+
+Host 10.10.0.*    # 使用通配符 * 代表 10.10.0.1 - 10.10.0.255
+    Port 22    # 服务器端口
+    User username    # 服务器用户名
+    ProxyJump tiaoban1,tiaoban2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;使用方法：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;ssh target
+ssh 10.10.0.1
+ssh username@target -p22
+ssh username@10.10.0.1 -p22
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;proxycommand&quot;&gt;ProxyCommand&lt;/h3&gt;
+&lt;p&gt;如果 OpenSSH 版本低于 7.3 可以使用 ProxyCommand达到同样的效果。&lt;/p&gt;
+
+&lt;p&gt;ProxyCommand 命令行使用方法：&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh username@目标机器IP -p 22 -o ProxyCommand='ssh -p 22 username@跳板机IP -W %h:%p'&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;同样可以在 ~/.ssh/config 文件中增加配置文件：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;Host tiaoban   # 任意名字，随便使用
+
+    HostName 跳板机的 IP，支持域名
+
+    Port 22      # 跳板机端口
+
+    User username_tiaoban       # 跳板机用户
+
+ 
+
+Host target      # 同样，任意名字，随便起
+
+    HostName 目标服务器 IP    # 真正登陆的服务器，不支持域名必须IP地址
+
+    Port 22   # 服务器的端口
+
+    User username   # 服务器的用户
+
+    ProxyCommand ssh tiaoban -W %h:%p
+
+
+
+Host 10.10.0.*      # 可以用*通配符
+
+    Port 22   # 服务器的端口
+
+    User username   # 服务器的用户
+
+    ProxyCommand ssh tiaoban -W %h:%p
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;使用方法同上：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh target
+ssh 10.10.0.1
+ssh username@target &lt;span class=&quot;nt&quot;&gt;-p22&lt;/span&gt;
+ssh username@10.10.0.1 &lt;span class=&quot;nt&quot;&gt;-p22&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;参考博客&quot;&gt;参考博客&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/74193910&quot;&gt;https://zhuanlan.zhihu.com/p/74193910&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="OpenSSH" /><category term="ProxyJump" /><summary type="html">OpenSSH OpenSSH 是 SSH （Secure SHell） 协议的免费开源实现。SSH协议族可以用来进行远程控制， 或在计算机之间传送文件。而实现此功能的传统方式，如telnet(终端仿真协议)、 rcp ftp、 rlogin、rsh都是极为不安全的，并且会使用明文传送密码。OpenSSH提供了服务端后台程序和客户端工具，用来加密远程控件和文件传输过程中的数据，并由此来代替原来的类似服务。</summary></entry><entry><title type="html">性能剖析 PProf</title><link href="https://lewinz.org/2021/05/18/pprof-detail/" rel="alternate" type="text/html" title="性能剖析 PProf" /><published>2021-05-18T00:00:00+08:00</published><updated>2021-05-18T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/18/pprof-detail</id><content type="html" xml:base="https://lewinz.org/2021/05/18/pprof-detail/">&lt;h2 id=&quot;go-pprof&quot;&gt;Go pprof&lt;/h2&gt;
+&lt;h3 id=&quot;go性能优化&quot;&gt;Go性能优化&lt;/h3&gt;
+
+&lt;p&gt;Go语言项目中的性能优化主要有以下几个方面：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;CPU profile：报告程序的 CPU 使用情况，按照一定频率去采集应用程序在 CPU 和寄存器上面的数据&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Memory Profile（Heap Profile）：报告程序的内存使用情况&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Block Profiling：报告 goroutines 不在运行状态的情况，可以用来分析和查找死锁等性能瓶颈&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Goroutine Profiling：报告 goroutines 的使用情况，有哪些 goroutine，它们的调用关系是怎样的&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;采集性能数据&quot;&gt;采集性能数据&lt;/h3&gt;
+
+&lt;p&gt;Go语言内置了获取程序的运行数据的工具，包括以下两个标准库：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;runtime/pprof&lt;/code&gt;：采集工具型应用运行数据进行分析&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;net/http/pprof&lt;/code&gt;：采集服务型应用运行时数据进行分析&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;pprof开启后，每隔一段时间（10ms）就会收集下当前的堆栈信息，获取格格函数占用的CPU以及内存资源；最后通过对这些采样数据进行分析，形成一个性能分析报告。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;注意，我们只应该在性能测试的时候才在代码中引入pprof。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;工具型应用&quot;&gt;工具型应用&lt;/h3&gt;
+
+&lt;p&gt;如果你的应用程序是运行一段时间就结束退出类型。那么最好的办法是在应用退出的时候把 profiling 的报告保存到文件中，进行分析。对于这种情况，可以使用runtime/pprof库。 首先在代码中导入runtime/pprof工具：&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;runtime/pprof&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;cpu性能分析&quot;&gt;CPU性能分析&lt;/h4&gt;
+
+&lt;p&gt;开启CPU性能分析：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pprof&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StartCPUProfile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Writer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;停止CPU性能分析：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pprof&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StopCPUProfile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;应用执行结束后，就会生成一个文件，保存了我们的 CPU profiling 数据。得到采样数据之后，使用go tool pprof工具进行CPU性能分析。&lt;/p&gt;
+
+&lt;h4 id=&quot;内存性能优化&quot;&gt;内存性能优化&lt;/h4&gt;
+
+&lt;p&gt;记录程序的堆栈信息&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pprof&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WriteHeapProfile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Writer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;得到采样数据之后，使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go tool pprof&lt;/code&gt;工具进行内存性能分析。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go tool pprof&lt;/code&gt;默认是使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-inuse_space&lt;/code&gt;进行统计，还可以使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-inuse-objects&lt;/code&gt;查看分配对象的数量。&lt;/p&gt;
+
+&lt;h3 id=&quot;服务型应用&quot;&gt;服务型应用&lt;/h3&gt;
+&lt;p&gt;如果你的应用程序是一直运行的，比如 web 应用，那么可以使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;net/http/pprof&lt;/code&gt;库，它能够在提供 HTTP 服务进行分析。&lt;/p&gt;
+
+&lt;p&gt;如果使用了默认的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http.DefaultServeMux&lt;/code&gt;（通常是代码直接使用 http.ListenAndServe(“0.0.0.0:8000”, nil)），只需要在你的web server端代码中按如下方式导入&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;net/http/pprof&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;net/http/pprof&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;如果你使用自定义的 Mux，则需要手动注册一些路由规则：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HandleFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/debug/pprof/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pprof&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HandleFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/debug/pprof/cmdline&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pprof&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Cmdline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HandleFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/debug/pprof/profile&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pprof&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Profile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HandleFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/debug/pprof/symbol&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pprof&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Symbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HandleFunc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/debug/pprof/trace&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pprof&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Trace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;如果你使用的是gin框架，那么推荐使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&quot;github.com/DeanThompson/ginpprof&quot;&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;不管哪种方式，你的 HTTP 服务都会多出&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/debug/pprof endpoint&lt;/code&gt;，访问它会得到性能监控数据&lt;/p&gt;
+
+&lt;p&gt;这个路径下还有几个子页面：&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;/debug/pprof/profile：访问这个链接会自动进行 CPU profiling，持续 30s，并生成一个文件供下载
+/debug/pprof/heap： Memory Profiling 的路径，访问这个链接会得到一个内存 Profiling 结果的文件
+/debug/pprof/block：block Profiling 的路径
+/debug/pprof/goroutines：运行的 goroutines 列表，以及调用关系
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;go-tool-pprof命令&quot;&gt;go tool pprof命令&lt;/h3&gt;
+&lt;p&gt;不管是工具型应用还是服务型应用，我们使用相应的pprof库获取数据之后，下一步的都要对这些数据进行分析，我们可以使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go tool pprof&lt;/code&gt;命令行工具。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go tool pprof&lt;/code&gt;最简单的使用方式为:&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pprof&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;binary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;其中：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;binary 是应用的二进制文件，用来解析各种符号；&lt;/li&gt;
+  &lt;li&gt;source 表示 profile 数据的来源，可以是本地的文件，也可以是 http 地址。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;注意事项&lt;/strong&gt;： 获取的 Profiling 数据是动态的，要想获得有效的数据，请保证应用处于较大的负载（比如正在生成中运行的服务，或者通过其他工具模拟访问压力）。否则如果应用处于空闲状态，得到的结果可能没有任何意义。&lt;/p&gt;
+
+&lt;h3 id=&quot;相关博客&quot;&gt;相关博客&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://segmentfault.com/a/1190000016412013&quot;&gt;https://segmentfault.com/a/1190000016412013&lt;/a&gt;
+&lt;a href=&quot;https://www.cnblogs.com/Dr-wei/p/11742414.html&quot;&gt;https://www.cnblogs.com/Dr-wei/p/11742414.html&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="PProf" /><category term="性能" /><summary type="html">Go pprof Go性能优化</summary></entry><entry><title type="html">Golang Tag 汇总</title><link href="https://lewinz.org/2021/05/17/golang-tag/" rel="alternate" type="text/html" title="Golang Tag 汇总" /><published>2021-05-17T00:00:00+08:00</published><updated>2021-05-17T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/17/golang-tag</id><content type="html" xml:base="https://lewinz.org/2021/05/17/golang-tag/">&lt;h2 id=&quot;tag&quot;&gt;Tag&lt;/h2&gt;
+&lt;p&gt;在 Go 的 struct 定义中，有时需要对某个字段添加额外的元信息，这就需要用到 field tag，即成员标签变量。&lt;/p&gt;
+
+&lt;h3 id=&quot;json-tag&quot;&gt;Json Tag&lt;/h3&gt;
+&lt;h4 id=&quot;示例&quot;&gt;示例&lt;/h4&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;peerInfo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;HTTPPort&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`json:&quot;http_port&quot;`&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;TCPPort&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`json:&quot;tcp_port&quot;`&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;versiong&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`json:&quot;versiong&quot;`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h4 id=&quot;encode-和-decode&quot;&gt;Encode 和 Decode&lt;/h4&gt;
+&lt;h5 id=&quot;encode&quot;&gt;Encode&lt;/h5&gt;
+&lt;p&gt;要把 golang 的数据结构转换成 JSON 字符串（encode），可以使用 Marshal函数&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h5 id=&quot;decode&quot;&gt;Decode&lt;/h5&gt;
+&lt;p&gt;相对应的，要把 JSON 数据转换成 Go 类型的值（Decode）， 可以使用 json.Unmarshal。&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Unmarshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;data 中存放的是 JSON 值，v 会存放解析后的数据，所以必须是指针，可以保证函数中做的修改能保存下来&lt;/p&gt;
+
+&lt;h4 id=&quot;更多控制&quot;&gt;更多控制&lt;/h4&gt;
+&lt;p&gt;Json Tag控制字段有三种：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;-：不要解析这个字段&lt;/li&gt;
+  &lt;li&gt;omitempty：当字段为空（默认值）时，不要解析这个字段。比如 false、0、nil、长度为 0 的 array，map，* * 
+slice，string&lt;/li&gt;
+  &lt;li&gt;FieldName：当解析 json 的时候，使用这个名字&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;xml-tag&quot;&gt;Xml Tag&lt;/h3&gt;
+&lt;p&gt;导包&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;import &quot;encoding/xml&quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;解析和读取规则&quot;&gt;解析和读取规则&lt;/h4&gt;
+&lt;p&gt;golang对xml的解析和读取是通过stuct和refect实现的,对于struct中的tag以什么方式对应到xml的元素上,golang的文档中做了如下描述:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;1、结构体中的XMLName字段或者类型为xml.Name的字段,会被删除.使用此字段tag上定义的属性进行解析
+2、结构体tag中”-” 在解析过程中会忽略结构体中的这个字段
+3、结构体tag中”name,attr” 使用name作输出为xml属性,对应字段值作为属性值
+4、结构体tag中”,attr” 使用字段名作为xml属性,字段值作为xml属性值
+5、结构体tag中”,chardata” 不作为xml的节点输出,把该字段对应的值作为字符输出
+6、结构体tag中 “,innerxml” 如果结构体改字段是基本类型如:string,int等,和”,chardata”输出无区别,如果是一个结构体,输出值会是一个完整的xml结构
+7、结构体tag中 “,comment” 输出xml中的注释
+8、结构体tag中”omitempty” 该字段是go中的空值:false, 0,空指针,空接口,任何长度为0的切片,数组,字符串和map. 都会被忽略
+9、结构体中不包含tag 会以该字段作为xml属性名称,值作为xml属性值
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;代码示例&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TNote&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Lang&lt;/span&gt;    &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`xml:&quot;lang,attr&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Content&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`xml:&quot;,innerxml&quot;`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TFile&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;XMLName&lt;/span&gt;  &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`xml:&quot;file&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;FileName&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;name,attr&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Size&lt;/span&gt;     &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;size,attr&quot;`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Release&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;XMLName&lt;/span&gt;   &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`xml:&quot;release&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Version&lt;/span&gt;   &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;version,attr&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;TimeStamp&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;,attr&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Lang&lt;/span&gt;      &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;-&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Skin&lt;/span&gt;      &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;,chardata&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Site&lt;/span&gt;      &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;,omitempty&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;File&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TFile&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;`xml:&quot;,innerxml&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;CnNotes&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;TNote&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`xml:&quot;cnnote&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;EnNotes&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;TNote&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`xml:&quot;ennote&quot;`&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;Comment&lt;/span&gt;   &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;,comment&quot;`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;gorm-tag&quot;&gt;gorm Tag&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;支持的结构标签&lt;/strong&gt;
+|   标签    |   说明    |
+|   —-    |   —-    |
+|   column    |   指定列的名称    |
+|   type    |   指定列的类型    |
+|   size    |   指定列的大小，默认是 255    |
+|   primary_key    |   指定一个列作为主键    |
+|   unique    |   指定一个唯一的列    |
+|   default    |   指定一个列的默认值    |
+|   precision    |   指定列的数据的精度    |
+|   not null    |   指定列的数据不为空    |
+|   auto_increment    |   指定一个列的数据是否自增    |
+|   index    |   创建带或不带名称的索引，同名创建复合索引    |
+|   unique_index    |   类似 索引，创建一个唯一的索引    |
+|   embedded    |   将 struct 设置为 embedded    |
+|   embedded_prefix    |   设置嵌入式结构的前缀名称    |
+|   -    |   忽略这些字段    |&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;关联的结构标签&lt;/strong&gt;
+|   标签    |   说明    |
+|   —-    |   —-    |
+|   many2many    |   指定连接表名称    |
+|   foreignkey    |   指定外键    |
+|   association_foreignkey    |   指定关联外键    |
+|   polymorphic    |   指定多态类型    |
+|   polymorphic_value    |   指定多态的值    |
+|   jointable_foreignkey    |   指定连接表的外键    |
+|   association_jointable_foreignkey    |   指定连接表的关联外键    |
+|   save_associations    |   是否自动保存关联    |
+|   association_autoupdate    |   是否自动更新关联    |
+|   association_autocreate    |   是否自动创建关联    |
+|   association_save_reference    |   是否引用自动保存的关联    |
+|   preload    |   是否自动预加载关联    |&lt;/p&gt;
+
+&lt;h3 id=&quot;map-tag&quot;&gt;Map Tag&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;mapstructure 大小写不敏感&lt;/strong&gt;
+示例：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`mapstructure:&quot;username&quot;`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;内嵌结构&quot;&gt;内嵌结构&lt;/h4&gt;
+&lt;p&gt;内嵌结构可设置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mapstructure:&quot;,squash&quot;&lt;/code&gt;将该结构体的字段提到父结构中&lt;br /&gt;
+另外需要注意一点，如果父结构体中有同名的字段，那么mapstructure会将JSON 中对应的值同时设置到这两个字段中，即这两个字段有相同的值。&lt;/p&gt;
+
+&lt;p&gt;示例：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Friend&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`mapstructure:&quot;,squash&quot;`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;未映射的值&quot;&gt;未映射的值&lt;/h4&gt;
+&lt;p&gt;如果源数据中有未映射的值（即结构体中无对应的字段），mapstructure默认会忽略它。&lt;/p&gt;
+
+&lt;p&gt;我们可以在结构体中定义一个字段，为其设置mapstructure:”,remain”标签。这样未映射的值就会添加到这个字段中。注意，这个字段的类型只能为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;或&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[interface{}]interface{}&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;示例：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;   &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Job&lt;/span&gt;   &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`mapstructure:&quot;,remain&quot;`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;逆向转换&quot;&gt;逆向转换&lt;/h4&gt;
+&lt;p&gt;前面我们都是将&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;解码到 Go 结构体中。mapstructure当然也可以将 Go 结构体反向解码为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;。在反向解码时，我们可以为某些字段设置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mapstructure:&quot;,omitempty&quot;&lt;/code&gt;。这样当这些字段为默认值时，就不会出现在结构的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;中：&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Job&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`mapstructure:&quot;,omitempty&quot;`&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;metadata&quot;&gt;Metadata&lt;/h4&gt;
+&lt;p&gt;解码时会产生一些有用的信息，mapstructure可以使用Metadata收集这些信息。Metadata结构如下：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// mapstructure.go&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Metadata&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Keys&lt;/span&gt;   &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Unused&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Metadata只有两个导出字段：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Keys：解码成功的键名；&lt;/li&gt;
+  &lt;li&gt;Unused：在源数据中存在，但是目标结构中不存在的键名。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;为了收集这些数据，我们需要使用DecodeMetadata来代替Decode方法：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;dj&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;age&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;18&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;job&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;&quot;programmer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;metadata&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mapstructure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Metadata&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;mapstructure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DecodeMetadata&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;keys:%#v unused:%#v&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unused&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;弱类型输入&quot;&gt;弱类型输入&lt;/h4&gt;
+&lt;p&gt;有时候，我们并不想对结构体字段类型和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;的对应键值做强类型一致的校验。这时可以使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WeakDecode/WeakDecodeMetadata&lt;/code&gt;方法，它们会尝试做类型转换：&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;   &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Emails&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;age&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;&quot;18&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;emails&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mapstructure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WeakDecode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;person:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;虽然键name对应的值123是int类型，但是在WeakDecode中会将其转换为string类型以匹配Person.Name字段的类型。同样的，age的值”18”是string类型，在WeakDecode中会将其转换为int类型以匹配Person.Age字段的类型。 需要注意一点，如果类型转换失败了，WeakDecode同样会返回错误。例如将上例中的age设置为”bad value”，它就不能转为int类型，故而返回错误。&lt;/p&gt;
+
+&lt;p&gt;参考博客：&lt;br /&gt;
+&lt;a href=&quot;https://zhuanlan.zhihu.com/p/165419292&quot;&gt;https://zhuanlan.zhihu.com/p/165419292&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golan" /><category term="tag" /><category term="汇总" /><summary type="html">Tag 在 Go 的 struct 定义中，有时需要对某个字段添加额外的元信息，这就需要用到 field tag，即成员标签变量。</summary></entry><entry><title type="html">虚拟机网络（四种网络连接方式）</title><link href="https://lewinz.org/2021/05/17/network-link-mode/" rel="alternate" type="text/html" title="虚拟机网络（四种网络连接方式）" /><published>2021-05-17T00:00:00+08:00</published><updated>2021-05-17T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/17/network-link-mode</id><content type="html" xml:base="https://lewinz.org/2021/05/17/network-link-mode/">&lt;h2 id=&quot;虚拟机网络&quot;&gt;虚拟机网络&lt;/h2&gt;
+
+&lt;p&gt;VirtualBox 中有4中网络连接方式：&lt;strong&gt;NAT&lt;/strong&gt;、&lt;strong&gt;Bridged Adapter&lt;/strong&gt;、&lt;strong&gt;Host-only Adapter&lt;/strong&gt;、&lt;strong&gt;Internal&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;VMWare 比 VirtualBox 少一种 &lt;strong&gt;Internal&lt;/strong&gt; ，其他三种概念一致。&lt;/p&gt;
+
+&lt;h3 id=&quot;nat&quot;&gt;NAT&lt;/h3&gt;
+
+&lt;p&gt;NAT：Network Address Translation，网络地址转换&lt;/p&gt;
+
+&lt;p&gt;NAT模式是最简单的实现虚拟机上网的方式，你可以这样理解：&lt;/p&gt;
+
+&lt;p&gt;Guest访问网络的所有数据都是由主机提供的，Guest并不真实存在于网络中，主机与网络中的任何机器都不能查看和访问到Guest的存在。&lt;/p&gt;
+
+&lt;p&gt;Guest可以访问主机能访问到的所有网络，但是对于主机以及主机网络上的其他机器，Guest又是不可见的，甚至主机也访问不到Guest。&lt;/p&gt;
+
+&lt;p&gt;虚拟机与主机的关系：只能单向访问，虚拟机可以通过网络访问到主机，主机无法通过网络访问到虚拟机。&lt;/p&gt;
+
+&lt;p&gt;虚拟机与网络中其他主机的关系：只能单向访问，虚拟机可以访问到网络中其他主机，其他主机不能通过网络访问到虚拟机。&lt;/p&gt;
+
+&lt;p&gt;虚拟机与虚拟机的关系：相互不能访问，虚拟机与虚拟机各自完全独立，相互间无法通过网络访问彼此。&lt;/p&gt;
+
+&lt;h4 id=&quot;detail&quot;&gt;Detail&lt;/h4&gt;
+&lt;p&gt;这种方式下，虚拟机的网卡连接到宿主的 VMnet8 上。此时系统的 VMWare NAT Service 服务就充当了路由器的作用，负责将虚拟机发到 VMnet8 的包进行地址转换之后发到实际的网络上，再将实际网络上返回的包进行地址转换后通过 VMnet8 发送给虚拟机。VMWare DHCP Service 负责为虚拟机提供 DHCP 服务。&lt;/p&gt;
+
+&lt;h3 id=&quot;bridged-adapter网桥模式&quot;&gt;Bridged Adapter（网桥模式）&lt;/h3&gt;
+
+&lt;p&gt;它是通过主机网卡，架设了一条桥，直接连入到网络中了。因此，它使得虚拟机能被分配到一个网络中独立的IP，所有网络功能完全和在网络中的真实机器一样。&lt;/p&gt;
+
+&lt;p&gt;网桥模式下的虚拟机，你把它认为是真实计算机就行了。&lt;/p&gt;
+
+&lt;p&gt;虚拟机与主机的关系：可以相互访问，因为虚拟机在真实网络段中有独立IP，主机与虚拟机处于同一网络段中，彼此可以通过各自IP相互访问。&lt;/p&gt;
+
+&lt;p&gt;虚拟机于网络中其他主机的关系：可以相互访问，同样因为虚拟机在真实网络段中有独立IP，虚拟机与所有网络其他主机处于同一网络段中，彼此可以通过各自IP相互访问。&lt;/p&gt;
+
+&lt;p&gt;虚拟机与虚拟机的关系：可以相互访问，原因同上。&lt;/p&gt;
+
+&lt;h4 id=&quot;detail-1&quot;&gt;Detail&lt;/h4&gt;
+&lt;p&gt;这种方式下，虚拟机就像一台真正的计算机一样，直接连接到实际的网络上，与宿主机没有任何联系。&lt;/p&gt;
+
+&lt;h3 id=&quot;internal内网模式&quot;&gt;Internal（内网模式）&lt;/h3&gt;
+
+&lt;p&gt;内网模式，顾名思义就是内部网络模式：&lt;/p&gt;
+
+&lt;p&gt;虚拟机与外网完全断开，只实现虚拟机于虚拟机之间的内部网络模式。&lt;/p&gt;
+
+&lt;p&gt;虚拟机与主机的关系：不能相互访问，彼此不属于同一个网络，无法相互访问。&lt;/p&gt;
+
+&lt;p&gt;虚拟机与网络中其他主机的关系：不能相互访问，理由同上。&lt;/p&gt;
+
+&lt;p&gt;虚拟机与虚拟机的关系：可以相互访问，前提是在设置网络时，两台虚拟机设置同一网络名称。如上配置图中，名称为intnet。&lt;/p&gt;
+
+&lt;h3 id=&quot;host-only-adapter主机模式&quot;&gt;Host-only Adapter（主机模式）&lt;/h3&gt;
+
+&lt;p&gt;主机模式，这是一种比较复杂的模式，需要有比较扎实的网络基础知识才能玩转。可以说前面几种模式所实现的功能，在这种模式下，通过虚拟机及网卡的设置都可以被实现。&lt;/p&gt;
+
+&lt;p&gt;我们可以理解为Guest在主机中模拟出一张专供虚拟机使用的网卡，所有虚拟机都是连接到该网卡上的，我们可以通过设置这张网卡来实现上网及其他很多功能，比如（网卡共享、网卡桥接等）。&lt;/p&gt;
+
+&lt;p&gt;虚拟机与主机的关系：默认不能相互访问，双方不属于同一IP段，host-only网卡默认IP段为192.168.56.X 子网掩码为255.255.255.0，后面的虚拟机被分配到的也都是这个网段。通过网卡共享、网卡桥接等，可以实现虚拟机于主机相互访问。&lt;/p&gt;
+
+&lt;p&gt;虚拟机与网络主机的关系：默认不能相互访问，原因同上，通过设置，可以实现相互访问。&lt;/p&gt;
+
+&lt;p&gt;虚拟机与虚拟机的关系：默认可以相互访问，都是同处于一个网段。&lt;/p&gt;
+
+&lt;h4 id=&quot;detail-2&quot;&gt;Detail&lt;/h4&gt;
+&lt;p&gt;这种方式下，虚拟机的网卡连接到宿主的 VMnet1 上，但系统并不为虚拟机提供任何路由服务，因此虚拟机只能和宿主机进行通信，而不能连接到实际网络上。&lt;/p&gt;
+
+&lt;h2 id=&quot;借鉴博客&quot;&gt;借鉴博客&lt;/h2&gt;
+&lt;p&gt;[https://blog.csdn.net/u010603798/article/details/97275333]&lt;/p&gt;</content><author><name>Lewin</name></author><category term="虚拟机网络" /><category term="连接" /><summary type="html">虚拟机网络</summary></entry><entry><title type="html">openstack 快照与镜像的区别</title><link href="https://lewinz.org/2021/05/17/openstack-snapshoot-image/" rel="alternate" type="text/html" title="openstack 快照与镜像的区别" /><published>2021-05-17T00:00:00+08:00</published><updated>2021-05-17T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/17/openstack-snapshoot-image</id><content type="html" xml:base="https://lewinz.org/2021/05/17/openstack-snapshoot-image/">&lt;p&gt;OpenStack的快照对于虚拟机来说，就是镜像。因为Openstack是采用创建镜像的方式创建快照，而不是通过正统的virsh和其他快照方式创建快照函数。虚拟机快照做完后以镜像形式存在于glance（镜像组件）中。&lt;/p&gt;
+
+&lt;h2 id=&quot;libvirt-主流快照实现&quot;&gt;libvirt 主流快照实现&lt;/h2&gt;
+&lt;p&gt;采用virDomainSnapshotCreateXML()函数(CLI为virsh snapshot-create)。新建的快照与虚拟机有关联：若为内置快照，快照信息和虚拟机存在同一个qcow2镜像中；若为外置快照，新建一个qcow2文件，原虚拟机的disk将变为一个read only的模板镜像，新qcow2镜像仅记录与2.模板镜像的差异数据。这种快照包含快照链信息，可保留disk和ram信息，可回滚至快照点。&lt;/p&gt;
+
+&lt;h2 id=&quot;openstack快照实现&quot;&gt;openstack快照实现&lt;/h2&gt;
+&lt;p&gt;openstack并未采用virDomainSnapshotCreateXML()来实现快照，而是单纯的对虚拟机镜像做转换和拷贝，生成一个与虚拟机无关联的镜像，最后上传至glance中。这种快照不包含快照链信息，只保留disk信息，无法回滚至快照点，只能采用该快照镜像创建一个新的虚拟机。&lt;/p&gt;
+
+&lt;h2 id=&quot;限制与缺点&quot;&gt;限制与缺点&lt;/h2&gt;
+
+&lt;p&gt;没有快照链信息，不支持revert恢复虚拟机到某一个快照点&lt;/p&gt;
+
+&lt;p&gt;只对系统盘进行快照&lt;/p&gt;
+
+&lt;p&gt;不支持内存快照，不支持同时对虚拟机和磁盘做快照&lt;/p&gt;
+
+&lt;p&gt;需要用户进行一致性操作&lt;/p&gt;
+
+&lt;p&gt;不支持含元数据导出&lt;/p&gt;
+
+&lt;p&gt;不支持含元数据导入&lt;/p&gt;
+
+&lt;p&gt;只支持虚拟机全量数据快照（与快照的实现方式有关，因为是通过image进行保存的）&lt;/p&gt;
+
+&lt;p&gt;过程较长（需要先通过存储快照，然后抽取并上传至glance)&lt;/p&gt;
+
+&lt;p&gt;快照以Image方式保存，而非以cinder卷方式保存，无法充分利用存储本身能力加快快照的创建和使用&lt;/p&gt;
+
+&lt;p&gt;当前限制openstack的虚拟机快照只快照root盘，不快照内存/CPU状态以及挂载磁盘。挂载磁盘需要事先卸载磁盘(数据盘），然后进行快照，然后再挂载磁盘&lt;/p&gt;
+
+&lt;p&gt;没有快照链信息&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;参考博客&lt;/strong&gt;：&lt;br /&gt;
+&lt;a href=&quot;https://blog.csdn.net/zhongbeida_xue/article/details/82257461&quot;&gt;https://blog.csdn.net/zhongbeida_xue/article/details/82257461&lt;/a&gt;
+&lt;a href=&quot;https://blog.csdn.net/liukuan73/article/details/46457439&quot;&gt;https://blog.csdn.net/liukuan73/article/details/46457439&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="快照" /><category term="镜像" /><summary type="html">OpenStack的快照对于虚拟机来说，就是镜像。因为Openstack是采用创建镜像的方式创建快照，而不是通过正统的virsh和其他快照方式创建快照函数。虚拟机快照做完后以镜像形式存在于glance（镜像组件）中。</summary></entry><entry><title type="html">虚拟化技术KVM</title><link href="https://lewinz.org/2021/05/17/virtualization-kvm/" rel="alternate" type="text/html" title="虚拟化技术KVM" /><published>2021-05-17T00:00:00+08:00</published><updated>2021-05-17T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/17/virtualization-kvm</id><content type="html" xml:base="https://lewinz.org/2021/05/17/virtualization-kvm/">&lt;h2 id=&quot;虚拟化&quot;&gt;虚拟化&lt;/h2&gt;
+&lt;p&gt;在计算机技术中，虚拟化（技术）或虚拟技术（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源（CPU、内存、磁盘空间、网络适配器等），予以抽象、转换后呈现出来并可供分割、组合为一个或多个电脑配置环境。由此，打破实体结构间的不可切割的障碍，使用户可以比原本的配置更好的方式来应用这些电脑硬件资源。这些资源的新虚拟部分是不受现有资源的架设方式，地域或物理配置所限制。一般所指的虚拟化资源包括计算能力和资料存储。&lt;/p&gt;
+
+&lt;h2 id=&quot;历史&quot;&gt;历史&lt;/h2&gt;
+&lt;p&gt;虚拟化技术起源于20世纪60年代末，美国IBM公司当时开发了一套被称作虚拟机监视器（Virtual Machine Monitor）的软件，该软件作为计算机硬件层上面的一层软件抽象层，将计算机硬件虚拟分割成一个或多个虚拟机，并提供多用户对大型计算机的同时、交互访问。&lt;/p&gt;
+
+&lt;h2 id=&quot;分类&quot;&gt;分类&lt;/h2&gt;
+&lt;p&gt;系统、存储、网络、GPU、软件、硬件&lt;/p&gt;
+
+&lt;h2 id=&quot;关键字及扩展知识&quot;&gt;关键字及扩展知识&lt;/h2&gt;
+&lt;p&gt;虚拟化平台VMM（Virtual Machine Monitor）&lt;/p&gt;
+
+&lt;p&gt;运行客户机 Guest VM（客户机）&lt;/p&gt;
+
+&lt;p&gt;X86保护环：Ring0（内核、系统运行）、Ring1、Ring2、Ring3（各类应用程序）&lt;/p&gt;
+
+&lt;h2 id=&quot;虚拟化技术分类&quot;&gt;虚拟化技术分类&lt;/h2&gt;
+&lt;h3 id=&quot;纯软件仿真&quot;&gt;纯软件仿真&lt;/h3&gt;
+&lt;p&gt;通过模拟完整的硬件环境虚拟化来宾平台&lt;/p&gt;
+
+&lt;p&gt;产品：QEMU、Bochs、PearPC&lt;/p&gt;
+
+&lt;p&gt;缺点：效率低&lt;/p&gt;
+
+&lt;h3 id=&quot;虚拟化层翻译&quot;&gt;虚拟化层翻译&lt;/h3&gt;
+&lt;h4 id=&quot;全虚拟化无硬件支持模式&quot;&gt;全虚拟化（无硬件支持模式）&lt;/h4&gt;
+&lt;p&gt;Hypervisor运行在Ring0，Guest VM运行在Ring1，客户机中的应用程序在Ring3&lt;/p&gt;
+
+&lt;p&gt;这种模式下，Guest VM无需修改（本身并不知道在虚拟化环境）&lt;/p&gt;
+
+&lt;p&gt;机制是进行 异常捕捉–&amp;gt; 捕获翻译，这个步骤本身有一定的消耗&lt;/p&gt;
+
+&lt;h4 id=&quot;半虚拟化也称类虚拟化&quot;&gt;半虚拟化（也称类虚拟化）&lt;/h4&gt;
+&lt;p&gt;Hypervisor运行在Ring0，Guest VM进行修改之后，也运行在Ring0中，客户机中的应用程序在Ring3&lt;/p&gt;
+
+&lt;p&gt;Linux系统可以做，开源，可修改源码；windows不行。无代码。&lt;/p&gt;
+
+&lt;h4 id=&quot;全虚拟化硬件辅助模式&quot;&gt;全虚拟化（硬件辅助模式）&lt;/h4&gt;
+&lt;p&gt;Inter VT 和 AMD-V 创建了Ring -1提供给 Hypervisor 使用，Guest VM运行在Ring0&lt;/p&gt;
+
+&lt;h3 id=&quot;容器&quot;&gt;容器&lt;/h3&gt;
+&lt;p&gt;无需 Hypervisor ，对于操作系统来说，一个容器就是一个进程&lt;/p&gt;
+
+&lt;h2 id=&quot;虚拟化主流模型&quot;&gt;虚拟化主流模型&lt;/h2&gt;
+&lt;h3 id=&quot;hypervisor模型&quot;&gt;Hypervisor模型&lt;/h3&gt;
+&lt;p&gt;在hypervisor模型中，VMM是一个完备的操作系统，它除了具备传统操作系统的功能，还具备虚拟化功能。包括CPU、内存和I/O设备在内的所有物理资源都归VMM所有，因此VMM不仅要负责虚拟机环境的创建和管理，还承担着管理物理资源的责任。&lt;/p&gt;
+
+&lt;p&gt;这种方式是比较高效的，然而I/O设备种类繁多，管理所有设备就意味着大量的驱动开发工作。在实际的产品中，厂商会根据产品定位，有选择的支持一些I/O设备，而不是对所有的I/O设备都提供支持。&lt;/p&gt;
+
+&lt;h3 id=&quot;host模型宿主机&quot;&gt;Host模型（宿主机）&lt;/h3&gt;
+&lt;p&gt;在host模型中，物理资源由host OS管理，host OS是传统操作系统（比如Linux），这些传统操作系统并不是为虚拟化而设计的，因此本身并不具备虚拟化功能，实际的虚拟化功能由VMM来提供。&lt;/p&gt;
+
+&lt;p&gt;VMM作为host OS中一个独立的内核模块，通过调用host OS的服务来获得资源，实现CPU、内存和I/O设备的虚拟化。VMM创建出虚拟机之后，通常将虚拟机作为host OS的一个进程参与调度。&lt;/p&gt;
+
+&lt;p&gt;Host模型最大的优点就是可以充分利用现有操作系统的设备驱动程序，VMM不需要为各种I/O设备重新实现驱动，可以专注于物理资源的虚拟化；缺点在于，由于VMM是借助host OS的服务来操作硬件，而不是直接操作硬件，因此受限于host OS服务的支持，可能导致硬件利用的不充分。&lt;/p&gt;
+
+&lt;p&gt;从架构上看，由Qumranet公司开发的KVM（Kernel-based Virtual Machine）就是属于host模型的，kernel-based，顾名思义就是基于操作系统内核。KVM于2007年被集成到Linux内核2.6.20版本，并于2008年被Red Hat收购。&lt;/p&gt;
+
+&lt;p&gt;随着越来越多的虚拟化功能被加入到Linux内核当中，Linux已经越来越像一个hypervisor了，从这个角度看，KVM也可以算是hypervisor模型了。&lt;/p&gt;
+
+&lt;h3 id=&quot;混合模型&quot;&gt;混合模型&lt;/h3&gt;
+&lt;p&gt;在混合模型中，VMM依然位于最底层，拥有所有的物理资源，但为了利用现有操作系统的I/O设备驱动程序，VMM会将大部分的I/O设备交由一个运行在特权级别的虚拟机操作系统（Service OS）来处理，自己则主要负责CPU管理和内存管理。&lt;/p&gt;
+
+&lt;p&gt;混合模型可以说是结合了上述两种模型的优点，既不需要另外开发I/O设备驱动程序，又可以通过直接控制CPU和内存实现对这些物理资源的充分利用，以提高效率。&lt;/p&gt;
+
+&lt;p&gt;但它也是存在缺点的，当来自guest OS的I/O请求发送到VMM后，VMM需要将这些请求转发到service OS，这无疑增加了上下文的开销。混合模型的代表有Xen，Intel最近推出的Acrn，以及我国工程师写的minos。&lt;/p&gt;
+
+&lt;p&gt;上面介绍的这三种VMM实现模型和全虚拟化/类虚拟化的guest VM之间并没有直接的对应关系，比如Xen就既可以支持类虚拟化的guest VM，也可以支持全虚拟化的guest VM。&lt;/p&gt;
+
+&lt;p&gt;还有一种划分方法是将VMM分为基于bare-metal的type-1和基于OS的type-2，从这个角度划分的话，hypervisor模型和混合模型都是属于type-1的，host模型则是属于type-2的。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="虚拟化" /><category term="KVM" /><summary type="html">虚拟化 在计算机技术中，虚拟化（技术）或虚拟技术（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源（CPU、内存、磁盘空间、网络适配器等），予以抽象、转换后呈现出来并可供分割、组合为一个或多个电脑配置环境。由此，打破实体结构间的不可切割的障碍，使用户可以比原本的配置更好的方式来应用这些电脑硬件资源。这些资源的新虚拟部分是不受现有资源的架设方式，地域或物理配置所限制。一般所指的虚拟化资源包括计算能力和资料存储。</summary></entry></feed>
