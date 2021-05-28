@@ -235,6 +235,14 @@
     } ,
   
     {
+      "title"    : "CDN缓存-jsdelivr",
+      "category" : "CDN",
+      
+      "url"      : "https://lewinz.org/wiki/jsdelivr_cdn_refresh/",
+      "keywords" : "CDN, jsdelivr, 缓存"
+    } ,
+  
+    {
       "title"    : "Linux命令备忘",
       "category" : "Linux",
       
