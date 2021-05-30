@@ -1,4 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-05-30T17:26:47+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">Prometheus 监控系统</title><link href="https://lewinz.org/2021/05/30/prometheus-info/" rel="alternate" type="text/html" title="Prometheus 监控系统" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/prometheus-info</id><content type="html" xml:base="https://lewinz.org/2021/05/30/prometheus-info/">&lt;h2 id=&quot;普罗米修斯prometheus&quot;&gt;普罗米修斯(Prometheus)&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-05-30T18:16:01+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">MySQL聚集索引和非聚集索引</title><link href="https://lewinz.org/2021/05/30/mysql-clustered-index/" rel="alternate" type="text/html" title="MySQL聚集索引和非聚集索引" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/mysql-clustered-index</id><content type="html" xml:base="https://lewinz.org/2021/05/30/mysql-clustered-index/">&lt;h2 id=&quot;聚集索引&quot;&gt;聚集索引&lt;/h2&gt;
+&lt;p&gt;聚集索引是指数据库表行中数据的物理顺序与键值的逻辑（索引）顺序相同。一个表只能有一个聚集索引，因为一个表的物理顺序只有一种情况，所以，对应的聚集索引只能有一个。如果某索引不是聚集索引，则表中的行物理顺序与索引顺序不匹配，与非聚集索引相比，聚集索引有着更快的检索速度。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysql-聚集索引和非聚集索引&quot;&gt;MySQL 聚集索引和非聚集索引&lt;/h2&gt;
+
+&lt;p&gt;MySQL 的 Innodb 存储引擎的索引分为聚集索引和非聚集索引两大类，理解聚集索引和非聚集索引可通过对比汉语字典的索引。汉语字典提供了两类检索汉字的方式，第一类是拼音检索（前提是知道该汉字读音），比如拼音为cheng的汉字排在拼音chang的汉字后面，根据拼音找到对应汉字的页码（因为按拼音排序，二分查找很快就能定位），这就是我们通常所说的字典序；第二类是部首笔画检索，根据笔画找到对应汉字，查到汉字对应的页码。拼音检索就是聚集索引，因为存储的记录（数据库中是行数据、字典中是汉字的详情记录）是按照该索引排序的；笔画索引，虽然笔画相同的字在笔画索引中相邻，但是实际存储页码却不相邻。&lt;/p&gt;
+
+&lt;p&gt;正文内容按照一个特定维度排序存储，这个特定的维度就是聚集索引；&lt;/p&gt;
+
+&lt;p&gt;Innodb 存储引擎中行记录就是按照聚集索引维度顺序存储的，Innodb 的表也称为索引表；因为行记录只能按照一个维度进行排序，所以一张表只能有一个聚集索引。&lt;/p&gt;
+
+&lt;p&gt;非聚集索引索引项顺序存储，但索引项对应的内容却是随机存储的；&lt;/p&gt;
+
+&lt;p&gt;举个例子说明下：&lt;/p&gt;
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;table&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;student&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;`id`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;INT&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;UNSIGNED&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;AUTO_INCREMENT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;`name`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;VARCHAR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;255&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;PRIMARY&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;KEY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;`id`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;KEY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;`name`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ENGINE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;InnoDB&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;DEFAULT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CHARSET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;utf8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;该表中主键id是该表的聚集索引、name为非聚集索引；表中的每行数据都是按照聚集索引id排序存储的；比如要查找name=’Arla’和name=’Arle’的两个同学，他们在name索引表中位置可能是相邻的，但是实际存储位置可能差的很远。&lt;strong&gt;name索引表节点按照name排序，检索的是每一行数据的主键。聚集索引表按照主键id排序，检索的是每一行数据的真实内容。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;也就是说查询 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;name='Arle'&lt;/code&gt; 的记录时，首相通过 name 索引表查找到 Arle 的主键 id （可能有多个主键 id ，因为有重名的同学），再根据主键id的聚集索引找到相应的行记录；&lt;/p&gt;
+
+&lt;p&gt;聚集索引一般是表中的主键索引，如果表中没有显示指定主键，则会选择表中的第一个不允许为 NULL 的唯一索引，如果还是没有的话，就采用 Innodb 存储引擎为每行数据内置的6字节 ROWID 作为聚集索引。&lt;/p&gt;
+
+&lt;p&gt;每张表只有一个聚集索引，因为聚集索引在精确查找和范围查找方面良好的性能表现（相比于普通索引和全表扫描），聚集索引就显得弥足珍贵，聚集索引选择还是要慎重的（一般不会让没有语义的自增id充当聚集索引）。&lt;/p&gt;
+
+&lt;p&gt;从宏观上分析下聚集索引和普通索引的性能差异，还是针对上述student表：&lt;/p&gt;
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;student&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;20000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;student&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Alie'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'John'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;第一条SQL语句根据id进行范围查询，因为(5000, 20000)范围内的记录在磁盘上按顺序存储，顺序读取磁盘很快就能读到这批数据。&lt;/p&gt;
+
+&lt;p&gt;第二条SQL语句查询（’Alie’, ‘John’）范围内的记录，主键id分布可能是离散的1，100，20001，5000…..；增加了随机读取数据页几率；所以普通索引的范围查询效率被聚集索引甩开几条街都不止；非聚集索引的精确查询效率还是可以的，比聚集索引查询只增加了一次IO开销。&lt;/p&gt;
+
+&lt;h2 id=&quot;本文中提到的索引都是以b-tree组织的&quot;&gt;本文中提到的索引都是以B+ tree组织的&lt;/h2&gt;</content><author><name>Lewin</name></author><category term="MySQL" /><category term="索引" /><category term="聚集索引" /><category term="非聚集索引" /><summary type="html">聚集索引 聚集索引是指数据库表行中数据的物理顺序与键值的逻辑（索引）顺序相同。一个表只能有一个聚集索引，因为一个表的物理顺序只有一种情况，所以，对应的聚集索引只能有一个。如果某索引不是聚集索引，则表中的行物理顺序与索引顺序不匹配，与非聚集索引相比，聚集索引有着更快的检索速度。</summary></entry><entry><title type="html">Prometheus 监控系统</title><link href="https://lewinz.org/2021/05/30/prometheus-info/" rel="alternate" type="text/html" title="Prometheus 监控系统" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/prometheus-info</id><content type="html" xml:base="https://lewinz.org/2021/05/30/prometheus-info/">&lt;h2 id=&quot;普罗米修斯prometheus&quot;&gt;普罗米修斯(Prometheus)&lt;/h2&gt;
 &lt;p&gt;普罗米修斯(Prometheus)是一个SoundCloud公司开源的监控系统。当年，由于SoundCloud公司生产了太多的服务，传统的监控已经无法满足监控需求，于是他们在2012年决定着手开发新的监控系统，即普罗米修斯。&lt;/p&gt;
 
 &lt;p&gt;普罗米修斯（下称普罗）的作者 Matt T.Proud 在2012年加入SoundCloud公司，他从google的监控系统Borgmon中获得灵感，与另一名工程师Julius Volz合作开发了开源的普罗，后来其他开发人员陆续加入到该项目，最终于2015年正式发布。&lt;/p&gt;
@@ -1156,38 +1199,4 @@ slice，string&lt;/li&gt;
 &lt;p&gt;这种方式下，虚拟机的网卡连接到宿主的 VMnet1 上，但系统并不为虚拟机提供任何路由服务，因此虚拟机只能和宿主机进行通信，而不能连接到实际网络上。&lt;/p&gt;
 
 &lt;h2 id=&quot;借鉴博客&quot;&gt;借鉴博客&lt;/h2&gt;
-&lt;p&gt;[https://blog.csdn.net/u010603798/article/details/97275333]&lt;/p&gt;</content><author><name>Lewin</name></author><category term="虚拟机网络" /><category term="连接" /><summary type="html">虚拟机网络</summary></entry><entry><title type="html">openstack 快照与镜像的区别</title><link href="https://lewinz.org/2021/05/17/openstack-snapshoot-image/" rel="alternate" type="text/html" title="openstack 快照与镜像的区别" /><published>2021-05-17T00:00:00+08:00</published><updated>2021-05-17T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/17/openstack-snapshoot-image</id><content type="html" xml:base="https://lewinz.org/2021/05/17/openstack-snapshoot-image/">&lt;p&gt;OpenStack的快照对于虚拟机来说，就是镜像。因为Openstack是采用创建镜像的方式创建快照，而不是通过正统的virsh和其他快照方式创建快照函数。虚拟机快照做完后以镜像形式存在于glance（镜像组件）中。&lt;/p&gt;
-
-&lt;h2 id=&quot;libvirt-主流快照实现&quot;&gt;libvirt 主流快照实现&lt;/h2&gt;
-&lt;p&gt;采用virDomainSnapshotCreateXML()函数(CLI为virsh snapshot-create)。新建的快照与虚拟机有关联：若为内置快照，快照信息和虚拟机存在同一个qcow2镜像中；若为外置快照，新建一个qcow2文件，原虚拟机的disk将变为一个read only的模板镜像，新qcow2镜像仅记录与2.模板镜像的差异数据。这种快照包含快照链信息，可保留disk和ram信息，可回滚至快照点。&lt;/p&gt;
-
-&lt;h2 id=&quot;openstack快照实现&quot;&gt;openstack快照实现&lt;/h2&gt;
-&lt;p&gt;openstack并未采用virDomainSnapshotCreateXML()来实现快照，而是单纯的对虚拟机镜像做转换和拷贝，生成一个与虚拟机无关联的镜像，最后上传至glance中。这种快照不包含快照链信息，只保留disk信息，无法回滚至快照点，只能采用该快照镜像创建一个新的虚拟机。&lt;/p&gt;
-
-&lt;h2 id=&quot;限制与缺点&quot;&gt;限制与缺点&lt;/h2&gt;
-
-&lt;p&gt;没有快照链信息，不支持revert恢复虚拟机到某一个快照点&lt;/p&gt;
-
-&lt;p&gt;只对系统盘进行快照&lt;/p&gt;
-
-&lt;p&gt;不支持内存快照，不支持同时对虚拟机和磁盘做快照&lt;/p&gt;
-
-&lt;p&gt;需要用户进行一致性操作&lt;/p&gt;
-
-&lt;p&gt;不支持含元数据导出&lt;/p&gt;
-
-&lt;p&gt;不支持含元数据导入&lt;/p&gt;
-
-&lt;p&gt;只支持虚拟机全量数据快照（与快照的实现方式有关，因为是通过image进行保存的）&lt;/p&gt;
-
-&lt;p&gt;过程较长（需要先通过存储快照，然后抽取并上传至glance)&lt;/p&gt;
-
-&lt;p&gt;快照以Image方式保存，而非以cinder卷方式保存，无法充分利用存储本身能力加快快照的创建和使用&lt;/p&gt;
-
-&lt;p&gt;当前限制openstack的虚拟机快照只快照root盘，不快照内存/CPU状态以及挂载磁盘。挂载磁盘需要事先卸载磁盘(数据盘），然后进行快照，然后再挂载磁盘&lt;/p&gt;
-
-&lt;p&gt;没有快照链信息&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;参考博客&lt;/strong&gt;：&lt;br /&gt;
-&lt;a href=&quot;https://blog.csdn.net/zhongbeida_xue/article/details/82257461&quot;&gt;https://blog.csdn.net/zhongbeida_xue/article/details/82257461&lt;/a&gt;
-&lt;a href=&quot;https://blog.csdn.net/liukuan73/article/details/46457439&quot;&gt;https://blog.csdn.net/liukuan73/article/details/46457439&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="快照" /><category term="镜像" /><summary type="html">OpenStack的快照对于虚拟机来说，就是镜像。因为Openstack是采用创建镜像的方式创建快照，而不是通过正统的virsh和其他快照方式创建快照函数。虚拟机快照做完后以镜像形式存在于glance（镜像组件）中。</summary></entry></feed>
+&lt;p&gt;[https://blog.csdn.net/u010603798/article/details/97275333]&lt;/p&gt;</content><author><name>Lewin</name></author><category term="虚拟机网络" /><category term="连接" /><summary type="html">虚拟机网络</summary></entry></feed>
