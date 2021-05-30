@@ -67,14 +67,3 @@ LGPL 允许商业软件通过类库引用（link）的方式使用 LGPL 类库�
 
 ## 如何选择开源协议
 ![open_source_licenses](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/open_source_licenses.jpeg)
-
-
-
-
-
-
-
-
-
-
-
