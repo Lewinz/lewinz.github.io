@@ -219,6 +219,14 @@
     } ,
   
     {
+      "title"    : "开源协议",
+      "category" : "开源协议",
+      
+      "url"      : "https://lewinz.org/2021/05/30/open-source-licenses/",
+      "keywords" : "开源协议"
+    } ,
+  
+    {
       "title"    : "Prometheus 监控系统",
       "category" : "Prometheus",
       

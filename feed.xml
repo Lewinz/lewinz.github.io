@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-05-30T18:16:01+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">MySQL聚集索引和非聚集索引</title><link href="https://lewinz.org/2021/05/30/mysql-clustered-index/" rel="alternate" type="text/html" title="MySQL聚集索引和非聚集索引" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/mysql-clustered-index</id><content type="html" xml:base="https://lewinz.org/2021/05/30/mysql-clustered-index/">&lt;h2 id=&quot;聚集索引&quot;&gt;聚集索引&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-05-30T18:37:59+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">MySQL聚集索引和非聚集索引</title><link href="https://lewinz.org/2021/05/30/mysql-clustered-index/" rel="alternate" type="text/html" title="MySQL聚集索引和非聚集索引" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/mysql-clustered-index</id><content type="html" xml:base="https://lewinz.org/2021/05/30/mysql-clustered-index/">&lt;h2 id=&quot;聚集索引&quot;&gt;聚集索引&lt;/h2&gt;
 &lt;p&gt;聚集索引是指数据库表行中数据的物理顺序与键值的逻辑（索引）顺序相同。一个表只能有一个聚集索引，因为一个表的物理顺序只有一种情况，所以，对应的聚集索引只能有一个。如果某索引不是聚集索引，则表中的行物理顺序与索引顺序不匹配，与非聚集索引相比，聚集索引有着更快的检索速度。&lt;/p&gt;
 
 &lt;h2 id=&quot;mysql-聚集索引和非聚集索引&quot;&gt;MySQL 聚集索引和非聚集索引&lt;/h2&gt;
@@ -41,7 +41,64 @@
 
 &lt;p&gt;第二条SQL语句查询（’Alie’, ‘John’）范围内的记录，主键id分布可能是离散的1，100，20001，5000…..；增加了随机读取数据页几率；所以普通索引的范围查询效率被聚集索引甩开几条街都不止；非聚集索引的精确查询效率还是可以的，比聚集索引查询只增加了一次IO开销。&lt;/p&gt;
 
-&lt;h2 id=&quot;本文中提到的索引都是以b-tree组织的&quot;&gt;本文中提到的索引都是以B+ tree组织的&lt;/h2&gt;</content><author><name>Lewin</name></author><category term="MySQL" /><category term="索引" /><category term="聚集索引" /><category term="非聚集索引" /><summary type="html">聚集索引 聚集索引是指数据库表行中数据的物理顺序与键值的逻辑（索引）顺序相同。一个表只能有一个聚集索引，因为一个表的物理顺序只有一种情况，所以，对应的聚集索引只能有一个。如果某索引不是聚集索引，则表中的行物理顺序与索引顺序不匹配，与非聚集索引相比，聚集索引有着更快的检索速度。</summary></entry><entry><title type="html">Prometheus 监控系统</title><link href="https://lewinz.org/2021/05/30/prometheus-info/" rel="alternate" type="text/html" title="Prometheus 监控系统" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/prometheus-info</id><content type="html" xml:base="https://lewinz.org/2021/05/30/prometheus-info/">&lt;h2 id=&quot;普罗米修斯prometheus&quot;&gt;普罗米修斯(Prometheus)&lt;/h2&gt;
+&lt;h2 id=&quot;本文中提到的索引都是以b-tree组织的&quot;&gt;本文中提到的索引都是以B+ tree组织的&lt;/h2&gt;</content><author><name>Lewin</name></author><category term="MySQL" /><category term="索引" /><category term="聚集索引" /><category term="非聚集索引" /><summary type="html">聚集索引 聚集索引是指数据库表行中数据的物理顺序与键值的逻辑（索引）顺序相同。一个表只能有一个聚集索引，因为一个表的物理顺序只有一种情况，所以，对应的聚集索引只能有一个。如果某索引不是聚集索引，则表中的行物理顺序与索引顺序不匹配，与非聚集索引相比，聚集索引有着更快的检索速度。</summary></entry><entry><title type="html">开源协议</title><link href="https://lewinz.org/2021/05/30/open-source-licenses/" rel="alternate" type="text/html" title="开源协议" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/open-source-licenses</id><content type="html" xml:base="https://lewinz.org/2021/05/30/open-source-licenses/">&lt;h2 id=&quot;开源协议是什么&quot;&gt;开源协议是什么&lt;/h2&gt;
+&lt;p&gt;开源软件在追求“自由”的同时，不能牺牲程序员的利益，否则将会影响程序员的创造激情，因此世界上现在有 60 多种被开源促进组织（Open Source Initiative）认可的开源许可协议来保证开源工作者的权益。&lt;/p&gt;
+
+&lt;p&gt;开源协议规定了你在使用开源软件时的权利和责任，也就是规定了你可以做什么，不可以做什么。&lt;/p&gt;
+
+&lt;p&gt;开源协议虽然不一定具备法律效力，但是当涉及软件版权纠纷时，开源协议也是非常重要的证据之一。&lt;/p&gt;
+
+&lt;p&gt;对于准备编写一款开源软件的开发人员，也非常建议先了解一下当前最热门的开源许可协议，选择一个合适的开源许可协议来最大限度保护自己的软件权益。&lt;/p&gt;
+
+&lt;h3 id=&quot;gnu-gplgnu-general-public-licensegnu通用公共许可证&quot;&gt;GNU GPL（GNU General Public License，GNU通用公共许可证）&lt;/h3&gt;
+
+&lt;p&gt;只要软件中包含了遵循 GPL 协议的产品或代码，该软件就必须也遵循 GPL 许可协议，也就是必须开源免费，不能闭源收费，因此这个协议并不适合商用软件。&lt;/p&gt;
+
+&lt;p&gt;遵循 GPL 协议的开源软件数量极其庞大，包括 Linux 系统在内的大多数的开源软件都是基于这个协议的。&lt;/p&gt;
+
+&lt;h4 id=&quot;特点&quot;&gt;特点&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;复制自由	允许把软件复制到任何人的电脑中，并且不限制复制的数量。&lt;/li&gt;
+  &lt;li&gt;传播自由	允许软件以各种形式进行传播。&lt;/li&gt;
+  &lt;li&gt;收费传播	允许在各种媒介上出售该软件，但必须提前让买家知道这个软件是可以免费获得的；因此，一般来讲，开源软件都是通过为用户提供有偿服务的形式来盈利的。&lt;/li&gt;
+  &lt;li&gt;修改自由	允许开发人员增加或删除软件的功能，但软件修改后必须依然基于GPL许可协议授权。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;bsdberkeley-software-distribution伯克利软件发布版协议&quot;&gt;BSD（Berkeley Software Distribution，伯克利软件发布版）协议&lt;/h3&gt;
+&lt;p&gt;BSD 协议基本上允许用户“为所欲为”，用户可以使用、修改和重新发布遵循该许可的软件，并且可以将软件作为商业软件发布和销售，前提是需要满足下面三个条件：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;如果再发布的软件中包含源代码，则源代码必须继续遵循 BSD 许可协议。&lt;/li&gt;
+  &lt;li&gt;如果再发布的软件中只有二进制程序，则需要在相关文档或版权文件中声明原始代码遵循了 BSD 协议。&lt;/li&gt;
+  &lt;li&gt;不允许用原始软件的名字、作者名字或机构名称进行市场推广。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;BSD 对商业比较友好，很多公司在选用开源产品的时候都首选 BSD 协议，因为可以完全控制这些第三方的代码，甚至在必要的时候可以修改或者二次开发。&lt;/p&gt;
+
+&lt;h3 id=&quot;apache-许可证版本apache-license-version协议&quot;&gt;Apache 许可证版本（Apache License Version）协议&lt;/h3&gt;
+&lt;p&gt;Apache 和 BSD 类似，都适用于商业软件。Apache 协议在为开发人员提供版权及专利许可的同时，允许用户拥有修改代码及再发布的自由。&lt;/p&gt;
+
+&lt;p&gt;现在热门的 &lt;strong&gt;Hadoop&lt;/strong&gt; 、&lt;strong&gt;Apache HTTP Server&lt;/strong&gt;、&lt;strong&gt;MongoDB&lt;/strong&gt; 等项目都是基于该许可协议研发的，程序开发人员在开发遵循该协议的软件时，要严格遵守下面的四个条件：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;该软件及其衍生品必须继续使用 Apache 许可协议。&lt;/li&gt;
+  &lt;li&gt;如果修改了程序源代码，需要在文档中进行声明。&lt;/li&gt;
+  &lt;li&gt;若软件是基于他人的源代码编写而成的，则需要保留原始代码的协议、商标、专利声明及其他原作者声明的内容信息。&lt;/li&gt;
+  &lt;li&gt;如果再发布的软件中有声明文件，则需在此文件中标注 Apache 许可协议及其他许可协议。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;mitmassachusetts-institute-of-technology协议&quot;&gt;MIT（Massachusetts Institute of Technology）协议&lt;/h3&gt;
+&lt;p&gt;目前限制最少的开源许可协议之一（比 BSD 和 Apache 的限制都少），只要程序的开发者在修改后的源代码中保留原作者的许可信息即可，因此普遍被商业软件所使用。&lt;/p&gt;
+
+&lt;p&gt;使用 MIT 协议的软件有 PuTTY、X Window System、Ruby on Rails、Lua 5.0 onwards、Mono 等。&lt;/p&gt;
+
+&lt;h3 id=&quot;gun-lgplgnu-lesser-general-public-licensegnu-宽通用公共许可证&quot;&gt;GUN LGPL（GNU Lesser General Public License，GNU 宽通用公共许可证）&lt;/h3&gt;
+&lt;p&gt;LGPL 是 GPL 的一个衍生版本，也被称为 GPL V2，该协议主要是为类库设计的开源协议。&lt;/p&gt;
+
+&lt;p&gt;LGPL 允许商业软件通过类库引用（link）的方式使用 LGPL 类库，而不需要开源商业软件的代码。这使得采用 LGPL 协议的开源代码可以被商业软件作为类库引用并发布和销售。&lt;/p&gt;
+
+&lt;p&gt;但是如果修改 LGPL 协议的代码或者衍生品，则所有修改的代码，涉及修改部分的额外代码和衍生的代码都必须采用 LGPL 协议。因此LGPL协议的开源代码很适合作为第三方类库被商业软件引用，但不适合希望以 LGPL 协议代码为基础，通过修改和衍生的方式做二次开发的商业软件采用。&lt;/p&gt;
+
+&lt;h2 id=&quot;如何选择开源协议&quot;&gt;如何选择开源协议&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/open_source_licenses.jpeg&quot; alt=&quot;open_source_licenses&quot; /&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="开源协议" /><summary type="html">开源协议是什么 开源软件在追求“自由”的同时，不能牺牲程序员的利益，否则将会影响程序员的创造激情，因此世界上现在有 60 多种被开源促进组织（Open Source Initiative）认可的开源许可协议来保证开源工作者的权益。</summary></entry><entry><title type="html">Prometheus 监控系统</title><link href="https://lewinz.org/2021/05/30/prometheus-info/" rel="alternate" type="text/html" title="Prometheus 监控系统" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/prometheus-info</id><content type="html" xml:base="https://lewinz.org/2021/05/30/prometheus-info/">&lt;h2 id=&quot;普罗米修斯prometheus&quot;&gt;普罗米修斯(Prometheus)&lt;/h2&gt;
 &lt;p&gt;普罗米修斯(Prometheus)是一个SoundCloud公司开源的监控系统。当年，由于SoundCloud公司生产了太多的服务，传统的监控已经无法满足监控需求，于是他们在2012年决定着手开发新的监控系统，即普罗米修斯。&lt;/p&gt;
 
 &lt;p&gt;普罗米修斯（下称普罗）的作者 Matt T.Proud 在2012年加入SoundCloud公司，他从google的监控系统Borgmon中获得灵感，与另一名工程师Julius Volz合作开发了开源的普罗，后来其他开发人员陆续加入到该项目，最终于2015年正式发布。&lt;/p&gt;
@@ -1131,72 +1188,4 @@ slice，string&lt;/li&gt;
 &lt;p&gt;虽然键name对应的值123是int类型，但是在WeakDecode中会将其转换为string类型以匹配Person.Name字段的类型。同样的，age的值”18”是string类型，在WeakDecode中会将其转换为int类型以匹配Person.Age字段的类型。 需要注意一点，如果类型转换失败了，WeakDecode同样会返回错误。例如将上例中的age设置为”bad value”，它就不能转为int类型，故而返回错误。&lt;/p&gt;
 
 &lt;p&gt;参考博客：&lt;br /&gt;
-&lt;a href=&quot;https://zhuanlan.zhihu.com/p/165419292&quot;&gt;https://zhuanlan.zhihu.com/p/165419292&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golan" /><category term="tag" /><category term="汇总" /><summary type="html">Tag 在 Go 的 struct 定义中，有时需要对某个字段添加额外的元信息，这就需要用到 field tag，即成员标签变量。</summary></entry><entry><title type="html">虚拟机网络（四种网络连接方式）</title><link href="https://lewinz.org/2021/05/17/network-link-mode/" rel="alternate" type="text/html" title="虚拟机网络（四种网络连接方式）" /><published>2021-05-17T00:00:00+08:00</published><updated>2021-05-17T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/17/network-link-mode</id><content type="html" xml:base="https://lewinz.org/2021/05/17/network-link-mode/">&lt;h2 id=&quot;虚拟机网络&quot;&gt;虚拟机网络&lt;/h2&gt;
-
-&lt;p&gt;VirtualBox 中有4中网络连接方式：&lt;strong&gt;NAT&lt;/strong&gt;、&lt;strong&gt;Bridged Adapter&lt;/strong&gt;、&lt;strong&gt;Host-only Adapter&lt;/strong&gt;、&lt;strong&gt;Internal&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;VMWare 比 VirtualBox 少一种 &lt;strong&gt;Internal&lt;/strong&gt; ，其他三种概念一致。&lt;/p&gt;
-
-&lt;h3 id=&quot;nat&quot;&gt;NAT&lt;/h3&gt;
-
-&lt;p&gt;NAT：Network Address Translation，网络地址转换&lt;/p&gt;
-
-&lt;p&gt;NAT模式是最简单的实现虚拟机上网的方式，你可以这样理解：&lt;/p&gt;
-
-&lt;p&gt;Guest访问网络的所有数据都是由主机提供的，Guest并不真实存在于网络中，主机与网络中的任何机器都不能查看和访问到Guest的存在。&lt;/p&gt;
-
-&lt;p&gt;Guest可以访问主机能访问到的所有网络，但是对于主机以及主机网络上的其他机器，Guest又是不可见的，甚至主机也访问不到Guest。&lt;/p&gt;
-
-&lt;p&gt;虚拟机与主机的关系：只能单向访问，虚拟机可以通过网络访问到主机，主机无法通过网络访问到虚拟机。&lt;/p&gt;
-
-&lt;p&gt;虚拟机与网络中其他主机的关系：只能单向访问，虚拟机可以访问到网络中其他主机，其他主机不能通过网络访问到虚拟机。&lt;/p&gt;
-
-&lt;p&gt;虚拟机与虚拟机的关系：相互不能访问，虚拟机与虚拟机各自完全独立，相互间无法通过网络访问彼此。&lt;/p&gt;
-
-&lt;h4 id=&quot;detail&quot;&gt;Detail&lt;/h4&gt;
-&lt;p&gt;这种方式下，虚拟机的网卡连接到宿主的 VMnet8 上。此时系统的 VMWare NAT Service 服务就充当了路由器的作用，负责将虚拟机发到 VMnet8 的包进行地址转换之后发到实际的网络上，再将实际网络上返回的包进行地址转换后通过 VMnet8 发送给虚拟机。VMWare DHCP Service 负责为虚拟机提供 DHCP 服务。&lt;/p&gt;
-
-&lt;h3 id=&quot;bridged-adapter网桥模式&quot;&gt;Bridged Adapter（网桥模式）&lt;/h3&gt;
-
-&lt;p&gt;它是通过主机网卡，架设了一条桥，直接连入到网络中了。因此，它使得虚拟机能被分配到一个网络中独立的IP，所有网络功能完全和在网络中的真实机器一样。&lt;/p&gt;
-
-&lt;p&gt;网桥模式下的虚拟机，你把它认为是真实计算机就行了。&lt;/p&gt;
-
-&lt;p&gt;虚拟机与主机的关系：可以相互访问，因为虚拟机在真实网络段中有独立IP，主机与虚拟机处于同一网络段中，彼此可以通过各自IP相互访问。&lt;/p&gt;
-
-&lt;p&gt;虚拟机于网络中其他主机的关系：可以相互访问，同样因为虚拟机在真实网络段中有独立IP，虚拟机与所有网络其他主机处于同一网络段中，彼此可以通过各自IP相互访问。&lt;/p&gt;
-
-&lt;p&gt;虚拟机与虚拟机的关系：可以相互访问，原因同上。&lt;/p&gt;
-
-&lt;h4 id=&quot;detail-1&quot;&gt;Detail&lt;/h4&gt;
-&lt;p&gt;这种方式下，虚拟机就像一台真正的计算机一样，直接连接到实际的网络上，与宿主机没有任何联系。&lt;/p&gt;
-
-&lt;h3 id=&quot;internal内网模式&quot;&gt;Internal（内网模式）&lt;/h3&gt;
-
-&lt;p&gt;内网模式，顾名思义就是内部网络模式：&lt;/p&gt;
-
-&lt;p&gt;虚拟机与外网完全断开，只实现虚拟机于虚拟机之间的内部网络模式。&lt;/p&gt;
-
-&lt;p&gt;虚拟机与主机的关系：不能相互访问，彼此不属于同一个网络，无法相互访问。&lt;/p&gt;
-
-&lt;p&gt;虚拟机与网络中其他主机的关系：不能相互访问，理由同上。&lt;/p&gt;
-
-&lt;p&gt;虚拟机与虚拟机的关系：可以相互访问，前提是在设置网络时，两台虚拟机设置同一网络名称。如上配置图中，名称为intnet。&lt;/p&gt;
-
-&lt;h3 id=&quot;host-only-adapter主机模式&quot;&gt;Host-only Adapter（主机模式）&lt;/h3&gt;
-
-&lt;p&gt;主机模式，这是一种比较复杂的模式，需要有比较扎实的网络基础知识才能玩转。可以说前面几种模式所实现的功能，在这种模式下，通过虚拟机及网卡的设置都可以被实现。&lt;/p&gt;
-
-&lt;p&gt;我们可以理解为Guest在主机中模拟出一张专供虚拟机使用的网卡，所有虚拟机都是连接到该网卡上的，我们可以通过设置这张网卡来实现上网及其他很多功能，比如（网卡共享、网卡桥接等）。&lt;/p&gt;
-
-&lt;p&gt;虚拟机与主机的关系：默认不能相互访问，双方不属于同一IP段，host-only网卡默认IP段为192.168.56.X 子网掩码为255.255.255.0，后面的虚拟机被分配到的也都是这个网段。通过网卡共享、网卡桥接等，可以实现虚拟机于主机相互访问。&lt;/p&gt;
-
-&lt;p&gt;虚拟机与网络主机的关系：默认不能相互访问，原因同上，通过设置，可以实现相互访问。&lt;/p&gt;
-
-&lt;p&gt;虚拟机与虚拟机的关系：默认可以相互访问，都是同处于一个网段。&lt;/p&gt;
-
-&lt;h4 id=&quot;detail-2&quot;&gt;Detail&lt;/h4&gt;
-&lt;p&gt;这种方式下，虚拟机的网卡连接到宿主的 VMnet1 上，但系统并不为虚拟机提供任何路由服务，因此虚拟机只能和宿主机进行通信，而不能连接到实际网络上。&lt;/p&gt;
-
-&lt;h2 id=&quot;借鉴博客&quot;&gt;借鉴博客&lt;/h2&gt;
-&lt;p&gt;[https://blog.csdn.net/u010603798/article/details/97275333]&lt;/p&gt;</content><author><name>Lewin</name></author><category term="虚拟机网络" /><category term="连接" /><summary type="html">虚拟机网络</summary></entry></feed>
+&lt;a href=&quot;https://zhuanlan.zhihu.com/p/165419292&quot;&gt;https://zhuanlan.zhihu.com/p/165419292&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golan" /><category term="tag" /><category term="汇总" /><summary type="html">Tag 在 Go 的 struct 定义中，有时需要对某个字段添加额外的元信息，这就需要用到 field tag，即成员标签变量。</summary></entry></feed>
