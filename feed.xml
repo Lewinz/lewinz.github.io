@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-05-30T18:37:59+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">MySQL聚集索引和非聚集索引</title><link href="https://lewinz.org/2021/05/30/mysql-clustered-index/" rel="alternate" type="text/html" title="MySQL聚集索引和非聚集索引" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/mysql-clustered-index</id><content type="html" xml:base="https://lewinz.org/2021/05/30/mysql-clustered-index/">&lt;h2 id=&quot;聚集索引&quot;&gt;聚集索引&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-05-30T18:41:30+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">MySQL聚集索引和非聚集索引</title><link href="https://lewinz.org/2021/05/30/mysql-clustered-index/" rel="alternate" type="text/html" title="MySQL聚集索引和非聚集索引" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/mysql-clustered-index</id><content type="html" xml:base="https://lewinz.org/2021/05/30/mysql-clustered-index/">&lt;h2 id=&quot;聚集索引&quot;&gt;聚集索引&lt;/h2&gt;
 &lt;p&gt;聚集索引是指数据库表行中数据的物理顺序与键值的逻辑（索引）顺序相同。一个表只能有一个聚集索引，因为一个表的物理顺序只有一种情况，所以，对应的聚集索引只能有一个。如果某索引不是聚集索引，则表中的行物理顺序与索引顺序不匹配，与非聚集索引相比，聚集索引有着更快的检索速度。&lt;/p&gt;
 
 &lt;h2 id=&quot;mysql-聚集索引和非聚集索引&quot;&gt;MySQL 聚集索引和非聚集索引&lt;/h2&gt;
@@ -50,7 +50,8 @@
 
 &lt;p&gt;对于准备编写一款开源软件的开发人员，也非常建议先了解一下当前最热门的开源许可协议，选择一个合适的开源许可协议来最大限度保护自己的软件权益。&lt;/p&gt;
 
-&lt;h3 id=&quot;gnu-gplgnu-general-public-licensegnu通用公共许可证&quot;&gt;GNU GPL（GNU General Public License，GNU通用公共许可证）&lt;/h3&gt;
+&lt;h3 id=&quot;gnu-gpl&quot;&gt;GNU GPL&lt;/h3&gt;
+&lt;p&gt;GNU GPL（GNU General Public License，GNU通用公共许可证）&lt;/p&gt;
 
 &lt;p&gt;只要软件中包含了遵循 GPL 协议的产品或代码，该软件就必须也遵循 GPL 许可协议，也就是必须开源免费，不能闭源收费，因此这个协议并不适合商用软件。&lt;/p&gt;
 
@@ -64,7 +65,9 @@
   &lt;li&gt;修改自由	允许开发人员增加或删除软件的功能，但软件修改后必须依然基于GPL许可协议授权。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;bsdberkeley-software-distribution伯克利软件发布版协议&quot;&gt;BSD（Berkeley Software Distribution，伯克利软件发布版）协议&lt;/h3&gt;
+&lt;h3 id=&quot;bsd&quot;&gt;BSD&lt;/h3&gt;
+&lt;p&gt;BSD（Berkeley Software Distribution，伯克利软件发布版）协议&lt;/p&gt;
+
 &lt;p&gt;BSD 协议基本上允许用户“为所欲为”，用户可以使用、修改和重新发布遵循该许可的软件，并且可以将软件作为商业软件发布和销售，前提是需要满足下面三个条件：&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;如果再发布的软件中包含源代码，则源代码必须继续遵循 BSD 许可协议。&lt;/li&gt;
@@ -74,7 +77,9 @@
 
 &lt;p&gt;BSD 对商业比较友好，很多公司在选用开源产品的时候都首选 BSD 协议，因为可以完全控制这些第三方的代码，甚至在必要的时候可以修改或者二次开发。&lt;/p&gt;
 
-&lt;h3 id=&quot;apache-许可证版本apache-license-version协议&quot;&gt;Apache 许可证版本（Apache License Version）协议&lt;/h3&gt;
+&lt;h3 id=&quot;apache&quot;&gt;Apache&lt;/h3&gt;
+&lt;p&gt;Apache 许可证版本（Apache License Version）协议&lt;/p&gt;
+
 &lt;p&gt;Apache 和 BSD 类似，都适用于商业软件。Apache 协议在为开发人员提供版权及专利许可的同时，允许用户拥有修改代码及再发布的自由。&lt;/p&gt;
 
 &lt;p&gt;现在热门的 &lt;strong&gt;Hadoop&lt;/strong&gt; 、&lt;strong&gt;Apache HTTP Server&lt;/strong&gt;、&lt;strong&gt;MongoDB&lt;/strong&gt; 等项目都是基于该许可协议研发的，程序开发人员在开发遵循该协议的软件时，要严格遵守下面的四个条件：&lt;/p&gt;
@@ -85,12 +90,16 @@
   &lt;li&gt;如果再发布的软件中有声明文件，则需在此文件中标注 Apache 许可协议及其他许可协议。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;mitmassachusetts-institute-of-technology协议&quot;&gt;MIT（Massachusetts Institute of Technology）协议&lt;/h3&gt;
+&lt;h3 id=&quot;mit&quot;&gt;MIT&lt;/h3&gt;
+&lt;p&gt;MIT（Massachusetts Institute of Technology）协议&lt;/p&gt;
+
 &lt;p&gt;目前限制最少的开源许可协议之一（比 BSD 和 Apache 的限制都少），只要程序的开发者在修改后的源代码中保留原作者的许可信息即可，因此普遍被商业软件所使用。&lt;/p&gt;
 
 &lt;p&gt;使用 MIT 协议的软件有 PuTTY、X Window System、Ruby on Rails、Lua 5.0 onwards、Mono 等。&lt;/p&gt;
 
-&lt;h3 id=&quot;gun-lgplgnu-lesser-general-public-licensegnu-宽通用公共许可证&quot;&gt;GUN LGPL（GNU Lesser General Public License，GNU 宽通用公共许可证）&lt;/h3&gt;
+&lt;h3 id=&quot;gun-lgpl&quot;&gt;GUN LGPL&lt;/h3&gt;
+&lt;p&gt;GUN LGPL（GNU Lesser General Public License，GNU 宽通用公共许可证）&lt;/p&gt;
+
 &lt;p&gt;LGPL 是 GPL 的一个衍生版本，也被称为 GPL V2，该协议主要是为类库设计的开源协议。&lt;/p&gt;
 
 &lt;p&gt;LGPL 允许商业软件通过类库引用（link）的方式使用 LGPL 类库，而不需要开源商业软件的代码。这使得采用 LGPL 协议的开源代码可以被商业软件作为类库引用并发布和销售。&lt;/p&gt;
