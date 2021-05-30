@@ -283,6 +283,14 @@
     } ,
   
     {
+      "title"    : "Prometheus 监控系统搭建",
+      "category" : "Prometheus",
+      
+      "url"      : "https://lewinz.org/wiki/prometheus-construct/",
+      "keywords" : "Prometheus,监控,搭建"
+    } ,
+  
+    {
       "title"    : "Wiki Template",
       "category" : "cate1",
       
