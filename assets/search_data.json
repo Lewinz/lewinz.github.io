@@ -211,6 +211,14 @@
     } ,
   
     {
+      "title"    : "Prometheus 监控系统",
+      "category" : "Prometheus",
+      
+      "url"      : "https://lewinz.org/2021/05/30/prometheus-info/",
+      "keywords" : "Prometheus,监控"
+    } ,
+  
+    {
       "title"    : "gin/gorm 报错记录",
       "category" : "gin",
       

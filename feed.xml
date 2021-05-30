@@ -1,4 +1,122 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-05-28T18:33:33+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">块存储、文件存储、对象存储</title><link href="https://lewinz.org/2021/05/28/block-file-object-storage/" rel="alternate" type="text/html" title="块存储、文件存储、对象存储" /><published>2021-05-28T00:00:00+08:00</published><updated>2021-05-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/28/block-file-object-storage</id><content type="html" xml:base="https://lewinz.org/2021/05/28/block-file-object-storage/">&lt;h2 id=&quot;块存储&quot;&gt;块存储&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-05-30T14:22:09+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">Prometheus 监控系统</title><link href="https://lewinz.org/2021/05/30/prometheus-info/" rel="alternate" type="text/html" title="Prometheus 监控系统" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/prometheus-info</id><content type="html" xml:base="https://lewinz.org/2021/05/30/prometheus-info/">&lt;h2 id=&quot;普罗米修斯prometheus&quot;&gt;普罗米修斯(Prometheus)&lt;/h2&gt;
+&lt;p&gt;普罗米修斯(Prometheus)是一个SoundCloud公司开源的监控系统。当年，由于SoundCloud公司生产了太多的服务，传统的监控已经无法满足监控需求，于是他们在2012年决定着手开发新的监控系统，即普罗米修斯。&lt;/p&gt;
+
+&lt;p&gt;普罗米修斯（下称普罗）的作者 Matt T.Proud 在2012年加入SoundCloud公司，他从google的监控系统Borgmon中获得灵感，与另一名工程师Julius Volz合作开发了开源的普罗，后来其他开发人员陆续加入到该项目，最终于2015年正式发布。&lt;/p&gt;
+
+&lt;p&gt;普罗基于Go语言开发，其架构图如下：
+&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/prometheus.jpeg&quot; alt=&quot;image_prometheus&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;其中：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Prometheus Server: 用数据的采集和存储，PromQL查询，报警配置。&lt;/li&gt;
+  &lt;li&gt;Push gateway: 用于批量，短期的监控数据的汇报总节点。&lt;/li&gt;
+  &lt;li&gt;Exporters: 各种汇报数据的exporter，例如汇报机器数据的node_exporter，汇报MondogDB信息的 MongoDB_exporter 等等。&lt;/li&gt;
+  &lt;li&gt;Alertmanager: 用于高级通知管理。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;采集监控数据&quot;&gt;采集监控数据&lt;/h2&gt;
+&lt;p&gt;要采集目标（主机或服务）的监控数据，首先就要在被采集目标上安装采集组件，这种采集组件被称为 &lt;strong&gt;Exporter&lt;/strong&gt; 。&lt;a href=&quot;http://prometheus.io&quot;&gt;普罗米修斯&lt;/a&gt; 官网上有很多这种 exporter ，比如：&lt;/p&gt;
+
+&lt;p&gt;Consul exporter (official)&lt;br /&gt;
+Memcached exporter (official)&lt;br /&gt;
+MySQL server exporter (official)&lt;br /&gt;
+Node/system metrics exporter (official)&lt;br /&gt;
+HAProxy exporter (official)&lt;br /&gt;
+RabbitMQ exporter&lt;br /&gt;
+Grok exporter&lt;br /&gt;
+InfluxDB exporter (official)&lt;/p&gt;
+
+&lt;p&gt;这些exporter能为我们采集目标的监控数据，然后传输给普罗米修斯。这时候，exporter会暴露一个http接口，普罗米修斯通过HTTP协议使用Pull的方式周期性拉取相应的数据。&lt;/p&gt;
+
+&lt;p&gt;不过，普罗也提供了Push模式来进行数据传输，通过增加Push Gateway这个中间商实现，你可以将数据推送到Push Gateway，普罗再通过Pull的方式从Push Gateway获取数据。&lt;/p&gt;
+
+&lt;p&gt;这就是为什么你从架构图里能看到两个 Pull metrics 的原因，一个是采集器直接被Server拉取数据(pull)；另一个是采集器主动Push数据到Push Gateway，Server再对Push Gateway主动拉取数据(pull)。&lt;/p&gt;
+
+&lt;h3 id=&quot;采集数据的主要流程&quot;&gt;采集数据的主要流程&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Prometheus server 定期从静态配置的主机或服务发现的 targets 拉取数据（zookeeper，consul，DNS SRV Lookup等方式）&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;当新拉取的数据大于配置内存缓存区的时候，Prometheus会将数据持久化到磁盘，也可以远程持久化到云端。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Prometheus通过PromQL、API、Console和其他可视化组件如Grafana、Promdash展示数据。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Prometheus 可以配置rules，然后定时查询数据，当条件触发的时候，会将告警推送到配置的Alertmanager。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Alertmanager收到告警的时候，会根据配置，聚合，去重，降噪，最后发出警告。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;采集的数据结构与指标类型&quot;&gt;采集的数据结构与指标类型&lt;/h3&gt;
+&lt;h4 id=&quot;数据结构&quot;&gt;数据结构&lt;/h4&gt;
+&lt;p&gt;了解普罗米修斯的数据结构对于了解整个普罗生态非常重要。普罗采用键值对作为其基本的数据结构：
+&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/prometheus_matadata.jpeg&quot; alt=&quot;image_prometheus_matadata&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Key是指标名字，Value是该指标的值，此外Metadata(元信息)也非常重要，也可称之为labels(标签信息)。这些标签信息指定了当前这个值属于哪个云区域下的哪台机器，如果没有labels，数据有可能会被丢失。&lt;/p&gt;
+
+&lt;h4 id=&quot;指标类型&quot;&gt;指标类型&lt;/h4&gt;
+&lt;p&gt;普罗米修斯的监控指标有4种基本类型：&lt;/p&gt;
+
+&lt;h5 id=&quot;counter计数器&quot;&gt;Counter(计数器)&lt;/h5&gt;
+&lt;p&gt;计数器是我们最简单的指标类型。比如你想统计某个网站的HTTP错误总数，这时候就用计数器。&lt;/p&gt;
+
+&lt;p&gt;计数器的值只能增加或重置为0，因此特别适合计算某个时段上某个时间的发生次数，即指标随时间演变发生的变化。&lt;/p&gt;
+
+&lt;h5 id=&quot;gauges&quot;&gt;Gauges&lt;/h5&gt;
+
+&lt;p&gt;Gauges可以用于处理随时间增加或减少的指标，比如内存变化、温度变化。&lt;/p&gt;
+
+&lt;p&gt;这可能是最常见的指标类型，不过它也有一定&lt;strong&gt;缺点&lt;/strong&gt;：如果系统每5秒发送一次指标，普罗服务每15秒抓取一次数据，那么这期间可能会丢失一些指标，如果你基于这些数据做汇总分析计算，则结果的准确性会有所下滑。&lt;/p&gt;
+
+&lt;h5 id=&quot;histogram直方图&quot;&gt;Histogram(直方图)&lt;/h5&gt;
+
+&lt;p&gt;直方图是一种更复杂的度量标准类型。它为我们的指标提供了额外信息，例如观察值的总和及其数量，常用于跟踪事件发生的规模。&lt;/p&gt;
+
+&lt;p&gt;比如，为了监控性能指标，我们希望在有20%的服务器请求响应时间超过300毫秒时发送告警。对于涉及比例的指标就可以考虑使用直方图。&lt;/p&gt;
+
+&lt;h5 id=&quot;summary摘要&quot;&gt;Summary(摘要)&lt;/h5&gt;
+
+&lt;p&gt;摘要更高级一些，是对直方图的扩展。除了提供观察的总和和计数之外，它们还提供滑动窗口上的分位数度量。分位数是将概率密度划分为相等概率范围的方法。&lt;/p&gt;
+
+&lt;p&gt;对比直方图：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;直方图随时间汇总值，给出总和和计数函数，使得易于查看给定指标的变化趋势。&lt;/li&gt;
+  &lt;li&gt;而摘要则给出了滑动窗口上的分位数（即随时间不断变化）。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;实例概念&quot;&gt;实例概念&lt;/h3&gt;
+
+&lt;p&gt;随着分布式架构的不断发展和云解决方案的普及，现在的架构已经变得越来越复杂了。&lt;/p&gt;
+
+&lt;p&gt;分布式的服务器复制和分发成了日常架构的必备组件。我们举一个经典的Web架构，该架构由3个后端Web服务器组成。在该例子中，我们要监视Web服务器返回的HTTP错误的数量。&lt;/p&gt;
+
+&lt;p&gt;使用普罗米修斯语言，单个Web服务器单元称为实例（主机实例）。该任务是计算所有实例的HTTP错误数量。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/prometheus_instance.jpeg&quot; alt=&quot;image_prometheus_instance&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;事实上，这甚至可以说是最简单的架构了，再复杂一点，实例不仅能是主机实例，还能是服务实例，因此你需要增加一个instance_type的标签标记主机或服务。&lt;/p&gt;
+
+&lt;p&gt;再再复杂一点，同样的IP，可能存在于不同云区域下，这属于不同的机器，因此还需要一个cloud标签，最终该数据结构可能会变为：&lt;/p&gt;
+
+&lt;p&gt;cpu_usage {job=”1”, instance=”128.0.0.1”, cloud=”0”, instance_type=”0”}&lt;/p&gt;
+
+&lt;h3 id=&quot;数据可视化&quot;&gt;数据可视化&lt;/h3&gt;
+
+&lt;p&gt;如果使用过基于InfluxDB的数据库，你可能会熟悉InfluxQL。普罗米修斯也内置了自己的SQL查询语言用于查询和检索数据，这个内置的语言就是PromQL。&lt;/p&gt;
+
+&lt;p&gt;我们前面说过，普罗米修斯的数据是用键值对表示的。PromQL也用相同的语法查询和返回结果集。&lt;/p&gt;
+
+&lt;p&gt;PromQL会处理两种向量：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;即时向量：表示当前时间，某个指标的数据向量。&lt;/li&gt;
+  &lt;li&gt;时间范围向量：表示过去某时间范围内，某个指标的数据向量。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="Prometheus" /><category term="监控" /><summary type="html">普罗米修斯(Prometheus) 普罗米修斯(Prometheus)是一个SoundCloud公司开源的监控系统。当年，由于SoundCloud公司生产了太多的服务，传统的监控已经无法满足监控需求，于是他们在2012年决定着手开发新的监控系统，即普罗米修斯。</summary></entry><entry><title type="html">块存储、文件存储、对象存储</title><link href="https://lewinz.org/2021/05/28/block-file-object-storage/" rel="alternate" type="text/html" title="块存储、文件存储、对象存储" /><published>2021-05-28T00:00:00+08:00</published><updated>2021-05-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/28/block-file-object-storage</id><content type="html" xml:base="https://lewinz.org/2021/05/28/block-file-object-storage/">&lt;h2 id=&quot;块存储&quot;&gt;块存储&lt;/h2&gt;
 
 &lt;p&gt;&lt;strong&gt;典型设备：磁盘阵列、硬盘&lt;/strong&gt;&lt;/p&gt;
 
@@ -1072,73 +1190,4 @@ slice，string&lt;/li&gt;
 
 &lt;p&gt;&lt;strong&gt;参考博客&lt;/strong&gt;：&lt;br /&gt;
 &lt;a href=&quot;https://blog.csdn.net/zhongbeida_xue/article/details/82257461&quot;&gt;https://blog.csdn.net/zhongbeida_xue/article/details/82257461&lt;/a&gt;
-&lt;a href=&quot;https://blog.csdn.net/liukuan73/article/details/46457439&quot;&gt;https://blog.csdn.net/liukuan73/article/details/46457439&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="快照" /><category term="镜像" /><summary type="html">OpenStack的快照对于虚拟机来说，就是镜像。因为Openstack是采用创建镜像的方式创建快照，而不是通过正统的virsh和其他快照方式创建快照函数。虚拟机快照做完后以镜像形式存在于glance（镜像组件）中。</summary></entry><entry><title type="html">虚拟化技术KVM</title><link href="https://lewinz.org/2021/05/17/virtualization-kvm/" rel="alternate" type="text/html" title="虚拟化技术KVM" /><published>2021-05-17T00:00:00+08:00</published><updated>2021-05-17T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/17/virtualization-kvm</id><content type="html" xml:base="https://lewinz.org/2021/05/17/virtualization-kvm/">&lt;h2 id=&quot;虚拟化&quot;&gt;虚拟化&lt;/h2&gt;
-&lt;p&gt;在计算机技术中，虚拟化（技术）或虚拟技术（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源（CPU、内存、磁盘空间、网络适配器等），予以抽象、转换后呈现出来并可供分割、组合为一个或多个电脑配置环境。由此，打破实体结构间的不可切割的障碍，使用户可以比原本的配置更好的方式来应用这些电脑硬件资源。这些资源的新虚拟部分是不受现有资源的架设方式，地域或物理配置所限制。一般所指的虚拟化资源包括计算能力和资料存储。&lt;/p&gt;
-
-&lt;h2 id=&quot;历史&quot;&gt;历史&lt;/h2&gt;
-&lt;p&gt;虚拟化技术起源于20世纪60年代末，美国IBM公司当时开发了一套被称作虚拟机监视器（Virtual Machine Monitor）的软件，该软件作为计算机硬件层上面的一层软件抽象层，将计算机硬件虚拟分割成一个或多个虚拟机，并提供多用户对大型计算机的同时、交互访问。&lt;/p&gt;
-
-&lt;h2 id=&quot;分类&quot;&gt;分类&lt;/h2&gt;
-&lt;p&gt;系统、存储、网络、GPU、软件、硬件&lt;/p&gt;
-
-&lt;h2 id=&quot;关键字及扩展知识&quot;&gt;关键字及扩展知识&lt;/h2&gt;
-&lt;p&gt;虚拟化平台VMM（Virtual Machine Monitor）&lt;/p&gt;
-
-&lt;p&gt;运行客户机 Guest VM（客户机）&lt;/p&gt;
-
-&lt;p&gt;X86保护环：Ring0（内核、系统运行）、Ring1、Ring2、Ring3（各类应用程序）&lt;/p&gt;
-
-&lt;h2 id=&quot;虚拟化技术分类&quot;&gt;虚拟化技术分类&lt;/h2&gt;
-&lt;h3 id=&quot;纯软件仿真&quot;&gt;纯软件仿真&lt;/h3&gt;
-&lt;p&gt;通过模拟完整的硬件环境虚拟化来宾平台&lt;/p&gt;
-
-&lt;p&gt;产品：QEMU、Bochs、PearPC&lt;/p&gt;
-
-&lt;p&gt;缺点：效率低&lt;/p&gt;
-
-&lt;h3 id=&quot;虚拟化层翻译&quot;&gt;虚拟化层翻译&lt;/h3&gt;
-&lt;h4 id=&quot;全虚拟化无硬件支持模式&quot;&gt;全虚拟化（无硬件支持模式）&lt;/h4&gt;
-&lt;p&gt;Hypervisor运行在Ring0，Guest VM运行在Ring1，客户机中的应用程序在Ring3&lt;/p&gt;
-
-&lt;p&gt;这种模式下，Guest VM无需修改（本身并不知道在虚拟化环境）&lt;/p&gt;
-
-&lt;p&gt;机制是进行 异常捕捉–&amp;gt; 捕获翻译，这个步骤本身有一定的消耗&lt;/p&gt;
-
-&lt;h4 id=&quot;半虚拟化也称类虚拟化&quot;&gt;半虚拟化（也称类虚拟化）&lt;/h4&gt;
-&lt;p&gt;Hypervisor运行在Ring0，Guest VM进行修改之后，也运行在Ring0中，客户机中的应用程序在Ring3&lt;/p&gt;
-
-&lt;p&gt;Linux系统可以做，开源，可修改源码；windows不行。无代码。&lt;/p&gt;
-
-&lt;h4 id=&quot;全虚拟化硬件辅助模式&quot;&gt;全虚拟化（硬件辅助模式）&lt;/h4&gt;
-&lt;p&gt;Inter VT 和 AMD-V 创建了Ring -1提供给 Hypervisor 使用，Guest VM运行在Ring0&lt;/p&gt;
-
-&lt;h3 id=&quot;容器&quot;&gt;容器&lt;/h3&gt;
-&lt;p&gt;无需 Hypervisor ，对于操作系统来说，一个容器就是一个进程&lt;/p&gt;
-
-&lt;h2 id=&quot;虚拟化主流模型&quot;&gt;虚拟化主流模型&lt;/h2&gt;
-&lt;h3 id=&quot;hypervisor模型&quot;&gt;Hypervisor模型&lt;/h3&gt;
-&lt;p&gt;在hypervisor模型中，VMM是一个完备的操作系统，它除了具备传统操作系统的功能，还具备虚拟化功能。包括CPU、内存和I/O设备在内的所有物理资源都归VMM所有，因此VMM不仅要负责虚拟机环境的创建和管理，还承担着管理物理资源的责任。&lt;/p&gt;
-
-&lt;p&gt;这种方式是比较高效的，然而I/O设备种类繁多，管理所有设备就意味着大量的驱动开发工作。在实际的产品中，厂商会根据产品定位，有选择的支持一些I/O设备，而不是对所有的I/O设备都提供支持。&lt;/p&gt;
-
-&lt;h3 id=&quot;host模型宿主机&quot;&gt;Host模型（宿主机）&lt;/h3&gt;
-&lt;p&gt;在host模型中，物理资源由host OS管理，host OS是传统操作系统（比如Linux），这些传统操作系统并不是为虚拟化而设计的，因此本身并不具备虚拟化功能，实际的虚拟化功能由VMM来提供。&lt;/p&gt;
-
-&lt;p&gt;VMM作为host OS中一个独立的内核模块，通过调用host OS的服务来获得资源，实现CPU、内存和I/O设备的虚拟化。VMM创建出虚拟机之后，通常将虚拟机作为host OS的一个进程参与调度。&lt;/p&gt;
-
-&lt;p&gt;Host模型最大的优点就是可以充分利用现有操作系统的设备驱动程序，VMM不需要为各种I/O设备重新实现驱动，可以专注于物理资源的虚拟化；缺点在于，由于VMM是借助host OS的服务来操作硬件，而不是直接操作硬件，因此受限于host OS服务的支持，可能导致硬件利用的不充分。&lt;/p&gt;
-
-&lt;p&gt;从架构上看，由Qumranet公司开发的KVM（Kernel-based Virtual Machine）就是属于host模型的，kernel-based，顾名思义就是基于操作系统内核。KVM于2007年被集成到Linux内核2.6.20版本，并于2008年被Red Hat收购。&lt;/p&gt;
-
-&lt;p&gt;随着越来越多的虚拟化功能被加入到Linux内核当中，Linux已经越来越像一个hypervisor了，从这个角度看，KVM也可以算是hypervisor模型了。&lt;/p&gt;
-
-&lt;h3 id=&quot;混合模型&quot;&gt;混合模型&lt;/h3&gt;
-&lt;p&gt;在混合模型中，VMM依然位于最底层，拥有所有的物理资源，但为了利用现有操作系统的I/O设备驱动程序，VMM会将大部分的I/O设备交由一个运行在特权级别的虚拟机操作系统（Service OS）来处理，自己则主要负责CPU管理和内存管理。&lt;/p&gt;
-
-&lt;p&gt;混合模型可以说是结合了上述两种模型的优点，既不需要另外开发I/O设备驱动程序，又可以通过直接控制CPU和内存实现对这些物理资源的充分利用，以提高效率。&lt;/p&gt;
-
-&lt;p&gt;但它也是存在缺点的，当来自guest OS的I/O请求发送到VMM后，VMM需要将这些请求转发到service OS，这无疑增加了上下文的开销。混合模型的代表有Xen，Intel最近推出的Acrn，以及我国工程师写的minos。&lt;/p&gt;
-
-&lt;p&gt;上面介绍的这三种VMM实现模型和全虚拟化/类虚拟化的guest VM之间并没有直接的对应关系，比如Xen就既可以支持类虚拟化的guest VM，也可以支持全虚拟化的guest VM。&lt;/p&gt;
-
-&lt;p&gt;还有一种划分方法是将VMM分为基于bare-metal的type-1和基于OS的type-2，从这个角度划分的话，hypervisor模型和混合模型都是属于type-1的，host模型则是属于type-2的。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="虚拟化" /><category term="KVM" /><summary type="html">虚拟化 在计算机技术中，虚拟化（技术）或虚拟技术（英语：Virtualization）是一种资源管理技术，是将计算机的各种实体资源（CPU、内存、磁盘空间、网络适配器等），予以抽象、转换后呈现出来并可供分割、组合为一个或多个电脑配置环境。由此，打破实体结构间的不可切割的障碍，使用户可以比原本的配置更好的方式来应用这些电脑硬件资源。这些资源的新虚拟部分是不受现有资源的架设方式，地域或物理配置所限制。一般所指的虚拟化资源包括计算能力和资料存储。</summary></entry></feed>
+&lt;a href=&quot;https://blog.csdn.net/liukuan73/article/details/46457439&quot;&gt;https://blog.csdn.net/liukuan73/article/details/46457439&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="快照" /><category term="镜像" /><summary type="html">OpenStack的快照对于虚拟机来说，就是镜像。因为Openstack是采用创建镜像的方式创建快照，而不是通过正统的virsh和其他快照方式创建快照函数。虚拟机快照做完后以镜像形式存在于glance（镜像组件）中。</summary></entry></feed>
