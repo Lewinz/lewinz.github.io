@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-05-30T18:45:44+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">MySQL聚集索引和非聚集索引</title><link href="https://lewinz.org/2021/05/30/mysql-clustered-index/" rel="alternate" type="text/html" title="MySQL聚集索引和非聚集索引" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/mysql-clustered-index</id><content type="html" xml:base="https://lewinz.org/2021/05/30/mysql-clustered-index/">&lt;h2 id=&quot;聚集索引&quot;&gt;聚集索引&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-05-30T20:24:53+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">MySQL聚集索引和非聚集索引</title><link href="https://lewinz.org/2021/05/30/mysql-clustered-index/" rel="alternate" type="text/html" title="MySQL聚集索引和非聚集索引" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/mysql-clustered-index</id><content type="html" xml:base="https://lewinz.org/2021/05/30/mysql-clustered-index/">&lt;h2 id=&quot;聚集索引&quot;&gt;聚集索引&lt;/h2&gt;
 &lt;p&gt;聚集索引是指数据库表行中数据的物理顺序与键值的逻辑（索引）顺序相同。一个表只能有一个聚集索引，因为一个表的物理顺序只有一种情况，所以，对应的聚集索引只能有一个。如果某索引不是聚集索引，则表中的行物理顺序与索引顺序不匹配，与非聚集索引相比，聚集索引有着更快的检索速度。&lt;/p&gt;
 
 &lt;h2 id=&quot;mysql-聚集索引和非聚集索引&quot;&gt;MySQL 聚集索引和非聚集索引&lt;/h2&gt;
@@ -225,7 +225,151 @@ InfluxDB exporter (official)&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;即时向量：表示当前时间，某个指标的数据向量。&lt;/li&gt;
   &lt;li&gt;时间范围向量：表示过去某时间范围内，某个指标的数据向量。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="Prometheus" /><category term="监控" /><summary type="html">普罗米修斯(Prometheus) 普罗米修斯(Prometheus)是一个SoundCloud公司开源的监控系统。当年，由于SoundCloud公司生产了太多的服务，传统的监控已经无法满足监控需求，于是他们在2012年决定着手开发新的监控系统，即普罗米修斯。</summary></entry><entry><title type="html">块存储、文件存储、对象存储</title><link href="https://lewinz.org/2021/05/28/block-file-object-storage/" rel="alternate" type="text/html" title="块存储、文件存储、对象存储" /><published>2021-05-28T00:00:00+08:00</published><updated>2021-05-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/28/block-file-object-storage</id><content type="html" xml:base="https://lewinz.org/2021/05/28/block-file-object-storage/">&lt;h2 id=&quot;块存储&quot;&gt;块存储&lt;/h2&gt;
+&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="Prometheus" /><category term="监控" /><summary type="html">普罗米修斯(Prometheus) 普罗米修斯(Prometheus)是一个SoundCloud公司开源的监控系统。当年，由于SoundCloud公司生产了太多的服务，传统的监控已经无法满足监控需求，于是他们在2012年决定着手开发新的监控系统，即普罗米修斯。</summary></entry><entry><title type="html">时间序列数据库（TSDB）</title><link href="https://lewinz.org/2021/05/30/time-series-database/" rel="alternate" type="text/html" title="时间序列数据库（TSDB）" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/time-series-database</id><content type="html" xml:base="https://lewinz.org/2021/05/30/time-series-database/">&lt;h2 id=&quot;背景&quot;&gt;背景&lt;/h2&gt;
+&lt;p&gt;2017年时序数据库忽然火了起来。开年2月Facebook开源了beringei时序数据库；到了4月基于PostgreSQL打造的时序数据库TimeScaleDB也开源了，而早在2016年7月，百度云在其天工物联网平台上发布了国内首个多租户的分布式时序数据库产品TSDB，成为支持其发展制造，交通，能源，智慧城市等产业领域的核心产品，同时也成为百度战略发展产业物联网的标志性事件。&lt;/p&gt;
+
+&lt;h2 id=&quot;时间序列数据库-time-series-database-tsdb&quot;&gt;时间序列数据库 Time Series Database (TSDB)&lt;/h2&gt;
+&lt;p&gt;随着分布式系统监控、物联网的发展，TSDB开始受到更多的关注。
+维基百科上对于时间序列的定义是‘一系列数据点按照时间顺序排列’&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;时间序列数据就是历史烙印，具有不变性,、唯一性、时间排序性&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;时间序列数据跟关系型数据库有太多不同，但是很多公司并不想放弃关系型数据库。 于是就产生了一些特殊的用法，比如用 &lt;a href=&quot;http://link.zhihu.com/?target=https%3A//www.vividcortex.com/blog/2014/12/16/in-case-you-missed-it-building-a-time-series-database-in-mysql/&quot;&gt;MySQL 的 VividCortex&lt;/a&gt;, 用 &lt;a href=&quot;http://link.zhihu.com/?target=http%3A//www.timescale.com/&quot;&gt;Postgres 的 Timescale&lt;/a&gt;。 很多人觉得特殊的问题需要特殊的解决方法，于是很多时间序列数据库从头写起，不依赖任何现有的数据库, 比如 Graphite，InfluxDB。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;mysql 的引擎，除了常见的 innodb 和 myisam ，还有一个引擎叫 archive ，它的作用和 rrd 差不多，支持插入和查询操作。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;时序数据是基于时间的一系列的数据。在有时间的坐标中将这些数据点连成线，往过去看可以做成多纬度报表，揭示其趋势性、规律性、异常性；往未来看可以做大数据分析，机器学习，实现预测和预警。&lt;/li&gt;
+  &lt;li&gt;时序数据库就是存放时序数据的数据库，并且需要支持时序数据的快速写入、持久化、多纬度的聚合查询等基本功能。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;数据写入的特点&quot;&gt;数据写入的特点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;写入平稳、持续、高并发高吞吐：时序数据的写入是比较平稳的，这点与应用数据不同，应用数据通常与应用的访问量成正比，而应用的访问量通常存在波峰波谷。时序数据的产生通常是以一个固定的时间频率产生，不会受其他因素的制约，其数据生成的速度是相对比较平稳的。&lt;/li&gt;
+  &lt;li&gt;写多读少：时序数据上95%-99%的操作都是写操作，是典型的写多读少的数据。这与其数据特性相关，例如监控数据，你的监控项可能很多，但是你真正去读的可能比较少，通常只会关心几个特定的关键指标或者在特定的场景下才会去读数据。&lt;/li&gt;
+  &lt;li&gt;实时写入最近生成的数据，无更新：时序数据的写入是实时的，且每次写入都是最近生成的数据，这与其数据生成的特点相关，因为其数据生成是随着时间推进的，而新生成的数据会实时的进行写入。数据写入无更新，在时间这个维度上，随着时间的推进，每次数据都是新数据，不会存在旧数据的更新，不过不排除人为的对数据做订正。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;数据查询和分析的特点&quot;&gt;数据查询和分析的特点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;按时间范围读取：通常来说，你不会去关心某个特定点的数据，而是一段时间的数据。&lt;/li&gt;
+  &lt;li&gt;最近的数据被读取的概率高&lt;/li&gt;
+  &lt;li&gt;历史数据粗粒度查询的概率搞&lt;/li&gt;
+  &lt;li&gt;多种精度查询&lt;/li&gt;
+  &lt;li&gt;多维度分析&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;数据存储的特点&quot;&gt;数据存储的特点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;数据量大：拿监控数据来举例，如果我们采集的监控数据的时间间隔是1s，那一个监控项每天会产生86400个数据点，若有10000个监控项，则一天就会产生864000000个数据点。在物联网场景下，这个数字会更大。整个数据的规模，是TB甚至是PB级的。&lt;/li&gt;
+  &lt;li&gt;冷热分明：时序数据有非常典型的冷热特征，越是历史的数据，被查询和分析的概率越低。&lt;/li&gt;
+  &lt;li&gt;具有时效性：时序数据具有时效性，数据通常会有一个保存周期，超过这个保存周期的数据可以认为是失效的，可以被回收。一方面是因为越是历史的数据，可利用的价值越低；另一方面是为了节省存储成本，低价值的数据可以被清理。&lt;/li&gt;
+  &lt;li&gt;多精度数据存储：在查询的特点里提到时序数据出于存储成本和查询效率的考虑，会需要一个多精度的查询，同样也需要一个多精度数据的存储。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;开源时间序列数据库&quot;&gt;开源时间序列数据库&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;1999/07/16 &lt;a href=&quot;http://link.zhihu.com/?target=https%3A//en.wikipedia.org/wiki/RRDtool&quot;&gt;RRDTool First release&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;2009/12/30 &lt;a href=&quot;http://link.zhihu.com/?target=https%3A//github.com/graphite-project/graphite-web/releases/tag/0.9.5&quot;&gt;Graphite 0.9.5&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;2011/12/23 &lt;a href=&quot;http://link.zhihu.com/?target=https%3A//github.com/OpenTSDB/opentsdb/releases/tag/v1.0.0&quot;&gt;OpenTSDB 1.0.0&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;2013/05/24 &lt;a href=&quot;http://link.zhihu.com/?target=https%3A//github.com/kairosdb/kairosdb/releases/tag/v1.0.0-beta2a&quot;&gt;KairosDB 1.0.0-beta&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;2013/10/24 &lt;a href=&quot;http://link.zhihu.com/?target=https%3A//github.com/influxdata/influxdb/releases/tag/v0.0.1&quot;&gt;InfluxDB 0.0.1&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;2014/08/25 &lt;a href=&quot;http://link.zhihu.com/?target=https%3A//github.com/spotify/heroic/releases/tag/0.3.0&quot;&gt;Heroic 0.3.0&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;2017/03/27 &lt;a href=&quot;http://link.zhihu.com/?target=https%3A//github.com/timescale/timescaledb/releases/tag/0.0.1-beta&quot;&gt;TimescaleDB 0.0.1-beta&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://link.zhihu.com/?target=https%3A//oss.oetiker.ch/rrdtool/&quot;&gt;RRDTool&lt;/a&gt; 是最早的时间序列数据库，它自带画图功能，现在大部分时间序列数据库都使用 &lt;a href=&quot;http://link.zhihu.com/?target=https%3A//github.com/grafana/grafana&quot;&gt;Grafana&lt;/a&gt; 来画图。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://link.zhihu.com/?target=https%3A//graphiteapp.org/&quot;&gt;Graphite&lt;/a&gt; 是用 Python 写的 RRD 数据库，它的存储引擎 &lt;a href=&quot;http://link.zhihu.com/?target=https%3A//github.com/graphite-project/whisper&quot;&gt;Whisper&lt;/a&gt; 也是 Python 写的， 它画图和聚合能力都强了很多，但是很难水平扩展。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://link.zhihu.com/?target=http%3A//opentsdb.net/&quot;&gt;OpenTSDB&lt;/a&gt; 使用 HBase 解决了水平扩展的问题&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://link.zhihu.com/?target=https%3A//kairosdb.github.io/&quot;&gt;KairosDB&lt;/a&gt; 最初是基于OpenTSDB修改的，但是作者认为兼容HBase导致他们不能使用很多 Cassandra 独有的特性， 于是就抛弃了HBase仅支持Cassandra。&lt;/p&gt;
+
+&lt;p&gt;新发布的 &lt;a href=&quot;http://link.zhihu.com/?target=http%3A//opentsdb.net/docs/build/html/new.html&quot;&gt;OpenTSDB&lt;/a&gt; 中也加入了对 Cassandra 的支持。 故事还没完，Spotify 的人本来想使用 KairosDB，但是觉得项目发展方向不对以及性能太差，就自己撸了一个 Heroic。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://link.zhihu.com/?target=https%3A//github.com/influxdata/influxdb&quot;&gt;InfluxDB&lt;/a&gt; 早期是完全开源的，后来为了维持公司运营，闭源了集群版本。 在 Percona Live 上他们做了一个开源数据库商业模型正面临危机的演讲，里面调侃红帽的段子很不错。 并且今年的 Percona Live 还有专门的时间序列数据库单元。&lt;/p&gt;
+
+&lt;h3 id=&quot;数据模型&quot;&gt;数据模型&lt;/h3&gt;
+&lt;p&gt;时间序列数据可以分成两部分&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;序列 ：就是标识符（维度），主要的目的是方便进行搜索和筛选&lt;/li&gt;
+  &lt;li&gt;数据点：时间戳和数值构成的数组
+    &lt;ul&gt;
+      &lt;li&gt;行存：一个数组包含多个点，如 [{t: 2017-09-03-21:24:44, v: 0.1002}, {t: 2017-09-03-21:24:45, v: 0.1012}]&lt;/li&gt;
+      &lt;li&gt;列存：两个数组，一个存时间戳，一个存数值，如[ 2017-09-03-21:24:44, 2017-09-03-21:24:45], [0.1002, 0.1012]&lt;br /&gt;
+一般情况下：列存能有更好的压缩率和查询性能&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;基本概念&quot;&gt;基本概念&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;metric: 度量，相当于关系型数据库中的table。&lt;/li&gt;
+  &lt;li&gt;data point: 数据点，相当于关系型数据库中的row。&lt;/li&gt;
+  &lt;li&gt;timestamp：时间戳，代表数据点产生的时间。&lt;/li&gt;
+  &lt;li&gt;field: 度量下的不同字段。比如位置这个度量具有经度和纬度两个field。一般情况下存放的是会随着时间戳的变化而变化的数据。&lt;/li&gt;
+  &lt;li&gt;tag: 标签，或者附加信息。一般存放的是并不随着时间戳变化的属性信息。timestamp加上所有的tags可以认为是table的primary key。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;如下图，度量为Wind，每一个数据点都具有一个timestamp，两个field：direction和speed，两个tag：sensor、city。它的第一行和第三行，存放的都是sensor号码为95D8-7913的设备，属性城市是上海。随着时间的变化，风向和风速都发生了改变，风向从23.4变成23.2；而风速从3.4变成了3.3。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/time_series_databse_1.jpeg&quot; alt=&quot;time_series_databse_1&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;应用场景&quot;&gt;应用场景&lt;/h3&gt;
+&lt;p&gt;所有有时序数据产生，并且需要展现其历史趋势、周期规律、异常性的，进一步对未来做出预测分析的，都是时序数据库适合的场景。&lt;/p&gt;
+
+&lt;p&gt;例：&lt;br /&gt;
+在工业物联网环境监控方向，百度天工的客户就遇到了这么一个难题，由于工业上面的要求，需要将工况数据存储起来。客户每个厂区具有20000个监测点，500毫秒一个采集周期，一共20个厂区。这样算起来一年将产生惊人的26万亿个数据点。假设每个点50Byte，数据总量将达1P（如果每台服务器10T的硬盘，那么总共需要100多台服务器）。这些数据不只是要实时生成，写入存储；还要支持快速查询，做可视化的展示，帮助管理者分析决策；并且也能够用来做大数据分析，发现深层次的问题，帮助企业节能减排，增加效益。最终客户采用了百度天工的时序数据库方案，帮助他解决了难题。&lt;br /&gt;
+（这个高逼格）&lt;/p&gt;
+
+&lt;h3 id=&quot;时序数据库遇到的挑战&quot;&gt;时序数据库遇到的挑战&lt;/h3&gt;
+&lt;p&gt;很多人可能认为在传统关系型数据库上加上时间戳一列就能作为时序数据库。数据量少的时候确实也没问题，但少量数据是展现的纬度有限，细节少，可置信低，更加不能用来做大数据分析。很明显时序数据库是为了解决海量数据场景而设计的。&lt;/p&gt;
+
+&lt;p&gt;可以看到时序数据库需要解决以下几个问题&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;时序数据的写入：如何支持每秒钟上千万上亿数据点的写入。&lt;/li&gt;
+  &lt;li&gt;时序数据的读取：又如何支持在秒级对上亿数据的分组聚合运算。&lt;/li&gt;
+  &lt;li&gt;成本敏感：由海量数据存储带来的是成本问题。如何更低成本的存储这些数据，将成为时序数据库需要解决的重中之重。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这些问题不是用一篇文章就能含盖的，同时每个问题都可以从多个角度去优化解决。在这里只从数据存储这个角度来尝试回答如何解决大数据量的写入和读取。&lt;/p&gt;
+
+&lt;h3 id=&quot;rrd&quot;&gt;RRD&lt;/h3&gt;
+&lt;p&gt;RRD （Round Robin Database）数据库是一个环形的数据库，数据库由一个固定大小的数据文件来存放数据，此数据库不会像传统数据库一样为随着数据的增多而文件的大小也在增加，RRD在创建好后其文件大小就固定，可以把它想像成一个圆，圆的众多直径把圆划分成一个个扇形，每个扇形就是可以存数据的槽位，每个槽位上被打上了一个时间戳，在圆心上有一个指针，随着时间的流逝，取回数据后，指针会负责把数据填充在相应的槽位上，当指针转了360度后，最开始的数据就会被覆盖，就这样RRD循环填充着数据。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;源数据搜集：采用一些数据搜集工具，如脚本、shell命令、SNMP等工具在一定时间间隔里把数据搜集填充到rrd数据库中，这些需要数据搜集的对象叫DS，一个DS里在一个时间里可以搜集的数据可以有多个，比如一个时间点上对网卡来说有进来的流量，也有流出的流量，所以这是2个数据成为一组数据。&lt;/li&gt;
+  &lt;li&gt;临时存储：源数据获取到后是存放在一个数据库的一个临时区域，这些源数据叫做PDP&lt;/li&gt;
+  &lt;li&gt;分组-聚合：RRDTool把这些PDP数据作为数据源通过分组、再利用聚合函数计算后把计算后的结果放在RRD数据库的时间槽(time slot)上，这些数据叫做CDP，CDP才是RRDTool绘图时真正打交道的数据，&lt;/li&gt;
+  &lt;li&gt;在从源数据中取数据做聚合计算时会有一个挑选数据的基准，也就是说是以几个源数据为一组做聚合，根据现实需求的不同，对源数据可以很灵活的选择不同的时间段提取源数据，再聚合提取不同的聚合值，这样就产生不同组别的CDP数据，这些有以相同时间段挑选源数据及相同聚合函数计算的结果组成的数据就叫RRA，所以根据挑选源数据的标准及采用的聚合函数的不同，RRA可以有多组。&lt;/li&gt;
+  &lt;li&gt;DS：Data Source 数据源，用于定义搜集数据的工具所搜集数据的一些特性&lt;/li&gt;
+  &lt;li&gt;Time Solt：时间槽，用于存放通过聚合后的数据区域&lt;/li&gt;
+  &lt;li&gt;PDP：Primary Data Point 主数据节点，每个时间点产生的数据，即是搜集的源数据，没有做聚合的数据&lt;/li&gt;
+  &lt;li&gt;CDP（Consolidation Data Point 聚合数据节点）：通过对获取的源数据分组、聚合计算后得到的数据叫CDP，&lt;/li&gt;
+  &lt;li&gt;RRA（Round Robin Archive 轮转归档）：以相同的分组、聚合函数计算后的CDP数据组就组成了RRA&lt;/li&gt;
+  &lt;li&gt;Resolution（解析度）：这是一个时间跨度，表示在做聚合计算时是以几个连续的time slot里的数据做聚合，在默认时rrd是以300秒的间隔产生一个time slot。&lt;/li&gt;
+  &lt;li&gt;CF：Consolidation Function，合并函数或聚合函数，以RRDTool中有AVERAGE、MAX、MIN、LAST4种&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;以一个图来说明PDP、CDP、RRA之间的关系：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/time_series_pdp_cdp_rra.jpeg&quot; alt=&quot;time_series_pdp_cdp_rra&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;PDP是以规定的时间间隔（默认为300秒）搜集的源数据，第一个RRA以4个PDP（即4*300秒）为一组做CF后组成的数据，第二个RRA则是以10个PDP为一组做CF后组成的数据。&lt;/p&gt;
+
+&lt;h3 id=&quot;influxdb&quot;&gt;InfluxDB&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;http://link.zhihu.com/?target=https%3A//github.com/influxdata/influxdb&quot;&gt;InfluxDB&lt;/a&gt; 在存储引擎上纠结了很久， leveldb, rocksdb, boltdb 都玩了个遍，最后决定自己造个轮子叫 Time Structured Merge Tree。&lt;/p&gt;
+
+&lt;p&gt;Time Structured Merge Tree (TSM) 和 Log Structured Merge Tree (LSM) 的名字都有点误导性，关键并不是树，也不是日志或者时间，而是 Merge。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;写入的时候，数据先写入到内存里，之后批量写入到硬盘。&lt;/li&gt;
+  &lt;li&gt;读的时候，同时读内存和硬盘然后合并结果。&lt;/li&gt;
+  &lt;li&gt;删除的时候，写入一个删除标记，被标记的数据在读取时不会被返回。&lt;/li&gt;
+  &lt;li&gt;后台会把小的块合并成大的块，此时被标记删除的数据才真正被删除&lt;/li&gt;
+  &lt;li&gt;相对于普通数据，有规律的时间序列数据在合并的过程中可以极大的提高压缩比。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="数据库" /><category term="时间序列" /><summary type="html">背景 2017年时序数据库忽然火了起来。开年2月Facebook开源了beringei时序数据库；到了4月基于PostgreSQL打造的时序数据库TimeScaleDB也开源了，而早在2016年7月，百度云在其天工物联网平台上发布了国内首个多租户的分布式时序数据库产品TSDB，成为支持其发展制造，交通，能源，智慧城市等产业领域的核心产品，同时也成为百度战略发展产业物联网的标志性事件。</summary></entry><entry><title type="html">块存储、文件存储、对象存储</title><link href="https://lewinz.org/2021/05/28/block-file-object-storage/" rel="alternate" type="text/html" title="块存储、文件存储、对象存储" /><published>2021-05-28T00:00:00+08:00</published><updated>2021-05-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/28/block-file-object-storage</id><content type="html" xml:base="https://lewinz.org/2021/05/28/block-file-object-storage/">&lt;h2 id=&quot;块存储&quot;&gt;块存储&lt;/h2&gt;
 
 &lt;p&gt;&lt;strong&gt;典型设备：磁盘阵列、硬盘&lt;/strong&gt;&lt;/p&gt;
 
@@ -978,223 +1122,4 @@ ssh username@10.10.0.1 &lt;span class=&quot;nt&quot;&gt;-p22&lt;/span&gt;
 &lt;h3 id=&quot;相关博客&quot;&gt;相关博客&lt;/h3&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://segmentfault.com/a/1190000016412013&quot;&gt;https://segmentfault.com/a/1190000016412013&lt;/a&gt;
-&lt;a href=&quot;https://www.cnblogs.com/Dr-wei/p/11742414.html&quot;&gt;https://www.cnblogs.com/Dr-wei/p/11742414.html&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="PProf" /><category term="性能" /><summary type="html">Go pprof Go性能优化</summary></entry><entry><title type="html">Golang Tag 汇总</title><link href="https://lewinz.org/2021/05/17/golang-tag/" rel="alternate" type="text/html" title="Golang Tag 汇总" /><published>2021-05-17T00:00:00+08:00</published><updated>2021-05-17T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/17/golang-tag</id><content type="html" xml:base="https://lewinz.org/2021/05/17/golang-tag/">&lt;h2 id=&quot;tag&quot;&gt;Tag&lt;/h2&gt;
-&lt;p&gt;在 Go 的 struct 定义中，有时需要对某个字段添加额外的元信息，这就需要用到 field tag，即成员标签变量。&lt;/p&gt;
-
-&lt;h3 id=&quot;json-tag&quot;&gt;Json Tag&lt;/h3&gt;
-&lt;h4 id=&quot;示例&quot;&gt;示例&lt;/h4&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;peerInfo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;HTTPPort&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`json:&quot;http_port&quot;`&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;TCPPort&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`json:&quot;tcp_port&quot;`&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;versiong&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`json:&quot;versiong&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h4 id=&quot;encode-和-decode&quot;&gt;Encode 和 Decode&lt;/h4&gt;
-&lt;h5 id=&quot;encode&quot;&gt;Encode&lt;/h5&gt;
-&lt;p&gt;要把 golang 的数据结构转换成 JSON 字符串（encode），可以使用 Marshal函数&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h5 id=&quot;decode&quot;&gt;Decode&lt;/h5&gt;
-&lt;p&gt;相对应的，要把 JSON 数据转换成 Go 类型的值（Decode）， 可以使用 json.Unmarshal。&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Unmarshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;data 中存放的是 JSON 值，v 会存放解析后的数据，所以必须是指针，可以保证函数中做的修改能保存下来&lt;/p&gt;
-
-&lt;h4 id=&quot;更多控制&quot;&gt;更多控制&lt;/h4&gt;
-&lt;p&gt;Json Tag控制字段有三种：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;-：不要解析这个字段&lt;/li&gt;
-  &lt;li&gt;omitempty：当字段为空（默认值）时，不要解析这个字段。比如 false、0、nil、长度为 0 的 array，map，* * 
-slice，string&lt;/li&gt;
-  &lt;li&gt;FieldName：当解析 json 的时候，使用这个名字&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;xml-tag&quot;&gt;Xml Tag&lt;/h3&gt;
-&lt;p&gt;导包&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;import &quot;encoding/xml&quot;&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;解析和读取规则&quot;&gt;解析和读取规则&lt;/h4&gt;
-&lt;p&gt;golang对xml的解析和读取是通过stuct和refect实现的,对于struct中的tag以什么方式对应到xml的元素上,golang的文档中做了如下描述:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-txt&quot;&gt;1、结构体中的XMLName字段或者类型为xml.Name的字段,会被删除.使用此字段tag上定义的属性进行解析
-2、结构体tag中”-” 在解析过程中会忽略结构体中的这个字段
-3、结构体tag中”name,attr” 使用name作输出为xml属性,对应字段值作为属性值
-4、结构体tag中”,attr” 使用字段名作为xml属性,字段值作为xml属性值
-5、结构体tag中”,chardata” 不作为xml的节点输出,把该字段对应的值作为字符输出
-6、结构体tag中 “,innerxml” 如果结构体改字段是基本类型如:string,int等,和”,chardata”输出无区别,如果是一个结构体,输出值会是一个完整的xml结构
-7、结构体tag中 “,comment” 输出xml中的注释
-8、结构体tag中”omitempty” 该字段是go中的空值:false, 0,空指针,空接口,任何长度为0的切片,数组,字符串和map. 都会被忽略
-9、结构体中不包含tag 会以该字段作为xml属性名称,值作为xml属性值
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;代码示例&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TNote&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Lang&lt;/span&gt;    &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`xml:&quot;lang,attr&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Content&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`xml:&quot;,innerxml&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TFile&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;XMLName&lt;/span&gt;  &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`xml:&quot;file&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;FileName&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;name,attr&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Size&lt;/span&gt;     &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;size,attr&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Release&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;XMLName&lt;/span&gt;   &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`xml:&quot;release&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Version&lt;/span&gt;   &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;version,attr&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;TimeStamp&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;,attr&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Lang&lt;/span&gt;      &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;-&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Skin&lt;/span&gt;      &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;,chardata&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Site&lt;/span&gt;      &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;,omitempty&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;File&lt;/span&gt;      &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TFile&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;`xml:&quot;,innerxml&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;CnNotes&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;TNote&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`xml:&quot;cnnote&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;EnNotes&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;TNote&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`xml:&quot;ennote&quot;`&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Comment&lt;/span&gt;   &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`xml:&quot;,comment&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;gorm-tag&quot;&gt;gorm Tag&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;支持的结构标签&lt;/strong&gt;
-|   标签    |   说明    |
-|   —-    |   —-    |
-|   column    |   指定列的名称    |
-|   type    |   指定列的类型    |
-|   size    |   指定列的大小，默认是 255    |
-|   primary_key    |   指定一个列作为主键    |
-|   unique    |   指定一个唯一的列    |
-|   default    |   指定一个列的默认值    |
-|   precision    |   指定列的数据的精度    |
-|   not null    |   指定列的数据不为空    |
-|   auto_increment    |   指定一个列的数据是否自增    |
-|   index    |   创建带或不带名称的索引，同名创建复合索引    |
-|   unique_index    |   类似 索引，创建一个唯一的索引    |
-|   embedded    |   将 struct 设置为 embedded    |
-|   embedded_prefix    |   设置嵌入式结构的前缀名称    |
-|   -    |   忽略这些字段    |&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;关联的结构标签&lt;/strong&gt;
-|   标签    |   说明    |
-|   —-    |   —-    |
-|   many2many    |   指定连接表名称    |
-|   foreignkey    |   指定外键    |
-|   association_foreignkey    |   指定关联外键    |
-|   polymorphic    |   指定多态类型    |
-|   polymorphic_value    |   指定多态的值    |
-|   jointable_foreignkey    |   指定连接表的外键    |
-|   association_jointable_foreignkey    |   指定连接表的关联外键    |
-|   save_associations    |   是否自动保存关联    |
-|   association_autoupdate    |   是否自动更新关联    |
-|   association_autocreate    |   是否自动创建关联    |
-|   association_save_reference    |   是否引用自动保存的关联    |
-|   preload    |   是否自动预加载关联    |&lt;/p&gt;
-
-&lt;h3 id=&quot;map-tag&quot;&gt;Map Tag&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;mapstructure 大小写不敏感&lt;/strong&gt;
-示例：&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`mapstructure:&quot;username&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;内嵌结构&quot;&gt;内嵌结构&lt;/h4&gt;
-&lt;p&gt;内嵌结构可设置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mapstructure:&quot;,squash&quot;&lt;/code&gt;将该结构体的字段提到父结构中&lt;br /&gt;
-另外需要注意一点，如果父结构体中有同名的字段，那么mapstructure会将JSON 中对应的值同时设置到这两个字段中，即这两个字段有相同的值。&lt;/p&gt;
-
-&lt;p&gt;示例：&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Friend&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`mapstructure:&quot;,squash&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;未映射的值&quot;&gt;未映射的值&lt;/h4&gt;
-&lt;p&gt;如果源数据中有未映射的值（即结构体中无对应的字段），mapstructure默认会忽略它。&lt;/p&gt;
-
-&lt;p&gt;我们可以在结构体中定义一个字段，为其设置mapstructure:”,remain”标签。这样未映射的值就会添加到这个字段中。注意，这个字段的类型只能为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;或&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[interface{}]interface{}&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;示例：&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;   &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Job&lt;/span&gt;   &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`mapstructure:&quot;,remain&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;逆向转换&quot;&gt;逆向转换&lt;/h4&gt;
-&lt;p&gt;前面我们都是将&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;解码到 Go 结构体中。mapstructure当然也可以将 Go 结构体反向解码为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;。在反向解码时，我们可以为某些字段设置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mapstructure:&quot;,omitempty&quot;&lt;/code&gt;。这样当这些字段为默认值时，就不会出现在结构的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;中：&lt;/p&gt;
-
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Job&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`mapstructure:&quot;,omitempty&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;metadata&quot;&gt;Metadata&lt;/h4&gt;
-&lt;p&gt;解码时会产生一些有用的信息，mapstructure可以使用Metadata收集这些信息。Metadata结构如下：&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// mapstructure.go&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Metadata&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Keys&lt;/span&gt;   &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Unused&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Metadata只有两个导出字段：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Keys：解码成功的键名；&lt;/li&gt;
-  &lt;li&gt;Unused：在源数据中存在，但是目标结构中不存在的键名。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;为了收集这些数据，我们需要使用DecodeMetadata来代替Decode方法：&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;dj&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;age&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;18&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;job&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;&quot;programmer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;metadata&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mapstructure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Metadata&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;mapstructure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DecodeMetadata&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-  &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;keys:%#v unused:%#v&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unused&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;弱类型输入&quot;&gt;弱类型输入&lt;/h4&gt;
-&lt;p&gt;有时候，我们并不想对结构体字段类型和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;map[string]interface{}&lt;/code&gt;的对应键值做强类型一致的校验。这时可以使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WeakDecode/WeakDecodeMetadata&lt;/code&gt;方法，它们会尝试做类型转换：&lt;/p&gt;
-
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;   &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;    &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Emails&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}{&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;123&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;age&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;&quot;18&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;emails&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mapstructure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WeakDecode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;person:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;虽然键name对应的值123是int类型，但是在WeakDecode中会将其转换为string类型以匹配Person.Name字段的类型。同样的，age的值”18”是string类型，在WeakDecode中会将其转换为int类型以匹配Person.Age字段的类型。 需要注意一点，如果类型转换失败了，WeakDecode同样会返回错误。例如将上例中的age设置为”bad value”，它就不能转为int类型，故而返回错误。&lt;/p&gt;
-
-&lt;p&gt;参考博客：&lt;br /&gt;
-&lt;a href=&quot;https://zhuanlan.zhihu.com/p/165419292&quot;&gt;https://zhuanlan.zhihu.com/p/165419292&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golan" /><category term="tag" /><category term="汇总" /><summary type="html">Tag 在 Go 的 struct 定义中，有时需要对某个字段添加额外的元信息，这就需要用到 field tag，即成员标签变量。</summary></entry></feed>
+&lt;a href=&quot;https://www.cnblogs.com/Dr-wei/p/11742414.html&quot;&gt;https://www.cnblogs.com/Dr-wei/p/11742414.html&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="PProf" /><category term="性能" /><summary type="html">Go pprof Go性能优化</summary></entry></feed>
