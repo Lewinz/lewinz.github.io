@@ -37,6 +37,9 @@ Json Tag控制字段有三种：
 * omitempty：当字段为空（默认值）时，不要解析这个字段。比如 false、0、nil、长度为 0 的 array，map，* * 
 slice，string  
 * FieldName：当解析 json 的时候，使用这个名字
+* -：忽略字段输出
+
+
 
 ### Xml Tag
 导包`import "encoding/xml"`  
