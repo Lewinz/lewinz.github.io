@@ -1,4 +1,122 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-06-06T21:47:09+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang Json Tag 详细用法</title><link href="https://lewinz.org/2021/06/06/golang-json-tag/" rel="alternate" type="text/html" title="golang Json Tag 详细用法" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/golang-json-tag</id><content type="html" xml:base="https://lewinz.org/2021/06/06/golang-json-tag/">&lt;p&gt;Go中使用json很多，玩法也很多，整理了一下go中关于json的tag使用
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-06-06T22:01:12+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang 依赖循环</title><link href="https://lewinz.org/2021/06/06/golang-depend-loop/" rel="alternate" type="text/html" title="golang 依赖循环" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/golang-depend-loop</id><content type="html" xml:base="https://lewinz.org/2021/06/06/golang-depend-loop/">&lt;p&gt;循环依赖本质上一个错误的设计，在go里面，直接把它作为了一个编译时的错误。&lt;/p&gt;
+
+&lt;p&gt;什么是循环依赖呢？&lt;/p&gt;
+
+&lt;p&gt;假如有一个结构体 A 和一个结构体B，A和 B分别在包a和b中, 而且结构体A 依赖 结构体B, 并且结构体B 依赖结构体A, 如果写成这样就会导致 循环依赖 或者说是 循环导入。&lt;/p&gt;
+
+&lt;p&gt;没有代码bb什么，直接上代码&lt;/p&gt;
+
+&lt;p&gt;这是a的代码&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;fmt&quot;&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;my-test/importcicle/b&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DoSomethingWithA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CreateA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;invokeSomethingFromB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DoSomethingWithB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;这是b的代码&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;fmt&quot;&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;my-test/importcicle/a&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DoSomethingWithB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CreateB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;invokeSomethingFromA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CreateA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DoSomethingWithA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;正如上面的代码，A需要B，B也需要A，这样就导致了循环导入或者说循环依赖。当你要编译这段代码时，会报错：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cycle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;allowed&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;my&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;importcicle&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;imports&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;my&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;importcicle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;imports&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;my&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;importcicle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;imports&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;my&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;importcicle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;那怎么解决这种循环依赖，平时写代码，一时兴起，不小心写个循环依赖也是常有的事&lt;/p&gt;
+
+&lt;p&gt;通常为了避免这种循环依赖，可以在一个新的package中引入一个接口,比如新建一个package叫x，这个interface中包含有B依赖A结构中所有的方法。&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ADoSomethingIntf&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;DoSomethingWithA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;现在修改b包中的代码，导入x, 而不是导入a&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;fmt&quot;&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;my-test/importcicle/x&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DoSomethingWithB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CreateB&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;// 注意 这里稍微做了些调整&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;invokeSomethingFromA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ADoSomethingIntf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DoSomethingWithA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;但是如果仍然需要A的实例，那怎么办呢？&lt;/p&gt;
+
+&lt;p&gt;所以将不得不引入另外一个package比如说y，y将同时导入a和b，它创建了A的一个实例并将它传递给b。&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;my-test/importcicle/a&quot;&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;my-test/importcicle/b&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;doSomethingWithY&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;o&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;InvokeSomethingFromA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;o&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;这就是我解决循环依赖的方式，总结就是：&lt;/p&gt;
+
+&lt;p&gt;A依赖于B&lt;/p&gt;
+
+&lt;p&gt;B依赖于X&lt;/p&gt;
+
+&lt;p&gt;Y依赖于A和B&lt;/p&gt;
+
+&lt;p&gt;因此没有循环依赖&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="依赖循环" /><summary type="html">循环依赖本质上一个错误的设计，在go里面，直接把它作为了一个编译时的错误。</summary></entry><entry><title type="html">golang Json Tag 详细用法</title><link href="https://lewinz.org/2021/06/06/golang-json-tag/" rel="alternate" type="text/html" title="golang Json Tag 详细用法" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/golang-json-tag</id><content type="html" xml:base="https://lewinz.org/2021/06/06/golang-json-tag/">&lt;p&gt;Go中使用json很多，玩法也很多，整理了一下go中关于json的tag使用
 包含了一些遇到的问题与解决方案&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -740,122 +858,4 @@ virtual ip ==&amp;gt; 虚拟IP&lt;/p&gt;
 &lt;p&gt;但是如果修改 LGPL 协议的代码或者衍生品，则所有修改的代码，涉及修改部分的额外代码和衍生的代码都必须采用 LGPL 协议。因此LGPL协议的开源代码很适合作为第三方类库被商业软件引用，但不适合希望以 LGPL 协议代码为基础，通过修改和衍生的方式做二次开发的商业软件采用。&lt;/p&gt;
 
 &lt;h2 id=&quot;如何选择开源协议&quot;&gt;如何选择开源协议&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/open_source_licenses.jpeg&quot; alt=&quot;open_source_licenses&quot; /&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="开源协议" /><summary type="html">开源协议是什么 开源软件在追求“自由”的同时，不能牺牲程序员的利益，否则将会影响程序员的创造激情，因此世界上现在有 60 多种被开源促进组织（Open Source Initiative）认可的开源许可协议来保证开源工作者的权益。</summary></entry><entry><title type="html">Prometheus 监控系统</title><link href="https://lewinz.org/2021/05/30/prometheus-info/" rel="alternate" type="text/html" title="Prometheus 监控系统" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/prometheus-info</id><content type="html" xml:base="https://lewinz.org/2021/05/30/prometheus-info/">&lt;h2 id=&quot;普罗米修斯prometheus&quot;&gt;普罗米修斯(Prometheus)&lt;/h2&gt;
-&lt;p&gt;普罗米修斯(Prometheus)是一个SoundCloud公司开源的监控系统。当年，由于SoundCloud公司生产了太多的服务，传统的监控已经无法满足监控需求，于是他们在2012年决定着手开发新的监控系统，即普罗米修斯。&lt;/p&gt;
-
-&lt;p&gt;普罗米修斯（下称普罗）的作者 Matt T.Proud 在2012年加入SoundCloud公司，他从google的监控系统Borgmon中获得灵感，与另一名工程师Julius Volz合作开发了开源的普罗，后来其他开发人员陆续加入到该项目，最终于2015年正式发布。&lt;/p&gt;
-
-&lt;p&gt;普罗基于Go语言开发，其架构图如下：
-&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/prometheus.jpeg&quot; alt=&quot;image_prometheus&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;其中：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Prometheus Server: 用数据的采集和存储，PromQL查询，报警配置。&lt;/li&gt;
-  &lt;li&gt;Push gateway: 用于批量，短期的监控数据的汇报总节点。&lt;/li&gt;
-  &lt;li&gt;Exporters: 各种汇报数据的exporter，例如汇报机器数据的node_exporter，汇报MondogDB信息的 MongoDB_exporter 等等。&lt;/li&gt;
-  &lt;li&gt;Alertmanager: 用于高级通知管理。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;采集监控数据&quot;&gt;采集监控数据&lt;/h2&gt;
-&lt;p&gt;要采集目标（主机或服务）的监控数据，首先就要在被采集目标上安装采集组件，这种采集组件被称为 &lt;strong&gt;Exporter&lt;/strong&gt; 。&lt;a href=&quot;http://prometheus.io&quot;&gt;普罗米修斯&lt;/a&gt; 官网上有很多这种 exporter ，比如：&lt;/p&gt;
-
-&lt;p&gt;Consul exporter (official)&lt;br /&gt;
-Memcached exporter (official)&lt;br /&gt;
-MySQL server exporter (official)&lt;br /&gt;
-Node/system metrics exporter (official)&lt;br /&gt;
-HAProxy exporter (official)&lt;br /&gt;
-RabbitMQ exporter&lt;br /&gt;
-Grok exporter&lt;br /&gt;
-InfluxDB exporter (official)&lt;/p&gt;
-
-&lt;p&gt;这些exporter能为我们采集目标的监控数据，然后传输给普罗米修斯。这时候，exporter会暴露一个http接口，普罗米修斯通过HTTP协议使用Pull的方式周期性拉取相应的数据。&lt;/p&gt;
-
-&lt;p&gt;不过，普罗也提供了Push模式来进行数据传输，通过增加Push Gateway这个中间商实现，你可以将数据推送到Push Gateway，普罗再通过Pull的方式从Push Gateway获取数据。&lt;/p&gt;
-
-&lt;p&gt;这就是为什么你从架构图里能看到两个 Pull metrics 的原因，一个是采集器直接被Server拉取数据(pull)；另一个是采集器主动Push数据到Push Gateway，Server再对Push Gateway主动拉取数据(pull)。&lt;/p&gt;
-
-&lt;h3 id=&quot;采集数据的主要流程&quot;&gt;采集数据的主要流程&lt;/h3&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Prometheus server 定期从静态配置的主机或服务发现的 targets 拉取数据（zookeeper，consul，DNS SRV Lookup等方式）&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;当新拉取的数据大于配置内存缓存区的时候，Prometheus会将数据持久化到磁盘，也可以远程持久化到云端。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Prometheus通过PromQL、API、Console和其他可视化组件如Grafana、Promdash展示数据。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Prometheus 可以配置rules，然后定时查询数据，当条件触发的时候，会将告警推送到配置的Alertmanager。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Alertmanager收到告警的时候，会根据配置，聚合，去重，降噪，最后发出警告。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;采集的数据结构与指标类型&quot;&gt;采集的数据结构与指标类型&lt;/h3&gt;
-&lt;h4 id=&quot;数据结构&quot;&gt;数据结构&lt;/h4&gt;
-&lt;p&gt;了解普罗米修斯的数据结构对于了解整个普罗生态非常重要。普罗采用键值对作为其基本的数据结构：
-&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/prometheus_matadata.jpeg&quot; alt=&quot;image_prometheus_matadata&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Key是指标名字，Value是该指标的值，此外Metadata(元信息)也非常重要，也可称之为labels(标签信息)。这些标签信息指定了当前这个值属于哪个云区域下的哪台机器，如果没有labels，数据有可能会被丢失。&lt;/p&gt;
-
-&lt;h4 id=&quot;指标类型&quot;&gt;指标类型&lt;/h4&gt;
-&lt;p&gt;普罗米修斯的监控指标有4种基本类型：&lt;/p&gt;
-
-&lt;h5 id=&quot;counter计数器&quot;&gt;Counter(计数器)&lt;/h5&gt;
-&lt;p&gt;计数器是我们最简单的指标类型。比如你想统计某个网站的HTTP错误总数，这时候就用计数器。&lt;/p&gt;
-
-&lt;p&gt;计数器的值只能增加或重置为0，因此特别适合计算某个时段上某个时间的发生次数，即指标随时间演变发生的变化。&lt;/p&gt;
-
-&lt;h5 id=&quot;gauges&quot;&gt;Gauges&lt;/h5&gt;
-
-&lt;p&gt;Gauges可以用于处理随时间增加或减少的指标，比如内存变化、温度变化。&lt;/p&gt;
-
-&lt;p&gt;这可能是最常见的指标类型，不过它也有一定&lt;strong&gt;缺点&lt;/strong&gt;：如果系统每5秒发送一次指标，普罗服务每15秒抓取一次数据，那么这期间可能会丢失一些指标，如果你基于这些数据做汇总分析计算，则结果的准确性会有所下滑。&lt;/p&gt;
-
-&lt;h5 id=&quot;histogram直方图&quot;&gt;Histogram(直方图)&lt;/h5&gt;
-
-&lt;p&gt;直方图是一种更复杂的度量标准类型。它为我们的指标提供了额外信息，例如观察值的总和及其数量，常用于跟踪事件发生的规模。&lt;/p&gt;
-
-&lt;p&gt;比如，为了监控性能指标，我们希望在有20%的服务器请求响应时间超过300毫秒时发送告警。对于涉及比例的指标就可以考虑使用直方图。&lt;/p&gt;
-
-&lt;h5 id=&quot;summary摘要&quot;&gt;Summary(摘要)&lt;/h5&gt;
-
-&lt;p&gt;摘要更高级一些，是对直方图的扩展。除了提供观察的总和和计数之外，它们还提供滑动窗口上的分位数度量。分位数是将概率密度划分为相等概率范围的方法。&lt;/p&gt;
-
-&lt;p&gt;对比直方图：&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;直方图随时间汇总值，给出总和和计数函数，使得易于查看给定指标的变化趋势。&lt;/li&gt;
-  &lt;li&gt;而摘要则给出了滑动窗口上的分位数（即随时间不断变化）。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;实例概念&quot;&gt;实例概念&lt;/h3&gt;
-
-&lt;p&gt;随着分布式架构的不断发展和云解决方案的普及，现在的架构已经变得越来越复杂了。&lt;/p&gt;
-
-&lt;p&gt;分布式的服务器复制和分发成了日常架构的必备组件。我们举一个经典的Web架构，该架构由3个后端Web服务器组成。在该例子中，我们要监视Web服务器返回的HTTP错误的数量。&lt;/p&gt;
-
-&lt;p&gt;使用普罗米修斯语言，单个Web服务器单元称为实例（主机实例）。该任务是计算所有实例的HTTP错误数量。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/prometheus_instance.jpeg&quot; alt=&quot;image_prometheus_instance&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;事实上，这甚至可以说是最简单的架构了，再复杂一点，实例不仅能是主机实例，还能是服务实例，因此你需要增加一个instance_type的标签标记主机或服务。&lt;/p&gt;
-
-&lt;p&gt;再再复杂一点，同样的IP，可能存在于不同云区域下，这属于不同的机器，因此还需要一个cloud标签，最终该数据结构可能会变为：&lt;/p&gt;
-
-&lt;p&gt;cpu_usage {job=”1”, instance=”128.0.0.1”, cloud=”0”, instance_type=”0”}&lt;/p&gt;
-
-&lt;h3 id=&quot;数据可视化&quot;&gt;数据可视化&lt;/h3&gt;
-
-&lt;p&gt;如果使用过基于InfluxDB的数据库，你可能会熟悉InfluxQL。普罗米修斯也内置了自己的SQL查询语言用于查询和检索数据，这个内置的语言就是PromQL。&lt;/p&gt;
-
-&lt;p&gt;我们前面说过，普罗米修斯的数据是用键值对表示的。PromQL也用相同的语法查询和返回结果集。&lt;/p&gt;
-
-&lt;p&gt;PromQL会处理两种向量：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;即时向量：表示当前时间，某个指标的数据向量。&lt;/li&gt;
-  &lt;li&gt;时间范围向量：表示过去某时间范围内，某个指标的数据向量。&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="Prometheus" /><category term="监控" /><summary type="html">普罗米修斯(Prometheus) 普罗米修斯(Prometheus)是一个SoundCloud公司开源的监控系统。当年，由于SoundCloud公司生产了太多的服务，传统的监控已经无法满足监控需求，于是他们在2012年决定着手开发新的监控系统，即普罗米修斯。</summary></entry></feed>
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/open_source_licenses.jpeg&quot; alt=&quot;open_source_licenses&quot; /&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="开源协议" /><summary type="html">开源协议是什么 开源软件在追求“自由”的同时，不能牺牲程序员的利益，否则将会影响程序员的创造激情，因此世界上现在有 60 多种被开源促进组织（Open Source Initiative）认可的开源许可协议来保证开源工作者的权益。</summary></entry></feed>
