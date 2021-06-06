@@ -1,4 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-06-06T20:52:07+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">MAC 地址与 IP 地址的区别</title><link href="https://lewinz.org/2021/06/06/mac-ip-address/" rel="alternate" type="text/html" title="MAC 地址与 IP 地址的区别" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/mac-ip-address</id><content type="html" xml:base="https://lewinz.org/2021/06/06/mac-ip-address/">&lt;h2 id=&quot;基础知识&quot;&gt;基础知识&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-06-06T21:04:42+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">Linux 网卡设置</title><link href="https://lewinz.org/2021/06/06/linux-network-set/" rel="alternate" type="text/html" title="Linux 网卡设置" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/linux-network-set</id><content type="html" xml:base="https://lewinz.org/2021/06/06/linux-network-set/">&lt;h2 id=&quot;centos74-设置网卡&quot;&gt;centos7.4 设置网卡&lt;/h2&gt;
+&lt;p&gt;修改配置文件&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// ens34 为网卡名
+vim /etc/sysconfig/network-scripts/ifcfg-ens34
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;TYPE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Ethernet    &lt;span class=&quot;c&quot;&gt;# 网卡类型：为以太网&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;PROXY_METHOD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;none    &lt;span class=&quot;c&quot;&gt;# 代理方式：关闭状态&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;BROWSER_ONLY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;no      &lt;span class=&quot;c&quot;&gt;# 只是浏览器：否&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;BOOTPROTO&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;dhcp  &lt;span class=&quot;c&quot;&gt;#设置网卡获得ip地址的方式，可能的选项为static(静态)，dhcp(dhcp协议)或bootp(bootp协议).&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;DEFROUTE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;        &lt;span class=&quot;c&quot;&gt;# 默认路由：是, 不明白的可以百度关键词 `默认路由`&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;IPV4_FAILURE_FATAL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;no     &lt;span class=&quot;c&quot;&gt;# 是不开启IPV4致命错误检测：否&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;IPV6INIT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;         &lt;span class=&quot;c&quot;&gt;# IPV6是否自动初始化: 是[不会有任何影响, 现在还没用到IPV6]&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;IPV6_AUTOCONF&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;    &lt;span class=&quot;c&quot;&gt;# IPV6是否自动配置：是[不会有任何影响, 现在还没用到IPV6]&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;IPV6_DEFROUTE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;     &lt;span class=&quot;c&quot;&gt;# IPV6是否可以为默认路由：是[不会有任何影响, 现在还没用到IPV6]&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;IPV6_FAILURE_FATAL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;no     &lt;span class=&quot;c&quot;&gt;# 是不开启IPV6致命错误检测：否&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;IPV6_ADDR_GEN_MODE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;stable-privacy   &lt;span class=&quot;c&quot;&gt;# IPV6地址生成模型：stable-privacy [这只一种生成IPV6的策略]&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ens34     &lt;span class=&quot;c&quot;&gt;# 网卡物理设备名称  &lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;UUID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8c75c2ba-d363-46d7-9a17-6719934267b7   &lt;span class=&quot;c&quot;&gt;# 通用唯一识别码，没事不要动它，否则你会后悔的。。&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;DEVICE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ens34   &lt;span class=&quot;c&quot;&gt;# 网卡设备名称, 必须和 `NAME` 值一样&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;ONBOOT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;no &lt;span class=&quot;c&quot;&gt;#系统启动时是否设置此网络接口，设置为yes时，系统启动时激活此设备 &lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;IPADDR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.103.203   &lt;span class=&quot;c&quot;&gt;#网卡对应的ip地址&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;PREFIX&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;24             &lt;span class=&quot;c&quot;&gt;# 子网 24就是255.255.255.0&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;GATEWAY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;192.168.103.1    &lt;span class=&quot;c&quot;&gt;#网关  &lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;DNS1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;114.114.114.114        &lt;span class=&quot;c&quot;&gt;# dns&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;HWADDR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;78:2B:CB:57:28:E5  &lt;span class=&quot;c&quot;&gt;# mac地址&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;ip命令常用参数&quot;&gt;ip命令常用参数&lt;/h2&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Ip  &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;选项]  操作对象&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;|addr|route...&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+ip &lt;span class=&quot;nb&quot;&gt;link &lt;/span&gt;show                           &lt;span class=&quot;c&quot;&gt;# 显示网络接口信息&lt;/span&gt;
+ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;eth0 upi                   &lt;span class=&quot;c&quot;&gt;# 开启网卡&lt;/span&gt;
+ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;eth0 down                  &lt;span class=&quot;c&quot;&gt;# 关闭网卡&lt;/span&gt;
+ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;eth0 promisc on            &lt;span class=&quot;c&quot;&gt;# 开启网卡的混合模式&lt;/span&gt;
+ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;eth0 promisc offi          &lt;span class=&quot;c&quot;&gt;# 关闭网卡的混个模式&lt;/span&gt;
+ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;eth0 txqueuelen 1200       &lt;span class=&quot;c&quot;&gt;# 设置网卡队列长度&lt;/span&gt;
+ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;eth0 mtu 1400              &lt;span class=&quot;c&quot;&gt;# 设置网卡最大传输单元&lt;/span&gt;
+
+ip addr show                           &lt;span class=&quot;c&quot;&gt;# 显示网卡IP信息&lt;/span&gt;
+ip addr add 192.168.0.1/24 dev eth0    &lt;span class=&quot;c&quot;&gt;# 设置eth0网卡IP地址192.168.0.1&lt;/span&gt;
+ip addr del 192.168.0.1/24 dev eth0    &lt;span class=&quot;c&quot;&gt;# 删除eth0网卡IP地址&lt;/span&gt;
+
+ip route list                                            &lt;span class=&quot;c&quot;&gt;# 查看路由信息&lt;/span&gt;
+ip route add 192.168.4.0/24  via  192.168.0.254 dev eth0 &lt;span class=&quot;c&quot;&gt;# 设置192.168.4.0网段的网关为192.168.0.254,数据走eth0接口&lt;/span&gt;
+ip route add default via  192.168.0.254  dev eth0        &lt;span class=&quot;c&quot;&gt;# 设置默认网关为192.168.0.254&lt;/span&gt;
+ip route del 192.168.4.0/24                              &lt;span class=&quot;c&quot;&gt;# 删除192.168.4.0网段的网关&lt;/span&gt;
+ip route del default                                     &lt;span class=&quot;c&quot;&gt;# 删除默认路由&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="linux" /><category term="网卡" /><summary type="html">centos7.4 设置网卡 修改配置文件 // ens34 为网卡名 vim /etc/sysconfig/network-scripts/ifcfg-ens34</summary></entry><entry><title type="html">MAC 地址与 IP 地址的区别</title><link href="https://lewinz.org/2021/06/06/mac-ip-address/" rel="alternate" type="text/html" title="MAC 地址与 IP 地址的区别" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/mac-ip-address</id><content type="html" xml:base="https://lewinz.org/2021/06/06/mac-ip-address/">&lt;h2 id=&quot;基础知识&quot;&gt;基础知识&lt;/h2&gt;
 
 &lt;p&gt;如今的网络是分层来实现的，就像是搭积木一样，先设计某个特定功能的模块，然后把模块拼起来组成整个网络。局域网也不例外，一般来说，在组网上我们使用的是IEEE802参考模型，从下至上分为：&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E7%89%A9%E7%90%86%E5%B1%82&quot;&gt;物理层&lt;/a&gt;、&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E4%BB%8B%E8%B4%A8%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6&quot;&gt;媒体接入控制层（MAC）&lt;/a&gt;，&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E6%95%B0%E6%8D%AE%E9%93%BE%E8%B7%AF%E5%B1%82&quot;&gt;逻辑链路控制层（LLC）&lt;/a&gt;。&lt;/p&gt;
 
@@ -1096,58 +1144,4 @@ FAIL    chapter09/testing    0.009s
 &lt;ul&gt;
   &lt;li&gt;Fatal : Log + FailNow&lt;/li&gt;
   &lt;li&gt;Fatalf : Logf + FailNow&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="test" /><summary type="html">testing - 单元测试 testing 为 Go 语言 package 提供自动化测试的支持。通过 go test 命令，能够自动执行如下形式的任何函数：</summary></entry><entry><title type="html">mtr 命令</title><link href="https://lewinz.org/2021/05/26/mtr-instruct/" rel="alternate" type="text/html" title="mtr 命令" /><published>2021-05-26T00:00:00+08:00</published><updated>2021-05-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/26/mtr-instruct</id><content type="html" xml:base="https://lewinz.org/2021/05/26/mtr-instruct/">&lt;h3 id=&quot;mtr&quot;&gt;MTR&lt;/h3&gt;
-&lt;p&gt;mtr 命令是 ping 和 tracert 命令的结合，同时具有 测试丢包率（ping） 和 跟踪路由（tracert） 的功能&lt;/p&gt;
-
-&lt;h3 id=&quot;安装&quot;&gt;安装&lt;/h3&gt;
-&lt;h4 id=&quot;mac&quot;&gt;mac&lt;/h4&gt;
-&lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;命令安装 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;brew install mtr&lt;/code&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;MTR 安装之后并未把程序文件复制到 /usr/local/bin 目录下，需要手动复制
-    &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local/Cellar/mtr/0.92/sbin
-&lt;span class=&quot;nb&quot;&gt;cp &lt;/span&gt;mtr /usr/local/bin/
-&lt;span class=&quot;nb&quot;&gt;cp &lt;/span&gt;mtr-packet /usr/local/bin/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;MTR 命令的使用，需要管理员权限，所以在运行时必须加上 sudo&lt;br /&gt;
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo mtr www.baidu.com&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;命令详解&quot;&gt;命令详解&lt;/h3&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mtr &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; 提供帮助命令  
-
-mtr &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; 显示mtr的版本信息  
-
-mtr &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; 已报告模式显示  
-
-mtr &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; 设置每秒发送数据包的数量  
-
-mtr &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; 用来指定ping数据包的大小  
-
-mtr &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; no-dns不对IP地址做域名解析  
-
-mtr &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; 来设置发送数据包的IP地址 这个对一个主机由多个IP地址是有用的  
-
-mtr &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; 使用这个参数来设置ICMP返回之间的要求默认是1秒  
-
-mtr &lt;span class=&quot;nt&quot;&gt;-4&lt;/span&gt; IPv4  
-
-mtr &lt;span class=&quot;nt&quot;&gt;-6&lt;/span&gt; IPv6  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;数据含义：&lt;br /&gt;
-​Host 列是途经的IP或本机域名&lt;/p&gt;
-
-&lt;p&gt;Loss% 列就是对应IP行的丢包率了，值得一提的是，只有最后的目标丢包才算是真正的丢包&lt;/p&gt;
-
-&lt;p&gt;Last 列则是最后一次返回的延迟，按毫秒计算的&lt;/p&gt;
-
-&lt;p&gt;Avg 列是所有返回时延的一个平均值&lt;/p&gt;
-
-&lt;p&gt;Best 列是最快的一次返回时延&lt;/p&gt;
-
-&lt;p&gt;Wrst 列是最长的一次返回时延&lt;/p&gt;
-
-&lt;p&gt;StDev 列是标准偏差&lt;/p&gt;</content><author><name>Lewin</name></author><category term="mtr" /><category term="路由" /><summary type="html">MTR mtr 命令是 ping 和 tracert 命令的结合，同时具有 测试丢包率（ping） 和 跟踪路由（tracert） 的功能</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="test" /><summary type="html">testing - 单元测试 testing 为 Go 语言 package 提供自动化测试的支持。通过 go test 命令，能够自动执行如下形式的任何函数：</summary></entry></feed>

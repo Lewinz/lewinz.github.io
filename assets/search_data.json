@@ -245,6 +245,14 @@
     } ,
   
     {
+      "title"    : "Linux 网卡设置",
+      "category" : "linux",
+      
+      "url"      : "https://lewinz.org/2021/06/06/linux-network-set/",
+      "keywords" : "linux,网卡"
+    } ,
+  
+    {
       "title"    : "MAC 地址与 IP 地址的区别",
       "category" : "MAC",
       
