@@ -277,6 +277,14 @@
     } ,
   
     {
+      "title"    : "openstack 秘钥上传",
+      "category" : "openstack",
+      
+      "url"      : "https://lewinz.org/2021/06/06/openstack-keypair-upload/",
+      "keywords" : "openstack,秘钥"
+    } ,
+  
+    {
       "title"    : "网关与路由的区别",
       "category" : "网关",
       
