@@ -253,6 +253,14 @@
     } ,
   
     {
+      "title"    : "静态IP/动态IP/浮动IP/虚拟IP 的区别",
+      "category" : "静态IP",
+      
+      "url"      : "https://lewinz.org/2021/06/06/static-dynamic-floating-virtual-ip/",
+      "keywords" : "静态IP,动态IP,浮动IP,虚拟IP"
+    } ,
+  
+    {
       "title"    : "gin/gorm 报错记录",
       "category" : "gin",
       
