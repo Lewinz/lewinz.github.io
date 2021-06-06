@@ -24,23 +24,23 @@ floating ip 跟 dynamic ip 有点像，参考各公有云厂商的弹性 ip。
 在有些情况（比如高可用场景）下我们需要多台电脑共用一个 ip，也就是说一个 ip 「属于」多台电脑。那怎么实现呢？是给两台电脑设置同一个 ip 吗？显然不是，因为为产生 ip 冲突。这就需要 virtual ip。  
 比如我们有两台服务器AAA和BBB，它们的 IP 分别是10.0.0.1和10.0.0.2。它们功能相同，提供相同的服务。理论上大家可以直接能过 10.0.0.1 或者 10.0.0.2 来访问 AAA 或 BBB 的服务。但如果某一台机器宕机，就没法访问了。要解决这个问题就需要 virtual ip。
 
-![VIP_1](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/VIP_1.png)
+![VIP_1](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/VIP_1.jpeg)
 
 首先，我们从 AAA 和 BBB 中选一个作主，另一个作备。然后要求它们互相探测，确保对方都在线。然后给AAA和BBB同时「分配」一个 virtual ip 10.0.0.100。其他主机需要通过 10.0.0.100 来访问 AAA 或 BBB 提供的服务。
 
 一般来说，其他主机要访问 10.0.0.100 需要通过 ARP 获取对应的 MAC 地址。如果 AAA 和 BBB 同时应答 ARP 请求，就会产生冲突。因为 10.0.0.100 是 virtual ip，所以，只有主服务器AAA才能应答。BBB 收到 ARP 请求后发现 AAA 还活着，就自动闭嘴。
 
-![VIP_2](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/VIP_2.png)
+![VIP_2](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/VIP_2.jpeg)
 
 之后所有访问 10.0.0.100 这个 virtual ip 的请求都会发到 AAA。
 
 如果 AAA 出现故障呢？这个时候其他主机发现 10.0.0.100 不通了，于是发出新的 ARP 请求
 
-![VIP_3](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/VIP_3.png)
+![VIP_3](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/VIP_3.jpeg)
 
 同时，BBB 也探测不到 AAA，它知道自己的高光时刻来到了，于是 BBB 大声响应 ARP 请求说「向我开炮」。
 
-![VIP_4](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/VIP_4.png)
+![VIP_4](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/VIP_4.jpeg)
 
 总结下来，virtual ip 就是多主机设置相同 ip，但只有一台主机可以在特定条件下响应 arp 请求。
 
