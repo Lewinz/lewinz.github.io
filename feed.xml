@@ -1,4 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-06-06T22:01:12+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang 依赖循环</title><link href="https://lewinz.org/2021/06/06/golang-depend-loop/" rel="alternate" type="text/html" title="golang 依赖循环" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/golang-depend-loop</id><content type="html" xml:base="https://lewinz.org/2021/06/06/golang-depend-loop/">&lt;p&gt;循环依赖本质上一个错误的设计，在go里面，直接把它作为了一个编译时的错误。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-06-11T19:20:40+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">监控测试方法-跑满CPU</title><link href="https://lewinz.org/2021/06/11/monitor-cpu-test/" rel="alternate" type="text/html" title="监控测试方法-跑满CPU" /><published>2021-06-11T00:00:00+08:00</published><updated>2021-06-11T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/11/monitor-cpu-test</id><content type="html" xml:base="https://lewinz.org/2021/06/11/monitor-cpu-test/">&lt;h3 id=&quot;命令&quot;&gt;命令&lt;/h3&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;i &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;1 &lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /proc/cpuinfo |grep &lt;span class=&quot;s2&quot;&gt;&quot;processor&quot;&lt;/span&gt; |wc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dd &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/zero &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/null&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;分析&quot;&gt;分析&lt;/h3&gt;
+&lt;p&gt;首先，我们把这一行命令拆分一下，增强下代码的可读性：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /proc/cpuinfo | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;processor&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;wc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;1 &lt;span class=&quot;nv&quot;&gt;$N&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;i &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$List&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do
+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;dd &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/zero &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/null
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;下面来解释下每一行吧。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /proc/cpuinfo | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;processor&quot;&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;wc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;这条最简单了，获取CPU核数。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;1 N
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;根据N的值生成一个序列。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;i &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;seq &lt;/span&gt;1 N&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;循环执行命令，从１到Ｎ。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;dd &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/zero &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/null
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;执行dd命令，输出到&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/dev/null&lt;/code&gt;, 实际上只占用CPU，没有IO操作。&lt;br /&gt;
+由于连续执行Ｎ个的dd 命令, 且使用率为100%，这时调度器会调度每个dd命令在不同的CPU上处理，最终就实现所有CPU使用率达到100%。&lt;/p&gt;
+
+&lt;h3 id=&quot;kill方法&quot;&gt;Kill方法&lt;/h3&gt;
+&lt;p&gt;还是要履行下运维的职责，把这个引起CPU使用率100%的进程干掉。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pkill -9 dd&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="监控" /><category term="CPU" /><summary type="html">命令 for i in `seq 1 $(cat /proc/cpuinfo |grep &quot;processor&quot; |wc -l)`; do dd if=/dev/zero of=/dev/null; done</summary></entry><entry><title type="html">golang 依赖循环</title><link href="https://lewinz.org/2021/06/06/golang-depend-loop/" rel="alternate" type="text/html" title="golang 依赖循环" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/golang-depend-loop</id><content type="html" xml:base="https://lewinz.org/2021/06/06/golang-depend-loop/">&lt;p&gt;循环依赖本质上一个错误的设计，在go里面，直接把它作为了一个编译时的错误。&lt;/p&gt;
 
 &lt;p&gt;什么是循环依赖呢？&lt;/p&gt;
 
@@ -560,14 +591,140 @@ ip route del default                                     &lt;span class=&quot;c&
 
 &lt;p&gt;注意：ARP命令仅对局域网的上网代理(网络信息的中转站突破自身IP访问限制)服务器(文件传输协议支持FTP协议的服务器就是FTP服务器)有用，而且是针对静态IP地址，如果采用Modem拨号上网或是动态IP地址就不起作用。&lt;/p&gt;
 
-&lt;p&gt;不过，只是简单地绑定IP和MAC地址是不能完全的解决IP盗用问题的。作为一个网络供应商，他们有责任为用户解决好这些问题之的后，才交给用户使用，而不是把安全问题交给用户来解决。不应该让用户来承担一些不必要盗用的损失。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="MAC" /><category term="IP" /><summary type="html">基础知识</summary></entry><entry><title type="html">openstack 镜像压缩</title><link href="https://lewinz.org/2021/06/06/openstack-image-compress/" rel="alternate" type="text/html" title="openstack 镜像压缩" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/openstack-image-compress</id><content type="html" xml:base="https://lewinz.org/2021/06/06/openstack-image-compress/">&lt;h4 id=&quot;使用qemu-img工具&quot;&gt;使用qemu-img工具&lt;/h4&gt;
+&lt;p&gt;不过，只是简单地绑定IP和MAC地址是不能完全的解决IP盗用问题的。作为一个网络供应商，他们有责任为用户解决好这些问题之的后，才交给用户使用，而不是把安全问题交给用户来解决。不应该让用户来承担一些不必要盗用的损失。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="MAC" /><category term="IP" /><summary type="html">基础知识</summary></entry><entry><title type="html">openstack 制作标准镜像</title><link href="https://lewinz.org/2021/06/06/openstack-image-compress/" rel="alternate" type="text/html" title="openstack 制作标准镜像" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/openstack-image-compress</id><content type="html" xml:base="https://lewinz.org/2021/06/06/openstack-image-compress/">&lt;h2 id=&quot;下载官方镜像&quot;&gt;下载官方镜像&lt;/h2&gt;
+&lt;p&gt;具体的镜像地址参考： &lt;a href=&quot;https://docs.openstack.org/image-guide/obtain-images.html&quot;&gt;https://docs.openstack.org/image-guide/obtain-images.html&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;转换镜像格式的命令：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;qemu-img convert -f qcow2 -O raw test.qcow2 test.raw&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&quot;需要对镜像做的改动&quot;&gt;需要对镜像做的改动：&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;配置支持密码登录&lt;/li&gt;
+  &lt;li&gt;配置支持系统盘自动扩容&lt;/li&gt;
+  &lt;li&gt;配置支持使用 root 登录&lt;/li&gt;
+  &lt;li&gt;配置支持监控 qemu-guest-agent&lt;/li&gt;
+  &lt;li&gt;配置系统日志，开启 nova console log&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;// 压缩命令是以当前镜像文件基础上 -20G，要事先计算镜像真实大小，压缩至一定空间后上传&lt;br /&gt;
-压缩镜像命令:&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;qemu-img resize test.raw -- -20G&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&quot;ubuntu--centos&quot;&gt;Ubuntu | CentOS&lt;/h2&gt;
 
-&lt;p&gt;镜像上传命令:&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;glance image-create --name Ubuntu --disk-format raw --container-format bare --property os_type=&quot;linux&quot; --property os_distro=&quot;UbuntuServer16.04-64&quot; --file &lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="镜像" /><summary type="html">使用qemu-img工具</summary></entry><entry><title type="html">openstack 秘钥上传</title><link href="https://lewinz.org/2021/06/06/openstack-keypair-upload/" rel="alternate" type="text/html" title="openstack 秘钥上传" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/openstack-keypair-upload</id><content type="html" xml:base="https://lewinz.org/2021/06/06/openstack-keypair-upload/">&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nova &lt;span class=&quot;nb&quot;&gt;help&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;key
+&lt;h3 id=&quot;ubuntu&quot;&gt;Ubuntu&lt;/h3&gt;
+&lt;h4 id=&quot;设置密码和-root-登录&quot;&gt;设置密码和 root 登录&lt;/h4&gt;
+&lt;p&gt;修改 cloud-init config&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vi /etc/cloud/cloud.cfg
+
+&lt;span class=&quot;c&quot;&gt;# 修改内容：&lt;/span&gt;
+disable_root: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 新增内容：&lt;/span&gt;
+ssh_pwauth: &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;修改 sshd_config&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vi /etc/ssh/sshd_config
+&lt;span class=&quot;c&quot;&gt;# 修改的内容：&lt;/span&gt;
+PasswordAuthentication &lt;span class=&quot;nb&quot;&gt;yes
+&lt;/span&gt;PermitRootLogin &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;重启 sshd 服务： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;service sshd restart&lt;/code&gt;&lt;/p&gt;
+&lt;h4 id=&quot;设置系统盘自动扩容&quot;&gt;设置系统盘自动扩容&lt;/h4&gt;
+&lt;p&gt;Ubuntu 的官方 Cloud 镜像自带这个功能，所以不需要操作&lt;/p&gt;
+&lt;h4 id=&quot;配置监控&quot;&gt;配置监控&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get update &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt-get &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; qemu-guest-agent
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h4 id=&quot;配置开启-nova-console-log&quot;&gt;配置开启 nova console log&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vi /etc/default/grub
+
+修改的内容：
+GRUB_CMDLINE_LINUX_DEFAULT加上console&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;tty0 &lt;span class=&quot;nv&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ttyS0,115200
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;centos&quot;&gt;CentOS&lt;/h3&gt;
+&lt;h4 id=&quot;cloud-init&quot;&gt;cloud-init&lt;/h4&gt;
+&lt;p&gt;允许root远程登录&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;cloud-init
+
+&lt;span class=&quot;c&quot;&gt;# 修改 /etc/cloud/cloud.cfg&lt;/span&gt;
+vi /etc/cloud/cloud.cfg
+disable_root: 0
+ssh_pwauth:   1
+
+&lt;span class=&quot;c&quot;&gt;# 文件末尾添加&lt;/span&gt;
+user: root
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;sshd_config&quot;&gt;sshd_config&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vi /etc/ssh/sshd_config
+
+&lt;span class=&quot;c&quot;&gt;# 修改&lt;/span&gt;
+PasswordAuthentication &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 注意不能有多个&lt;/span&gt;
+PermitRootLogin &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 重启 sshd 服务&lt;/span&gt;
+service sshd restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;配置支持系统盘自动扩容&quot;&gt;配置支持系统盘自动扩容&lt;/h3&gt;
+&lt;p&gt;CentOS7官方镜像自带自动扩容，无需修改&lt;br /&gt;
+CentOS6参考&lt;a href=&quot;https://ykfq.github.io/openstack/create-centos6-image-for-openstack&quot;&gt;文档&lt;/a&gt;修改&lt;/p&gt;
+
+&lt;h3 id=&quot;qemu-guest-agent监控&quot;&gt;qemu-guest-agent(监控)&lt;/h3&gt;
+&lt;p&gt;虚机内操作&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;qemu-guest-agent
+
+vi /etc/sysconfig/qemu-ga
+&lt;span class=&quot;c&quot;&gt;# 新增&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;FSFREEZE_HOOK_ENABLE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+&lt;span class=&quot;c&quot;&gt;# 注释&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;BLACKLIST_RPC&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;guest-file-open,guest-file-close,guest-file-read,guest-file-write,guest-file-seek,guest-file-flush&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;==&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# BLACKLIST_RPC=&quot;guest-file-open,guest-file-close,guest-file-read,guest-file-write,guest-file-seek,guest-file-flush&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;镜像文件操作&lt;br /&gt;
+修改镜像元数据，新增
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hw_qemu_guest_agent=yes&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;开启nova-console-log日志输出支持&quot;&gt;开启nova console log日志输出支持&lt;/h3&gt;
+&lt;h4 id=&quot;centos6&quot;&gt;centos6&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vim /etc/grub.conf
+&lt;span class=&quot;nv&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;tty0 &lt;span class=&quot;nv&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ttyS0,115200n8 &lt;span class=&quot;c&quot;&gt;#追加到kernel行末尾&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#注：/etc/grub.conf /boot/grub/menu.lst 都是指向 /boot/grub/grub.conf 的软链。&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;centos7&quot;&gt;centos7&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;vim /etc/default/grub
+删除rhgb quiet 并追加 &lt;span class=&quot;nv&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;tty0 &lt;span class=&quot;nv&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ttyS0,115200n8
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;重新生成grubcfg文件&quot;&gt;重新生成grub.cfg文件&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;grub2-mkconfig -o /boot/grub2/grub.cfg&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;镜像文件格式转换与压缩&quot;&gt;镜像文件格式转换与压缩&lt;/h3&gt;
+&lt;h4 id=&quot;openstack-命令行客户端鉴权&quot;&gt;openstack 命令行客户端鉴权&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;source &lt;/span&gt;auth.sh
+
+&lt;span class=&quot;c&quot;&gt;# auth.sh 为鉴权文件，例如&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;OS_USERNAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;openstack_username
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;OS_PASSWORD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;openstack_password
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;OS_TENANT_NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;name
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;OS_AUTH_URL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;https://qvm-wz.qiniu.com:5000/v3
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;OS_USER_DOMAIN_NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Default
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;OS_PROJECT_DOMAIN_NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Default
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;OS_IDENTITY_API_VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;OS_PROJECT_ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;project_id
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h4 id=&quot;镜像格式转换&quot;&gt;镜像格式转换&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# -f 转换前格式&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -O 转换后格式&lt;/span&gt;
+qemu-img convert &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; qcow2 &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; raw test.qcow2 test.raw
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h4 id=&quot;压缩镜像文件&quot;&gt;压缩镜像文件&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# -- -18.5G 在原有镜像文件基础上压缩 18.5G&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# CentOS镜像可能会出现压缩后转换格式size变很小，解决办法是压缩时减少压缩大小&lt;/span&gt;
+qemu-img resize test.raw &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-18&lt;/span&gt;.5G
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h4 id=&quot;重新上传镜像文件&quot;&gt;重新上传镜像文件&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;glance image-create &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt; Ubuntu &lt;span class=&quot;nt&quot;&gt;--disk-format&lt;/span&gt; raw &lt;span class=&quot;nt&quot;&gt;--container-format&lt;/span&gt; bare &lt;span class=&quot;nt&quot;&gt;--property&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;os_type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;linux&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--property&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;os_distro&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;UbuntuServer16.04-64&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--file&lt;/span&gt; test.qcow2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="镜像" /><summary type="html">下载官方镜像 具体的镜像地址参考： https://docs.openstack.org/image-guide/obtain-images.html</summary></entry><entry><title type="html">openstack 秘钥上传</title><link href="https://lewinz.org/2021/06/06/openstack-keypair-upload/" rel="alternate" type="text/html" title="openstack 秘钥上传" /><published>2021-06-06T00:00:00+08:00</published><updated>2021-06-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/06/openstack-keypair-upload</id><content type="html" xml:base="https://lewinz.org/2021/06/06/openstack-keypair-upload/">&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nova &lt;span class=&quot;nb&quot;&gt;help&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;key
     flavor-key          Set or &lt;span class=&quot;nb&quot;&gt;unset &lt;/span&gt;extra_spec &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;a flavor.
     keypair-add         Create a new key pair &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;use with instances.
     keypair-delete      Delete keypair given by its name.
@@ -792,70 +949,4 @@ virtual ip ==&amp;gt; 虚拟IP&lt;/p&gt;
 
 &lt;p&gt;第二条SQL语句查询（’Alie’, ‘John’）范围内的记录，主键id分布可能是离散的1，100，20001，5000…..；增加了随机读取数据页几率；所以普通索引的范围查询效率被聚集索引甩开几条街都不止；非聚集索引的精确查询效率还是可以的，比聚集索引查询只增加了一次IO开销。&lt;/p&gt;
 
-&lt;h2 id=&quot;本文中提到的索引都是以b-tree组织的&quot;&gt;本文中提到的索引都是以B+ tree组织的&lt;/h2&gt;</content><author><name>Lewin</name></author><category term="MySQL" /><category term="索引" /><category term="聚集索引" /><category term="非聚集索引" /><summary type="html">聚集索引 聚集索引是指数据库表行中数据的物理顺序与键值的逻辑（索引）顺序相同。一个表只能有一个聚集索引，因为一个表的物理顺序只有一种情况，所以，对应的聚集索引只能有一个。如果某索引不是聚集索引，则表中的行物理顺序与索引顺序不匹配，与非聚集索引相比，聚集索引有着更快的检索速度。</summary></entry><entry><title type="html">开源协议</title><link href="https://lewinz.org/2021/05/30/open-source-licenses/" rel="alternate" type="text/html" title="开源协议" /><published>2021-05-30T00:00:00+08:00</published><updated>2021-05-30T00:00:00+08:00</updated><id>https://lewinz.org/2021/05/30/open-source-licenses</id><content type="html" xml:base="https://lewinz.org/2021/05/30/open-source-licenses/">&lt;h2 id=&quot;开源协议是什么&quot;&gt;开源协议是什么&lt;/h2&gt;
-&lt;p&gt;开源软件在追求“自由”的同时，不能牺牲程序员的利益，否则将会影响程序员的创造激情，因此世界上现在有 60 多种被开源促进组织（Open Source Initiative）认可的开源许可协议来保证开源工作者的权益。&lt;/p&gt;
-
-&lt;p&gt;开源协议规定了你在使用开源软件时的权利和责任，也就是规定了你可以做什么，不可以做什么。&lt;/p&gt;
-
-&lt;p&gt;开源协议虽然不一定具备法律效力，但是当涉及软件版权纠纷时，开源协议也是非常重要的证据之一。&lt;/p&gt;
-
-&lt;p&gt;对于准备编写一款开源软件的开发人员，也非常建议先了解一下当前最热门的开源许可协议，选择一个合适的开源许可协议来最大限度保护自己的软件权益。&lt;/p&gt;
-
-&lt;h3 id=&quot;gnu-gpl&quot;&gt;GNU GPL&lt;/h3&gt;
-&lt;p&gt;GNU GPL（GNU General Public License，GNU通用公共许可证）&lt;/p&gt;
-
-&lt;p&gt;只要软件中包含了遵循 GPL 协议的产品或代码，该软件就必须也遵循 GPL 许可协议，也就是必须开源免费，不能闭源收费，因此这个协议并不适合商用软件。&lt;/p&gt;
-
-&lt;p&gt;遵循 GPL 协议的开源软件数量极其庞大，包括 Linux 系统在内的大多数的开源软件都是基于这个协议的。&lt;/p&gt;
-
-&lt;h4 id=&quot;特点&quot;&gt;特点&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;复制自由	允许把软件复制到任何人的电脑中，并且不限制复制的数量。&lt;/li&gt;
-  &lt;li&gt;传播自由	允许软件以各种形式进行传播。&lt;/li&gt;
-  &lt;li&gt;收费传播	允许在各种媒介上出售该软件，但必须提前让买家知道这个软件是可以免费获得的；因此，一般来讲，开源软件都是通过为用户提供有偿服务的形式来盈利的。&lt;/li&gt;
-  &lt;li&gt;修改自由	允许开发人员增加或删除软件的功能，但软件修改后必须依然基于GPL许可协议授权。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;bsd&quot;&gt;BSD&lt;/h3&gt;
-&lt;p&gt;BSD（Berkeley Software Distribution，伯克利软件发布版）协议&lt;/p&gt;
-
-&lt;p&gt;BSD 协议基本上允许用户“为所欲为”，用户可以使用、修改和重新发布遵循该许可的软件，并且可以将软件作为商业软件发布和销售，前提是需要满足下面三个条件：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;如果再发布的软件中包含源代码，则源代码必须继续遵循 BSD 许可协议。&lt;/li&gt;
-  &lt;li&gt;如果再发布的软件中只有二进制程序，则需要在相关文档或版权文件中声明原始代码遵循了 BSD 协议。&lt;/li&gt;
-  &lt;li&gt;不允许用原始软件的名字、作者名字或机构名称进行市场推广。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;BSD 对商业比较友好，很多公司在选用开源产品的时候都首选 BSD 协议，因为可以完全控制这些第三方的代码，甚至在必要的时候可以修改或者二次开发。&lt;/p&gt;
-
-&lt;h3 id=&quot;apache&quot;&gt;Apache&lt;/h3&gt;
-&lt;p&gt;Apache 许可证版本（Apache License Version）协议&lt;/p&gt;
-
-&lt;p&gt;Apache 和 BSD 类似，都适用于商业软件。Apache 协议在为开发人员提供版权及专利许可的同时，允许用户拥有修改代码及再发布的自由。&lt;/p&gt;
-
-&lt;p&gt;现在热门的 &lt;strong&gt;Hadoop&lt;/strong&gt; 、&lt;strong&gt;Apache HTTP Server&lt;/strong&gt;、&lt;strong&gt;MongoDB&lt;/strong&gt; 等项目都是基于该许可协议研发的，程序开发人员在开发遵循该协议的软件时，要严格遵守下面的四个条件：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;该软件及其衍生品必须继续使用 Apache 许可协议。&lt;/li&gt;
-  &lt;li&gt;如果修改了程序源代码，需要在文档中进行声明。&lt;/li&gt;
-  &lt;li&gt;若软件是基于他人的源代码编写而成的，则需要保留原始代码的协议、商标、专利声明及其他原作者声明的内容信息。&lt;/li&gt;
-  &lt;li&gt;如果再发布的软件中有声明文件，则需在此文件中标注 Apache 许可协议及其他许可协议。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;mit&quot;&gt;MIT&lt;/h3&gt;
-&lt;p&gt;MIT（Massachusetts Institute of Technology）协议&lt;/p&gt;
-
-&lt;p&gt;目前限制最少的开源许可协议之一（比 BSD 和 Apache 的限制都少），只要程序的开发者在修改后的源代码中保留原作者的许可信息即可，因此普遍被商业软件所使用。&lt;/p&gt;
-
-&lt;p&gt;使用 MIT 协议的软件有 PuTTY、X Window System、Ruby on Rails、Lua 5.0 onwards、Mono 等。&lt;/p&gt;
-
-&lt;h3 id=&quot;gun-lgpl&quot;&gt;GUN LGPL&lt;/h3&gt;
-&lt;p&gt;GUN LGPL（GNU Lesser General Public License，GNU 宽通用公共许可证）&lt;/p&gt;
-
-&lt;p&gt;LGPL 是 GPL 的一个衍生版本，也被称为 GPL V2，该协议主要是为类库设计的开源协议。&lt;/p&gt;
-
-&lt;p&gt;LGPL 允许商业软件通过类库引用（link）的方式使用 LGPL 类库，而不需要开源商业软件的代码。这使得采用 LGPL 协议的开源代码可以被商业软件作为类库引用并发布和销售。&lt;/p&gt;
-
-&lt;p&gt;但是如果修改 LGPL 协议的代码或者衍生品，则所有修改的代码，涉及修改部分的额外代码和衍生的代码都必须采用 LGPL 协议。因此LGPL协议的开源代码很适合作为第三方类库被商业软件引用，但不适合希望以 LGPL 协议代码为基础，通过修改和衍生的方式做二次开发的商业软件采用。&lt;/p&gt;
-
-&lt;h2 id=&quot;如何选择开源协议&quot;&gt;如何选择开源协议&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/open_source_licenses.jpeg&quot; alt=&quot;open_source_licenses&quot; /&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="开源协议" /><summary type="html">开源协议是什么 开源软件在追求“自由”的同时，不能牺牲程序员的利益，否则将会影响程序员的创造激情，因此世界上现在有 60 多种被开源促进组织（Open Source Initiative）认可的开源许可协议来保证开源工作者的权益。</summary></entry></feed>
+&lt;h2 id=&quot;本文中提到的索引都是以b-tree组织的&quot;&gt;本文中提到的索引都是以B+ tree组织的&lt;/h2&gt;</content><author><name>Lewin</name></author><category term="MySQL" /><category term="索引" /><category term="聚集索引" /><category term="非聚集索引" /><summary type="html">聚集索引 聚集索引是指数据库表行中数据的物理顺序与键值的逻辑（索引）顺序相同。一个表只能有一个聚集索引，因为一个表的物理顺序只有一种情况，所以，对应的聚集索引只能有一个。如果某索引不是聚集索引，则表中的行物理顺序与索引顺序不匹配，与非聚集索引相比，聚集索引有着更快的检索速度。</summary></entry></feed>

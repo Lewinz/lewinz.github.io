@@ -277,7 +277,7 @@
     } ,
   
     {
-      "title"    : "openstack 镜像压缩",
+      "title"    : "openstack 制作标准镜像",
       "category" : "openstack",
       
       "url"      : "https://lewinz.org/2021/06/06/openstack-image-compress/",
@@ -306,6 +306,14 @@
       
       "url"      : "https://lewinz.org/2021/06/06/static-dynamic-floating-virtual-ip/",
       "keywords" : "静态IP,动态IP,浮动IP,虚拟IP"
+    } ,
+  
+    {
+      "title"    : "监控测试方法-跑满CPU",
+      "category" : "监控",
+      
+      "url"      : "https://lewinz.org/2021/06/11/monitor-cpu-test/",
+      "keywords" : "监控,CPU"
     } ,
   
     {
