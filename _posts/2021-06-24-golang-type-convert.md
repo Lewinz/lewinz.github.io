@@ -15,10 +15,10 @@ int, err := strconv.Atoi(string)
 // string到int64
 int64, err := strconv.ParseInt(string, 10, 64)
 
-//string到float64
+// string到float64
 float, err := strconv.ParseFloat(string, 64)
 
-//string到float32
+// string到float32
 float, err = strconv.ParseFloat(string, 32)
 ```
 
