@@ -82,6 +82,8 @@
   
   
   
+  
+  
 
   
     {
@@ -134,10 +136,10 @@
   
     {
       "title"    : "Golang Tag 汇总",
-      "category" : "golan",
+      "category" : "golang",
       
       "url"      : "https://lewinz.org/2021/05/17/golang-tag/",
-      "keywords" : "golan,tag,汇总"
+      "keywords" : "golang,tag,汇总"
     } ,
   
     {
@@ -314,6 +316,22 @@
       
       "url"      : "https://lewinz.org/2021/06/11/monitor-cpu-test/",
       "keywords" : "监控,CPU"
+    } ,
+  
+    {
+      "title"    : "Golang 格式化输出 - fmt",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/2021/06/24/golang-fmt-placeholder/",
+      "keywords" : "golang,格式化,输出"
+    } ,
+  
+    {
+      "title"    : "Golang 基础类型转换",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/2021/06/24/golang-type-convert/",
+      "keywords" : "golang,转换"
     } ,
   
     {
