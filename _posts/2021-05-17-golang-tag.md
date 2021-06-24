@@ -1,9 +1,9 @@
 ---
 layout: post
 title: Golang Tag 汇总
-categories: [golan,tag,汇总]
+categories: [golang,tag,汇总]
 description: Golang Tag 汇总
-keywords: golan,tag,汇总
+keywords: golang,tag,汇总
 ---
 
 ## Tag

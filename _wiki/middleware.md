@@ -265,6 +265,19 @@ rpm -ivh mysql-community-server-5.7.22-1.el7.x86_64.rpm
 修改mysql配置  
 `vi /etc/my.cnf`
 ```sh
+# 设置字符编码集 utf8mb4
+[client] 
+default-character-set = utf8mb4 
+ 
+[mysql] 
+default-character-set = utf8mb4 
+ 
+[mysqld] 
+character-set-client-handshake = FALSE 
+character-set-server = utf8mb4 
+collation-server = utf8mb4_general_ci 
+init_connect='SET NAMES utf8mb4'
+
 user=mysql
 skip-name-resolve
 max_connections=500
