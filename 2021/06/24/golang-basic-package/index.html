@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /><title>Golang 基础包 &mdash; 阿嫂</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/primer-css/css/primer.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/collection.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/repo-card.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/sections/repo-list.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/boxed-group.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/common.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/responsive.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/posts/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/octicons/octicons/octicons.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/rouge-themes@master/dist/github.css"><link rel="canonical" href="https://lewinz.org/2021/06/24/golang-basic-package/"><link rel="alternate" type="application/atom+xml" title="阿嫂" href="https://lewinz.org/feed.xml"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/favicon.ico"><meta property="og:title" content="Golang 基础包"><meta name="keywords" content="golang,基础包"><meta name="og:keywords" content="golang,基础包"><meta name="description" content="time"><meta name="og:description" content="time"><meta property="og:url" content="https://lewinz.org/2021/06/24/golang-basic-package/"><meta property="og:site_name" content="阿嫂"><meta property="og:type" content="article"><meta property="og:locale" content="zh_CN" /><meta property="article:published_time" content="2021-06-24"> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/jquery/dist/jquery.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery-ui.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/main.js"></script> <script data-ad-client="ca-pub-7093222719567591" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head><body class="" data-mz=""><header class="site-header"><div class="container"><h1><a href="https://lewinz.org/" title="阿嫂"><span class="octicon octicon-mark-github"></span> 阿嫂</a></h1><button class="collapsed mobile-visible" type="button" onclick="toggleMenu();"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button><nav class="site-header-nav" role="navigation"> <a href="https://lewinz.org/" class=" site-header-nav-item" target="" title="首页">首页</a> <a href="https://lewinz.org/categories/" class=" site-header-nav-item" target="" title="分类">分类</a> <a href="https://lewinz.org/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a> <a href="https://lewinz.org/links/" class=" site-header-nav-item" target="" title="链接">链接</a> <a href="https://lewinz.org/about/" class=" site-header-nav-item" target="" title="关于">关于</a></nav></div></header><section class="collection-head small geopattern" data-pattern-id="Golang 基础包"><div class="container"><div class="columns"><div class="column three-fourths"><div class="collection-title"><h1 class="collection-header">Golang 基础包</h1><div class="collection-info"> <span class="meta-info"> <span class="octicon octicon-calendar"></span> 2021/06/24 </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#golang" title="golang">golang</a> </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#基础包" title="基础包">基础包</a> </span> <span class="meta-info"> <span class="octicon octicon-clock"></span> 共 5624 字，约 17 分钟 </span></div></div></div><div class="column one-fourth mobile-hidden"><div class="collection-title"></div></div></div></div></section><section class="container content"><div class="columns"><div class="column three-fourths" > <ins class="adsbygoogle content-header-ad" data-ad-client="ca-pub-7093222719567591" data-ad-slot="1650902835"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script> <br /><article class="article-content markdown-body"><h2 id="time">time</h2><p>golang 时间可分为时间点和时间段</p><ul><li>时间点 (Time)</li><li>时间段 (Duration)</li></ul><p>除此之外，还提供了其他几种类型</p><ul><li>时区 (Location)</li><li>Ticker</li><li>Timer (定时器)</li></ul><h3 id="时间点-time">时间点 (Time)</h3><h4 id="初始化">初始化</h4><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// func Now() Time</span>
+<!DOCTYPE html><html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /><title>Golang 基础包 &mdash; 阿嫂</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/primer-css/css/primer.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/collection.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/repo-card.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/sections/repo-list.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/boxed-group.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/common.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/responsive.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/posts/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/octicons/octicons/octicons.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/rouge-themes@master/dist/github.css"><link rel="canonical" href="https://lewinz.org/2021/06/24/golang-basic-package/"><link rel="alternate" type="application/atom+xml" title="阿嫂" href="https://lewinz.org/feed.xml"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/favicon.ico"><meta property="og:title" content="Golang 基础包"><meta name="keywords" content="golang,基础包"><meta name="og:keywords" content="golang,基础包"><meta name="description" content="time"><meta name="og:description" content="time"><meta property="og:url" content="https://lewinz.org/2021/06/24/golang-basic-package/"><meta property="og:site_name" content="阿嫂"><meta property="og:type" content="article"><meta property="og:locale" content="zh_CN" /><meta property="article:published_time" content="2021-06-24"> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/jquery/dist/jquery.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery-ui.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/main.js"></script> <script data-ad-client="ca-pub-7093222719567591" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head><body class="" data-mz=""><header class="site-header"><div class="container"><h1><a href="https://lewinz.org/" title="阿嫂"><span class="octicon octicon-mark-github"></span> 阿嫂</a></h1><button class="collapsed mobile-visible" type="button" onclick="toggleMenu();"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button><nav class="site-header-nav" role="navigation"> <a href="https://lewinz.org/" class=" site-header-nav-item" target="" title="首页">首页</a> <a href="https://lewinz.org/categories/" class=" site-header-nav-item" target="" title="分类">分类</a> <a href="https://lewinz.org/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a> <a href="https://lewinz.org/links/" class=" site-header-nav-item" target="" title="链接">链接</a> <a href="https://lewinz.org/about/" class=" site-header-nav-item" target="" title="关于">关于</a></nav></div></header><section class="collection-head small geopattern" data-pattern-id="Golang 基础包"><div class="container"><div class="columns"><div class="column three-fourths"><div class="collection-title"><h1 class="collection-header">Golang 基础包</h1><div class="collection-info"> <span class="meta-info"> <span class="octicon octicon-calendar"></span> 2021/06/24 </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#golang" title="golang">golang</a> </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#基础包" title="基础包">基础包</a> </span> <span class="meta-info"> <span class="octicon octicon-clock"></span> 共 11712 字，约 34 分钟 </span></div></div></div><div class="column one-fourth mobile-hidden"><div class="collection-title"></div></div></div></div></section><section class="container content"><div class="columns"><div class="column three-fourths" > <ins class="adsbygoogle content-header-ad" data-ad-client="ca-pub-7093222719567591" data-ad-slot="1650902835"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script> <br /><article class="article-content markdown-body"><h2 id="time">time</h2><p>golang 时间可分为时间点和时间段</p><ul><li>时间点 (Time)</li><li>时间段 (Duration)</li></ul><p>除此之外，还提供了其他几种类型</p><ul><li>时区 (Location)</li><li>Ticker</li><li>Timer (定时器)</li></ul><h3 id="时间点-time">时间点 (Time)</h3><h4 id="初始化">初始化</h4><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// func Now() Time</span>
 <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">())</span>
 
 <span class="c">// func Parse(layout, value string) (Time, error)</span>
@@ -169,4 +169,318 @@
   <span class="o">&lt;-</span><span class="n">t</span><span class="o">.</span><span class="n">C</span>
 <span class="p">}</span>
 <span class="n">t</span><span class="o">.</span><span class="n">Reset</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-</code></pre></div></div><h2 id="template">template</h2><h2 id="sync">sync</h2><h2 id="content">content</h2><div style="margin-top:2em;padding:0 1.5em;border:1px solid #d3d3d3;background-color:#deebf7"><h3>文档信息</h3><ul><li>本文作者：<a href="https://lewinz.org" target="_blank">Lewin</a></li><li>本文链接：<a href="https://lewinz.org/2021/06/24/golang-basic-package/" target="_blank">https://lewinz.org/2021/06/24/golang-basic-package/</a></li><li>版权声明：自由转载-非商用-非衍生-保持署名</li></ul></div></article><div class="share"></div><div class="comment"><div id="gitalk-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/gitalk/gitalk.css"> <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> <script> var gitalk = new Gitalk({ id: '/2021/06/24/golang-basic-package/', clientID: '3e7199ec0cac88c1d311', clientSecret: '55eef1180649f1417aa979dc9f50f66ed4a6e69a', repo: 'blog-comments', owner: 'Lewinz', admin: ['Lewinz'], labels: ['gitment'], perPage: 50, }); gitalk.render('gitalk-container'); </script></div></div><div class="column one-fourth"><h3>Search</h3><div id="site_search"> <input style="width:96%" type="text" id="search_box" placeholder="Search"></div><ul id="search_results" style="font-size:14px;list-style-type:none;padding-top:10px;padding-left:10px;"></ul><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/simple-jekyll-search.min.js"></script> <script type="text/javascript"> SimpleJekyllSearch({ searchInput: document.getElementById('search_box'), resultsContainer: document.getElementById('search_results'), json: 'https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@built/assets/search_data.json?v=1624589132', searchResultTemplate: '<li><a href="{url}" title="{title}">{title}</a></li>', noResultsText: 'No results found', limit: 10, fuzzy: false, exclude: ['Welcome'] }) </script><h3 class="post-directory-title mobile-hidden">Table of Contents</h3><div id="post-directory-module" class="mobile-hidden"><section class="post-directory"><dl></dl></section></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery.toc.js"></script></div></div></section><footer class="container"> <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7093222719567591" data-ad-slot="5263168187" data-ad-format="auto" data-full-width-responsive="true"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script><div class="site-footer" role="contentinfo"><div class="copyright left mobile-block"> © 2021 <span title="Lewin">Lewin</span> <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a></div><ul class="site-footer-links right mobile-hidden"><li> <a href="javascript:window.scrollTo(0,0)" >TOP</a></li></ul><a href="https://github.com/Lewinz/lewinz.github.io" target="_blank" aria-label="view source code"> <span class="mega-octicon octicon-mark-github" title="GitHub"></span> </a><ul class="site-footer-links mobile-hidden"><li> <a href="https://lewinz.org/" title="首页" target="">首页</a></li><li> <a href="https://lewinz.org/categories/" title="分类" target="">分类</a></li><li> <a href="https://lewinz.org/wiki/" title="维基" target="">维基</a></li><li> <a href="https://lewinz.org/links/" title="链接" target="">链接</a></li><li> <a href="https://lewinz.org/about/" title="关于" target="">关于</a></li><li><a href="https://lewinz.org/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li></ul><script async src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="mobile-hidden" style="margin-top:8px"> <span id="busuanzi_container_site_pv" style="display:none"> 本站访问量<span id="busuanzi_value_site_pv"></span>次 </span> <span id="busuanzi_container_site_uv" style="display:none"> / 本站访客数<span id="busuanzi_value_site_uv"></span>人 </span> <span id="busuanzi_container_page_pv" style="display:none"> / 本页访问量<span id="busuanzi_value_page_pv"></span>次 / 统计始于2021-04-21 </span></div></div></footer><div class="tools-wrapper"> <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/geopattern.js"></script> <script> jQuery(document).ready(function($) { $('.geopattern').each(function(){ $(this).geopattern($(this).data('pattern-id')); }); /* hljs.initHighlightingOnLoad(); */ }); </script><div style="display:none"> <script> (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-80669434-1', 'auto'); ga('send', 'pageview'); </script></div></body></html>
+</code></pre></div></div><h2 id="template">template</h2><h2 id="sync">sync</h2><p><code class="language-plaintext highlighter-rouge">sync</code> 整个包都围绕这 <code class="language-plaintext highlighter-rouge">Locker</code> 进行，这是一个 <code class="language-plaintext highlighter-rouge">interface</code> ：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Locker</span> <span class="k">interface</span> <span class="p">{</span>
+        <span class="n">Lock</span><span class="p">()</span>
+        <span class="n">Unlock</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div><p>只有两个方法，Lock() 和 Unlock()。</p><p>另外该包下的对象，在使用过之后，<strong>千万不要复制</strong>。</p><h3 id="为什么需要锁">为什么需要锁？</h3><p>在并发的情况下，多个线程或协程同时去修改一个变量，可能会出现如下情况：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">a</span> <span class="o">=</span> <span class="m">0</span>
+
+    <span class="c">// 启动 100 个协程，需要足够大</span>
+    <span class="c">// var lock sync.Mutex</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">100</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">idx</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c">// lock.Lock()</span>
+            <span class="c">// defer lock.Unlock()</span>
+            <span class="n">a</span> <span class="o">+=</span> <span class="m">1</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"goroutine %d, a=%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+        <span class="p">}(</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c">// 等待 1s 结束主程序</span>
+    <span class="c">// 确保所有协程执行完</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div><p>观察打印结果，是否出现 a 的值是相同的情况（未出现则重试或调大协程数），答案：是的。</p><p>显然这不是我们想要的结果。出现这种情况的原因是，协程依次执行：<br /> 从寄存器读取 a 的值 -&gt; 然后做加法运算 -&gt; 最后写会寄存器。</p><p>试想，此时一个协程取出 a 的值 3，正在做加法运算（还未写回寄存器）。同时另一个协程此时去取，取出了同样的 a 的值 3。最终导致的结果是，两个协程产出的结果相同，a 相当于只增加了 1。</p><p>所以，锁的概念就是，我正在处理 a（锁定），你们谁都别和我抢，等我处理完了（解锁），你们再处理。这样就实现了，同时处理 a 的协程只有一个，就实现了同步。</p><p>把上面代码里的注释取消掉再试下。</p><h3 id="什么是互斥锁-mutex">什么是互斥锁 Mutex？</h3><p>什么是互斥锁？它是锁的一种具体实现，有两个方法：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span><span class="n">Mutex</span><span class="p">)</span> <span class="n">Lock</span><span class="p">()</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span><span class="n">Mutex</span><span class="p">)</span> <span class="n">Unlock</span><span class="p">()</span>
+</code></pre></div></div><p>在首次使用后不要复制该互斥锁。对一个未锁定的互斥锁解锁将会产生运行时错误。</p><p>一个互斥锁只能同时被一个 goroutine 锁定，其它 goroutine 将阻塞直到互斥锁被解锁（重新争抢对互斥锁的锁定）。如：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="k">struct</span><span class="p">{},</span> <span class="m">2</span><span class="p">)</span>
+
+    <span class="k">var</span> <span class="n">l</span> <span class="n">sync</span><span class="o">.</span><span class="n">Mutex</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="k">defer</span> <span class="n">l</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"goroutine1: 我会锁定大概 2s"</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span> <span class="o">*</span> <span class="m">2</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"goroutine1: 我解锁了，你们去抢吧"</span><span class="p">)</span>
+        <span class="n">ch</span> <span class="o">&lt;-</span> <span class="k">struct</span><span class="p">{}{}</span>
+    <span class="p">}()</span>
+
+    <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"groutine2: 等待解锁"</span><span class="p">)</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="k">defer</span> <span class="n">l</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"goroutine2: 哈哈，我锁定了"</span><span class="p">)</span>
+        <span class="n">ch</span> <span class="o">&lt;-</span> <span class="k">struct</span><span class="p">{}{}</span>
+    <span class="p">}()</span>
+
+    <span class="c">// 等待 goroutine 执行结束</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">2</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="o">&lt;-</span><span class="n">ch</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div><p>注意，平时所说的锁定，其实就是去锁定互斥锁，而不是说去锁定一段代码。也就是说，当代码执行到有锁的地方时，它获取不到互斥锁的锁定，会阻塞在那里，从而达到控制同步的目的。</p><h3 id="什么是读写锁-rwmutex">什么是读写锁 RWMutex?</h3><p>那么什么是读写锁呢？它是针对读写操作的互斥锁，读写锁与互斥锁最大的不同就是可以分别对 读、写 进行锁定。一般用在大量读操作、少量写操作的情况：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="p">(</span><span class="n">rw</span> <span class="o">*</span><span class="n">RWMutex</span><span class="p">)</span> <span class="n">Lock</span><span class="p">()</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">rw</span> <span class="o">*</span><span class="n">RWMutex</span><span class="p">)</span> <span class="n">Unlock</span><span class="p">()</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">rw</span> <span class="o">*</span><span class="n">RWMutex</span><span class="p">)</span> <span class="n">RLock</span><span class="p">()</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">rw</span> <span class="o">*</span><span class="n">RWMutex</span><span class="p">)</span> <span class="n">RUnlock</span><span class="p">()</span>
+</code></pre></div></div><p>由于这里需要区分读写锁定，我们这样定义：</p><ul><li>读锁定（RLock），对读操作进行锁定</li><li>读解锁（RUnlock），对读锁定进行解锁</li><li>写锁定（Lock），对写操作进行锁定</li><li>写解锁（Unlock），对写锁定进行解锁</li></ul><p>在首次使用之后，不要复制该读写锁。不要混用锁定和解锁，如：Lock 和 RUnlock、RLock 和 Unlock。因为对未读锁定的读写锁进行读解锁或对未写锁定的读写锁进行写解锁将会引起运行时错误。</p><p>如何理解读写锁呢？</p><ul><li>同时只能有一个 goroutine 能够获得写锁定。</li><li>同时可以有任意多个 gorouinte 获得读锁定。</li><li>同时只能存在写锁定或读锁定（读和写互斥）。</li></ul><p>也就是说，当有一个 goroutine 获得写锁定，其它无论是读锁定还是写锁定都将阻塞直到写解锁；当有一个 goroutine 获得读锁定，其它读锁定任然可以继续；当有一个或任意多个读锁定，写锁定将等待所有读锁定解锁之后才能够进行写锁定。所以说这里的读锁定（RLock）目的其实是告诉写锁定：有很多人正在读取数据，你给我站一边去，等它们读（读解锁）完你再来写（写锁定）。</p><p>使用例子：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"math/rand"</span>
+    <span class="s">"sync"</span>
+<span class="p">)</span>
+
+<span class="k">var</span> <span class="n">count</span> <span class="kt">int</span>
+<span class="k">var</span> <span class="n">rw</span> <span class="n">sync</span><span class="o">.</span><span class="n">RWMutex</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="k">struct</span><span class="p">{},</span> <span class="m">10</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="n">read</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ch</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="n">write</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ch</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="o">&lt;-</span><span class="n">ch</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">read</span><span class="p">(</span><span class="n">n</span> <span class="kt">int</span><span class="p">,</span> <span class="n">ch</span> <span class="k">chan</span> <span class="k">struct</span><span class="p">{})</span> <span class="p">{</span>
+    <span class="n">rw</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"goroutine %d 进入读操作...</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">:=</span> <span class="n">count</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"goroutine %d 读取结束，值为：%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">rw</span><span class="o">.</span><span class="n">RUnlock</span><span class="p">()</span>
+    <span class="n">ch</span> <span class="o">&lt;-</span> <span class="k">struct</span><span class="p">{}{}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">write</span><span class="p">(</span><span class="n">n</span> <span class="kt">int</span><span class="p">,</span> <span class="n">ch</span> <span class="k">chan</span> <span class="k">struct</span><span class="p">{})</span> <span class="p">{</span>
+    <span class="n">rw</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"goroutine %d 进入写操作...</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">:=</span> <span class="n">rand</span><span class="o">.</span><span class="n">Intn</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"goroutine %d 写入结束，新值为：%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">rw</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+    <span class="n">ch</span> <span class="o">&lt;-</span> <span class="k">struct</span><span class="p">{}{}</span>
+<span class="p">}</span>
+</code></pre></div></div><h3 id="waitgroup-例子">WaitGroup 例子</h3><p>WaitGroup 用于等待一组 goroutine 结束，用法很简单。它有三个方法：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="p">(</span><span class="n">wg</span> <span class="o">*</span><span class="n">WaitGroup</span><span class="p">)</span> <span class="n">Add</span><span class="p">(</span><span class="n">delta</span> <span class="kt">int</span><span class="p">)</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">wg</span> <span class="o">*</span><span class="n">WaitGroup</span><span class="p">)</span> <span class="n">Done</span><span class="p">()</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">wg</span> <span class="o">*</span><span class="n">WaitGroup</span><span class="p">)</span> <span class="n">Wait</span><span class="p">()</span>
+</code></pre></div></div><p>Add 用来添加 goroutine 的个数。Done 执行一次数量减 1。Wait 用来等待结束：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="c">// 计数加 1</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">i</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c">// 计数减 1</span>
+            <span class="k">defer</span> <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"goroutine%d 结束</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="p">}(</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c">// 等待执行结束</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"所有 goroutine 执行结束"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div><p>注意，<code class="language-plaintext highlighter-rouge">wg.Add()</code> 方法一定要在 <code class="language-plaintext highlighter-rouge">goroutine</code> 开始前执行哦。</p><h3 id="cond-条件变量">Cond 条件变量</h3><p>Cond 实现一个条件变量，即等待或宣布事件发生的 goroutines 的会合点，它会保存一个通知列表。基本思想是当某中状态达成，goroutine 将会等待（Wait）在那里，当某个时刻状态改变时通过通知的方式（Broadcast，Signal）的方式通知等待的 goroutine。这样，不满足条件的 goroutine 唤醒继续向下执行，满足条件的重新进入等待序列。</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Cond</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">noCopy</span> <span class="n">noCopy</span>
+  
+    <span class="c">// L is held while observing or changing the condition</span>
+    <span class="n">L</span> <span class="n">Locker</span>
+  
+    <span class="n">notify</span>  <span class="n">notifyList</span> <span class="c">// 通知列表</span>
+    <span class="n">checker</span> <span class="n">copyChecker</span>
+<span class="p">}</span>
+</code></pre></div></div><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="n">NewCond</span><span class="p">(</span><span class="n">l</span> <span class="n">Locker</span><span class="p">)</span> <span class="o">*</span><span class="n">Cond</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">Cond</span><span class="p">)</span> <span class="n">Broadcast</span><span class="p">()</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">Cond</span><span class="p">)</span> <span class="n">Signal</span><span class="p">()</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">Cond</span><span class="p">)</span> <span class="n">Wait</span><span class="p">()</span>
+</code></pre></div></div><p>Wait 方法、Signal 方法和 Broadcast 方法。它们分别代表了等待通知、单发通知和广播通知的操作。</p><p>我们来看一下 Wait 方法：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span><span class="n">Cond</span><span class="p">)</span> <span class="n">Wait</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">checker</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+    <span class="n">t</span> <span class="o">:=</span> <span class="n">runtime_notifyListAdd</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="o">.</span><span class="n">notify</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+    <span class="n">runtime_notifyListWait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="o">.</span><span class="n">notify</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div><p>它的操作为：加入到通知列表 -&gt; 解锁 L -&gt; 等待通知 -&gt; 锁定 L。其使用方法是：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">c</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+<span class="k">for</span> <span class="o">!</span><span class="n">condition</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+<span class="o">...</span> <span class="nb">make</span> <span class="n">use</span> <span class="n">of</span> <span class="n">condition</span> <span class="o">...</span>
+<span class="n">c</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+</code></pre></div></div><p>举个例子：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">// Package main provides ...</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">var</span> <span class="n">count</span> <span class="kt">int</span> <span class="o">=</span> <span class="m">4</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="k">struct</span><span class="p">{},</span> <span class="m">5</span><span class="p">)</span>
+
+    <span class="c">// 新建 cond</span>
+    <span class="k">var</span> <span class="n">l</span> <span class="n">sync</span><span class="o">.</span><span class="n">Mutex</span>
+    <span class="n">cond</span> <span class="o">:=</span> <span class="n">sync</span><span class="o">.</span><span class="n">NewCond</span><span class="p">(</span><span class="o">&amp;</span><span class="n">l</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">(</span><span class="n">i</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c">// 争抢互斥锁的锁定</span>
+            <span class="n">cond</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+            <span class="k">defer</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+                <span class="n">cond</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+                <span class="n">ch</span> <span class="o">&lt;-</span> <span class="k">struct</span><span class="p">{}{}</span>
+            <span class="p">}()</span>
+
+            <span class="c">// 条件是否达成</span>
+            <span class="k">for</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="n">i</span> <span class="p">{</span>
+                <span class="n">cond</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"收到一个通知 goroutine%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="p">}</span>
+            
+            <span class="n">fmt</span><span class="o">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">"goroutine%d 执行结束</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="p">}(</span><span class="n">i</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c">// 确保所有 goroutine 启动完成</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Millisecond</span> <span class="o">*</span> <span class="m">20</span><span class="p">)</span>
+    
+    <span class="c">// 锁定一下</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"broadcast..."</span><span class="p">)</span>
+    <span class="n">cond</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">count</span> <span class="o">-=</span> <span class="m">1</span>
+    <span class="n">cond</span><span class="o">.</span><span class="n">Broadcast</span><span class="p">()</span>
+    <span class="n">cond</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"signal..."</span><span class="p">)</span>
+    <span class="n">cond</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">count</span> <span class="o">-=</span> <span class="m">2</span>
+    <span class="n">cond</span><span class="o">.</span><span class="n">Signal</span><span class="p">()</span>
+    <span class="n">cond</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+
+    <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Second</span><span class="p">)</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"broadcast..."</span><span class="p">)</span>
+    <span class="n">cond</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="n">count</span> <span class="o">-=</span> <span class="m">1</span>
+    <span class="n">cond</span><span class="o">.</span><span class="n">Broadcast</span><span class="p">()</span>
+    <span class="n">cond</span><span class="o">.</span><span class="n">L</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">5</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="o">&lt;-</span><span class="n">ch</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div><h3 id="pool-临时对象池">Pool 临时对象池</h3><p><code class="language-plaintext highlighter-rouge">sync.Pool</code> 可以作为临时对象的保存和复用的集合。其结构为：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Pool</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">noCopy</span> <span class="n">noCopy</span>
+
+    <span class="n">local</span>     <span class="n">unsafe</span><span class="o">.</span><span class="n">Pointer</span> <span class="c">// local fixed-size per-P pool, actual type is [P]poolLocal</span>
+    <span class="n">localSize</span> <span class="kt">uintptr</span>        <span class="c">// size of the local array</span>
+
+    <span class="c">// New optionally specifies a function to generate</span>
+    <span class="c">// a value when Get would otherwise return nil.</span>
+    <span class="c">// It may not be changed concurrently with calls to Get.</span>
+    <span class="n">New</span> <span class="k">func</span><span class="p">()</span> <span class="k">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">p</span> <span class="o">*</span><span class="n">Pool</span><span class="p">)</span> <span class="n">Get</span><span class="p">()</span> <span class="k">interface</span><span class="p">{}</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">p</span> <span class="o">*</span><span class="n">Pool</span><span class="p">)</span> <span class="n">Put</span><span class="p">(</span><span class="n">x</span> <span class="k">interface</span><span class="p">{})</span>
+</code></pre></div></div><p>新键 Pool 需要提供一个 New 方法，目的是当获取不到临时对象时自动创建一个（不会主动加入到 Pool 中），Get 和 Put 方法都很好理解。</p><p>深入了解过 Go 的同学应该知道，Go 的重要组成结构为 M、P、G。Pool 实际上会为每一个操作它的 goroutine 相关联的 P 都生成一个本地池。如果从本地池 Get 对象的时候，本地池没有，则会从其它的 P 本地池获取。因此，Pool 的一个特点就是：可以把由其中的对象值产生的存储压力进行分摊。</p><p>它有着以下特点：</p><ul><li>Pool 中的对象在仅有 Pool 有着唯一索引的情况下可能会被自动删除（取决于下一次 GC 执行的时间）。</li><li>goroutines 协程安全，可以同时被多个协程使用。</li></ul><blockquote><p>GC 的执行一般会使 Pool 中的对象全部移除。</p></blockquote><p>那么 Pool 都适用于什么场景呢？从它的特点来说，适用与无状态的对象的复用，而不适用与如连接池之类的。在 fmt 包中有一个很好的使用池的例子，它维护一个动态大小的临时输出缓冲区。</p><p>官方例子：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"bytes"</span>
+    <span class="s">"io"</span>
+    <span class="s">"os"</span>
+    <span class="s">"sync"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">var</span> <span class="n">bufPool</span> <span class="o">=</span> <span class="n">sync</span><span class="o">.</span><span class="n">Pool</span><span class="p">{</span>
+    <span class="n">New</span><span class="o">:</span> <span class="k">func</span><span class="p">()</span> <span class="k">interface</span><span class="p">{}</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">new</span><span class="p">(</span><span class="n">bytes</span><span class="o">.</span><span class="n">Buffer</span><span class="p">)</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">timeNow</span><span class="p">()</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">Unix</span><span class="p">(</span><span class="m">1136214245</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">Log</span><span class="p">(</span><span class="n">w</span> <span class="n">io</span><span class="o">.</span><span class="n">Writer</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c">// 获取临时对象，没有的话会自动创建</span>
+    <span class="n">b</span> <span class="o">:=</span> <span class="n">bufPool</span><span class="o">.</span><span class="n">Get</span><span class="p">()</span><span class="o">.</span><span class="p">(</span><span class="o">*</span><span class="n">bytes</span><span class="o">.</span><span class="n">Buffer</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">Reset</span><span class="p">()</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="n">timeNow</span><span class="p">()</span><span class="o">.</span><span class="n">UTC</span><span class="p">()</span><span class="o">.</span><span class="n">Format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">RFC3339</span><span class="p">))</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">WriteByte</span><span class="p">(</span><span class="sc">' '</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">WriteByte</span><span class="p">(</span><span class="sc">'='</span><span class="p">)</span>
+    <span class="n">b</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="n">w</span><span class="o">.</span><span class="n">Write</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">Bytes</span><span class="p">())</span>
+    <span class="c">// 将临时对象放回到 Pool 中</span>
+    <span class="n">bufPool</span><span class="o">.</span><span class="n">Put</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Log</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">Stdout</span><span class="p">,</span> <span class="s">"path"</span><span class="p">,</span> <span class="s">"/search?q=flowers"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div><p>打印结果：<br /> <code class="language-plaintext highlighter-rouge">2006-01-02T15:04:05Z path=/search?q=flowers</code></p><h3 id="once-执行一次">Once 执行一次</h3><p>使用 sync.Once 对象可以使得函数多次调用只执行一次。其结构为：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">Once</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">m</span>    <span class="n">Mutex</span>
+    <span class="n">done</span> <span class="kt">uint32</span>
+<span class="p">}</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">o</span> <span class="o">*</span><span class="n">Once</span><span class="p">)</span> <span class="n">Do</span><span class="p">(</span><span class="n">f</span> <span class="k">func</span><span class="p">())</span>
+</code></pre></div></div><p>用 done 来记录执行次数，用 m 来保证保证仅被执行一次。只有一个 Do 方法，调用执行。</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">once</span> <span class="n">sync</span><span class="o">.</span><span class="n">Once</span>
+    <span class="n">onceBody</span> <span class="o">:=</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Only once"</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">done</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="kt">bool</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="n">once</span><span class="o">.</span><span class="n">Do</span><span class="p">(</span><span class="n">onceBody</span><span class="p">)</span>
+            <span class="n">done</span> <span class="o">&lt;-</span> <span class="no">true</span>
+        <span class="p">}()</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="o">&lt;-</span><span class="n">done</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div><p>打印结果：<br /> <code class="language-plaintext highlighter-rouge">Only once</code></p><h2 id="content">content</h2><div style="margin-top:2em;padding:0 1.5em;border:1px solid #d3d3d3;background-color:#deebf7"><h3>文档信息</h3><ul><li>本文作者：<a href="https://lewinz.org" target="_blank">Lewin</a></li><li>本文链接：<a href="https://lewinz.org/2021/06/24/golang-basic-package/" target="_blank">https://lewinz.org/2021/06/24/golang-basic-package/</a></li><li>版权声明：自由转载-非商用-非衍生-保持署名</li></ul></div></article><div class="share"></div><div class="comment"><div id="gitalk-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/gitalk/gitalk.css"> <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> <script> var gitalk = new Gitalk({ id: '/2021/06/24/golang-basic-package/', clientID: '3e7199ec0cac88c1d311', clientSecret: '55eef1180649f1417aa979dc9f50f66ed4a6e69a', repo: 'blog-comments', owner: 'Lewinz', admin: ['Lewinz'], labels: ['gitment'], perPage: 50, }); gitalk.render('gitalk-container'); </script></div></div><div class="column one-fourth"><h3>Search</h3><div id="site_search"> <input style="width:96%" type="text" id="search_box" placeholder="Search"></div><ul id="search_results" style="font-size:14px;list-style-type:none;padding-top:10px;padding-left:10px;"></ul><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/simple-jekyll-search.min.js"></script> <script type="text/javascript"> SimpleJekyllSearch({ searchInput: document.getElementById('search_box'), resultsContainer: document.getElementById('search_results'), json: 'https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@built/assets/search_data.json?v=1624602043', searchResultTemplate: '<li><a href="{url}" title="{title}">{title}</a></li>', noResultsText: 'No results found', limit: 10, fuzzy: false, exclude: ['Welcome'] }) </script><h3 class="post-directory-title mobile-hidden">Table of Contents</h3><div id="post-directory-module" class="mobile-hidden"><section class="post-directory"><dl></dl></section></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery.toc.js"></script></div></div></section><footer class="container"> <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7093222719567591" data-ad-slot="5263168187" data-ad-format="auto" data-full-width-responsive="true"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script><div class="site-footer" role="contentinfo"><div class="copyright left mobile-block"> © 2021 <span title="Lewin">Lewin</span> <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a></div><ul class="site-footer-links right mobile-hidden"><li> <a href="javascript:window.scrollTo(0,0)" >TOP</a></li></ul><a href="https://github.com/Lewinz/lewinz.github.io" target="_blank" aria-label="view source code"> <span class="mega-octicon octicon-mark-github" title="GitHub"></span> </a><ul class="site-footer-links mobile-hidden"><li> <a href="https://lewinz.org/" title="首页" target="">首页</a></li><li> <a href="https://lewinz.org/categories/" title="分类" target="">分类</a></li><li> <a href="https://lewinz.org/wiki/" title="维基" target="">维基</a></li><li> <a href="https://lewinz.org/links/" title="链接" target="">链接</a></li><li> <a href="https://lewinz.org/about/" title="关于" target="">关于</a></li><li><a href="https://lewinz.org/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li></ul><script async src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="mobile-hidden" style="margin-top:8px"> <span id="busuanzi_container_site_pv" style="display:none"> 本站访问量<span id="busuanzi_value_site_pv"></span>次 </span> <span id="busuanzi_container_site_uv" style="display:none"> / 本站访客数<span id="busuanzi_value_site_uv"></span>人 </span> <span id="busuanzi_container_page_pv" style="display:none"> / 本页访问量<span id="busuanzi_value_page_pv"></span>次 / 统计始于2021-04-21 </span></div></div></footer><div class="tools-wrapper"> <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/geopattern.js"></script> <script> jQuery(document).ready(function($) { $('.geopattern').each(function(){ $(this).geopattern($(this).data('pattern-id')); }); /* hljs.initHighlightingOnLoad(); */ }); </script><div style="display:none"> <script> (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-80669434-1', 'auto'); ga('send', 'pageview'); </script></div></body></html>
