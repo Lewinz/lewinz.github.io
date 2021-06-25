@@ -1,18 +1,18 @@
 ---
 layout: wiki
-title: gin/gorm 报错记录
+title: gin/gorm 使用记录
 categories: [gin,gorm]
-description: gin/gorm 报错记录
+description: gin/gorm 使用记录
 keywords: gin,gorm
 ---
 
-## gin
+### gin
 
 #### gin listen tcp: address 8000: missing port in address
 报错原因：gin绑定的端口号格式错误，必须为"ip:port"，一般为":port"，故容易忽略  
 解决方案：检查一下端口绑定格式是否正确  
 
-## gorm
+### gorm
 
 #### 映射表名为结构体蛇形复数
 ```
@@ -55,3 +55,9 @@ func updateTimeStampForCreateCallback(scope *Scope) {
 #### 主键设置自增，注意点
 
 1、如果结构体中主键为ID，表字段一定要为id，否则gorm在映射的时候会严格按照蛇形，**主键也不例外**，尽管有主键声明。
+
+#### CreatedAt 设置为 `*time.Time`
+设置为指针是为了数据新增转换时，方便 nil 判断，如果设置成非指针，且数据库未配置支持空值时间类型，则会报错
+
+#### 手动事务使用注意事项
+事务中所有需要管理的操作一定要使用 tx := db.Begin() 返回的这个 DB ，否则会导致事务失效，且会造成数据锁(行级？)。
