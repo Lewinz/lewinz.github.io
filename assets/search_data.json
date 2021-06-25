@@ -359,10 +359,10 @@
     } ,
   
     {
-      "title"    : "gin/gorm 报错记录",
+      "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
-      "url"      : "https://lewinz.org/wiki/gin-gorm-err-record/",
+      "url"      : "https://lewinz.org/wiki/gin-gorm-summary/",
       "keywords" : "gin,gorm"
     } ,
   
