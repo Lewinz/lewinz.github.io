@@ -39,6 +39,13 @@ keywords: Mac, 配置
 **神器tldr**
 `brew tap tldr-pages/tldr && brew install tldr`
 
+**释压神器**
+``` sh
+brew install thefuck
+
+# ~/.zshrc 文件末尾添加
+eval $(thefuck --alias FUCK)
+```
 ## mac使用item2进行ssh连接
 使用命令连接
 `ssh -p22 root@47.117.136.250`
