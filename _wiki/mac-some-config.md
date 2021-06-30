@@ -33,13 +33,13 @@ keywords: Mac, 配置
 **MySQL 客户端**  
 <https://www.sequelpro.com/>  
 
-**神器alfred**
+**神器alfred**  
 <https://www.alfredapp.com/>  
 
-**神器tldr**
+**神器tldr**  
 `brew tap tldr-pages/tldr && brew install tldr`
 
-**释压神器**
+**释压神器**  
 ``` sh
 brew install thefuck
 
