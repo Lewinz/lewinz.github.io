@@ -123,9 +123,19 @@ collections:
 #      Comments    #
 # ---------------- #
 # support provider: disqus, gitment, gitalk
-comments_provider: gitalk
+comments_provider: gitment
 # !!!重要!!! 请修改下面这些信息为你自己申请的
 # !!!Important!!! Please modify infos below to yours
+# https://disqus.com
+disqus:
+    username: 
+# https://imsun.net/posts/gitment-introduction/
+gitment:
+    owner: Lewinz
+    repo: blog-comments
+    oauth:
+        client_id: 3e7199ec0cac88c1d311
+        client_secret: 55eef1180649f1417aa979dc9f50f66ed4a6e69a
 # https://github.com/gitalk/gitalk#install
 gitalk:
     owner: Lewinz
