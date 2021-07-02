@@ -399,6 +399,14 @@
     } ,
   
     {
+      "title"    : "负载均衡-四层负载与七层负载",
+      "category" : "lvs",
+      
+      "url"      : "https://lewinz.org/2021/07/02/lvs-loading-blance/",
+      "keywords" : "lvs,负载均衡"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
