@@ -5,7 +5,6 @@ categories: [install,ubuntu]
 description: 物理机安装 Ubuntu
 keywords: install,ubuntu
 ---
-
 ## 出现问题
 ### 安装 Ubuntu 后无可引导设备
 我的安装设备是弘基笔记本，具体型号忘记了（多年前使用的电脑，一直闲置），安装完 Ubuntu 之后出现无可引导设备（no bootable device found）错误
@@ -22,3 +21,6 @@ keywords: install,ubuntu
 3. 在这里你可以看到你的硬盘，例如 HDD0。如果你有多块硬盘，我希望你记住你安装 Ubuntu 的那块。同样敲击回车。
 4. 选择 `<EFI>` -> `<ubuntu>` -> `<shimx64.efi>`
 5. 保存后重启解决
+
+## 参考链接
+https://www.jianshu.com/p/54d9a3a695cc?tdsourcetag=s_pctim_aiomsg
