@@ -465,6 +465,14 @@
     } ,
   
     {
+      "title"    : "Linux 磁盘分区、格式化、挂载",
+      "category" : "linux",
+      
+      "url"      : "https://lewinz.org/wiki/linux-fdisk-cli/",
+      "keywords" : "Linux 磁盘分区、格式化、挂载"
+    } ,
+  
+    {
       "title"    : "Mac各类配置记录",
       "category" : "Mac",
       
