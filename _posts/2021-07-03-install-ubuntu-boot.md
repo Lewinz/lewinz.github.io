@@ -56,5 +56,21 @@ keywords: install,ubuntu
 4. 选择 `<EFI>` -> `<ubuntu>` -> `<shimx64.efi>`
 5. 保存后重启解决
 
+## 扩展
+### CentOS 安装 x-window
+**首先安装 X (X Window System)**  
+`yum groupinstall "X Window System" -y` 注意有引号
+
+**安装 GNOME**  
+`yum grouplist`
+
+![ubuntui_install](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/ubuntu_install_3.png)
+
+`yum groupinstall "GNOME Desktop" "Graphical Administration Tools" -y`
+
+安装完成之后可以使用 `startx` 进入图形化界面
+
+**设置启动默认使用图形化界面**  
+`ln -sf /lib/systemd/system/runlevel5.target /etc/systemd/system/default.target`
 ## 参考链接
 <https://www.jianshu.com/p/54d9a3a695cc?tdsourcetag=s_pctim_aiomsg>
