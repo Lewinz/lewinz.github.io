@@ -45,7 +45,7 @@ func BenchmarkInline(b *testing.B) {
     }
 }
 ```
-在程序代码中，想要禁止编译器内联优化很简单，在函数定义前一行添加 //go:noinline 即可。以下是性能对比结果
+在程序代码中，想要禁止编译器内联优化很简单，在函数定义前一行添加 `//go:noinline` 即可。以下是性能对比结果
 ``` golang
 BenchmarkNoInline-8     824031799                1.47 ns/op
 BenchmarkInline-8       1000000000               0.255 ns/op
@@ -76,7 +76,7 @@ func main() {
     _ = iter(n)
 }
 ```
-假设源码文件为 main.go，可通过执行 go build -gcflags="-m -m" main.go 命令查看编译器的优化策略。
+假设源码文件为 `main.go`，可通过执行 `go build -gcflags="-m -m" main.go` 命令查看编译器的优化策略。
 ``` sh
 $ go build -gcflags="-m -m" main.go
 # command-line-arguments
@@ -85,7 +85,7 @@ $ go build -gcflags="-m -m" main.go
 ./main.go:10:12: inlining call to add func(int, int) int { return a + b }
 ./main.go:15:6: can inline main with cost 67 as: func() { n := 100; _ = iter(n) }
 ```
-通过以上信息，可知编译器判断 add 函数与 main 函数都可以被内联优化，并将 add 函数内联。同时可以注意到的是，iter 函数由于存在循环语句并不能被内联：cannot inline iter: unhandled op FOR。实际上，除了 for 循环，还有一些情况不会被内联，例如闭包，select，for，defer，go 关键字所开启的新 goroutine 等，详细可见 src/cmd/compile/internal/gc/inl.go 相关内容。
+通过以上信息，可知编译器判断 `add` 函数与 `main` 函数都可以被内联优化，并将 `add` 函数内联。同时可以注意到的是，`iter` 函数由于存在循环语句并不能被内联：`cannot inline iter: unhandled op FOR`。实际上，除了 `for` 循环，还有一些情况不会被内联，例如闭包，`select`，`for`，`defer`，`go` 关键字所开启的新 `goroutine` 等，详细可见 `src/cmd/compile/internal/gc/inl.go` 相关内容。
 ``` sh
     case OCLOSURE,
         OCALLPART,
@@ -111,7 +111,7 @@ func add(a, b int) int {
     return a + b
 }
 ```
-执行 go build -gcflags="-m -m" main.go 命令，得到信息
+执行 `go build -gcflags="-m -m" main.go` 命令，得到信息
 ``` sh
 ./main.go:3:6: can inline add with cost 9 as: func(int, int) int { a = a + 1; return a + b }
 ```
