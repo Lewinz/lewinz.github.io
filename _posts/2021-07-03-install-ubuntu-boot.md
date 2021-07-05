@@ -15,7 +15,7 @@ keywords: install,ubuntu
 选择国内的镜像源下载
 
 ### 下载 Rufus
-![ubuntui_install](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/ubuntu_install_1.jpg)
+![ubuntui_install](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/ubuntu_install_1.png)
 
 | 设置项  | 说明  |
 | - | - |
