@@ -1,9 +1,9 @@
 ---
 layout: post
-title: openstack 命令行操作合集
-categories: [openstack,命令行]
-description: openstack 命令行操作合集
-keywords: openstack,命令行
+title: openstack loadbalancer 命令行
+categories: [openstack,命令行,loadbalancer]
+description: openstack loadbalancer 命令行
+keywords: openstack,命令行,loadbalancer
 ---
 
 ## 鉴权文件格式
