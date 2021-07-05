@@ -393,6 +393,14 @@
     } ,
   
     {
+      "title"    : "openstack 命令行操作合集",
+      "category" : "openstack",
+      
+      "url"      : "https://lewinz.org/2021/07/01/openstack-loadbalancer-cli/",
+      "keywords" : "openstack,命令行"
+    } ,
+  
+    {
       "title"    : "OSI 七层模型与 TCP/IP 四层模型",
       "category" : "OSI",
       
