@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-05T14:34:17+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">物理机安装 Ubuntu</title><link href="https://lewinz.org/2021/07/03/install-ubuntu-boot/" rel="alternate" type="text/html" title="物理机安装 Ubuntu" /><published>2021-07-03T00:00:00+08:00</published><updated>2021-07-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/03/install-ubuntu-boot</id><content type="html" xml:base="https://lewinz.org/2021/07/03/install-ubuntu-boot/">&lt;h2 id=&quot;启动-u-盘制作&quot;&gt;启动 U 盘制作&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-05T16:28:36+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">物理机安装 Ubuntu</title><link href="https://lewinz.org/2021/07/03/install-ubuntu-boot/" rel="alternate" type="text/html" title="物理机安装 Ubuntu" /><published>2021-07-03T00:00:00+08:00</published><updated>2021-07-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/03/install-ubuntu-boot</id><content type="html" xml:base="https://lewinz.org/2021/07/03/install-ubuntu-boot/">&lt;h2 id=&quot;启动-u-盘制作&quot;&gt;启动 U 盘制作&lt;/h2&gt;
 &lt;h3 id=&quot;下载官方镜像&quot;&gt;下载官方镜像&lt;/h3&gt;
 &lt;p&gt;目前稳定的长期支持的版本是 Ubuntu 16.04.3 LTS 。&lt;/p&gt;
 
@@ -80,6 +80,22 @@
   &lt;li&gt;保存后重启解决&lt;/li&gt;
 &lt;/ol&gt;
 
+&lt;h2 id=&quot;扩展&quot;&gt;扩展&lt;/h2&gt;
+&lt;h3 id=&quot;centos-安装-x-window&quot;&gt;CentOS 安装 x-window&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;首先安装 X (X Window System)&lt;/strong&gt;&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum groupinstall &quot;X Window System&quot; -y&lt;/code&gt; 注意有引号&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;安装 GNOME&lt;/strong&gt;&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum grouplist&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/ubuntu_install_3.png&quot; alt=&quot;ubuntui_install&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum groupinstall &quot;GNOME Desktop&quot; &quot;Graphical Administration Tools&quot; -y&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;安装完成之后可以使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;startx&lt;/code&gt; 进入图形化界面&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;设置启动默认使用图形化界面&lt;/strong&gt;&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ln -sf /lib/systemd/system/runlevel5.target /etc/systemd/system/default.target&lt;/code&gt;&lt;/p&gt;
 &lt;h2 id=&quot;参考链接&quot;&gt;参考链接&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://www.jianshu.com/p/54d9a3a695cc?tdsourcetag=s_pctim_aiomsg&quot;&gt;https://www.jianshu.com/p/54d9a3a695cc?tdsourcetag=s_pctim_aiomsg&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="install" /><category term="ubuntu" /><summary type="html">启动 U 盘制作 下载官方镜像 目前稳定的长期支持的版本是 Ubuntu 16.04.3 LTS 。</summary></entry><entry><title type="html">负载均衡-四层负载与七层负载</title><link href="https://lewinz.org/2021/07/02/lvs-loading-blance/" rel="alternate" type="text/html" title="负载均衡-四层负载与七层负载" /><published>2021-07-02T00:00:00+08:00</published><updated>2021-07-02T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/02/lvs-loading-blance</id><content type="html" xml:base="https://lewinz.org/2021/07/02/lvs-loading-blance/">&lt;h2 id=&quot;什么是负载均衡&quot;&gt;什么是负载均衡&lt;/h2&gt;
 &lt;p&gt;负载均衡（Load Balance）建立在现有网络结构之上，它提供了一种廉价有效透明的方法扩展网络设备和服务器的带宽、增加吞吐量、加强网络数据处理能力、提高网络的灵活性和可用性。负载均衡有两方面的含义：首先，大量的并发访问或数据流量分担到多台节点设备上分别处理，减少用户等待响应的时间；其次，单个重负载的运算分担到多台节点设备上做并行处理，每个节点设备处理结束后，将结果汇总，返回给用户，系统处理能力得到大幅度提高。&lt;/p&gt;
