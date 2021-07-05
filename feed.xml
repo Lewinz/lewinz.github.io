@@ -1,4 +1,166 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-05T16:28:36+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">物理机安装 Ubuntu</title><link href="https://lewinz.org/2021/07/03/install-ubuntu-boot/" rel="alternate" type="text/html" title="物理机安装 Ubuntu" /><published>2021-07-03T00:00:00+08:00</published><updated>2021-07-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/03/install-ubuntu-boot</id><content type="html" xml:base="https://lewinz.org/2021/07/03/install-ubuntu-boot/">&lt;h2 id=&quot;启动-u-盘制作&quot;&gt;启动 U 盘制作&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-05T16:39:45+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">Golang 内联优化</title><link href="https://lewinz.org/2021/07/05/go-inline-optmization/" rel="alternate" type="text/html" title="Golang 内联优化" /><published>2021-07-05T00:00:00+08:00</published><updated>2021-07-05T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/05/go-inline-optmization</id><content type="html" xml:base="https://lewinz.org/2021/07/05/go-inline-optmization/">&lt;p&gt;为了保证程序的执行高效与安全，现代编译器并不会将程序员的代码直接翻译成相应地机器码，它需要做一系列的检查与优化。Go 编译器默认做了很多相关工作，例如未使用的引用包检查、未使用的声明变量检查、有效的括号检查、逃逸分析、内联优化、删除无用代码等。本文重点讨论内联优化相关内容。&lt;/p&gt;
+
+&lt;h2 id=&quot;内联&quot;&gt;内联&lt;/h2&gt;
+&lt;p&gt;在 Go 中，一个 goroutine 会有一个单独的栈，栈又会包含多个栈帧，栈帧是函数调用时在栈上为函数所分配的区域。但其实，函数调用是存在一些固定开销的，例如维护帧指针寄存器 BP、栈溢出检测等。因此，对于一些代码行比较少的函数，编译器倾向于将它们在编译期展开从而消除函数调用，这种行为就是内联。&lt;/p&gt;
+
+&lt;p&gt;性能对比
+首先，看一下函数内联与非内联的性能差异。&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;//go:noinline&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;maxNoinline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;maxInline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkNoInline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ResetTimer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;maxNoinline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkInline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ResetTimer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;maxInline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;在程序代码中，想要禁止编译器内联优化很简单，在函数定义前一行添加 //go:noinline 即可。以下是性能对比结果&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;BenchmarkNoInline&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;824031799&lt;/span&gt;                &lt;span class=&quot;m&quot;&gt;1.47&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;op&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;BenchmarkInline&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;       &lt;span class=&quot;m&quot;&gt;1000000000&lt;/span&gt;               &lt;span class=&quot;m&quot;&gt;0.255&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;op&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;因为函数体内部的执行逻辑非常简单，此时内联与否的性能差异主要体现在函数调用的固定开销上。显而易见，该差异是非常大的。&lt;/p&gt;
+
+&lt;h3 id=&quot;内联场景&quot;&gt;内联场景&lt;/h3&gt;
+&lt;p&gt;此时，爱思考的读者可能就会产生疑问：既然内联优化效果这么显著，是不是所有的函数调用都可以内联呢？答案是不可以。因为内联，其实就是将一个函数调用原地展开，替换成这个函数的实现。当该函数被多次调用，就会被多次展开，这会增加编译后二进制文件的大小。而非内联函数，只需要保存一份函数体的代码，然后进行调用。所以，在空间上，一般来说使用内联函数会导致生成的可执行文件变大（但需要考虑内联的代码量、调用次数、维护内联关系的开销）。&lt;/p&gt;
+
+&lt;p&gt;问题来了，编译器内联优化的选择策略是什么？&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;iter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;iter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;假设源码文件为 main.go，可通过执行 go build -gcflags=”-m -m” main.go 命令查看编译器的优化策略。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;go build &lt;span class=&quot;nt&quot;&gt;-gcflags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-m -m&quot;&lt;/span&gt; main.go
+&lt;span class=&quot;c&quot;&gt;# command-line-arguments&lt;/span&gt;
+./main.go:3:6: can inline add with cost 4 as: func&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int, int&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; int &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;a + b &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+./main.go:7:6: cannot inline iter: unhandled op FOR
+./main.go:10:12: inlining call to add func&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int, int&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; int &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;a + b &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+./main.go:15:6: can inline main with cost 67 as: func&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; n :&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 100&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; _ &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; iter&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;n&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;通过以上信息，可知编译器判断 add 函数与 main 函数都可以被内联优化，并将 add 函数内联。同时可以注意到的是，iter 函数由于存在循环语句并不能被内联：cannot inline iter: unhandled op FOR。实际上，除了 for 循环，还有一些情况不会被内联，例如闭包，select，for，defer，go 关键字所开启的新 goroutine 等，详细可见 src/cmd/compile/internal/gc/inl.go 相关内容。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; OCLOSURE,
+        OCALLPART,
+        ORANGE,
+        OFOR,
+        OFORUNTIL,
+        OSELECT,
+        OTYPESW,
+        OGO,
+        ODEFER,
+        ODCLTYPE, // can&lt;span class=&quot;s1&quot;&gt;'t print yet
+        OBREAK,
+        ORETJMP:
+        v.reason = &quot;unhandled op &quot; + n.Op.String()
+        return true
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;在上文提到过，内联只针对小代码量的函数而言，那么到底是小于多少才算是小代码量呢？&lt;/p&gt;
+
+&lt;p&gt;此时，我将上面的 add 函数，更改为如下内容&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;执行 go build -gcflags=”-m -m” main.go 命令，得到信息&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./main.go:3:6: can inline add with cost 9 as: func&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int, int&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; int &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; a &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; a + 1&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;a + b &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;对比之前的信息&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./main.go:3:6: can inline add with cost 4 as: func&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int, int&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; int &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;a + b &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;可以发现，存在 cost 4 与 cost 9 的区别。这里的数值代表的是抽象语法树 AST 的节点，a = a + 1 包含的是 5 个节点。Go 函数中超过 80 个节点的代码量就不再内联。例如，如果在 add 中写入 16 个 a = a + 1，则不再内联。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./main.go:3:6: cannot inline add: &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;too complex: cost 84 exceeds budget 80
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;内联表&quot;&gt;内联表&lt;/h3&gt;
+&lt;p&gt;内联会将函数调用的过程抹掉，这会引入一个新的问题：代码的堆栈信息还能否保证。举个例子，如果程序发生 panic，内联之后的程序，还能否准确的打印出堆栈信息？看以下例子。&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;panic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;i am a panic information&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;在该代码样例中，max 函数将被内联。执行程序，输出结果如下&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;panic: i am a panic information
+
+goroutine 1 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;running]:
+main.sub&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;...&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        /Users/slp/go/src/workspace/example/main.go:5
+main.max&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;...&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        /Users/slp/go/src/workspace/example/main.go:10
+main.main&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+        /Users/slp/go/src/workspace/example/main.go:17 +0x3a
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;我们可以发现，panic 依然输出了正确的程序堆栈信息，包括源文件位置和行号信息。那，Go 是如何做到的呢？这是由于 Go 内部会为每个存在内联优化的 goroutine 维持一个内联树（inlining tree），该树可通过 go build -gcflags=”-d pctab=pctoinline” main.go 命令查看&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;funcpctab &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.sub &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;valfunc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;pctoinline]
+...
+wrote 3 bytes to 0xc000082668
+ 00 42 00
+funcpctab &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.max &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;valfunc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;pctoinline]
+...
+wrote 7 bytes to 0xc000082f68
+ 00 3c 02 1d 01 09 00
+&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; inlining tree &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.max:
+0 | &lt;span class=&quot;nt&quot;&gt;-1&lt;/span&gt; | &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.sub &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/Users/slp/go/src/workspace/example/main.go:10:6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;59
+&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;
+funcpctab &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.main &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;valfunc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;pctoinline]
+...
+wrote 11 bytes to 0xc0004807e8
+ 00 1d 02 01 01 07 04 16 03 0c 00
+&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; inlining tree &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.main:
+0 | &lt;span class=&quot;nt&quot;&gt;-1&lt;/span&gt; | &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.max &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/Users/slp/go/src/workspace/example/main.go:17:9&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;30
+1 | 0 | &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.sub &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/Users/slp/go/src/workspace/example/main.go:10:6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;29
+&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;内联控制&quot;&gt;内联控制&lt;/h3&gt;
+&lt;p&gt;Go 程序编译时，默认将进行内联优化。我们可通过 -gcflags=”-l” 选项全局禁用内联，与一个 -l 禁用内联相反，如果传递两个或两个以上的 -l 则会打开内联，并启用更激进的内联策略。如果不想全局范围内禁止优化，则可以在函数定义时添加 //go:noinline 编译指令来阻止编译器内联函数。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="inline optimization" /><category term="内联优化" /><summary type="html">为了保证程序的执行高效与安全，现代编译器并不会将程序员的代码直接翻译成相应地机器码，它需要做一系列的检查与优化。Go 编译器默认做了很多相关工作，例如未使用的引用包检查、未使用的声明变量检查、有效的括号检查、逃逸分析、内联优化、删除无用代码等。本文重点讨论内联优化相关内容。</summary></entry><entry><title type="html">物理机安装 Ubuntu</title><link href="https://lewinz.org/2021/07/03/install-ubuntu-boot/" rel="alternate" type="text/html" title="物理机安装 Ubuntu" /><published>2021-07-03T00:00:00+08:00</published><updated>2021-07-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/03/install-ubuntu-boot</id><content type="html" xml:base="https://lewinz.org/2021/07/03/install-ubuntu-boot/">&lt;h2 id=&quot;启动-u-盘制作&quot;&gt;启动 U 盘制作&lt;/h2&gt;
 &lt;h3 id=&quot;下载官方镜像&quot;&gt;下载官方镜像&lt;/h3&gt;
 &lt;p&gt;目前稳定的长期支持的版本是 Ubuntu 16.04.3 LTS 。&lt;/p&gt;
 
@@ -2026,288 +2188,4 @@ Connection closed.
 &lt;p&gt;打印结果：&lt;br /&gt;
 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Only once&lt;/code&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;content&quot;&gt;content&lt;/h2&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="基础包" /><summary type="html">time</summary></entry><entry><title type="html">Golang 格式化输出 - fmt</title><link href="https://lewinz.org/2021/06/24/golang-fmt-placeholder/" rel="alternate" type="text/html" title="Golang 格式化输出 - fmt" /><published>2021-06-24T00:00:00+08:00</published><updated>2021-06-24T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/24/golang-fmt-placeholder</id><content type="html" xml:base="https://lewinz.org/2021/06/24/golang-fmt-placeholder/">&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;定义示例类型和变量&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Human&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;people&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Human&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;zhangsan&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;占位符&lt;/th&gt;
-      &lt;th&gt;说明&lt;/th&gt;
-      &lt;th&gt;举例&lt;/th&gt;
-      &lt;th&gt;输出&lt;/th&gt;
-      &lt;th&gt;详细&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;通用&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%v&lt;/td&gt;
-      &lt;td&gt;相应值的默认格式&lt;/td&gt;
-      &lt;td&gt;Printf(“%v”, people)&lt;/td&gt;
-      &lt;td&gt;{zhangsan}&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%+v&lt;/td&gt;
-      &lt;td&gt;打印结构体时，会添加字段名&lt;/td&gt;
-      &lt;td&gt;Printf(“%+v”, people)&lt;/td&gt;
-      &lt;td&gt;{Name:zhangsan}&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%#v&lt;/td&gt;
-      &lt;td&gt;相应值的Go语法表示&lt;/td&gt;
-      &lt;td&gt;Printf(“%#v”, people)&lt;/td&gt;
-      &lt;td&gt;main.Human{Name:”zhangsan”}&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%T&lt;/td&gt;
-      &lt;td&gt;相应值的类型的Go语法表示&lt;/td&gt;
-      &lt;td&gt;Printf(“%T”, people)&lt;/td&gt;
-      &lt;td&gt;main.Human&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%%&lt;/td&gt;
-      &lt;td&gt;字面上的百分号，并非值的占位符&lt;/td&gt;
-      &lt;td&gt;Printf(“%%”)&lt;/td&gt;
-      &lt;td&gt;%&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;布尔占位符&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%t&lt;/td&gt;
-      &lt;td&gt;true 或 false&lt;/td&gt;
-      &lt;td&gt;Printf(“%t”, true)&lt;/td&gt;
-      &lt;td&gt;true&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;整数占位符&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%b&lt;/td&gt;
-      &lt;td&gt;二进制表示&lt;/td&gt;
-      &lt;td&gt;Printf(“%b”, 5)&lt;/td&gt;
-      &lt;td&gt;101&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%c&lt;/td&gt;
-      &lt;td&gt;相应Unicode码点所表示的字符&lt;/td&gt;
-      &lt;td&gt;Printf(“%c”, 0x4E2D)&lt;/td&gt;
-      &lt;td&gt;中&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%d&lt;/td&gt;
-      &lt;td&gt;十进制表示&lt;/td&gt;
-      &lt;td&gt;Printf(“%d”, 0x12)&lt;/td&gt;
-      &lt;td&gt;18&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%o&lt;/td&gt;
-      &lt;td&gt;八进制表示&lt;/td&gt;
-      &lt;td&gt;Printf(“%o”, 10)&lt;/td&gt;
-      &lt;td&gt;12&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%q&lt;/td&gt;
-      &lt;td&gt;单引号围绕的字符字面值，由Go语法安全地转义&lt;/td&gt;
-      &lt;td&gt;Printf(“%q”, 0x4E2D)&lt;/td&gt;
-      &lt;td&gt;‘中’&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%x&lt;/td&gt;
-      &lt;td&gt;十六进制表示，字母形式为小写 a-f&lt;/td&gt;
-      &lt;td&gt;Printf(“%x”, 13)&lt;/td&gt;
-      &lt;td&gt;d&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%X&lt;/td&gt;
-      &lt;td&gt;十六进制表示，字母形式为大写 A-F&lt;/td&gt;
-      &lt;td&gt;Printf(“%x”, 13)&lt;/td&gt;
-      &lt;td&gt;D&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%U&lt;/td&gt;
-      &lt;td&gt;Unicode格式：U+1234，等同于 “U+%04X”&lt;/td&gt;
-      &lt;td&gt;Printf(“%U”, 0x4E2D)&lt;/td&gt;
-      &lt;td&gt;U+4E2D&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;浮点数和复数的组成部分（实部和虚部）&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%b&lt;/td&gt;
-      &lt;td&gt;无小数部分的，指数为二的幂的科学计数法，与 strconv.FormatFloat 的 ‘b’ 转换格式一致。例如 -123456p-78&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%e&lt;/td&gt;
-      &lt;td&gt;科学计数法，例如 -1234.456e+78&lt;/td&gt;
-      &lt;td&gt;Printf(“%e”, 10.2)&lt;/td&gt;
-      &lt;td&gt;1.020000e+01&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%E&lt;/td&gt;
-      &lt;td&gt;科学计数法，例如 -1234.456E+78&lt;/td&gt;
-      &lt;td&gt;Printf(“%e”, 10.2)&lt;/td&gt;
-      &lt;td&gt;1.020000E+01&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%f&lt;/td&gt;
-      &lt;td&gt;有小数点而无指数，例如 123.456&lt;/td&gt;
-      &lt;td&gt;Printf(“%f”, 10.2)&lt;/td&gt;
-      &lt;td&gt;10.200000&lt;/td&gt;
-      &lt;td&gt;%f：默认宽度，默认精度。%9f，默认精度，宽度9。%.2f，默认宽度，精度2。%9.2f，宽度9，精度2&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%g&lt;/td&gt;
-      &lt;td&gt;根据情况选择 %e 或 %f 以产生更紧凑的（无末尾的0）输出&lt;/td&gt;
-      &lt;td&gt;Printf(“%g”, 10.20)&lt;/td&gt;
-      &lt;td&gt;10.2&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%G&lt;/td&gt;
-      &lt;td&gt;根据情况选择 %E 或 %f 以产生更紧凑的（无末尾的0）输出&lt;/td&gt;
-      &lt;td&gt;Printf(“%G”, 10.20+2i)&lt;/td&gt;
-      &lt;td&gt;(10.2+2i)&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;字符串与字节切片&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%s&lt;/td&gt;
-      &lt;td&gt;输出字符串表示（string类型或[]byte)&lt;/td&gt;
-      &lt;td&gt;Printf(“%s”, []byte(“Go语言”))&lt;/td&gt;
-      &lt;td&gt;Go语言&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%q&lt;/td&gt;
-      &lt;td&gt;双引号围绕的字符串，由Go语法安全地转义&lt;/td&gt;
-      &lt;td&gt;Printf(“%q”, “Go语言”)&lt;/td&gt;
-      &lt;td&gt;“Go语言”&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%x&lt;/td&gt;
-      &lt;td&gt;十六进制，小写字母，每字节两个字符&lt;/td&gt;
-      &lt;td&gt;Printf(“%x”, “golang”)&lt;/td&gt;
-      &lt;td&gt;676f6c616e67&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%X&lt;/td&gt;
-      &lt;td&gt;十六进制，大写字母，每字节两个字符&lt;/td&gt;
-      &lt;td&gt;Printf(“%X”, “golang”)&lt;/td&gt;
-      &lt;td&gt;676F6C616E67&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;指针&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;%p&lt;/td&gt;
-      &lt;td&gt;十六进制表示，前缀 0x&lt;/td&gt;
-      &lt;td&gt;Printf(“%p”, &amp;amp;people)&lt;/td&gt;
-      &lt;td&gt;0x4f57f0&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;其它标记&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;+&lt;/td&gt;
-      &lt;td&gt;总打印数值的正负号；对于%q（%+q）保证只输出ASCII编码的字符&lt;/td&gt;
-      &lt;td&gt;Printf(“%+q”, “中文”)&lt;/td&gt;
-      &lt;td&gt;“\u4e2d\u6587”&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;-&lt;/td&gt;
-      &lt;td&gt;在右侧而非左侧填充空格（左对齐该区域）&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;#&lt;/td&gt;
-      &lt;td&gt;备用格式：为八进制添加前导 0（%#o）&lt;/td&gt;
-      &lt;td&gt;Printf(“%#U”, ‘中’)&lt;/td&gt;
-      &lt;td&gt;U+4E2D&lt;/td&gt;
-      &lt;td&gt;为十六进制添加前导 0x（%#x）或 0X（%#X），为 %p（%#p）去掉前导 0x；如果可能的话，%q（%#q）会打印原始 （即反引号围绕的）字符串；如果是可打印字符，%U（%#U）会写出该字符的Unicode 编码形式（如字符 x 会被打印成 U+0078 ‘x’）&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;’ ‘&lt;/td&gt;
-      &lt;td&gt;(空格)为数值中省略的正负号留出空白（% d）;以十六进制（% x, % X）打印字符串或切片时，在字节之间用空格隔开&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;0&lt;/td&gt;
-      &lt;td&gt;填充前导的0而非空格；对于数字，这会将填充移到正负号之后&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;精度：&lt;br /&gt;
-小数点后位数&lt;br /&gt;
-宽度：&lt;br /&gt;
-小数点前位数，如果宽度&amp;gt;小数点前位数，将使用空格填充&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="格式化" /><category term="输出" /><summary type="html">``` golang 定义示例类型和变量 type Human struct { Name string }</summary></entry></feed>
+&lt;h2 id=&quot;content&quot;&gt;content&lt;/h2&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="基础包" /><summary type="html">time</summary></entry></feed>

@@ -425,6 +425,14 @@
     } ,
   
     {
+      "title"    : "Golang 内联优化",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/2021/07/05/go-inline-optmization/",
+      "keywords" : "golang,inline optimization,内联优化"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
