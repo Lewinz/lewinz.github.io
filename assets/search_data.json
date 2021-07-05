@@ -84,6 +84,8 @@
   
   
   
+  
+  
 
   
     {
@@ -404,6 +406,14 @@
       
       "url"      : "https://lewinz.org/2021/07/02/lvs-loading-blance/",
       "keywords" : "lvs,负载均衡"
+    } ,
+  
+    {
+      "title"    : "物理机安装 Ubuntu",
+      "category" : "install",
+      
+      "url"      : "https://lewinz.org/2021/07/03/install-ubuntu-boot/",
+      "keywords" : "install,ubuntu"
     } ,
   
     {

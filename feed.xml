@@ -1,4 +1,87 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-04T22:34:31+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">负载均衡-四层负载与七层负载</title><link href="https://lewinz.org/2021/07/02/lvs-loading-blance/" rel="alternate" type="text/html" title="负载均衡-四层负载与七层负载" /><published>2021-07-02T00:00:00+08:00</published><updated>2021-07-02T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/02/lvs-loading-blance</id><content type="html" xml:base="https://lewinz.org/2021/07/02/lvs-loading-blance/">&lt;h2 id=&quot;什么是负载均衡&quot;&gt;什么是负载均衡&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-05T10:11:06+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">物理机安装 Ubuntu</title><link href="https://lewinz.org/2021/07/03/install-ubuntu-boot/" rel="alternate" type="text/html" title="物理机安装 Ubuntu" /><published>2021-07-03T00:00:00+08:00</published><updated>2021-07-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/03/install-ubuntu-boot</id><content type="html" xml:base="https://lewinz.org/2021/07/03/install-ubuntu-boot/">&lt;h2 id=&quot;启动-u-盘制作&quot;&gt;启动 U 盘制作&lt;/h2&gt;
+&lt;h3 id=&quot;下载官方镜像&quot;&gt;下载官方镜像&lt;/h3&gt;
+&lt;p&gt;目前稳定的长期支持的版本是 Ubuntu 16.04.3 LTS 。&lt;/p&gt;
+
+&lt;p&gt;下载地址：&lt;br /&gt;
+官网：&lt;a href=&quot;https://www.ubuntu.com/download/desktop&quot;&gt;https://www.ubuntu.com/download/desktop&lt;/a&gt;&lt;br /&gt;
+镜像：&lt;a href=&quot;http://mirrors.163.com/ubuntu-releases/16.04.3/&quot;&gt;http://mirrors.163.com/ubuntu-releases/16.04.3/&lt;/a&gt;&lt;br /&gt;
+选择国内的镜像源下载&lt;/p&gt;
+
+&lt;h3 id=&quot;下载-rufus&quot;&gt;下载 Rufus&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/ubuntu_install_1.jpg&quot; alt=&quot;ubuntui_install&quot; /&gt;&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;设置项&lt;/th&gt;
+      &lt;th&gt;说明&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;设备&lt;/td&gt;
+      &lt;td&gt;选择你的 U 盘，为了避免选错，只插一个 U 盘&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;分区方案和目标系统类型&lt;/td&gt;
+      &lt;td&gt;如果电脑启动方式是 UEFI 的，则选带 UEFI 的那个；如果是 BIOS 的，则选兼容 BIOS 的&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;文件系统&lt;/td&gt;
+      &lt;td&gt;默认 FAT32 即可&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;簇大小&lt;/td&gt;
+      &lt;td&gt;默认即可&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;新卷标&lt;/td&gt;
+      &lt;td&gt;设置 U 盘的名称，这一项在选择 Ubuntu 的 iso 文件之后会自动修改&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&quot;文件格式差异&quot;&gt;文件格式差异&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;Fat32 文件格式是一种通用格式，任何 USB 存储设备都会预装该文件系统，可以在任何操作系统平台上使用。最主要的缺陷是只支持最大单文件大小容量为 4GB，因此日常使用没有问题，只有在传输大文件时才会显现出缺点。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;exFAT 文件是微软自家创建的用来取代 FAT32 文件格式的新型文件格式，它最大可以支持 1EB 的文件大小，非常适合用来存储大容量文件，还可以在 Mac 和 Windows 操作系统上通用。虽然是微软的技术，苹果批准在系统中使用该文件格式，因此在 Mac 系统中格式化存储设备时会出现 exFAT 文件格式选项。最大的缺点是没有文件日志功能，这样就不能记录磁盘上文件的修改记录。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;NTFS 是微软为硬盘或固态硬盘（SSD）创建的默认新型文件系统，NTFS 的含义是 New Technology File System，它基层了所有文件系统的优点：日志功能、无文件大小限制、支持文件压缩和长文件名、服务器文件管理权限等。最大的缺点是 Mac 系统只能读取 NTFS 文件但没有权限写入，需要借助第三方工具才能实现。因此跨平台的功能非常差。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;簇大小&quot;&gt;簇大小&lt;/h4&gt;
+&lt;p&gt;簇是系统可以识别的最小单位。也就是对于文件，占用的簇数量都是整数，也就是不会有两个文件占用一个簇的情况发生。&lt;/p&gt;
+
+&lt;p&gt;每个簇可以包括 2、4、8、16、32 或 64 个扇区。显然，簇是操作系统所使用的逻辑概念，而非磁盘的物理特性。&lt;/p&gt;
+
+&lt;p&gt;为了更好地管理磁盘空间和更高效地从硬盘读取数据，操作系统规定一个簇中只能放置一个文件的内容，因此文件所占用的空间，只能是簇的整数倍；如果文件实际大小小于一簇，它也要占一簇的空间。如果文件实际大小大于一簇，根据逻辑推算，那么该文件就要占两个簇的空间。&lt;/p&gt;
+
+&lt;h2 id=&quot;出现问题&quot;&gt;出现问题&lt;/h2&gt;
+&lt;h3 id=&quot;安装-ubuntu-后无可引导设备&quot;&gt;安装 Ubuntu 后无可引导设备&lt;/h3&gt;
+&lt;p&gt;我的安装设备是弘基笔记本，具体型号忘记了（多年前使用的电脑，一直闲置），安装完 Ubuntu 之后出现无可引导设备（no bootable device found）错误&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/ubuntu_install_2.jpg&quot; alt=&quot;ubuntui_install&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;起初怀疑是制作启动 U 盘有问题（最开始是在 mac 上用命令行写到 U 盘上的），但换了好几次 U 盘制作工具之后，依旧无果，甚至将 CentOS 安装好一次之后，排除是启动 U 盘的问题&lt;/p&gt;
+
+&lt;p&gt;最后打开 bios 发现是安全引导（Secure boot）没有关闭&lt;/p&gt;
+
+&lt;p&gt;解决：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;进入 bios 界面，在 Boot 标签页安全引导 (Secure Boot) 并关闭&lt;/li&gt;
+  &lt;li&gt;进入到 Security 标签，找到 “选择一个用于执行的可信任 UEFI 文件 (Select an UEFI file as trusted for executing) ” 并敲击回车。&lt;/li&gt;
+  &lt;li&gt;在这里你可以看到你的硬盘，例如 HDD0。如果你有多块硬盘，我希望你记住你安装 Ubuntu 的那块。同样敲击回车。&lt;/li&gt;
+  &lt;li&gt;选择 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;EFI&amp;gt;&lt;/code&gt; -&amp;gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;ubuntu&amp;gt;&lt;/code&gt; -&amp;gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;shimx64.efi&amp;gt;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;保存后重启解决&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;参考链接&quot;&gt;参考链接&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.jianshu.com/p/54d9a3a695cc?tdsourcetag=s_pctim_aiomsg&quot;&gt;https://www.jianshu.com/p/54d9a3a695cc?tdsourcetag=s_pctim_aiomsg&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="install" /><category term="ubuntu" /><summary type="html">启动 U 盘制作 下载官方镜像 目前稳定的长期支持的版本是 Ubuntu 16.04.3 LTS 。</summary></entry><entry><title type="html">负载均衡-四层负载与七层负载</title><link href="https://lewinz.org/2021/07/02/lvs-loading-blance/" rel="alternate" type="text/html" title="负载均衡-四层负载与七层负载" /><published>2021-07-02T00:00:00+08:00</published><updated>2021-07-02T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/02/lvs-loading-blance</id><content type="html" xml:base="https://lewinz.org/2021/07/02/lvs-loading-blance/">&lt;h2 id=&quot;什么是负载均衡&quot;&gt;什么是负载均衡&lt;/h2&gt;
 &lt;p&gt;负载均衡（Load Balance）建立在现有网络结构之上，它提供了一种廉价有效透明的方法扩展网络设备和服务器的带宽、增加吞吐量、加强网络数据处理能力、提高网络的灵活性和可用性。负载均衡有两方面的含义：首先，大量的并发访问或数据流量分担到多台节点设备上分别处理，减少用户等待响应的时间；其次，单个重负载的运算分担到多台节点设备上做并行处理，每个节点设备处理结束后，将结果汇总，返回给用户，系统处理能力得到大幅度提高。&lt;/p&gt;
 
 &lt;p&gt;简单来说就是：其一是将大量的并发处理转发给后端多个节点处理，减少工作响应时间；其二是将单个繁重的工作转发给后端多个节点处理，处理完再返回给负载均衡中心，再返回给用户。目前负载均衡技术大多数是用于提高诸如在 Web 服务器、FTP 服务器和其它关键任务服务器上的 Internet 服务器程序的可用性和可伸缩性。&lt;/p&gt;
@@ -1820,143 +1903,4 @@ ps:主要是 float 问题&lt;/p&gt;</content><author><name>Lewin</name></author>
 
 &lt;p&gt;第一种方法在 slice 大小比较小时，比第 2、3 种方法慢一倍左右。但是 slice 大小变大时，性能显著下降。&lt;/p&gt;
 
-&lt;p&gt;第 2 种方法和第 3 种方法差距基本处于同一量级，但是第 3 种方法稍快一些。但是当 slice 大小增加到 10^6 级别时，第三种方法的优势就显现出来。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="slice" /><summary type="html">写了两种对一个 slice 中删除特定元素的方法，并做了性能对比，在这里记录一下。</summary></entry><entry><title type="html">Golang 字符串拼接性能</title><link href="https://lewinz.org/2021/06/24/golang-string-append/" rel="alternate" type="text/html" title="Golang 字符串拼接性能" /><published>2021-06-24T00:00:00+08:00</published><updated>2021-06-24T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/24/golang-string-append</id><content type="html" xml:base="https://lewinz.org/2021/06/24/golang-string-append/">&lt;h3 id=&quot;常用拼接方法&quot;&gt;常用拼接方法&lt;/h3&gt;
-
-&lt;p&gt;字符串拼接在日常开发中是很常见的需求，目前有两种普遍做法：&lt;/p&gt;
-
-&lt;p&gt;一种是直接用 += 来拼接&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;s1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hello&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;s2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;World&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;s3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s2&lt;/span&gt;  &lt;span class=&quot;c&quot;&gt;// s3 == &quot;HelloWorld&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;s1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s2&lt;/span&gt;       &lt;span class=&quot;c&quot;&gt;// s1 == &quot;HelloWorld&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;这是最常用也是最简单直观的方法，不过简单是有代价的，golang 的字符串是不可变类型，也就是说每一次对字符串的 “原地” 修改都会重新生成一个 string，再把数据复制进去，这样一来将会产生很可观的性能开销，稍后的性能测试中将会看到这一点。&lt;/p&gt;
-
-&lt;p&gt;第二种是使用 bytes.Buffer&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// bytes.Buffer的0值可以直接使用&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buff&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Buffer&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// 向buff中写入字符/字符串&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;buff&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;buff&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WriteByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;' '&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;buff&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WriteString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;World&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// String() 方法获得拼接的字符串&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;buff&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// &quot;Hello World&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;这种方法用于需要大量进行字符串拼接操作的场合，性能要大大优于第一种方法。&lt;/p&gt;
-
-&lt;p&gt;不过使用 bytes 模块来操作 string 难免让人产生迷惑，所以在 go1.10 中新增了第三种方法：strings.Builder，官方鼓励尽量在 string 的拼接时使用 Builder，byte 拼接时使用 Buffer&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// strings.Builder的0值可以直接使用&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// 向builder中写入字符/字符串&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WriteByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sc&quot;&gt;' '&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WriteString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;World&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// String() 方法获得拼接的字符串&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// &quot;Hello World&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;从上面的代码中可以看到，strings.Builder 和 bytes.Buffer 的操作几乎一样，不过 strings.Builder 仅仅实现了 write 类方法，而 Buffer 是可读可写的。&lt;/p&gt;
-
-&lt;p&gt;所以 strings.Builder 仅用于拼接 / 构建字符串&lt;/p&gt;
-
-&lt;h3 id=&quot;性能&quot;&gt;性能&lt;/h3&gt;
-
-&lt;p&gt;除了是否易用外，另一条参考标准就是性能，得益于 golang 自带的测试工具，我们可以大致对比一下三种方案的性能。&lt;/p&gt;
-
-&lt;p&gt;测试使用从 26 个大写和小写字母 10 个数字以及 5 个常用符号共 67 字符中随机取 10 个组成 string 或 [] byte，再由 Buffer 和 Builder 进行拼接。&lt;/p&gt;
-
-&lt;p&gt;先上测试结果&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go test -bench=. -benchmem&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_slice_append_1.png&quot; alt=&quot;image_1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;下面是测试代码&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// BenchmarkSpliceAddString10 测试使用 += 拼接N次长度为10的字符串&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkSpliceAddString10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GenRandString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// BenchmarkSpliceBuilderString10 测试使用strings.Builder拼接N次长度为10的字符串&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkSpliceBuilderString10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WriteString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GenRandString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// BenchmarkSpliceBufferString10 测试使用bytes.Buffer拼接N次长度为10的字符串&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkSpliceBufferString10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buff&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Buffer&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;buff&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WriteString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GenRandString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// BenchmarkSpliceBufferByte10 测试使用bytes.Buffer拼接N次长度为10的[]byte&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkSpliceBufferByte10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buff&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Buffer&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;buff&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GenRandBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// BenchmarkSpliceBuilderByte10 测试使用string.Builder拼接N次长度为10的[]byte&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkSpliceBuilderByte10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Write&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;GenRandBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;这是生成供拼接使用的随机字符串的代码（这里仍然使用了 bytes.Buffer，推荐使用新的 strings.Builder）&lt;/p&gt;
-
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890,.-=/&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;rand&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Seed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// 设置随机种子&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// GenRandString 生成n个随机字符的string&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GenRandString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Buffer&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WriteByte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rand&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Intn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)])&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;// GenRandBytes 生成n个随机字符的[]byte&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;GenRandBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rand&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Intn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)]&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;使用 += 的方法性能是最慢的，性能和其他两种差了好几个数量级。&lt;/p&gt;
-
-&lt;p&gt;Buffer 和 Builder 性能相差无几，Builder 在内存的使用上要略优于 Buffer&lt;/p&gt;
-
-&lt;h3 id=&quot;结论&quot;&gt;结论&lt;/h3&gt;
-
-&lt;p&gt;strings.Builder 在 golang 1.10 才引入标准库的，所以 version &amp;lt;= 1.9 的时候对于大量字符串的拼接操作推荐 bytes.Buffer&lt;/p&gt;
-
-&lt;p&gt;如果你正在使用 1.10+，那么建议使用 strings.Builder，不仅是更好的性能，也是为了能使代码更清晰。&lt;/p&gt;
-
-&lt;p&gt;当然，对于简单的拼接，+= 就足够了&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="字符串" /><summary type="html">常用拼接方法</summary></entry></feed>
+&lt;p&gt;第 2 种方法和第 3 种方法差距基本处于同一量级，但是第 3 种方法稍快一些。但是当 slice 大小增加到 10^6 级别时，第三种方法的优势就显现出来。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="slice" /><summary type="html">写了两种对一个 slice 中删除特定元素的方法，并做了性能对比，在这里记录一下。</summary></entry></feed>
