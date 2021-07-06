@@ -96,6 +96,9 @@ x   extra functionality (experts only)
 **格式化分区**
 `mkfs.ext2 /dev/sdb1`
 
+**查看磁盘分区文件系统格式**
+`parted -l`
+
 **挂载分区**
 `mount /dev/sdb1 /oracle`
 
@@ -115,3 +118,8 @@ proc                    /proc                   proc    defaults        0 0
 /dev/sdb1               /oracle                 ext2    defaults        0 0
 /dev/sdb6               /web                    ext3    defaults        0 0
 ```
+
+**可能出现的问题**  
+格式化分区的时候报错：`The device apparently does not exist; did you specify it correctly?`  
+错误出现大多是因为之前操作的分区尚在使用，保存操作时未成功，分区操作还未写入分区表，使用 `partprobe` 命令将信息推入分区表即可解决。
+
