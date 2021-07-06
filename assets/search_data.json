@@ -433,6 +433,14 @@
     } ,
   
     {
+      "title"    : "Ubuntu 20.04 设置 root 登录图形界面",
+      "category" : "ubuntu",
+      
+      "url"      : "https://lewinz.org/2021/07/06/ubuntu-root-login-x-window/",
+      "keywords" : "ubuntu,root,login"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
