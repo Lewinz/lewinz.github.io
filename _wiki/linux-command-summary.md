@@ -1,8 +1,8 @@
 ---
 layout: wiki
-title: Linux命令备忘
+title: Linux 命令备忘
 categories: Linux
-description: Linux命令备忘
+description: Linux 命令备忘
 keywords: Linux, 命令， 备忘
 ---
 
