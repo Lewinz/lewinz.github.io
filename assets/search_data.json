@@ -449,6 +449,14 @@
     } ,
   
     {
+      "title"    : "Linux systemd &amp;&amp; systemctl",
+      "category" : "linux",
+      
+      "url"      : "https://lewinz.org/2021/07/12/linux-systemctl/",
+      "keywords" : "linux, 自启动, systemd, systemctl"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
@@ -481,7 +489,7 @@
     } ,
   
     {
-      "title"    : "Linux命令备忘",
+      "title"    : "Linux 命令备忘",
       "category" : "Linux",
       
       "url"      : "https://lewinz.org/wiki/linux-command-summary/",
