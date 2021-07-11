@@ -1,4 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-10T16:15:04+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">Ubuntu 20.04 设置 root 登录图形界面</title><link href="https://lewinz.org/2021/07/06/ubuntu-root-login-x-window/" rel="alternate" type="text/html" title="Ubuntu 20.04 设置 root 登录图形界面" /><published>2021-07-06T00:00:00+08:00</published><updated>2021-07-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/06/ubuntu-root-login-x-window</id><content type="html" xml:base="https://lewinz.org/2021/07/06/ubuntu-root-login-x-window/">&lt;p&gt;Ubuntu 默认是关闭 root 账户登录图形界面的&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-11T21:36:28+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">frp 搭建过程记录</title><link href="https://lewinz.org/2021/07/10/frp-install/" rel="alternate" type="text/html" title="frp 搭建过程记录" /><published>2021-07-10T00:00:00+08:00</published><updated>2021-07-10T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/10/frp-install</id><content type="html" xml:base="https://lewinz.org/2021/07/10/frp-install/">&lt;p&gt;Emmm… 本来以为会有繁琐的配置，结果开箱即用&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/fatedier/frp&quot;&gt;GitHub地址&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;https://gofrp.org/docs/&quot;&gt;中文文档&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="frp" /><category term="搭建" /><summary type="html">Emmm… 本来以为会有繁琐的配置，结果开箱即用</summary></entry><entry><title type="html">Ubuntu 20.04 设置 root 登录图形界面</title><link href="https://lewinz.org/2021/07/06/ubuntu-root-login-x-window/" rel="alternate" type="text/html" title="Ubuntu 20.04 设置 root 登录图形界面" /><published>2021-07-06T00:00:00+08:00</published><updated>2021-07-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/06/ubuntu-root-login-x-window</id><content type="html" xml:base="https://lewinz.org/2021/07/06/ubuntu-root-login-x-window/">&lt;p&gt;Ubuntu 默认是关闭 root 账户登录图形界面的&lt;/p&gt;
 
 &lt;h3 id=&quot;修改-root-账号密码&quot;&gt;修改 root 账号密码&lt;/h3&gt;
 &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo passwd root&lt;/code&gt;&lt;/p&gt;
@@ -1530,14 +1533,4 @@ Connection closed.
 &lt;p&gt;分析的过程涉及了很多语言底层的知识，源代码阅读起来也比较晦涩，其中充斥着反常规的控制流程，通过程序计数器来回跳转，不过对于我们理解程序的执行流程还是很有帮助。&lt;/p&gt;
 
 &lt;h2 id=&quot;参考&quot;&gt;参考&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://draveness.me/golang/docs/part2-foundation/ch05-keyword/golang-panic-recover/#fn:3&quot;&gt;博客&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="panic" /><category term="recover" /><summary type="html"></summary></entry><entry><title type="html">时间戳</title><link href="https://lewinz.org/2021/06/29/timestamp/" rel="alternate" type="text/html" title="时间戳" /><published>2021-06-29T00:00:00+08:00</published><updated>2021-06-29T00:00:00+08:00</updated><id>https://lewinz.org/2021/06/29/timestamp</id><content type="html" xml:base="https://lewinz.org/2021/06/29/timestamp/">&lt;h2 id=&quot;基本概念&quot;&gt;基本概念&lt;/h2&gt;
-
-&lt;p&gt;定义：时间戳是指格林威治时间 1970 年 01 月 01 日 00 时 00 分 00 秒 (北京时间 1970 年 01 月 01 日 08 时 00 分 00 秒) 起至现在的总秒数。&lt;/p&gt;
-
-&lt;p&gt;时间戳（timestamp），通常是一个字符序列，唯一地标识某一刻的时间。&lt;/p&gt;
-
-&lt;h2 id=&quot;个人理解&quot;&gt;个人理解&lt;/h2&gt;
-&lt;p&gt;时间戳是标识一个时间节点，时间戳的计时起点根据各时区的不同相应提前或推后（我是这么理解的！），所以从这个角度上看，&lt;strong&gt;时间戳没有时区这句话&lt;/strong&gt;，是个伪命题。（每个人的理解不用，表述不同，因人而异。）&lt;/p&gt;
-
-&lt;h2 id=&quot;golang-注意点&quot;&gt;golang 注意点&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;time.unix()&lt;/code&gt; 这个方法，会根据 time 的 Location 属性不同，输出的时间戳也会不同，所以在 time 初始化的时候注意一定要赋予正确的 Location。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="时间戳" /><summary type="html">基本概念</summary></entry></feed>
+&lt;p&gt;&lt;a href=&quot;https://draveness.me/golang/docs/part2-foundation/ch05-keyword/golang-panic-recover/#fn:3&quot;&gt;博客&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="panic" /><category term="recover" /><summary type="html"></summary></entry></feed>

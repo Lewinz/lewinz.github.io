@@ -441,6 +441,14 @@
     } ,
   
     {
+      "title"    : "frp 搭建过程记录",
+      "category" : "frp",
+      
+      "url"      : "https://lewinz.org/2021/07/10/frp-install/",
+      "keywords" : "frp,搭建"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
