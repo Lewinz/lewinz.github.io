@@ -465,6 +465,14 @@
     } ,
   
     {
+      "title"    : "openstack 各服务重启命令",
+      "category" : "openstack",
+      
+      "url"      : "https://lewinz.org/2021/07/25/openstack-server-restart-cli/",
+      "keywords" : "openstack, restart, cli"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
