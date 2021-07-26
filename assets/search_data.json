@@ -499,6 +499,14 @@
     } ,
   
     {
+      "title"    : "WebAssembly",
+      "category" : "webassembly",
+      
+      "url"      : "https://lewinz.org/2021/07/26/webassembly/",
+      "keywords" : "webassembly"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
