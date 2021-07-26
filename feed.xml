@@ -1,4 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-26T14:32:13+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html"></title><link href="https://lewinz.org/2021/07/26/2021-07-26-golang-string-covert/" rel="alternate" type="text/html" title="" /><published>2021-07-26T14:32:13+08:00</published><updated>2021-07-26T14:32:13+08:00</updated><id>https://lewinz.org/2021/07/26/2021-07-26-golang-string-covert</id><content type="html" xml:base="https://lewinz.org/2021/07/26/2021-07-26-golang-string-covert/">&lt;p&gt;string 类型和 [] byte 类型是我们编程时最常使用到的数据结构。本文将探讨两者之间的转换方式，通过分析它们之间的内在联系来拨开迷雾。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-26T14:34:05+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang 内存分配</title><link href="https://lewinz.org/2021/07/26/golang-memory-allocation/" rel="alternate" type="text/html" title="golang 内存分配" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-memory-allocation</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-memory-allocation/">&lt;p&gt;在内存从分配到回收的生命周期中，内存不再被使用的时候，标准库会自动执行 Go 的内存管理。虽然开发者不必操心这些细节，但是 Go 语言所做的底层管理经过了很好的优化，同时有很多有趣的概念。&lt;/p&gt;
+
+&lt;h2 id=&quot;堆上的分配&quot;&gt;堆上的分配&lt;/h2&gt;
+&lt;p&gt;内存管理被设计为可以在并发环境快速执行，同时与垃圾收集器集成在了一起。从一个简单的例子开始：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;smallStruct&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int64&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float64&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;smallAllocation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;//go:noinline&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;smallAllocation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;smallStruct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;smallStruct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;注释 //go:noinline 会禁用内联，以避免内联通过移除函数的方式优化这段代码，从而造成最终没有分配内存的情况出现。&lt;/p&gt;
+
+&lt;p&gt;通过运行逃逸分析命令 go tool compile “-m” main.go 可以确认 Go 执行了的分配：
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.go:14:9: &amp;amp;smallStruct literal escapes to heap&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;借助 go tool compile -S main.go 命令得到这段程序的汇编代码，可以同样明确地向我们展示具体的分配细节：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0x001d 00029 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   LEAQ   type.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.smallStruct&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;SB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, AX
+0x0024 00036 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  PCDATA &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;
+0x0024 00036 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  MOVQ   AX, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;SP&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+0x0028 00040 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  CALL   runtime.newobject&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;SB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;函数 newobject 是用于新对象的分配以及代理 mallocgc 的内置函数，该函数在堆上管理这些内存。在 Go 语言中有两种策略，一种用于较小的内存空间的分配，而另一种则用于较大的内存空间的分配。&lt;/p&gt;
+
+&lt;h2 id=&quot;较小内存空间的分配策略&quot;&gt;较小内存空间的分配策略&lt;/h2&gt;
+&lt;p&gt;对于小于 32kb 的，较小的内存空间的分配策略，Go 会从被叫做 mcache 的本地缓存中尝试获取内存。 这个缓存持有一个被叫做 mspan 的内存块 (span ，32kb 大小的内存块) 列表，mspan 包含着可用于分配的内存：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_1.png&quot; alt=&quot;golang_memory_allocation_1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;每个线程 M 被分配一个处理器 P，并且一次最多处理一个 goroutine。在分配内存时，当前的 goroutine 会使用它当前的 P 的本地缓存，在 span 链表中寻找第一个可用的空闲对象。使用这种本地缓存不需要锁操作，从而分配效率更高。&lt;/p&gt;
+
+&lt;p&gt;span 链表被划分为 8 字节大小到 32k 字节大小的，约 70 个的大小等级，每个等级可以存储不同大小的对象。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_2.png&quot; alt=&quot;golang_memory_allocation_2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;每个 span 链表会存在两份：一个链表用于不包含指针的对象而另一个用于包含指针的对象。这种区别使得垃圾收集器更加轻松，因为它不必扫描不包含任何指针的 span。&lt;/p&gt;
+
+&lt;p&gt;在我们前面的例子中，结构体的大小是 32 字节，因此它会适合于 32 字节的 span ：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_3.png&quot; alt=&quot;golang_memory_allocation_3&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;现在，我们可能会好奇，如果在分配期间 span 没有空闲的插槽会发生什么。Go 维护着每个大小等级的 span 的中央链表，该中央链表被叫做 mcentral，其中维护着包含空闲对象的 span 和没有空闲对象的 span ：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_4.png&quot; alt=&quot;golang_memory_allocation_4&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;mcentral 维护着 span 的双向链表；其中每个链表节点有着指向前一个 span 和后一个 span 的引用。非空链表中的 span 可能包含着一些正在使用的内存，“非空” 表示在链表中至少有一个空闲的插槽可供分配。当垃圾收集器清理内存时，可能会清理一部分 span，将这部分标记为不再使用，并将其放回非空链表。&lt;/p&gt;
+
+&lt;p&gt;我们的程序现在可以在没有插槽的情况下向中央链表请求 span ：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_5.png&quot; alt=&quot;golang_memory_allocation_5&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果空链表中没有可用的 span，Go 需要为中央链表获取新的 span 。新的 span 会从堆上分配，并链接到中央链表上：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_6.png&quot; alt=&quot;golang_memory_allocation_6&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;堆会在需要的时候从系统（ OS ）获取内存，如果需要更多的内存，堆会分配一个叫做 arena 的大块内存，在 64 位架构下为 64Mb，在其他架构下大多为 4Mb。arena 同样适用 span 映射内存。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_7.png&quot; alt=&quot;golang_memory_allocation_7&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;较大内存空间的分配策略&quot;&gt;较大内存空间的分配策略&lt;/h2&gt;
+&lt;p&gt;Go 并不适用本地缓存来管理较大的内存空间分配。对于超过 32kb 的分配，会向上取整到页的大小，并直接从堆上分配。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_8.png&quot; alt=&quot;golang_memory_allocation_8&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;全景图&quot;&gt;全景图&lt;/h2&gt;
+&lt;p&gt;现在我们对内存分配的时候发生了什么有了更好的认识。现在将所有的组成部分放在一起来得到完整的图画。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_9.png&quot; alt=&quot;golang_memory_allocation_9&quot; /&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="memory" /><category term="allocation" /><summary type="html">在内存从分配到回收的生命周期中，内存不再被使用的时候，标准库会自动执行 Go 的内存管理。虽然开发者不必操心这些细节，但是 Go 语言所做的底层管理经过了很好的优化，同时有很多有趣的概念。</summary></entry><entry><title type="html">golang 黑魔法(string 与 []byte 转换)</title><link href="https://lewinz.org/2021/07/26/golang-string-covert/" rel="alternate" type="text/html" title="golang 黑魔法(string 与 []byte 转换)" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-string-covert</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-string-covert/">&lt;p&gt;string 类型和 [] byte 类型是我们编程时最常使用到的数据结构。本文将探讨两者之间的转换方式，通过分析它们之间的内在联系来拨开迷雾。&lt;/p&gt;
 
 &lt;h2 id=&quot;两种转换方式&quot;&gt;两种转换方式&lt;/h2&gt;
 &lt;h3 id=&quot;标准转换&quot;&gt;标准转换&lt;/h3&gt;
@@ -383,83 +459,7 @@ ok      workspace/example/stringBytes   4.383s
 
 &lt;h2 id=&quot;取舍场景&quot;&gt;取舍场景&lt;/h2&gt;
 &lt;p&gt;在你不确定安全隐患的条件下，尽量采用标准方式进行数据转换。&lt;br /&gt;
-当程序对运行性能有高要求，同时满足对数据仅仅只有读操作的条件，且存在频繁转换（例如消息转发场景），可以使用强转换。&lt;/p&gt;</content><author><name>Lewin</name></author></entry><entry><title type="html">golang 内存分配</title><link href="https://lewinz.org/2021/07/26/golang-memory-allocation/" rel="alternate" type="text/html" title="golang 内存分配" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-memory-allocation</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-memory-allocation/">&lt;p&gt;在内存从分配到回收的生命周期中，内存不再被使用的时候，标准库会自动执行 Go 的内存管理。虽然开发者不必操心这些细节，但是 Go 语言所做的底层管理经过了很好的优化，同时有很多有趣的概念。&lt;/p&gt;
-
-&lt;h2 id=&quot;堆上的分配&quot;&gt;堆上的分配&lt;/h2&gt;
-&lt;p&gt;内存管理被设计为可以在并发环境快速执行，同时与垃圾收集器集成在了一起。从一个简单的例子开始：&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;smallStruct&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-   &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int64&lt;/span&gt;
-   &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float64&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-   &lt;span class=&quot;n&quot;&gt;smallAllocation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;//go:noinline&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;smallAllocation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;smallStruct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;smallStruct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;注释 //go:noinline 会禁用内联，以避免内联通过移除函数的方式优化这段代码，从而造成最终没有分配内存的情况出现。&lt;/p&gt;
-
-&lt;p&gt;通过运行逃逸分析命令 go tool compile “-m” main.go 可以确认 Go 执行了的分配：
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.go:14:9: &amp;amp;smallStruct literal escapes to heap&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;借助 go tool compile -S main.go 命令得到这段程序的汇编代码，可以同样明确地向我们展示具体的分配细节：&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0x001d 00029 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   LEAQ   type.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.smallStruct&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;SB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, AX
-0x0024 00036 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  PCDATA &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;
-0x0024 00036 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  MOVQ   AX, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;SP&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-0x0028 00040 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  CALL   runtime.newobject&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;SB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;函数 newobject 是用于新对象的分配以及代理 mallocgc 的内置函数，该函数在堆上管理这些内存。在 Go 语言中有两种策略，一种用于较小的内存空间的分配，而另一种则用于较大的内存空间的分配。&lt;/p&gt;
-
-&lt;h2 id=&quot;较小内存空间的分配策略&quot;&gt;较小内存空间的分配策略&lt;/h2&gt;
-&lt;p&gt;对于小于 32kb 的，较小的内存空间的分配策略，Go 会从被叫做 mcache 的本地缓存中尝试获取内存。 这个缓存持有一个被叫做 mspan 的内存块 (span ，32kb 大小的内存块) 列表，mspan 包含着可用于分配的内存：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_1.png&quot; alt=&quot;golang_memory_allocation_1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;每个线程 M 被分配一个处理器 P，并且一次最多处理一个 goroutine。在分配内存时，当前的 goroutine 会使用它当前的 P 的本地缓存，在 span 链表中寻找第一个可用的空闲对象。使用这种本地缓存不需要锁操作，从而分配效率更高。&lt;/p&gt;
-
-&lt;p&gt;span 链表被划分为 8 字节大小到 32k 字节大小的，约 70 个的大小等级，每个等级可以存储不同大小的对象。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_2.png&quot; alt=&quot;golang_memory_allocation_2&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;每个 span 链表会存在两份：一个链表用于不包含指针的对象而另一个用于包含指针的对象。这种区别使得垃圾收集器更加轻松，因为它不必扫描不包含任何指针的 span。&lt;/p&gt;
-
-&lt;p&gt;在我们前面的例子中，结构体的大小是 32 字节，因此它会适合于 32 字节的 span ：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_3.png&quot; alt=&quot;golang_memory_allocation_3&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;现在，我们可能会好奇，如果在分配期间 span 没有空闲的插槽会发生什么。Go 维护着每个大小等级的 span 的中央链表，该中央链表被叫做 mcentral，其中维护着包含空闲对象的 span 和没有空闲对象的 span ：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_4.png&quot; alt=&quot;golang_memory_allocation_4&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;mcentral 维护着 span 的双向链表；其中每个链表节点有着指向前一个 span 和后一个 span 的引用。非空链表中的 span 可能包含着一些正在使用的内存，“非空” 表示在链表中至少有一个空闲的插槽可供分配。当垃圾收集器清理内存时，可能会清理一部分 span，将这部分标记为不再使用，并将其放回非空链表。&lt;/p&gt;
-
-&lt;p&gt;我们的程序现在可以在没有插槽的情况下向中央链表请求 span ：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_5.png&quot; alt=&quot;golang_memory_allocation_5&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;如果空链表中没有可用的 span，Go 需要为中央链表获取新的 span 。新的 span 会从堆上分配，并链接到中央链表上：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_6.png&quot; alt=&quot;golang_memory_allocation_6&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;堆会在需要的时候从系统（ OS ）获取内存，如果需要更多的内存，堆会分配一个叫做 arena 的大块内存，在 64 位架构下为 64Mb，在其他架构下大多为 4Mb。arena 同样适用 span 映射内存。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_7.png&quot; alt=&quot;golang_memory_allocation_7&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;较大内存空间的分配策略&quot;&gt;较大内存空间的分配策略&lt;/h2&gt;
-&lt;p&gt;Go 并不适用本地缓存来管理较大的内存空间分配。对于超过 32kb 的分配，会向上取整到页的大小，并直接从堆上分配。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_8.png&quot; alt=&quot;golang_memory_allocation_8&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;全景图&quot;&gt;全景图&lt;/h2&gt;
-&lt;p&gt;现在我们对内存分配的时候发生了什么有了更好的认识。现在将所有的组成部分放在一起来得到完整的图画。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_9.png&quot; alt=&quot;golang_memory_allocation_9&quot; /&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="memory" /><category term="allocation" /><summary type="html">在内存从分配到回收的生命周期中，内存不再被使用的时候，标准库会自动执行 Go 的内存管理。虽然开发者不必操心这些细节，但是 Go 语言所做的底层管理经过了很好的优化，同时有很多有趣的概念。</summary></entry><entry><title type="html">golang 不安全编程</title><link href="https://lewinz.org/2021/07/26/golang-unsafe-programming/" rel="alternate" type="text/html" title="golang 不安全编程" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-unsafe-programming</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-unsafe-programming/">&lt;p&gt;不安全编程？用 go 语言以来也没发现有啥不安全的啊，而且 go 里面有垃圾回收，也不需要我们来管理内存。当听到不安全编程这几个字，唯一能想到的也就是指针了，只有指针才可能导致不安全问题。我们知道 go 中是有指针的，但是 go 的指针并不能像 C 语言中的指针一样可以进行运算，因此在提供了指针的便利性的同时，又保证了安全。关于 go 中的指针我们之前已经说过了，以及它都做了哪些限制。&lt;/p&gt;
+当程序对运行性能有高要求，同时满足对数据仅仅只有读操作的条件，且存在频繁转换（例如消息转发场景），可以使用强转换。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="string" /><category term="byte" /><category term="coverted" /><summary type="html">string 类型和 [] byte 类型是我们编程时最常使用到的数据结构。本文将探讨两者之间的转换方式，通过分析它们之间的内在联系来拨开迷雾。</summary></entry><entry><title type="html">golang 不安全编程</title><link href="https://lewinz.org/2021/07/26/golang-unsafe-programming/" rel="alternate" type="text/html" title="golang 不安全编程" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-unsafe-programming</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-unsafe-programming/">&lt;p&gt;不安全编程？用 go 语言以来也没发现有啥不安全的啊，而且 go 里面有垃圾回收，也不需要我们来管理内存。当听到不安全编程这几个字，唯一能想到的也就是指针了，只有指针才可能导致不安全问题。我们知道 go 中是有指针的，但是 go 的指针并不能像 C 语言中的指针一样可以进行运算，因此在提供了指针的便利性的同时，又保证了安全。关于 go 中的指针我们之前已经说过了，以及它都做了哪些限制。&lt;/p&gt;
 
 &lt;p&gt;但是在 go 中，可以通过一个叫做 unsafe 的包让指针突破限制，从而进行运算，可一旦用不好就会导致很严重的问题，所以我们说这是不安全编程。但即便如此我们还是可以使用的，因为用好了在某些场景下能够带来很大的便利，而且 go 的内部也在大量的使用 unsafe 这个包。&lt;/p&gt;
 
