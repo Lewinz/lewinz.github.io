@@ -1,9 +1,9 @@
 ---
 layout: post
 title: golang 黑魔法(string 与 []byte 转换)
-categories: [golang, string, []byte, coverted]
+categories: [golang, string, byte, coverted]
 description: golang 黑魔法(string 与 []byte 转换)
-keywords: golang, string, []byte, coverted
+keywords: golang, string, byte, coverted
 ---
 string 类型和 [] byte 类型是我们编程时最常使用到的数据结构。本文将探讨两者之间的转换方式，通过分析它们之间的内在联系来拨开迷雾。
 
