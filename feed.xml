@@ -1,4 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-26T10:47:12+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang 不安全编程</title><link href="https://lewinz.org/2021/07/26/golang-unsafe-programming/" rel="alternate" type="text/html" title="golang 不安全编程" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-unsafe-programming</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-unsafe-programming/">&lt;p&gt;不安全编程？用 go 语言以来也没发现有啥不安全的啊，而且 go 里面有垃圾回收，也不需要我们来管理内存。当听到不安全编程这几个字，唯一能想到的也就是指针了，只有指针才可能导致不安全问题。我们知道 go 中是有指针的，但是 go 的指针并不能像 C 语言中的指针一样可以进行运算，因此在提供了指针的便利性的同时，又保证了安全。关于 go 中的指针我们之前已经说过了，以及它都做了哪些限制。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-26T11:51:37+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang 内存分配</title><link href="https://lewinz.org/2021/07/26/golang-memory-allocation/" rel="alternate" type="text/html" title="golang 内存分配" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-memory-allocation</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-memory-allocation/">&lt;p&gt;在内存从分配到回收的生命周期中，内存不再被使用的时候，标准库会自动执行 Go 的内存管理。虽然开发者不必操心这些细节，但是 Go 语言所做的底层管理经过了很好的优化，同时有很多有趣的概念。&lt;/p&gt;
+
+&lt;h2 id=&quot;堆上的分配&quot;&gt;堆上的分配&lt;/h2&gt;
+&lt;p&gt;内存管理被设计为可以在并发环境快速执行，同时与垃圾收集器集成在了一起。从一个简单的例子开始：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;smallStruct&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int64&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float64&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;smallAllocation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;//go:noinline&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;smallAllocation&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;smallStruct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;smallStruct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;注释 //go:noinline 会禁用内联，以避免内联通过移除函数的方式优化这段代码，从而造成最终没有分配内存的情况出现。&lt;/p&gt;
+
+&lt;p&gt;通过运行逃逸分析命令 go tool compile “-m” main.go 可以确认 Go 执行了的分配：
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.go:14:9: &amp;amp;smallStruct literal escapes to heap&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;借助 go tool compile -S main.go 命令得到这段程序的汇编代码，可以同样明确地向我们展示具体的分配细节：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0x001d 00029 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   LEAQ   type.&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.smallStruct&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;SB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, AX
+0x0024 00036 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  PCDATA &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;
+0x0024 00036 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  MOVQ   AX, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;SP&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+0x0028 00040 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;main.go:14&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  CALL   runtime.newobject&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;SB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;函数 newobject 是用于新对象的分配以及代理 mallocgc 的内置函数，该函数在堆上管理这些内存。在 Go 语言中有两种策略，一种用于较小的内存空间的分配，而另一种则用于较大的内存空间的分配。&lt;/p&gt;
+
+&lt;h2 id=&quot;较小内存空间的分配策略&quot;&gt;较小内存空间的分配策略&lt;/h2&gt;
+&lt;p&gt;对于小于 32kb 的，较小的内存空间的分配策略，Go 会从被叫做 mcache 的本地缓存中尝试获取内存。 这个缓存持有一个被叫做 mspan 的内存块 (span ，32kb 大小的内存块) 列表，mspan 包含着可用于分配的内存：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_1.png&quot; alt=&quot;golang_memory_allocation_1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;每个线程 M 被分配一个处理器 P，并且一次最多处理一个 goroutine。在分配内存时，当前的 goroutine 会使用它当前的 P 的本地缓存，在 span 链表中寻找第一个可用的空闲对象。使用这种本地缓存不需要锁操作，从而分配效率更高。&lt;/p&gt;
+
+&lt;p&gt;span 链表被划分为 8 字节大小到 32k 字节大小的，约 70 个的大小等级，每个等级可以存储不同大小的对象。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_2.png&quot; alt=&quot;golang_memory_allocation_2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;每个 span 链表会存在两份：一个链表用于不包含指针的对象而另一个用于包含指针的对象。这种区别使得垃圾收集器更加轻松，因为它不必扫描不包含任何指针的 span。&lt;/p&gt;
+
+&lt;p&gt;在我们前面的例子中，结构体的大小是 32 字节，因此它会适合于 32 字节的 span ：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_3.png&quot; alt=&quot;golang_memory_allocation_3&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;现在，我们可能会好奇，如果在分配期间 span 没有空闲的插槽会发生什么。Go 维护着每个大小等级的 span 的中央链表，该中央链表被叫做 mcentral，其中维护着包含空闲对象的 span 和没有空闲对象的 span ：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_4.png&quot; alt=&quot;golang_memory_allocation_4&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;mcentral 维护着 span 的双向链表；其中每个链表节点有着指向前一个 span 和后一个 span 的引用。非空链表中的 span 可能包含着一些正在使用的内存，“非空” 表示在链表中至少有一个空闲的插槽可供分配。当垃圾收集器清理内存时，可能会清理一部分 span，将这部分标记为不再使用，并将其放回非空链表。&lt;/p&gt;
+
+&lt;p&gt;我们的程序现在可以在没有插槽的情况下向中央链表请求 span ：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_5.png&quot; alt=&quot;golang_memory_allocation_5&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果空链表中没有可用的 span，Go 需要为中央链表获取新的 span 。新的 span 会从堆上分配，并链接到中央链表上：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_6.png&quot; alt=&quot;golang_memory_allocation_6&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;堆会在需要的时候从系统（ OS ）获取内存，如果需要更多的内存，堆会分配一个叫做 arena 的大块内存，在 64 位架构下为 64Mb，在其他架构下大多为 4Mb。arena 同样适用 span 映射内存。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_7.png&quot; alt=&quot;golang_memory_allocation_7&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;较大内存空间的分配策略&quot;&gt;较大内存空间的分配策略&lt;/h2&gt;
+&lt;p&gt;Go 并不适用本地缓存来管理较大的内存空间分配。对于超过 32kb 的分配，会向上取整到页的大小，并直接从堆上分配。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_8.png&quot; alt=&quot;golang_memory_allocation_8&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;全景图&quot;&gt;全景图&lt;/h2&gt;
+&lt;p&gt;现在我们对内存分配的时候发生了什么有了更好的认识。现在将所有的组成部分放在一起来得到完整的图画。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_memory_allocation_9.png&quot; alt=&quot;golang_memory_allocation_9&quot; /&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="memory" /><category term="allocation" /><summary type="html">在内存从分配到回收的生命周期中，内存不再被使用的时候，标准库会自动执行 Go 的内存管理。虽然开发者不必操心这些细节，但是 Go 语言所做的底层管理经过了很好的优化，同时有很多有趣的概念。</summary></entry><entry><title type="html">golang 不安全编程</title><link href="https://lewinz.org/2021/07/26/golang-unsafe-programming/" rel="alternate" type="text/html" title="golang 不安全编程" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-unsafe-programming</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-unsafe-programming/">&lt;p&gt;不安全编程？用 go 语言以来也没发现有啥不安全的啊，而且 go 里面有垃圾回收，也不需要我们来管理内存。当听到不安全编程这几个字，唯一能想到的也就是指针了，只有指针才可能导致不安全问题。我们知道 go 中是有指针的，但是 go 的指针并不能像 C 语言中的指针一样可以进行运算，因此在提供了指针的便利性的同时，又保证了安全。关于 go 中的指针我们之前已经说过了，以及它都做了哪些限制。&lt;/p&gt;
 
 &lt;p&gt;但是在 go 中，可以通过一个叫做 unsafe 的包让指针突破限制，从而进行运算，可一旦用不好就会导致很严重的问题，所以我们说这是不安全编程。但即便如此我们还是可以使用的，因为用好了在某些场景下能够带来很大的便利，而且 go 的内部也在大量的使用 unsafe 这个包。&lt;/p&gt;
 
@@ -1116,146 +1192,4 @@ wrote 11 bytes to 0xc0004807e8
     &lt;p&gt;DNS 响应均衡（Flash DNS）&lt;br /&gt;
 在 Internet 上，无论是 HTTP、FTP 或是其它的服务请求，客户端一般都是通过域名解析来找到服务器确切的 IP 地址的。在此均衡算法下，分处在不同地理位置的负载均衡设备收到同一个客户端的域名解析请求，并在同一时间内把此域名解析成各自相对应服务器的 IP 地址（即与此负载均衡设备在同一位地理位置的服务器的 IP 地址）并返回给客户端，则客户端将以最先收到的域名解析 IP 地址来继续请求服务，而忽略其它的 IP 地址响应。在种均衡策略适合应用在全局负载均衡的情况下，对本地负载均衡是没有意义的。&lt;/p&gt;
   &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Lewin</name></author><category term="lvs" /><category term="负载均衡" /><summary type="html">什么是负载均衡 负载均衡（Load Balance）建立在现有网络结构之上，它提供了一种廉价有效透明的方法扩展网络设备和服务器的带宽、增加吞吐量、加强网络数据处理能力、提高网络的灵活性和可用性。负载均衡有两方面的含义：首先，大量的并发访问或数据流量分担到多台节点设备上分别处理，减少用户等待响应的时间；其次，单个重负载的运算分担到多台节点设备上做并行处理，每个节点设备处理结束后，将结果汇总，返回给用户，系统处理能力得到大幅度提高。</summary></entry><entry><title type="html">golang 中 Json 转换注意点</title><link href="https://lewinz.org/2021/07/01/golang-json/" rel="alternate" type="text/html" title="golang 中 Json 转换注意点" /><published>2021-07-01T00:00:00+08:00</published><updated>2021-07-01T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/01/golang-json</id><content type="html" xml:base="https://lewinz.org/2021/07/01/golang-json/">&lt;p&gt;在使用 go 语言开发过程中，经常需要使用到 json 包来进行 json 和 struct 的互相转换，在使用过程中，遇到了一些需要额外注意的地方，记录如下。&lt;/p&gt;
-
-&lt;h2 id=&quot;整数变浮点数问题&quot;&gt;整数变浮点数问题&lt;/h2&gt;
-&lt;p&gt;假设有一个 Person 结构，其中包含 Age int64 和 Weight float64 两个字段，现在通过 json 包将 Person 结构转为 map [string] interface {}，代码如下。&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int64&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Weight&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;float64&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;person&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Wang Wu&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Weight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;150.07&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
- &lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;person&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
- 
- &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;personFromJSON&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unmarshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;personFromJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- 
- &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;personFromJSON&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;代码执行到这里看上去一切正常，但是打印一下 map [string] interface {} 就会发现不太对了。&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reflect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TypeOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Age&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// float64&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reflect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TypeOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Weight&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// float64&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;转换成 map [string] interface {} 之后，原先的 uint64 和 float64 类型都被转换成了 float64 类型，这显然是不符合我们的预期的。
-&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_json_1.png&quot; alt=&quot;golang-json-convert&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;查看 json 的规范可以看到，在 json 中是没有整型和浮点型之分的，所以现在可以理解 json 包中的 Unmarshal 方法转出的数字类型为什么都是 float64 了，因为根据 json 规范，数字都是同一种类型，那么对应到 go 的类型中最接近的就是 float64 了。&lt;/p&gt;
-
-&lt;p&gt;json 包还针对这个问题提供了更好的解决方案，不过需要使用 json.Decoder 来代替 json.Unmarshal 方法，将 json.Unmarhsal 替换如下。&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;personFromJSON&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
- 
-&lt;span class=&quot;n&quot;&gt;decoder&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewDecoder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewReader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;decoder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;UseNumber&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;decoder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;personFromJSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- 
-&lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;personFromJSON&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;这种方法首先创建了一个 jsonDecoder，然后调用了 UseNumber 方法，从文档中可以知道，使用 UseNumber 方法后，json 包会将数字转换成一个内置的 Number 类型（而不是 float64），这个 Number 类型提供了转换为 int64、float64 等多个方法。
-&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_json_2.png&quot; alt=&quot;golang-json-convert&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;时间格式&quot;&gt;时间格式&lt;/h2&gt;
-
-&lt;p&gt;对于 json 格式，是没有时间类型的，日期和时间以 json 格式存储时，需要转换为字符串类型。这就带来了一个问题，日期时间的字符串表示有多种多样，go 的 json 包支持的是哪一种呢？&lt;/p&gt;
-
-&lt;p&gt;使用下面的代码来输出 json.Marshal 方法将 Time 类型转换为字符串后的格式。&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Birth&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Time&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;person&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Wang Wu&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Birth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
- &lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;person&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// {&quot;Name&quot;:&quot;Wang Wu&quot;,&quot;Birth&quot;:&quot;2018-12-20T16:22:02.00287617+08:00&quot;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;根据输出可以判断，go 的 json 包使用的是 RFC3339 标准中定义的格式。接下来测试一下 json.Unmarshal 方法所支持的日期时间格式。&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;dateStr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;2018-10-12&quot;&lt;/span&gt;
- 
-&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;person&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;jsonStr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Sprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;{&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Wang Wu&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;, &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;Birth&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;: &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;%s&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;}&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dateStr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Unmarshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;byte&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsonStr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;person&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- 
-&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;person&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Birth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// 0001-01-01 00:00:00 +0000 UTC&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;对于形如 2018-10-12 的字符串，json 包并没有成功将其解析，接下来我们把 time 包中支持的所有格式都试一下。
-&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_json_3.png&quot; alt=&quot;golang-json-convert&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;经过试验，发现 json.Unmarshal 方法只支持 RFC3339 和 RFC3339Nano 两种格式的转换。还有一个需要注意的地方，使用 time.Now () 生成的时间是带有一个 Monotonic Time 的，经过 json.Marshal 转换时候，由于 RFC3339 规范里没有存放 Monotonic Time 的位置，会丢掉这一部分。&lt;/p&gt;
-
-&lt;h2 id=&quot;对于字段为空的处理&quot;&gt;对于字段为空的处理&lt;/h2&gt;
-&lt;p&gt;json 包对于空值的处理是一个非常容易出错的地方，看下面代码。&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;int64&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Birth&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Time&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Children&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;person&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
- 
- &lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;person&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// {&quot;Name&quot;:&quot;&quot;,&quot;Age&quot;:0,&quot;Birth&quot;:&quot;0001-01-01T00:00:00Z&quot;,&quot;Children&quot;:null}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;当 struct 中的字段没有值时，使用 json.Marshal 方法并不会自动忽略这些字段，而是根据字段的类型输出了他们的默认空值，这往往和我们的预期不一致，json 包提供了对字段的控制手段，我们可以为字段增加 omitempty tag，这个 tag 会在字段值为零值（int 和 float 类型零值是 0，string 类型零值是 ““，对象类型零值是 nil）时，忽略该字段。&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PersonAllowEmpty&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`json:&quot;,omitempty&quot;`&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;int64&lt;/span&gt;    &lt;span class=&quot;s&quot;&gt;`json:&quot;,omitempty&quot;`&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Birth&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Time&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;`json:&quot;,omitempty&quot;`&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Children&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PersonAllowEmpty&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`json:&quot;,omitempty&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;person&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PersonAllowEmpty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;person&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// {&quot;Birth&quot;:&quot;0001-01-01T00:00:00Z&quot;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;可以看到，这次输出的 json 中只有 Birth 字段了，string、int、对象类型的字段，都因为没有赋值，默认是零值，所以被忽略，对于日期时间类型，由于不可以设置为零值，也就是 0000-00-00 00:00:00，不会被忽略。&lt;/p&gt;
-
-&lt;p&gt;需要注意这样的情况：如果一个人的年龄是 0 （对于刚出生的婴儿，这个值是合理的），刚好是 int 字段的零值，在添加 omitempty tag 的情况下，年龄字段会被忽略。&lt;/p&gt;
-
-&lt;p&gt;如果想要某一个字段在任何情况下都被 json 包忽略，需要使用如下的写法。&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`json:&quot;-&quot;`&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;  &lt;span class=&quot;kt&quot;&gt;int64&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`json:&quot;-&quot;`&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Birth&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Time&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`json:&quot;-&quot;`&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;Children&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;`json:&quot;-&quot;`&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;birth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RFC3339&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;1988-12-02T15:04:27+08:00&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;person&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Person&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Wang Wu&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Age&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Birth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;birth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;Children&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;
- &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
- 
- &lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;person&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
- &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;jsonBytes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;// {}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;可以看到，使用 json:”-“ 标签的字段都被忽略了。&lt;/p&gt;
-
-&lt;h2 id=&quot;参考&quot;&gt;参考&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.jb51.net/article/153337.htm&quot;&gt;博客&lt;/a&gt;&lt;br /&gt;
-ps:主要是 float 问题&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="json" /><summary type="html">在使用 go 语言开发过程中，经常需要使用到 json 包来进行 json 和 struct 的互相转换，在使用过程中，遇到了一些需要额外注意的地方，记录如下。</summary></entry></feed>
+&lt;/ol&gt;</content><author><name>Lewin</name></author><category term="lvs" /><category term="负载均衡" /><summary type="html">什么是负载均衡 负载均衡（Load Balance）建立在现有网络结构之上，它提供了一种廉价有效透明的方法扩展网络设备和服务器的带宽、增加吞吐量、加强网络数据处理能力、提高网络的灵活性和可用性。负载均衡有两方面的含义：首先，大量的并发访问或数据流量分担到多台节点设备上分别处理，减少用户等待响应的时间；其次，单个重负载的运算分担到多台节点设备上做并行处理，每个节点设备处理结束后，将结果汇总，返回给用户，系统处理能力得到大幅度提高。</summary></entry></feed>

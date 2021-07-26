@@ -473,6 +473,14 @@
     } ,
   
     {
+      "title"    : "golang 内存分配",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/2021/07/26/golang-memory-allocation/",
+      "keywords" : "golang, memory, allocation"
+    } ,
+  
+    {
       "title"    : "golang 不安全编程",
       "category" : "golang",
       
