@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-28T23:18:58+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">http 网络状态码大全</title><link href="https://lewinz.org/2021/07/28/http-status-code/" rel="alternate" type="text/html" title="http 网络状态码大全" /><published>2021-07-28T00:00:00+08:00</published><updated>2021-07-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/28/http-status-code</id><content type="html" xml:base="https://lewinz.org/2021/07/28/http-status-code/">&lt;h2 id=&quot;1xx临时响应&quot;&gt;1xx（临时响应）&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-28T23:23:17+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">http 网络状态码大全</title><link href="https://lewinz.org/2021/07/28/http-status-code/" rel="alternate" type="text/html" title="http 网络状态码大全" /><published>2021-07-28T00:00:00+08:00</published><updated>2021-07-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/28/http-status-code</id><content type="html" xml:base="https://lewinz.org/2021/07/28/http-status-code/">&lt;h2 id=&quot;1xx临时响应&quot;&gt;1xx（临时响应）&lt;/h2&gt;
 &lt;p&gt;表示临时响应并需要请求者继续执行操作的状态代码。&lt;/p&gt;
 
 &lt;table&gt;
@@ -148,7 +148,7 @@
     &lt;tr&gt;
       &lt;td&gt;403&lt;/td&gt;
       &lt;td&gt;禁止&lt;/td&gt;
-      &lt;td&gt;服务器拒绝请求&lt;/td&gt;
+      &lt;td&gt;对资源的访问权限不足&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;404&lt;/td&gt;
