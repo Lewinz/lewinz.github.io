@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-28T22:52:17+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">openstack 秒级创建虚机方案</title><link href="https://lewinz.org/2021/07/28/openstack-create-nova/" rel="alternate" type="text/html" title="openstack 秒级创建虚机方案" /><published>2021-07-28T00:00:00+08:00</published><updated>2021-07-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/28/openstack-create-nova</id><content type="html" xml:base="https://lewinz.org/2021/07/28/openstack-create-nova/">&lt;p&gt;OpenStack 管理虚拟机生命周期的组件是 Nova，Nova 创建虚拟机从后端存储类型分为本地 LVM 存储和远程分布式存储（例如：Ceph/SheepDog/GlusterFS），从启动方式一般分为镜像启动和卷启动两大类，按启动方式和存储后端可以有 4 种组合&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-28T22:54:50+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">openstack 秒级创建虚机方案</title><link href="https://lewinz.org/2021/07/28/openstack-create-nova/" rel="alternate" type="text/html" title="openstack 秒级创建虚机方案" /><published>2021-07-28T00:00:00+08:00</published><updated>2021-07-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/28/openstack-create-nova</id><content type="html" xml:base="https://lewinz.org/2021/07/28/openstack-create-nova/">&lt;p&gt;OpenStack 管理虚拟机生命周期的组件是 Nova，Nova 创建虚拟机从后端存储类型分为本地 LVM 存储和远程分布式存储（例如：Ceph/SheepDog/GlusterFS），从启动方式一般分为镜像启动和卷启动两大类，按启动方式和存储后端可以有 4 种组合&lt;/p&gt;
 
 &lt;h2 id=&quot;本地-lvm--镜像启动&quot;&gt;本地 LVM + 镜像启动&lt;/h2&gt;
 
@@ -160,8 +160,7 @@ total 0
     &lt;tr&gt;
       &lt;th&gt;Status&lt;/th&gt;
       &lt;th&gt;Task&lt;/th&gt;
-      &lt;th&gt;Power&lt;/th&gt;
-      &lt;th&gt;state&lt;/th&gt;
+      &lt;th&gt;Power state&lt;/th&gt;
       &lt;th&gt;Steps&lt;/th&gt;
     &lt;/tr&gt;
   &lt;/thead&gt;
@@ -171,34 +170,29 @@ total 0
       &lt;td&gt;scheduling&lt;/td&gt;
       &lt;td&gt;None&lt;/td&gt;
       &lt;td&gt;3-12&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;Build&lt;/td&gt;
       &lt;td&gt;networking&lt;/td&gt;
       &lt;td&gt;None&lt;/td&gt;
       &lt;td&gt;22-24&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;Build&lt;/td&gt;
       &lt;td&gt;block_device_mapping&lt;/td&gt;
       &lt;td&gt;None&lt;/td&gt;
       &lt;td&gt;25-27&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;Build&lt;/td&gt;
       &lt;td&gt;spawing&lt;/td&gt;
       &lt;td&gt;None&lt;/td&gt;
       &lt;td&gt;28&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
       &lt;td&gt;Active&lt;/td&gt;
       &lt;td&gt;none&lt;/td&gt;
       &lt;td&gt;Running&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
       &lt;td&gt; &lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
