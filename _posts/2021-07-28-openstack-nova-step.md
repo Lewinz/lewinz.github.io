@@ -41,8 +41,8 @@ keywords: openstack, nova
 
 ### 下表列出了每个步骤中实例的状态：
 
-| Status  | Task  | Power | state | Steps |
-| - | - | - | - | - |
+| Status  | Task  | Power state | Steps |
+| - | - | - | - |
 | Build | scheduling  | None  | 3-12  |
 | Build | networking  | None  | 22-24 |
 | Build | block_device_mapping  | None  | 25-27 |
