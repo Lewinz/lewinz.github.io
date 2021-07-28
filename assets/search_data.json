@@ -523,6 +523,14 @@
     } ,
   
     {
+      "title"    : "主流软件负载均衡器对比 (LVS、Nginx、HAproxy)",
+      "category" : "lvc",
+      
+      "url"      : "https://lewinz.org/2021/07/28/lvs-nginx-haproxy/",
+      "keywords" : "lvc, nginx, haproxy"
+    } ,
+  
+    {
       "title"    : "openstack 秒级创建虚机方案",
       "category" : "openstack",
       
