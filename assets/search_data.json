@@ -531,6 +531,14 @@
     } ,
   
     {
+      "title"    : "openstack nova 创建虚拟机步骤",
+      "category" : "openstack",
+      
+      "url"      : "https://lewinz.org/2021/07/28/openstack-nova-step/",
+      "keywords" : "openstack, nova"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
