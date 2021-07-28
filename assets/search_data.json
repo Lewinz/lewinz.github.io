@@ -523,6 +523,14 @@
     } ,
   
     {
+      "title"    : "openstack 秒级创建虚机方案",
+      "category" : "openstack",
+      
+      "url"      : "https://lewinz.org/2021/07/28/openstack-create-nova/",
+      "keywords" : "openstack, nova"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       

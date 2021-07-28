@@ -1,4 +1,124 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-28T22:24:08+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang 内存分配</title><link href="https://lewinz.org/2021/07/26/golang-memory-allocation/" rel="alternate" type="text/html" title="golang 内存分配" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-memory-allocation</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-memory-allocation/">&lt;p&gt;在内存从分配到回收的生命周期中，内存不再被使用的时候，标准库会自动执行 Go 的内存管理。虽然开发者不必操心这些细节，但是 Go 语言所做的底层管理经过了很好的优化，同时有很多有趣的概念。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-28T22:38:52+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">openstack 秒级创建虚机方案</title><link href="https://lewinz.org/2021/07/28/openstack-create-nova/" rel="alternate" type="text/html" title="openstack 秒级创建虚机方案" /><published>2021-07-28T00:00:00+08:00</published><updated>2021-07-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/28/openstack-create-nova</id><content type="html" xml:base="https://lewinz.org/2021/07/28/openstack-create-nova/">&lt;p&gt;OpenStack 管理虚拟机生命周期的组件是 Nova，Nova 创建虚拟机从后端存储类型分为本地 LVM 存储和远程分布式存储（例如：Ceph/SheepDog/GlusterFS），从启动方式一般分为镜像启动和卷启动两大类，按启动方式和存储后端可以有 4 种组合&lt;/p&gt;
+
+&lt;h2 id=&quot;本地-lvm--镜像启动&quot;&gt;本地 LVM + 镜像启动&lt;/h2&gt;
+
+&lt;p&gt;此种方式，虚拟机镜像事先一般也会存放在远端的分布式存储上（Ceph 或 Swift）。当在计算节点首次创建虚拟机时，会从远端分布式存储下载镜像到计算节点做格式转换并缓存为 base-image，然后复制完整的镜像到 /var/lib/nova/instances/{instance-uuid} 目录下作为系统盘，耗时跟镜像大小和带宽有关，一般约数分数以上。&lt;/p&gt;
+
+&lt;p&gt;如果在相同的计算节点上第二次以相同的镜像创建虚拟机，因为已经有了镜像缓存，不需要再到远端分布式存储下载镜像，直接从本地计算节点拷贝镜像到虚拟机启动目录作为系统盘，耗时跟镜像大小有关，一般也得数分钟以上。&lt;/p&gt;
+
+&lt;h2 id=&quot;本地-lvm--卷启动&quot;&gt;本地 LVM + 卷启动&lt;/h2&gt;
+
+&lt;p&gt;此种方式，虚拟机镜像事先一般也会存放在远端的分布式存储上（Ceph 或 Swift）。当在计算节点首次创建虚拟机时，会从远端分布式存储下载镜像到计算节点做格式转换并缓存为 base-image，然后调用 cinder 在控制节点以 base-image 创建可 bootable 的卷，最后以该卷启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
+
+&lt;p&gt;如果在相同的计算节点上第二次以相同的镜像从卷启动创建虚拟机，因为已经有了镜像缓存，不需要再到远端分布式存储下载镜像，直接调用 cinder 在控制节点以 base-image 创建可 bootable 的卷，最后以该卷启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
+
+&lt;h2 id=&quot;远程分布式存储-ceph--镜像启动采用默认配置&quot;&gt;远程分布式存储 Ceph + 镜像启动（采用默认配置）&lt;/h2&gt;
+
+&lt;p&gt;此种方式，虚拟机镜像事先一般也会存放在远端的分布式存储 Ceph 上。当在计算节点首次创建虚拟机时，首先会从远程 Ceph 上下载镜像到该计算节点做格式转换并缓存为 base-image，然后上传 base-image 到远程 Ceph Rbd 的 pool 中作为系统盘，最后以 CephRbd pool 中的系统盘启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
+
+&lt;p&gt;在相同的计算节点上第二次以相同的镜像创建虚拟机，因为已经有了镜像缓存，不需要再到远端 Ceph 下载镜像，直接上传 base-image 到远程 Ceph Rbd 的 pool 中作为系统盘，最后以 CephRbd pool 中的系统盘启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
+
+&lt;h2 id=&quot;远程分布式存储-ceph--卷启动采用默认配置&quot;&gt;远程分布式存储 Ceph + 卷启动（采用默认配置）&lt;/h2&gt;
+
+&lt;p&gt;此种方式，虚拟机镜像事先一般也会存放在远端的分布式存储 Ceph 上。当在计算节点首次创建虚拟机时，首先会从远程 Ceph 上下载镜像到该计算节点做格式转换并缓存为 base-image，然后调用 cinder 通过 base-image 在远程 Ceph Rbd 的 pool 中创建可 bootable 的启动卷，最后以 Ceph Rbd pool 中的卷启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
+
+&lt;p&gt;在相同的计算节点上第二次以相同的镜像以卷启动创建虚拟机，因为已经有了镜像缓存，不需要再到远端 Ceph 下载镜像，直接调用 cinder 通过 base-image 在远程 Ceph Rbd 的 pool 中创建可 bootable 的启动卷，最后以 Ceph Rbd pool 中的卷启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
+
+&lt;h2 id=&quot;秒级创建虚拟机优化方案&quot;&gt;秒级创建虚拟机优化方案&lt;/h2&gt;
+
+&lt;p&gt;在优化之前，如果按照上述 4 种组合任一一种来创建虚拟机，如果批量创建几百台虚拟机，因为有镜像的下载、上传或者拷贝流程，整个创建流程会非常耗时，有些会因为接口超时导致失败。&lt;/p&gt;
+
+&lt;p&gt;为了达到秒级创建虚拟机的性能，Glance、Cinder 和 Nova 的后端存储统一以 Ceph 作为共享存储。Glance 上传的虚拟机镜像会上传到 Ceph images pool 中，Cinder 创建的卷会保存在 Ceph volumes pool 中，Nova 系统盘保存在 Cephinstances pool 中。&lt;/p&gt;
+
+&lt;p&gt;如果是以镜像启动创建虚拟机，在同一个计算节点选择相同的镜像不论是第一次还是第二次创建虚拟机，会直接基于 ceph images pool 的镜像先做 snapshot，然后基于该 snapshot 进行 clone（copy on write）到 Cephinstances pool，最后以该系统盘启动虚拟机。利用 ceph 写时复制特性，不存在镜像的上传、下载和完整拷贝，所以创建速度非常快，可以达到秒级。&lt;/p&gt;
+
+&lt;p&gt;如果是以卷启动创建虚拟机，在同一个计算节点选择相同的镜像不论是第一次还是第二次创建虚拟机，会直接基于 ceph images pool 的镜像先做 snapshot，然后调用 cinder 基于该 snapshot 进行 clone（copy on write）到 Ceph volumes pool，最后以该卷启动虚拟机。利用 ceph 写时复制特性，不存在镜像的上传、下载和完整拷贝，所以创建速度非常快，可以达到秒级。&lt;/p&gt;
+
+&lt;h2 id=&quot;秒级创建虚拟机的优化步骤&quot;&gt;秒级创建虚拟机的优化步骤&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;在 controller 控制节点上修改 /etc/glance/glance-api.conf 镜像配置文件，把 show_image_direct_url 参数设置为 True。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;vim /etc/glance/glance-api.conf&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_1.png&quot; alt=&quot;openstack_create_nova_1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;注意：一定要在【DEFAULT】下添加。&lt;/p&gt;
+
+&lt;p&gt;然后利用命令 serviceopenstack-glance-api restart 重启镜像管理服务。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;转换镜像格式，通过 glance 上传的镜像一定要是 raw 格式。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;在上传之前需要命令转换好后上传，转换命令：&lt;/p&gt;
+
+&lt;p&gt;qemu-img convert -O raw src-img.qcow2dst-img.raw&lt;/p&gt;
+
+&lt;p&gt;用命令行转换成 raw 格式，主要是解决如下 no bootable device 问题。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_2.png&quot; alt=&quot;openstack_create_nova_2&quot; /&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;在计算节点上进入 /var/lib/nova/instances/_base/ 目录，清空该目录下所有的缓存镜像。由于后台程序会先检测该目录下有没有缓存镜像，如果有，会把该缓存镜像上传到 ceph 中，如果没有，直接在 ceph 中 clone 镜像。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;步骤如下：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@openstack _base]# &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt;/var/lib/nova/instances/_base/
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@openstack _base]# ll
+
+&lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; 1 qemu qemu 41126400 Jul 24 01:01d7fca384a7c355afa3b70667b60f04dd08cd6f35
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@openstack _base]# &lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rfd7fca384a7c355afa3b70667b60f04dd08cd6f35&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@openstack _base]# ll
+
+total 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;相关的流程源码如下：&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_3.png&quot; alt=&quot;openstack_create_nova_3&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_4.png&quot; alt=&quot;openstack_create_nova_4&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[root@openstack ~]# vim /usr/lib/python2.7/site-packages/nova/virt/libvirt/imagebackend.py&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_5.png&quot; alt=&quot;openstack_create_nova_5&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[root@openstack ~]# vim /usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_6.jpeg&quot; alt=&quot;openstack_create_nova_6&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[root@openstack ~]# vim/usr/lib/python2.7/site-packages/glance/api/v2/images.py&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_7.jpeg&quot; alt=&quot;openstack_create_nova_7&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;上述介绍的不同种类的创建虚拟机的组合方式，从核心原理分析其实只有两类。一种是需要完整拷贝镜像，另一种是写时复制（copy on write）。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;完整拷贝镜像创建虚拟机&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;优点：是每个虚拟机独立，不会相互影响。&lt;/p&gt;
+
+&lt;p&gt;缺点：存在镜像下载、上传或者拷贝，创建速度慢。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;写时复制（copyon write）&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;优点：每次创建虚拟机都只有很小的增量文件，不存在全量镜像拷贝，创建速度很快。&lt;/p&gt;
+
+&lt;p&gt;缺点：以相同的镜像创建的所有虚拟机依赖共同的 base-image，如果 base-image 意外损坏或删除，上层依赖的虚拟机都会受到影响。&lt;/p&gt;
+
+&lt;p&gt;速度和安全性往往是一对矛盾体，两种方式需要做一定的权衡。可以在完整拷贝镜像创建虚拟机的方案中提升硬件性能，比如通过高配的磁盘和带宽来降低拷贝镜像的时间。也可以在写时复制（copy on write）的方案中，在虚拟机创建成功后的某个恰当时刻，通过后台执行 ceph 的 rbd flatten 命令断开 base-image 和增量 clone 虚拟磁盘的依赖链，达到每个虚拟机相互独立。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="nova" /><summary type="html">OpenStack 管理虚拟机生命周期的组件是 Nova，Nova 创建虚拟机从后端存储类型分为本地 LVM 存储和远程分布式存储（例如：Ceph/SheepDog/GlusterFS），从启动方式一般分为镜像启动和卷启动两大类，按启动方式和存储后端可以有 4 种组合</summary></entry><entry><title type="html">golang 内存分配</title><link href="https://lewinz.org/2021/07/26/golang-memory-allocation/" rel="alternate" type="text/html" title="golang 内存分配" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-memory-allocation</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-memory-allocation/">&lt;p&gt;在内存从分配到回收的生命周期中，内存不再被使用的时候，标准库会自动执行 Go 的内存管理。虽然开发者不必操心这些细节，但是 Go 语言所做的底层管理经过了很好的优化，同时有很多有趣的概念。&lt;/p&gt;
 
 &lt;h2 id=&quot;堆上的分配&quot;&gt;堆上的分配&lt;/h2&gt;
 &lt;p&gt;内存管理被设计为可以在并发环境快速执行，同时与垃圾收集器集成在了一起。从一个简单的例子开始：&lt;/p&gt;
@@ -1672,7 +1792,4 @@ systemctl daemon-reload
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;注意事项&quot;&gt;注意事项&lt;/h2&gt;
-&lt;p&gt;注：修改了的 unit 文件 需要重载。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl daemon-reload&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="linux" /><category term="自启动" /><category term="systemd" /><category term="systemctl" /><summary type="html">systemd 文件夹配置文件夹 systemd 配置文件存在于以下三个文件夹中：</summary></entry><entry><title type="html">frp 搭建过程记录</title><link href="https://lewinz.org/2021/07/10/frp-install/" rel="alternate" type="text/html" title="frp 搭建过程记录" /><published>2021-07-10T00:00:00+08:00</published><updated>2021-07-10T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/10/frp-install</id><content type="html" xml:base="https://lewinz.org/2021/07/10/frp-install/">&lt;p&gt;Emmm… 本来以为会有繁琐的配置，结果开箱即用&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/fatedier/frp&quot;&gt;GitHub地址&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://gofrp.org/docs/&quot;&gt;中文文档&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="frp" /><category term="搭建" /><summary type="html">Emmm… 本来以为会有繁琐的配置，结果开箱即用</summary></entry></feed>
+&lt;p&gt;注：修改了的 unit 文件 需要重载。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl daemon-reload&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="linux" /><category term="自启动" /><category term="systemd" /><category term="systemctl" /><summary type="html">systemd 文件夹配置文件夹 systemd 配置文件存在于以下三个文件夹中：</summary></entry></feed>
