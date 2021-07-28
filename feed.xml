@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-26T16:31:43+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang 内存分配</title><link href="https://lewinz.org/2021/07/26/golang-memory-allocation/" rel="alternate" type="text/html" title="golang 内存分配" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-memory-allocation</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-memory-allocation/">&lt;p&gt;在内存从分配到回收的生命周期中，内存不再被使用的时候，标准库会自动执行 Go 的内存管理。虽然开发者不必操心这些细节，但是 Go 语言所做的底层管理经过了很好的优化，同时有很多有趣的概念。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-07-28T22:24:08+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang 内存分配</title><link href="https://lewinz.org/2021/07/26/golang-memory-allocation/" rel="alternate" type="text/html" title="golang 内存分配" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/golang-memory-allocation</id><content type="html" xml:base="https://lewinz.org/2021/07/26/golang-memory-allocation/">&lt;p&gt;在内存从分配到回收的生命周期中，内存不再被使用的时候，标准库会自动执行 Go 的内存管理。虽然开发者不必操心这些细节，但是 Go 语言所做的底层管理经过了很好的优化，同时有很多有趣的概念。&lt;/p&gt;
 
 &lt;h2 id=&quot;堆上的分配&quot;&gt;堆上的分配&lt;/h2&gt;
 &lt;p&gt;内存管理被设计为可以在并发环境快速执行，同时与垃圾收集器集成在了一起。从一个简单的例子开始：&lt;/p&gt;
@@ -765,7 +765,419 @@ ok      workspace/example/stringBytes   4.383s
 
 &lt;blockquote&gt;
   &lt;p&gt;顺便说一句，unsafe 包用多了之后，也不觉得它的名字有多么地不 “美观” 了。相反，因为使用了官方并不提倡的东西，反而觉得有点酷炫，或许这就是叛逆的感觉吧。个人非常赞同，觉得真的很酷。&lt;/p&gt;
-&lt;/blockquote&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="unsafe" /><category term="programming" /><summary type="html">不安全编程？用 go 语言以来也没发现有啥不安全的啊，而且 go 里面有垃圾回收，也不需要我们来管理内存。当听到不安全编程这几个字，唯一能想到的也就是指针了，只有指针才可能导致不安全问题。我们知道 go 中是有指针的，但是 go 的指针并不能像 C 语言中的指针一样可以进行运算，因此在提供了指针的便利性的同时，又保证了安全。关于 go 中的指针我们之前已经说过了，以及它都做了哪些限制。</summary></entry><entry><title type="html">WebAssembly</title><link href="https://lewinz.org/2021/07/26/webassembly/" rel="alternate" type="text/html" title="WebAssembly" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/webassembly</id><content type="html" xml:base="https://lewinz.org/2021/07/26/webassembly/">&lt;p&gt;自从引入计算机以来，本地应用程序的性能有了巨大的提高。相比之下，web 应用程序相当慢，因为 JS 一开始并不是为了速度而构建的。但是由于浏览器之间的激烈竞争以及 JS 引擎如 V8 的快速开发，使得 JS 能够在机器上快速运行。但是它仍然不能超过本机应用程序的性能。这主要是因为 JS 代码必须经历几个进程才能生成机器码。&lt;/p&gt;
+&lt;/blockquote&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="unsafe" /><category term="programming" /><summary type="html">不安全编程？用 go 语言以来也没发现有啥不安全的啊，而且 go 里面有垃圾回收，也不需要我们来管理内存。当听到不安全编程这几个字，唯一能想到的也就是指针了，只有指针才可能导致不安全问题。我们知道 go 中是有指针的，但是 go 的指针并不能像 C 语言中的指针一样可以进行运算，因此在提供了指针的便利性的同时，又保证了安全。关于 go 中的指针我们之前已经说过了，以及它都做了哪些限制。</summary></entry><entry><title type="html">Makefile</title><link href="https://lewinz.org/2021/07/26/makefile/" rel="alternate" type="text/html" title="Makefile" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/makefile</id><content type="html" xml:base="https://lewinz.org/2021/07/26/makefile/">&lt;h2 id=&quot;makefile-介绍&quot;&gt;makefile 介绍&lt;/h2&gt;
+&lt;p&gt;make 命令执行时，需要一个 makefile 文件，以告诉 make 命令需要怎么样的去编译和链接程序。&lt;/p&gt;
+
+&lt;p&gt;首先，我们用一个示例来说明 makefile 的书写规则，以便给大家一个感性认识。这个示例来源于 gnu 的 make 使用手册，在这个示例中，我们的工程有 8 个 c 文件，和 3 个头文件，我们要写一个 makefile 来告诉 make 命令如何编译和链接这几个文件。我们的规则是：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;如果这个工程没有编译过，那么我们的所有 c 文件都要编译并被链接。&lt;/li&gt;
+  &lt;li&gt;如果这个工程的某几个 c 文件被修改，那么我们只编译被修改的 c 文件，并链接目标程序。&lt;/li&gt;
+  &lt;li&gt;如果这个工程的头文件被改变了，那么我们需要编译引用了这几个头文件的 c 文件，并链接目标程序。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;只要我们的 makefile 写得够好，所有的这一切，我们只用一个 make 命令就可以完成，make 命令会自动智能地根据当前的文件修改的情况来确定哪些文件需要重编译，从而自动编译所需要的文件和链接目标程序。&lt;/p&gt;
+
+&lt;h2 id=&quot;makefile-的规则&quot;&gt;makefile 的规则&lt;/h2&gt;
+&lt;p&gt;在讲述这个 makefile 之前，还是让我们先来粗略地看一看 makefile 的规则。&lt;/p&gt;
+&lt;div class=&quot;language-makefile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nl&quot;&gt;target ... &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;prerequisites ...&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;command&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;target&quot;&gt;target&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;可以是一个 object file（目标文件），也可以是一个执行文件，还可以是一个标签（label）。对于标签这种特性，在后续的 “伪目标” 章节中会有叙述。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;prerequisites&quot;&gt;prerequisites&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;生成该 target 所依赖的文件和 / 或 target&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;command&quot;&gt;command&lt;/h3&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;该 target 要执行的命令（任意的 shell 命令）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这是一个文件的依赖关系，也就是说，target 这一个或多个的目标文件依赖于 prerequisites 中的文件，其生成规则定义在 command 中。说白一点就是说:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;prerequisites中如果有一个以上的文件比target文件要新的话，command所定义的命令就会被执行。
+这就是 makefile 的规则，也就是 makefile 中最核心的内容。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;说到底，makefile 的东西就是这样一点，好像我的这篇文档也该结束了。呵呵。还不尽然，这是 makefile 的主线和核心，但要写好一个 makefile 还不够，我会在后面一点一点地结合我的工作经验给你慢慢道来。内容还多着呢。:)&lt;/p&gt;
+
+&lt;h2 id=&quot;一个示例&quot;&gt;一个示例&lt;/h2&gt;
+&lt;p&gt;正如前面所说，如果一个工程有 3 个头文件和 8 个 c 文件，为了完成前面所述的那三个规则，我们的 makefile 应该是下面的这个样子的。&lt;/p&gt;
+&lt;div class=&quot;language-makefile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nl&quot;&gt;edit &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main.o kbd.o command.o display.o &lt;/span&gt;\
+&lt;span class=&quot;nf&quot;&gt;        insert.o search.o files.o utils.o&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;main.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;kbd.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;command.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;display.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;insert.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;search.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;files.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;utils.o&lt;/span&gt;
+
+&lt;span class=&quot;nl&quot;&gt;main.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main.c defs.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;main.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;kbd.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;kbd.c defs.h command.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;kbd.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;command.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;command.c defs.h command.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;command.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;display.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;display.c defs.h buffer.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;display.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;insert.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;insert.c defs.h buffer.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;insert.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;search.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;search.c defs.h buffer.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;search.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;files.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;files.c defs.h buffer.h command.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;files.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;utils.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;utils.c defs.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;utils.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;clean &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;main.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;kbd.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;command.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;display.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;insert.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;search.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;files.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;utils.o&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;反斜杠（ \ ）是换行符的意思。这样比较便于 makefile 的阅读。我们可以把这个内容保存在名字为 “makefile” 或 “Makefile” 的文件中，然后在该目录下直接输入命令 make 就可以生成执行文件 edit。如果要删除执行文件和所有的中间目标文件，那么，只要简单地执行一下 make clean 就可以了。&lt;/p&gt;
+
+&lt;p&gt;在这个 makefile 中，目标文件（target）包含：执行文件 edit 和中间目标文件（ *.o ），依赖文件（prerequisites）就是冒号后面的那些 .c 文件和 .h 文件。每一个 .o 文件都有一组依赖文件，而这些 .o 文件又是执行文件 edit 的依赖文件。依赖关系的实质就是说明了目标文件是由哪些文件生成的，换言之，目标文件是哪些文件更新的。&lt;/p&gt;
+
+&lt;p&gt;在定义好依赖关系后，后续的那一行定义了如何生成目标文件的操作系统命令，一定要以一个 Tab 键作为开头。记住，make 并不管命令是怎么工作的，他只管执行所定义的命令。make 会比较 targets 文件和 prerequisites 文件的修改日期，如果 prerequisites 文件的日期要比 targets 文件的日期要新，或者 target 不存在的话，那么，make 就会执行后续定义的命令。&lt;/p&gt;
+
+&lt;p&gt;这里要说明一点的是， clean 不是一个文件，它只不过是一个动作名字，有点像 c 语言中的 label 一样，其冒号后什么也没有，那么，make 就不会自动去找它的依赖性，也就不会自动执行其后所定义的命令。要执行其后的命令，就要在 make 命令后明显得指出这个 label 的名字。这样的方法非常有用，我们可以在一个 makefile 中定义不用的编译或是和编译无关的命令，比如程序的打包，程序的备份，等等。&lt;/p&gt;
+
+&lt;h2 id=&quot;make-是如何工作的&quot;&gt;make 是如何工作的&lt;/h2&gt;
+&lt;p&gt;在默认的方式下，也就是我们只输入 make 命令。那么，&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;make 会在当前目录下找名字叫 “Makefile” 或 “makefile” 的文件。&lt;/li&gt;
+  &lt;li&gt;如果找到，它会找文件中的第一个目标文件（target），在上面的例子中，他会找到 “edit” 这个文件，并把这个文件作为最终的目标文件。&lt;/li&gt;
+  &lt;li&gt;如果 edit 文件不存在，或是 edit 所依赖的后面的 .o 文件的文件修改时间要比 edit 这个文件新，那么，他就会执行后面所定义的命令来生成 edit 这个文件。&lt;/li&gt;
+  &lt;li&gt;如果 edit 所依赖的 .o 文件也不存在，那么 make 会在当前文件中找目标为 .o 文件的依赖性，如果找到则再根据那一个规则生成 .o 文件。（这有点像一个堆栈的过程）&lt;/li&gt;
+  &lt;li&gt;当然，你的 C 文件和 H 文件是存在的啦，于是 make 会生成 .o 文件，然后再用 .o 文件生成 make 的终极任务，也就是执行文件 edit 了。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这就是整个 make 的依赖性，make 会一层又一层地去找文件的依赖关系，直到最终编译出第一个目标文件。在找寻的过程中，如果出现错误，比如最后被依赖的文件找不到，那么 make 就会直接退出，并报错，而对于所定义的命令的错误，或是编译不成功，make 根本不理。make 只管文件的依赖性，即，如果在我找了依赖关系之后，冒号后面的文件还是不在，那么对不起，我就不工作啦。&lt;/p&gt;
+
+&lt;p&gt;通过上述分析，我们知道，像 clean 这种，没有被第一个目标文件直接或间接关联，那么它后面所定义的命令将不会被自动执行，不过，我们可以显示要 make 执行。即命令 —— make clean ，以此来清除所有的目标文件，以便重编译。&lt;/p&gt;
+
+&lt;p&gt;于是在我们编程中，如果这个工程已被编译过了，当我们修改了其中一个源文件，比如 file.c ，那么根据我们的依赖性，我们的目标 file.o 会被重编译（也就是在这个依性关系后面所定义的命令），于是 file.o 的文件也是最新的啦，于是 file.o 的文件修改时间要比 edit 要新，所以 edit 也会被重新链接了（详见 edit 目标文件后定义的命令）。&lt;/p&gt;
+
+&lt;p&gt;而如果我们改变了 command.h ，那么， kdb.o 、 command.o 和 files.o 都会被重编译，并且， edit 会被重链接。&lt;/p&gt;
+
+&lt;h2 id=&quot;makefile-中使用变量&quot;&gt;makefile 中使用变量&lt;/h2&gt;
+&lt;p&gt;在上面的例子中，先让我们看看 edit 的规则：&lt;/p&gt;
+&lt;div class=&quot;language-makefile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nl&quot;&gt;edit &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main.o kbd.o command.o display.o &lt;/span&gt;\
+&lt;span class=&quot;nf&quot;&gt;        insert.o search.o files.o utils.o&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;main.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;kbd.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;command.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;display.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;
+        &lt;span class=&quot;err&quot;&gt;insert.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;search.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;files.o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;utils.o&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;我们可以看到 .o 文件的字符串被重复了两次，如果我们的工程需要加入一个新的 .o 文件，那么我们需要在两个地方加（应该是三个地方，还有一个地方在 clean 中）。当然，我们的 makefile 并不复杂，所以在两个地方加也不累，但如果 makefile 变得复杂，那么我们就有可能会忘掉一个需要加入的地方，而导致编译失败。所以，为了 makefile 的易维护，在 makefile 中我们可以使用变量。makefile 的变量也就是一个字符串，理解成 C 语言中的宏可能会更好。&lt;/p&gt;
+
+&lt;p&gt;比如，我们声明一个变量，叫 objects ， OBJECTS ， objs ， OBJS ， obj 或是 OBJ ，反正不管什么啦，只要能够表示 obj 文件就行了。我们在 makefile 一开始就这样定义：&lt;/p&gt;
+&lt;div class=&quot;language-makefile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;objects&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; main.o kbd.o command.o display.o &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+     insert.o search.o files.o utils.o
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;于是，我们就可以很方便地在我们的 makefile 中以 $(objects) 的方式来使用这个变量了，于是我们的改良版 makefile 就变成下面这个样子：&lt;/p&gt;
+&lt;div class=&quot;language-makefile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;objects&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; main.o kbd.o command.o display.o &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    insert.o search.o files.o utils.o
+
+&lt;span class=&quot;nl&quot;&gt;edit &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;$(objects)&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;$(objects)&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;main.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main.c defs.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;main.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;kbd.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;kbd.c defs.h command.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;kbd.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;command.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;command.c defs.h command.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;command.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;display.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;display.c defs.h buffer.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;display.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;insert.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;insert.c defs.h buffer.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;insert.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;search.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;search.c defs.h buffer.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;search.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;files.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;files.c defs.h buffer.h command.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;files.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;utils.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;utils.c defs.h&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;utils.c&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;clean &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;$(objects)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;于是如果有新的 .o 文件加入，我们只需简单地修改一下 objects 变量就可以了。&lt;/p&gt;
+
+&lt;h2 id=&quot;让-make-自动推导&quot;&gt;让 make 自动推导&lt;/h2&gt;
+&lt;p&gt;GNU 的 make 很强大，它可以自动推导文件以及文件依赖关系后面的命令，于是我们就没必要去在每一个 .o 文件后都写上类似的命令，因为，我们的 make 会自动识别，并自己推导命令。&lt;/p&gt;
+
+&lt;p&gt;只要 make 看到一个 .o 文件，它就会自动的把 .c 文件加在依赖关系中，如果 make 找到一个 whatever.o ，那么 whatever.c 就会是 whatever.o 的依赖文件。并且 cc -c whatever.c 也会被推导出来，于是，我们的 makefile 再也不用写得这么复杂。我们的新 makefile 又出炉了。&lt;/p&gt;
+&lt;div class=&quot;language-makefile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;objects&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; main.o kbd.o command.o display.o &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    insert.o search.o files.o utils.o
+
+&lt;span class=&quot;nl&quot;&gt;edit &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;$(objects)&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;$(objects)&lt;/span&gt;
+
+&lt;span class=&quot;nl&quot;&gt;main.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;defs.h&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;kbd.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;defs.h command.h&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;command.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;defs.h command.h&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;display.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;defs.h buffer.h&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;insert.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;defs.h buffer.h&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;search.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;defs.h buffer.h&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;files.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;defs.h buffer.h command.h&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;utils.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;defs.h&lt;/span&gt;
+
+&lt;span class=&quot;nl&quot;&gt;.PHONY &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;clean&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;clean &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;$(objects)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;这种方法，也就是 make 的 “隐晦规则”。上面文件内容中， .PHONY 表示 clean 是个伪目标文件。&lt;/p&gt;
+
+&lt;h2 id=&quot;另类风格的-makefiles&quot;&gt;另类风格的 makefiles&lt;/h2&gt;
+&lt;p&gt;既然我们的 make 可以自动推导命令，那么我看到那堆 .o 和 .h 的依赖就有点不爽，那么多的重复的 .h ，能不能把其收拢起来，好吧，没有问题，这个对于 make 来说很容易，谁叫它提供了自动推导命令和文件的功能呢？来看看最新风格的 makefile 吧。&lt;/p&gt;
+&lt;div class=&quot;language-makefile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;objects&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; main.o kbd.o command.o display.o &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    insert.o search.o files.o utils.o
+
+&lt;span class=&quot;nl&quot;&gt;edit &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;$(objects)&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;cc&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;$(objects)&lt;/span&gt;
+
+&lt;span class=&quot;nl&quot;&gt;$(objects) &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;defs.h&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;kbd.o command.o files.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;command.h&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;display.o insert.o search.o files.o &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;buffer.h&lt;/span&gt;
+
+&lt;span class=&quot;nl&quot;&gt;.PHONY &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;clean&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;clean &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;$(objects)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;这种风格，让我们的 makefile 变得很简单，但我们的文件依赖关系就显得有点凌乱了。鱼和熊掌不可兼得。还看你的喜好了。我是不喜欢这种风格的，一是文件的依赖关系看不清楚，二是如果文件一多，要加入几个新的 .o 文件，那就理不清楚了。&lt;/p&gt;
+
+&lt;h2 id=&quot;清空目标文件的规则&quot;&gt;清空目标文件的规则&lt;/h2&gt;
+&lt;p&gt;每个 Makefile 中都应该写一个清空目标文件（ .o 和执行文件）的规则，这不仅便于重编译，也很利于保持文件的清洁。这是一个 “修养”（呵呵，还记得我的《编程修养》吗）。一般的风格都是：&lt;/p&gt;
+&lt;div class=&quot;language-makefile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nl&quot;&gt;clean&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;$(objects)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;更为稳健的做法是：&lt;/p&gt;
+
+&lt;div class=&quot;language-makefile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nl&quot;&gt;.PHONY &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;clean&lt;/span&gt;
+&lt;span class=&quot;nl&quot;&gt;clean &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;err&quot;&gt;-rm&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;edit&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;$(objects)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;前面说过， .PHONY 表示 clean 是一个 “伪目标”。而在 rm 命令前面加了一个小减号的意思就是，也许某些文件出现问题，但不要管，继续做后面的事。当然， clean 的规则不要放在文件的开头，不然，这就会变成 make 的默认目标，相信谁也不愿意这样。不成文的规矩是 ——“clean 从来都是放在文件的最后”。&lt;/p&gt;
+
+&lt;p&gt;上面就是一个 makefile 的概貌，也是 makefile 的基础，下面还有很多 makefile 的相关细节，准备好了吗？准备好了就来。&lt;/p&gt;
+
+&lt;h2 id=&quot;makefile-里有什么&quot;&gt;Makefile 里有什么？&lt;/h2&gt;
+&lt;p&gt;Makefile 里主要包含了五个东西：&lt;strong&gt;显式规则&lt;/strong&gt;、&lt;strong&gt;隐晦规则&lt;/strong&gt;、&lt;strong&gt;变量定义&lt;/strong&gt;、&lt;strong&gt;文件指示和注释&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;显式规则&quot;&gt;显式规则&lt;/h3&gt;
+&lt;p&gt;显式规则说明了如何生成一个或多个目标文件。这是由 Makefile 的书写者明显指出要生成的文件、文件的依赖文件和生成的命令。&lt;/p&gt;
+
+&lt;h3 id=&quot;隐晦规则&quot;&gt;隐晦规则&lt;/h3&gt;
+&lt;p&gt;由于我们的 make 有自动推导的功能，所以隐晦的规则可以让我们比较简略地书写 Makefile，这是由 make 所支持的。&lt;/p&gt;
+
+&lt;h3 id=&quot;变量定义&quot;&gt;变量定义&lt;/h3&gt;
+&lt;p&gt;在 Makefile 中我们要定义一系列的变量，变量一般都是字符串，这个有点像你 C 语言中的宏，当 Makefile 被执行时，其中的变量都会被扩展到相应的引用位置上。&lt;/p&gt;
+
+&lt;h3 id=&quot;文件指示&quot;&gt;文件指示&lt;/h3&gt;
+&lt;p&gt;其包括了三个部分，一个是在一个 Makefile 中引用另一个 Makefile，就像 C 语言中的 include 一样；另一个是指根据某些情况指定 Makefile 中的有效部分，就像 C 语言中的预编译 #if 一样；还有就是定义一个多行的命令。有关这一部分的内容，我会在后续的部分中讲述。&lt;/p&gt;
+
+&lt;h3 id=&quot;注释&quot;&gt;注释&lt;/h3&gt;
+&lt;p&gt;Makefile 中只有行注释，和 UNIX 的 Shell 脚本一样，其注释是用 # 字符，这个就像 C/C++ 中的 // 一样。如果你要在你的 Makefile 中使用 # 字符，可以用反斜杠进行转义，如： # 。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;最后，还值得一提的是，在 Makefile 中的命令，必须要以 Tab 键开始。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;makefile-的文件名&quot;&gt;Makefile 的文件名&lt;/h2&gt;
+&lt;p&gt;默认的情况下，make 命令会在当前目录下按顺序找寻文件名为 “GNUmakefile”、“makefile”、“Makefile” 的文件，找到了解释这个文件。在这三个文件名中，最好使用 “Makefile” 这个文件名，因为，这个文件名第一个字符为大写，这样有一种显目的感觉。最好不要用 “GNUmakefile”，这个文件是 GNU 的 make 识别的。有另外一些 make 只对全小写的 “makefile” 文件名敏感，但是基本上来说，大多数的 make 都支持 “makefile” 和 “Makefile” 这两种默认文件名。&lt;/p&gt;
+
+&lt;p&gt;当然，你可以使用别的文件名来书写 Makefile，比如：“Make.Linux”，“Make.Solaris”，“Make.AIX” 等，如果要指定特定的 Makefile，你可以使用 make 的 -f 和 –file 参数，如： make -f Make.Linux 或 make –file Make.AIX 。&lt;/p&gt;
+
+&lt;h2 id=&quot;引用其它的-makefile&quot;&gt;引用其它的 Makefile&lt;/h2&gt;
+&lt;p&gt;在 Makefile 使用 include 关键字可以把别的 Makefile 包含进来，这很像 C 语言的 #include ，被包含的文件会原模原样的放在当前文件的包含位置。 include 的语法是：&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include &amp;lt;filename&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;filename 可以是当前操作系统 Shell 的文件模式（可以包含路径和通配符）。&lt;/p&gt;
+
+&lt;p&gt;在 include 前面可以有一些空字符，但是绝不能是 Tab 键开始。 include 和 &lt;filename&gt; 可以用一个或多个空格隔开。举个例子，你有这样几个 Makefile： a.mk 、 b.mk 、 c.mk ，还有一个文件叫 foo.make ，以及一个变量 $(bar) ，其包含了 e.mk 和 f.mk ，那么，下面的语句：&lt;/filename&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include foo.make *.mk $(bar)&lt;/code&gt;&lt;br /&gt;
+等价于：&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include foo.make a.mk b.mk c.mk e.mk f.mk&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;make 命令开始时，会找寻 include 所指出的其它 Makefile，并把其内容安置在当前的位置。就好像 C/C++ 的 #include 指令一样。如果文件都没有指定绝对路径或是相对路径的话，make 会在当前目录下首先寻找，如果当前目录下没有找到，那么，make 还会在下面的几个目录下找：&lt;/p&gt;
+
+&lt;p&gt;如果 make 执行时，有 -I 或 –include-dir 参数，那么 make 就会在这个参数所指定的目录下去寻找。&lt;br /&gt;
+如果目录 &lt;prefix&gt;/include （一般是： /usr/local/bin 或 /usr/include ）存在的话，make 也会去找。  
+如果有文件没有找到的话，make 会生成一条警告信息，但不会马上出现致命错误。它会继续载入其它的文件，一旦完成 makefile 的读取，make 会再重试这些没有找到，或是不能读取的文件，如果还是不行，make 才会出现一条致命信息。如果你想让 make 不理那些无法读取的文件，而继续执行，你可以在 include 前加一个减号 “-”。如：  
+`-include &lt;filename&gt;`&lt;/filename&gt;&lt;/prefix&gt;&lt;/p&gt;
+
+&lt;p&gt;其表示，无论 include 过程中出现什么错误，都不要报错继续执行。和其它版本 make 兼容的相关命令是 sinclude，其作用和这一个是一样的。&lt;/p&gt;
+
+&lt;h2 id=&quot;环境变量-makefiles&quot;&gt;环境变量 MAKEFILES&lt;/h2&gt;
+&lt;p&gt;如果你的当前环境中定义了环境变量 MAKEFILES ，那么，make 会把这个变量中的值做一个类似于 include 的动作。这个变量中的值是其它的 Makefile，用空格分隔。只是，它和 include 不同的是，从这个环境变量中引入的 Makefile 的 “目标” 不会起作用，如果环境变量中定义的文件发现错误，make 也会不理。&lt;/p&gt;
+
+&lt;p&gt;但是在这里我还是建议不要使用这个环境变量，因为只要这个变量一被定义，那么当你使用 make 时，所有的 Makefile 都会受到它的影响，这绝不是你想看到的。在这里提这个事，只是为了告诉大家，也许有时候你的 Makefile 出现了怪事，那么你可以看看当前环境中有没有定义这个变量。&lt;/p&gt;
+
+&lt;h2 id=&quot;make-的工作方式&quot;&gt;make 的工作方式&lt;/h2&gt;
+&lt;p&gt;GNU 的 make 工作时的执行步骤如下：（想来其它的 make 也是类似）&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;读入所有的 Makefile。&lt;/li&gt;
+  &lt;li&gt;读入被 include 的其它 Makefile。&lt;/li&gt;
+  &lt;li&gt;初始化文件中的变量。&lt;/li&gt;
+  &lt;li&gt;推导隐晦规则，并分析所有规则。&lt;/li&gt;
+  &lt;li&gt;为所有的目标文件创建依赖关系链。&lt;/li&gt;
+  &lt;li&gt;根据依赖关系，决定哪些目标要重新生成。&lt;/li&gt;
+  &lt;li&gt;执行生成命令。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;1-5 步为第一个阶段，6-7 为第二个阶段。第一个阶段中，如果定义的变量被使用了，那么，make 会把其展开在使用的位置。但 make 并不会完全马上展开，make 使用的是拖延战术，如果变量出现在依赖关系的规则中，那么仅当这条依赖被决定要使用了，变量才会在其内部展开。&lt;/p&gt;
+
+&lt;p&gt;当然，这个工作方式你不一定要清楚，但是知道这个方式你也会对 make 更为熟悉。有了这个基础，后续部分也就容易看懂了。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="makefile" /><summary type="html">makefile 介绍 make 命令执行时，需要一个 makefile 文件，以告诉 make 命令需要怎么样的去编译和链接程序。</summary></entry><entry><title type="html">OpenStack 社区部署工具 Devstack</title><link href="https://lewinz.org/2021/07/26/openstack-devstack/" rel="alternate" type="text/html" title="OpenStack 社区部署工具 Devstack" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/openstack-devstack</id><content type="html" xml:base="https://lewinz.org/2021/07/26/openstack-devstack/">&lt;h2 id=&quot;为什么需要devstack&quot;&gt;为什么需要Devstack&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 是一个十分复杂的分布式系统，部署难度较大，调试也较困难。&lt;/p&gt;
+
+&lt;p&gt;对于开发者，首先需要一个 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;allinone&lt;/code&gt; 的开发环境，可以随时修改代码并查看结果。各大厂商的部署工具一般都支持 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;allinone&lt;/code&gt; 的快速部署，比如红帽的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RDO&lt;/code&gt; 工具等。&lt;/p&gt;
+
+&lt;p&gt;不过这些厂商的代码包通常是随着 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 的大版本发布而更新，不能实时与社区代码同步，而对于开发者而言，往往需要的是最新的代码，精确到最新的一次 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;commit&lt;/code&gt; ，因此使用厂商提供的部署工具难以满足开发需求。&lt;/p&gt;
+
+&lt;p&gt;幸运的是社区已经提供了现成的快速部署工具，即 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack(Develop OpenStack)&lt;/code&gt; ，从英文名称上也能看出这是专为开发 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 量身打造的工具。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 不依赖于任何自动化部署工具，纯 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Bash&lt;/code&gt; 脚本实现，因此不需要花费大量时间耗在部署工具准备上，而只需要简单地编辑配置文件，然后运行脚本即可实现一键部署 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 环境。利用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 基本可以部署所有的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 组件，但并不是所有的开发者都需要部署所有的服务，比如 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Nova&lt;/code&gt; 开发者可能只需要部署核心组件就够了，其它服务比如 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Swift&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Heat&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sahara&lt;/code&gt; 等其实并不需要。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 充分考虑这种情况，一开始的设计就是可扩展的，除了核心组件，其它组件都是以插件的形式提供，开发者只需要根据自己的需求定制配置自己的插件即可。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 除了给开发者快速部署最新的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 开发环境，社区项目的功能测试也是通过 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 完成，开发者提交的代码在合并到主分支之前，必须通过 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 的所有功能集测试。另外，前面提到 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 是基于代码仓库的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master&lt;/code&gt; 分支部署，如果你想尝试 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 的最新功能或者新项目，也可以通过 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 工具快速部署最新代码的测试环境。&lt;/p&gt;
+
+&lt;h2 id=&quot;三步玩转devstack&quot;&gt;三步玩转DevStack&lt;/h2&gt;
+&lt;p&gt;刚刚提到 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 的强大之处，是不是“蠢蠢欲动”想要小试牛刀？不过在开始之前，我得友情提醒下，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 运行后会安装大量 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 依赖的软件包和 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Python&lt;/code&gt; 库，如果你怕弄乱你的系统，建议开一个虚拟机（你说用容器？&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;you can，you up&lt;/code&gt;)，在虚拟机里跑 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 就不用担心会弄坏你的系统了。目前 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 支持&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ubuntu 14.04/16.04&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Fedora 23/24&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CentOS/RHEL 7&lt;/code&gt;以及 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Debian&lt;/code&gt; 和 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenSUSE&lt;/code&gt; 操作系统，不过官方建议使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ubuntu 16.04&lt;/code&gt;，因为该操作系统社区测试最全面，出现的问题最少。
+OK，让我们开始一步步走起吧。&lt;/p&gt;
+
+&lt;h3 id=&quot;创建stack用户&quot;&gt;创建stack用户&lt;/h3&gt;
+&lt;p&gt;为了系统的安全， &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 最好不要在 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt; 用户下直接运行，因此需要创建一个专门的用户 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;stack&lt;/code&gt; ，该用户需要有免密码 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo&lt;/code&gt; 权限，配置如下:&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;adduser stack
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;stack ALL=(ALL) NOPASSWD: ALL&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; /etc/sudoers &lt;span class=&quot;c&quot;&gt;# 建议使用visudo&lt;/span&gt;
+su stack
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;如果已经下载了 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 代码， &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 也提供了一个专门的脚本创建 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;stack&lt;/code&gt; 用户，该脚本位于&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;devstack/tools/create-stack-user.sh&lt;/code&gt;，直接运行该脚本即可。&lt;br /&gt;
+最后请务必检查当前工作用户为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;stack&lt;/code&gt; ，并且能够不输入密码执行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo&lt;/code&gt; 命令。&lt;/p&gt;
+
+&lt;h3 id=&quot;配置devstack&quot;&gt;配置DevStack&lt;/h3&gt;
+&lt;p&gt;在 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 根目录下创建 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;local.conf&lt;/code&gt; 配置文件，包含 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin&lt;/code&gt; 密码、数据库密码、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RabbitMQ&lt;/code&gt; 密码以及 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Service&lt;/code&gt; 密码：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;|localrc]]
+&lt;span class=&quot;nv&quot;&gt;ADMIN_PASSWORD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;secret
+&lt;span class=&quot;nv&quot;&gt;DATABASE_PASSWORD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ADMIN_PASSWORD&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;RABBIT_PASSWORD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ADMIN_PASSWORD&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;SERVICE_PASSWORD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ADMIN_PASSWORD&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;你也可以直接从 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sample&lt;/code&gt; 目录下拷贝一个模板文件，然后在模板文件中修改。
+部署一个最简单的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 环境以上配置就够了，是不是特别简单？&lt;/p&gt;
+
+&lt;h3 id=&quot;let-devstack-fly&quot;&gt;Let DevStack Fly&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;./stack.sh&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;就这么简单？是的，一键部署，只需要一个命令！接下来你唯一需要做的，就是砌一杯咖啡静静地等待，取决于你的网络，通常需要等待半个小时。部署完后，会输出 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Dashboard&lt;/code&gt; 地址以及默认创建的两个账号，一个是管理员账号 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin&lt;/code&gt; ，另一个是普通账号 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;demo&lt;/code&gt; ，如下：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;This is your host IP address: 172.16.0.41
+This is your host IPv6 address: ::1
+Horizon is now available at http://172.16.0.41/dashboard
+Keystone is serving at http://172.16.0.41:5000/
+The default &lt;span class=&quot;nb&quot;&gt;users &lt;/span&gt;are: admin and demo
+The password: secret
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;注意以上部署的是一个精简版的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 环境，默认只包含核心组件和 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Horizon&lt;/code&gt; ，包括 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Keystone&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Glance&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Nova&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Neutron&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Cinder&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Horizon&lt;/code&gt; 等，其它服务则需要通过配置文件开启对应的插件完成，将在下面小节介绍。&lt;/p&gt;
+
+&lt;h3 id=&quot;关于下载速度优化&quot;&gt;关于下载速度优化&lt;/h3&gt;
+&lt;p&gt;由于众所周知的原因，运行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 时下载 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 依赖包和 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Python&lt;/code&gt; 库时非常慢，拉取 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 源码也非常耗时。为了避免这个问题，很多人都会从以下几个方面优化下载速度，加快部署速率：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;使用国内的镜像源
+对于 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ubuntu&lt;/code&gt; 系统就是修改 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;APT&lt;/code&gt; 源，比如阿里云镜像源，只需要修改 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/apt/source.list&lt;/code&gt; 配置文件即可，替换为需要使用的镜像源。如：
+    &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ xenial-proposed main restricted universe multiverse
+deb http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-proposed main restricted universe multiverse
+deb-src http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;使用国内的pip源
+只需要在当前家目录 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.pip&lt;/code&gt; 目录创建 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pip.conf&lt;/code&gt; 配置文件，以使用阿里云为例，配置文件内容如下：
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cat ~/.pip/pip.conf&lt;/code&gt;
+    &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;global]
+index-url &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; http://mirrors.aliyun.com/pypi/simple/
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+trusted-host&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;mirrors.aliyun.com
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;修改 OpenStack 源码地址
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 默认会从 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git.openstack.org&lt;/code&gt; 下拉取代码，国内访问速度很慢，建议替换为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;github&lt;/code&gt; 地址或者国内的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;trystack&lt;/code&gt; 仓库，在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[[local|localrc]]&lt;/code&gt;配置下增加以下配置项：
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GIT_BASE=http://git.trystack.cn&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;如果你本地已经有最新的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 源码了，也可以指定你本地的源码路径，比如使用本地的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Nova&lt;/code&gt; 源代码并且使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;new_feature&lt;/code&gt; 分支:&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;|localrc]]
+&lt;span class=&quot;nv&quot;&gt;NOVA_REPO&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/home/int32bit/nova
+&lt;span class=&quot;nv&quot;&gt;NOVA_BRANCH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;new_feature
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;需要注意的是，国内源存在同步滞后，可能包不兼容或者下载某些包失败问题，出现这种情况时只需要重新替换原来的镜像源，然后重新运行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;./stack.sh&lt;/code&gt; 即可。&lt;/p&gt;
+
+&lt;h2 id=&quot;使用devstack环境开发&quot;&gt;使用DevStack环境开发&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 使用了 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Linux&lt;/code&gt; 的终端复用工具 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;screen&lt;/code&gt; ，不同的服务运行在不同的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;window&lt;/code&gt; 中，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;screen&lt;/code&gt; 的使用方法可参考官方文档。通常情况下，我们都是针对 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 的某个组件进行开发，比如 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Nova&lt;/code&gt; ，只需要找到 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Nova&lt;/code&gt; 的源码路径，修改对应的源码，然后重启对应的服务即可。比如你修改了 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nova&lt;/code&gt; 源码下的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nova/compute/manager.py&lt;/code&gt; 代码，则需要重启 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nova-compute&lt;/code&gt; 服务，重启步骤如下：&lt;/p&gt;
+
+&lt;p&gt;使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;screen -ls&lt;/code&gt; 命令查找 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;stack session&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# screen -ls&lt;/span&gt;
+os3:~&amp;gt; screen &lt;span class=&quot;nt&quot;&gt;-list&lt;/span&gt;
+There is a screen on:
+   28994.stack     &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;08/10/2016 09:01:33 PM&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Detached&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+1 Socket &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; /var/run/screen/S-sdague.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;screen -r socket attach&lt;/code&gt;到前台运行，其中 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;socket&lt;/code&gt; 为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;scrren&lt;/code&gt; 的名称，以上为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;28994.stack&lt;/code&gt; 。&lt;br /&gt;
+使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ctrl-a n&lt;/code&gt;和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ctrl-a p&lt;/code&gt;遍历 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;windows&lt;/code&gt; ，直到找到 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nova-compute&lt;/code&gt; 服务。&lt;br /&gt;
+使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ctrl-c&lt;/code&gt;杀掉&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nova-compute&lt;/code&gt;进程。&lt;br /&gt;
+使用上下方向键遍历历史命令，找到跑 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nova-compute&lt;/code&gt; 服务的命令，重新运行即可。&lt;/p&gt;
+
+&lt;p&gt;有些服务跑在 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Web&lt;/code&gt; 服务器中，比如 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Keystone&lt;/code&gt; 服务，此时重启 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Keystone&lt;/code&gt; 服务只需要重启 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Apache&lt;/code&gt; 服务即可。&lt;br /&gt;
+如果你需要修改 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;oslo&lt;/code&gt; 代码或者 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;python-xxxclient&lt;/code&gt; 代码就相对麻烦点，因为这些代码不同于 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 源码，它默认不是从代码仓库中拉取，而是从已发布的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pypi&lt;/code&gt; 仓库中直接安装。你需要覆盖默认配置，手动配置代码仓库源:&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt;|localrc]]
+&lt;span class=&quot;nv&quot;&gt;LIBS_FROM_GIT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;oslo.policy
+&lt;span class=&quot;nv&quot;&gt;OSLOPOLICY_REPO&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/home/sdague/oslo.policy
+&lt;span class=&quot;nv&quot;&gt;OSLOPOLICY_BRANCH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;better_exception
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;由于这些公共库需要被许多不同的项目依赖，因此社区的推荐做法是需要重新部署整个 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 环境:&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;./unstack.sh &amp;amp;&amp;amp; ./stack.sh&lt;/code&gt;
+这个过程虽然不用重复从网络上下载包，相比第一次部署节省了不少时间，但仍然还是挺耗时间的，不利于单步调试。个人更倾向于改什么就重启什么服务，比如我修改了 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;oslo.db&lt;/code&gt; 代码，并且主要是解决 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Nova&lt;/code&gt; 问题，那我只需要重启 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Nova&lt;/code&gt; 服务即可，暂时不需要重新部署整个 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 。而若修改了 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;client&lt;/code&gt; 代码，不需要重启任何服务，直接就可以测试功能。当然这种方式没有考虑其它服务的依赖，可能引入新问题，因此在确定开发完成后，最好还是完完全全走一遍 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unstack&lt;/code&gt; 、 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;stack&lt;/code&gt; 流程。&lt;/p&gt;
+
+&lt;h2 id=&quot;使用devstack部署其它openstack服务&quot;&gt;使用DevStack部署其它OpenStack服务&lt;/h2&gt;
+&lt;p&gt;前面我们使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 部署了一个精简版的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 环境，其中只包含了几个核心组件。其它 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 服务是通过插件形式安装， &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 支持部署的所有插件列表可参考 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack Plugin Registry&lt;/code&gt; ，截至2017年2月份，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 共包含132个安装插件。其中包含：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;trove: 数据库服务。&lt;/li&gt;
+  &lt;li&gt;sahara: 大数据服务。&lt;/li&gt;
+  &lt;li&gt;ironic: 裸机服务。&lt;/li&gt;
+  &lt;li&gt;magnum: 容器编排服务。&lt;/li&gt;
+  &lt;li&gt;manila: 文件共享服务。&lt;/li&gt;
+  &lt;li&gt;cloudkitty: 计费服务。
+…&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;需要开启部署某个服务，只需要使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;enable_plugin&lt;/code&gt; 配置指定对应插件即可，该配置项语法为:&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;enable_plugin plugin_name [code repo]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;其中 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;plugin_name&lt;/code&gt; 为插件名称，可以在插件列表中找到，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;code repo&lt;/code&gt; 为代码仓库地址，不配置就使用默认的地址。&lt;br /&gt;
+比如我们需要开启 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sahara&lt;/code&gt; 服务，只需要在 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;local.conf&lt;/code&gt; 增加以下配置项:&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;enable_plugin sahara https://github.com/openstack/sahara.git
+enable_plugin sahara-dashboard https://github.com/openstack/sahara-dashboard.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;注意以上我们同时开启了两个 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sahara&lt;/code&gt; 相关的插件，前者是 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sahara&lt;/code&gt; 插件，而后者是 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dashboard&lt;/code&gt; 的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sahara&lt;/code&gt; 插件，若不配置该插件，在 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dashboard&lt;/code&gt; 中将看不到 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Sahara&lt;/code&gt; 面板。&lt;br /&gt;
+除了 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 服务外，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 还支持其它和 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Openstack&lt;/code&gt; 相关的插件，比如默认情况下都是使用本地文件系统存储作为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 存储后端，如果需要测试 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ceph&lt;/code&gt; 后端，则需要开启 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;devstack-plugin-ceph&lt;/code&gt; 插件，该插件会自动部署一个单节点 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ceph&lt;/code&gt; 集群，然后就可以配置 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Glance&lt;/code&gt; 、 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Nova&lt;/code&gt; 、 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Cinder&lt;/code&gt; 、 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Manila&lt;/code&gt; 等服务使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Ceph&lt;/code&gt; 后端了。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;enable_plugin devstack-plugin-ceph git://git.openstack.org/openstack/devstack-plugin-ceph
+&lt;span class=&quot;nv&quot;&gt;ENABLE_CEPH_CINDER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;True     &lt;span class=&quot;c&quot;&gt;# ceph backend for cinder&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;ENABLE_CEPH_GLANCE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;True     &lt;span class=&quot;c&quot;&gt;# store images in ceph&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;ENABLE_CEPH_C_BAK&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;True      &lt;span class=&quot;c&quot;&gt;# cinder-backup volumes to ceph&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;ENABLE_CEPH_NOVA&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;True       &lt;span class=&quot;c&quot;&gt;# allow nova to use ceph resources&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;本章首先介绍了 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 的功能，然后详细介绍了如何使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 快速部署一个 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 环境，最后介绍了使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 部署其它 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 服务。 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 项目是由社区维护的、专门为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 开发人员准备的快速部署开发环境的脚本工具，该脚本工具具有非常灵活的扩展性，能够通过配置定制化部署 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OpenStack&lt;/code&gt; 服务。除此之外，社区项目的功能测试也是通过 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 完成的。由此可见，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 是社区一个非常重要的项目，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 出现问题不仅影响开发者开发，还将可能导致社区的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CI&lt;/code&gt; 系统奔溃。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Shell&lt;/code&gt; 脚本实现，如果想学习 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Shell&lt;/code&gt; 编程， &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DevStack&lt;/code&gt; 源码将是一个很好的学习案例。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="devstack" /><summary type="html">为什么需要Devstack OpenStack 是一个十分复杂的分布式系统，部署难度较大，调试也较困难。</summary></entry><entry><title type="html">WebAssembly</title><link href="https://lewinz.org/2021/07/26/webassembly/" rel="alternate" type="text/html" title="WebAssembly" /><published>2021-07-26T00:00:00+08:00</published><updated>2021-07-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/26/webassembly</id><content type="html" xml:base="https://lewinz.org/2021/07/26/webassembly/">&lt;p&gt;自从引入计算机以来，本地应用程序的性能有了巨大的提高。相比之下，web 应用程序相当慢，因为 JS 一开始并不是为了速度而构建的。但是由于浏览器之间的激烈竞争以及 JS 引擎如 V8 的快速开发，使得 JS 能够在机器上快速运行。但是它仍然不能超过本机应用程序的性能。这主要是因为 JS 代码必须经历几个进程才能生成机器码。&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/webassembly_1.png&quot; alt=&quot;webassembly_1&quot; /&gt;&lt;/p&gt;
 
@@ -1263,208 +1675,4 @@ systemctl daemon-reload
 &lt;p&gt;注：修改了的 unit 文件 需要重载。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl daemon-reload&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="linux" /><category term="自启动" /><category term="systemd" /><category term="systemctl" /><summary type="html">systemd 文件夹配置文件夹 systemd 配置文件存在于以下三个文件夹中：</summary></entry><entry><title type="html">frp 搭建过程记录</title><link href="https://lewinz.org/2021/07/10/frp-install/" rel="alternate" type="text/html" title="frp 搭建过程记录" /><published>2021-07-10T00:00:00+08:00</published><updated>2021-07-10T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/10/frp-install</id><content type="html" xml:base="https://lewinz.org/2021/07/10/frp-install/">&lt;p&gt;Emmm… 本来以为会有繁琐的配置，结果开箱即用&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/fatedier/frp&quot;&gt;GitHub地址&lt;/a&gt;&lt;br /&gt;
-&lt;a href=&quot;https://gofrp.org/docs/&quot;&gt;中文文档&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="frp" /><category term="搭建" /><summary type="html">Emmm… 本来以为会有繁琐的配置，结果开箱即用</summary></entry><entry><title type="html">Ubuntu 20.04 设置 root 登录图形界面</title><link href="https://lewinz.org/2021/07/06/ubuntu-root-login-x-window/" rel="alternate" type="text/html" title="Ubuntu 20.04 设置 root 登录图形界面" /><published>2021-07-06T00:00:00+08:00</published><updated>2021-07-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/06/ubuntu-root-login-x-window</id><content type="html" xml:base="https://lewinz.org/2021/07/06/ubuntu-root-login-x-window/">&lt;p&gt;Ubuntu 默认是关闭 root 账户登录图形界面的&lt;/p&gt;
-
-&lt;h3 id=&quot;修改-root-账号密码&quot;&gt;修改 root 账号密码&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo passwd root&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;修改配置文件&quot;&gt;修改配置文件&lt;/h3&gt;
-&lt;h4 id=&quot;修改-50-ubuntuconf&quot;&gt;修改 50-ubuntu.conf&lt;/h4&gt;
-&lt;p&gt;执行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo vim /usr/share/lightdm/lightdm.conf.d/50-ubuntu.conf&lt;/code&gt; 把配置改为如下所示&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Seat:&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-user-session&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ubuntu
-greeter-show-manual-login&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h4 id=&quot;修改-gdm-autologin-和-gdm-password&quot;&gt;修改 gdm-autologin 和 gdm-password&lt;/h4&gt;
-&lt;p&gt;执行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo vim /etc/pam.d/gdm-autologin&lt;/code&gt; 注释掉 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;auth required pam_succeed_if.so user != root quiet_success&lt;/code&gt; 这一行 (第三行左右)&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#%PAM-1.0&lt;/span&gt;
-auth    requisite       pam_nologin.so
-&lt;span class=&quot;c&quot;&gt;#auth   required        pam_succeed_if.so user != root quiet_success&lt;/span&gt;
-auth    optional        pam_gdm.so
-auth    optional        pam_gnome_keyring.so
-auth    required        pam_permit.so
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;执行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo vim /etc/pam.d/gdm-password&lt;/code&gt; 注释掉 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;auth required pam_succeed_if.so user != root quiet_success&lt;/code&gt; 这一行 (第三行左右)&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#%PAM-1.0&lt;/span&gt;
-auth    requisite       pam_nologin.so
-&lt;span class=&quot;c&quot;&gt;#auth   required        pam_succeed_if.so user != root quiet_success&lt;/span&gt;
-@include common-auth
-auth    optional        pam_gnome_keyring.so
-@include common-account
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h4 id=&quot;修改-rootprofile-文件&quot;&gt;修改 /root/.profile 文件&lt;/h4&gt;
-&lt;p&gt;执行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo vim/root/.profile&lt;/code&gt; 修改配置文件如下&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# ~/.profile: executed by Bourne-compatible login shells.&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$BASH&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
-  if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; ~/.bashrc &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; ~/.bashrc
-  &lt;span class=&quot;k&quot;&gt;fi
-fi
-&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;tty&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; mesg n &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true
-&lt;/span&gt;mesg n &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;重启生效使用-root-登录&quot;&gt;重启生效，使用 root 登录&lt;/h3&gt;</content><author><name>Lewin</name></author><category term="ubuntu" /><category term="root" /><category term="login" /><summary type="html">Ubuntu 默认是关闭 root 账户登录图形界面的</summary></entry><entry><title type="html">Golang 内联优化</title><link href="https://lewinz.org/2021/07/05/go-inline-optmization/" rel="alternate" type="text/html" title="Golang 内联优化" /><published>2021-07-05T00:00:00+08:00</published><updated>2021-07-05T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/05/go-inline-optmization</id><content type="html" xml:base="https://lewinz.org/2021/07/05/go-inline-optmization/">&lt;p&gt;为了保证程序的执行高效与安全，现代编译器并不会将程序员的代码直接翻译成相应地机器码，它需要做一系列的检查与优化。Go 编译器默认做了很多相关工作，例如未使用的引用包检查、未使用的声明变量检查、有效的括号检查、逃逸分析、内联优化、删除无用代码等。本文重点讨论内联优化相关内容。&lt;/p&gt;
-
-&lt;h2 id=&quot;内联&quot;&gt;内联&lt;/h2&gt;
-&lt;p&gt;在 Go 中，一个 goroutine 会有一个单独的栈，栈又会包含多个栈帧，栈帧是函数调用时在栈上为函数所分配的区域。但其实，函数调用是存在一些固定开销的，例如维护帧指针寄存器 BP、栈溢出检测等。因此，对于一些代码行比较少的函数，编译器倾向于将它们在编译期展开从而消除函数调用，这种行为就是内联。&lt;/p&gt;
-
-&lt;p&gt;性能对比
-首先，看一下函数内联与非内联的性能差异。&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;//go:noinline&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;maxNoinline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;maxInline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkNoInline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ResetTimer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;maxNoinline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkInline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ResetTimer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;N&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;maxInline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;在程序代码中，想要禁止编译器内联优化很简单，在函数定义前一行添加 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;//go:noinline&lt;/code&gt; 即可。以下是性能对比结果&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;BenchmarkNoInline&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;     &lt;span class=&quot;m&quot;&gt;824031799&lt;/span&gt;                &lt;span class=&quot;m&quot;&gt;1.47&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;op&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;BenchmarkInline&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;       &lt;span class=&quot;m&quot;&gt;1000000000&lt;/span&gt;               &lt;span class=&quot;m&quot;&gt;0.255&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;op&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;因为函数体内部的执行逻辑非常简单，此时内联与否的性能差异主要体现在函数调用的固定开销上。显而易见，该差异是非常大的。&lt;/p&gt;
-
-&lt;h3 id=&quot;内联场景&quot;&gt;内联场景&lt;/h3&gt;
-&lt;p&gt;此时，爱思考的读者可能就会产生疑问：既然内联优化效果这么显著，是不是所有的函数调用都可以内联呢？答案是不可以。因为内联，其实就是将一个函数调用原地展开，替换成这个函数的实现。当该函数被多次调用，就会被多次展开，这会增加编译后二进制文件的大小。而非内联函数，只需要保存一份函数体的代码，然后进行调用。所以，在空间上，一般来说使用内联函数会导致生成的可执行文件变大（但需要考虑内联的代码量、调用次数、维护内联关系的开销）。&lt;/p&gt;
-
-&lt;p&gt;问题来了，编译器内联优化的选择策略是什么？&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;iter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;iter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;假设源码文件为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main.go&lt;/code&gt;，可通过执行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go build -gcflags=&quot;-m -m&quot; main.go&lt;/code&gt; 命令查看编译器的优化策略。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;go build &lt;span class=&quot;nt&quot;&gt;-gcflags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-m -m&quot;&lt;/span&gt; main.go
-&lt;span class=&quot;c&quot;&gt;# command-line-arguments&lt;/span&gt;
-./main.go:3:6: can inline add with cost 4 as: func&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int, int&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; int &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;a + b &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-./main.go:7:6: cannot inline iter: unhandled op FOR
-./main.go:10:12: inlining call to add func&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int, int&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; int &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;a + b &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-./main.go:15:6: can inline main with cost 67 as: func&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; n :&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 100&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; _ &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; iter&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;n&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;通过以上信息，可知编译器判断 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;add&lt;/code&gt; 函数与 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;main&lt;/code&gt; 函数都可以被内联优化，并将 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;add&lt;/code&gt; 函数内联。同时可以注意到的是，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iter&lt;/code&gt; 函数由于存在循环语句并不能被内联：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cannot inline iter: unhandled op FOR&lt;/code&gt;。实际上，除了 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;for&lt;/code&gt; 循环，还有一些情况不会被内联，例如闭包，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;select&lt;/code&gt;，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;for&lt;/code&gt;，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;defer&lt;/code&gt;，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go&lt;/code&gt; 关键字所开启的新 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;goroutine&lt;/code&gt; 等，详细可见 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;src/cmd/compile/internal/gc/inl.go&lt;/code&gt; 相关内容。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; OCLOSURE,
-        OCALLPART,
-        ORANGE,
-        OFOR,
-        OFORUNTIL,
-        OSELECT,
-        OTYPESW,
-        OGO,
-        ODEFER,
-        ODCLTYPE, // can&lt;span class=&quot;s1&quot;&gt;'t print yet
-        OBREAK,
-        ORETJMP:
-        v.reason = &quot;unhandled op &quot; + n.Op.String()
-        return true
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;在上文提到过，内联只针对小代码量的函数而言，那么到底是小于多少才算是小代码量呢？&lt;/p&gt;
-
-&lt;p&gt;此时，我将上面的 add 函数，更改为如下内容&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;执行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go build -gcflags=&quot;-m -m&quot; main.go&lt;/code&gt; 命令，得到信息&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./main.go:3:6: can inline add with cost 9 as: func&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int, int&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; int &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; a &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; a + 1&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;a + b &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;对比之前的信息&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./main.go:3:6: can inline add with cost 4 as: func&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int, int&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; int &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;a + b &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;可以发现，存在 cost 4 与 cost 9 的区别。这里的数值代表的是抽象语法树 AST 的节点，a = a + 1 包含的是 5 个节点。Go 函数中超过 80 个节点的代码量就不再内联。例如，如果在 add 中写入 16 个 a = a + 1，则不再内联。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;./main.go:3:6: cannot inline add: &lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;too complex: cost 84 exceeds budget 80
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;内联表&quot;&gt;内联表&lt;/h3&gt;
-&lt;p&gt;内联会将函数调用的过程抹掉，这会引入一个新的问题：代码的堆栈信息还能否保证。举个例子，如果程序发生 panic，内联之后的程序，还能否准确的打印出堆栈信息？看以下例子。&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;panic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;i am a panic information&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;在该代码样例中，max 函数将被内联。执行程序，输出结果如下&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;panic: i am a panic information
-
-goroutine 1 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;running]:
-main.sub&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;...&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-        /Users/slp/go/src/workspace/example/main.go:5
-main.max&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;...&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-        /Users/slp/go/src/workspace/example/main.go:10
-main.main&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-        /Users/slp/go/src/workspace/example/main.go:17 +0x3a
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;我们可以发现，panic 依然输出了正确的程序堆栈信息，包括源文件位置和行号信息。那，Go 是如何做到的呢？这是由于 Go 内部会为每个存在内联优化的 goroutine 维持一个内联树（inlining tree），该树可通过 go build -gcflags=”-d pctab=pctoinline” main.go 命令查看&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;funcpctab &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.sub &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;valfunc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;pctoinline]
-...
-wrote 3 bytes to 0xc000082668
- 00 42 00
-funcpctab &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.max &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;valfunc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;pctoinline]
-...
-wrote 7 bytes to 0xc000082f68
- 00 3c 02 1d 01 09 00
-&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; inlining tree &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.max:
-0 | &lt;span class=&quot;nt&quot;&gt;-1&lt;/span&gt; | &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.sub &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/Users/slp/go/src/workspace/example/main.go:10:6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;59
-&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;
-funcpctab &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.main &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;valfunc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;pctoinline]
-...
-wrote 11 bytes to 0xc0004807e8
- 00 1d 02 01 01 07 04 16 03 0c 00
-&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; inlining tree &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.main:
-0 | &lt;span class=&quot;nt&quot;&gt;-1&lt;/span&gt; | &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.max &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/Users/slp/go/src/workspace/example/main.go:17:9&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;30
-1 | 0 | &lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;.sub &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/Users/slp/go/src/workspace/example/main.go:10:6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;29
-&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;内联控制&quot;&gt;内联控制&lt;/h3&gt;
-&lt;p&gt;Go 程序编译时，默认将进行内联优化。我们可通过 -gcflags=”-l” 选项全局禁用内联，与一个 -l 禁用内联相反，如果传递两个或两个以上的 -l 则会打开内联，并启用更激进的内联策略。如果不想全局范围内禁止优化，则可以在函数定义时添加 //go:noinline 编译指令来阻止编译器内联函数。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="inline optimization" /><category term="内联优化" /><summary type="html">为了保证程序的执行高效与安全，现代编译器并不会将程序员的代码直接翻译成相应地机器码，它需要做一系列的检查与优化。Go 编译器默认做了很多相关工作，例如未使用的引用包检查、未使用的声明变量检查、有效的括号检查、逃逸分析、内联优化、删除无用代码等。本文重点讨论内联优化相关内容。</summary></entry></feed>
+&lt;a href=&quot;https://gofrp.org/docs/&quot;&gt;中文文档&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="frp" /><category term="搭建" /><summary type="html">Emmm… 本来以为会有繁琐的配置，结果开箱即用</summary></entry></feed>

@@ -499,6 +499,22 @@
     } ,
   
     {
+      "title"    : "Makefile",
+      "category" : "makefile",
+      
+      "url"      : "https://lewinz.org/2021/07/26/makefile/",
+      "keywords" : "makefile"
+    } ,
+  
+    {
+      "title"    : "OpenStack 社区部署工具 Devstack",
+      "category" : "openstack",
+      
+      "url"      : "https://lewinz.org/2021/07/26/openstack-devstack/",
+      "keywords" : "openstack, devstack"
+    } ,
+  
+    {
       "title"    : "WebAssembly",
       "category" : "webassembly",
       
