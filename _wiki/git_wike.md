@@ -199,3 +199,15 @@ step 5、执行命令 `git merge upstream/develop` 合并远程的master分支
 
 step 6、执行命令 `git push` 把本地仓库向github仓库（你fork到自己名下的仓库）推送修改
 
+# 撤销 git push 代码
+``` sh
+# 将本地仓库版本号指向上一 commit
+git reset --soft HEAD~1
+
+# 修改代码，后正常提交
+git add xxxx
+git commit -m "xxxx"
+
+# 使用 -f 或者 --force 强制 push
+git push origin master -f
+```
