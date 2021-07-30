@@ -211,3 +211,19 @@ git commit -m "xxxx"
 # 使用 -f 或者 --force 强制 push
 git push origin master -f
 ```
+
+# 本地新建分支推送至远程仓库
+``` sh
+# 本地新建分支 test 并切换到 test 分支
+git checkout -b test
+
+# 与远程分支关联，origin 为本地分支别名
+git remote add origin https://github.com/yangxiaoyan20/BowlingScore.git
+
+# 正常提交流程
+git add .
+git commit -m "xxxx"
+
+# 将代码推送至远程仓库
+git push origin test
+```
