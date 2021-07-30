@@ -59,7 +59,7 @@ Host * #表示需要启用该规则的服务端（域名或 ip）
 `ssh -o ServerAliveInterval=30 user@host`
 
 ## 扩展
-## linux hosts 的 allow 和 deny
+### linux hosts 的 allow 和 deny
 网络防火墙是阻挡非授权主机访问网络的第一道防护，但是它们不应该仅有一道屏障。
 
 Linux 使用了两个文件 `/etc/host.allow` 和 `/etc/hosts.deny`，根据网络请求的来源限制对服务的访问。
