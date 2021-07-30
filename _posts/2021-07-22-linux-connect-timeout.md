@@ -57,3 +57,61 @@ Host * #表示需要启用该规则的服务端（域名或 ip）
 
 ### 连接参数 - o
 `ssh -o ServerAliveInterval=30 user@host`
+
+## 扩展
+## linux hosts 的 allow 和 deny
+网络防火墙是阻挡非授权主机访问网络的第一道防护，但是它们不应该仅有一道屏障。
+
+Linux 使用了两个文件 `/etc/host.allow` 和 `/etc/hosts.deny`，根据网络请求的来源限制对服务的访问。
+
+host.allow 文件列出了允许连接到一个特定服务的主机，而 hosts.deny 文件则负责限制访问。
+
+不过，这两个文件只控制对有 hosts_access 功能的服务（如 xinetd 所管理的那些服务、sshd 和某些配置的 sendmail）的访问。
+
+**`/etc/hosts.allow`文件格式**  
+``` sh
+#
+# hosts.allow This file describes the names of the hosts which are
+# allowed to use the local INET services, as decided
+# by the ‘/usr/sbin/tcpd’ server.
+#
+sshd:210.13.218.*:allow
+sshd:222.77.15.*:allow
+```
+以上写法表示允许 210 和 222 两个 ip 段连接 sshd 服务（这必然需要 hosts.deny 这个文件配合使用），当然:allow 完全可以省略的。
+
+当然如果管理员集中在一个 IP 那么这样写是比较省事的  
+all:218.24.129.110 // 他表示接受 110 这个 ip 的所有请求！
+
+**`/etc/hosts.deny` 文件格式**
+``` sh
+#
+# hosts.deny This file describes the names of the hosts which are
+# *not* allowed to use the local INET services, as decided
+# by the ‘/usr/sbin/tcpd’ server.
+#
+# The portmap line is redundant, but it is left to remind you that
+# the new secure portmap uses hosts.deny and hosts.allow. In particular
+# you should know that NFS uses portmap!
+sshd:all:deny
+```
+注意看：`sshd:all:deny` 表示拒绝了所有 sshd 远程连接。:deny 可以省略。
+
+所以：当 hosts.allow 和 host.deny 相冲突时，以 hosts.allow 设置为准。
+
+注意修改完后：  
+`service xinetd restart`  
+才能让刚才的更改生效。
+
+/etc/hosts.allow（允许）和 /etc/hosts.deny（禁止）这两个文件是 tcpd 服务器的配置文件  
+tcpd 服务器可以控制外部 IP 对本机服务的访问  
+linux 系统会先检查 /etc/hosts.deny 规则，再检查 /etc/hosts.allow 规则，如果有冲突 按 /etc/hosts.allow 规则处理
+
+比如：
+1. 禁止所有 ip 访问 linux 的 ssh 功能  
+可以在 /etc/hosts.deny 添加一行 sshd:all:deny
+
+2. 禁止某一个 ip（192.168.11.112）访问 ssh 功能  
+可以在 /etc/hosts.deny 添加一行 sshd:192.168.11.112
+
+3. 如果在 /etc/hosts.deny 和 /etc/hosts.allow 同时 有 sshd:192.168.11.112 规则，则 192.168.11.112 可以访问主机的 ssh 服务
