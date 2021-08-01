@@ -563,6 +563,14 @@
     } ,
   
     {
+      "title"    : "nova 虚拟机镜像从创建到文件系统 resize 完整流程",
+      "category" : "openstack",
+      
+      "url"      : "https://lewinz.org/2021/08/01/openstack-nova-image-resize/",
+      "keywords" : "openstack, nova, image, resize"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
