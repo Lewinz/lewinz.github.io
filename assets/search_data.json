@@ -101,7 +101,7 @@
     } ,
   
     {
-      "title"    : "网络协议TCP与UDP区别",
+      "title"    : "网络协议 TCP 与 UDP 区别",
       "category" : "网络协议",
       
       "url"      : "https://lewinz.org/2021/04/25/http-tcp-udp/",
@@ -109,7 +109,7 @@
     } ,
   
     {
-      "title"    : "aolang中的值类型和引用类型",
+      "title"    : "aolang 中的值类型和引用类型",
       "category" : "go",
       
       "url"      : "https://lewinz.org/2021/04/29/go-type-cite-value/",
@@ -117,7 +117,7 @@
     } ,
   
     {
-      "title"    : "gorm自动创建database",
+      "title"    : "gorm 自动创建 database",
       "category" : "gorm",
       
       "url"      : "https://lewinz.org/2021/05/05/go-gorm-ddl/",
@@ -125,7 +125,7 @@
     } ,
   
     {
-      "title"    : "golang基本类型",
+      "title"    : "golang 基本类型",
       "category" : "golang",
       
       "url"      : "https://lewinz.org/2021/05/06/go-type-detail/",
@@ -165,7 +165,7 @@
     } ,
   
     {
-      "title"    : "虚拟化技术KVM",
+      "title"    : "虚拟化技术 KVM",
       "category" : "虚拟化",
       
       "url"      : "https://lewinz.org/2021/05/17/virtualization-kvm/",
@@ -221,7 +221,7 @@
     } ,
   
     {
-      "title"    : "MySQL聚集索引和非聚集索引",
+      "title"    : "MySQL 聚集索引和非聚集索引",
       "category" : "MySQL",
       
       "url"      : "https://lewinz.org/2021/05/30/mysql-clustered-index/",
@@ -309,15 +309,15 @@
     } ,
   
     {
-      "title"    : "静态IP/动态IP/浮动IP/虚拟IP 的区别",
-      "category" : "静态IP",
+      "title"    : "静态 IP/动态 IP/浮动 IP/虚拟 IP 的区别",
+      "category" : "静态 IP",
       
       "url"      : "https://lewinz.org/2021/06/06/static-dynamic-floating-virtual-ip/",
-      "keywords" : "静态IP,动态IP,浮动IP,虚拟IP"
+      "keywords" : "静态 IP,动态 IP,浮动 IP,虚拟 IP"
     } ,
   
     {
-      "title"    : "监控测试方法-跑满CPU",
+      "title"    : "监控测试方法-跑满 CPU",
       "category" : "监控",
       
       "url"      : "https://lewinz.org/2021/06/11/monitor-cpu-test/",
@@ -485,7 +485,7 @@
     } ,
   
     {
-      "title"    : "golang 黑魔法(string 与 []byte 转换)",
+      "title"    : "golang 黑魔法 (string 与 []byte 转换)",
       "category" : "golang",
       
       "url"      : "https://lewinz.org/2021/07/26/golang-string-covert/",
@@ -613,7 +613,7 @@
     } ,
   
     {
-      "title"    : "git命令记录",
+      "title"    : "git 命令记录",
       "category" : "git",
       
       "url"      : "https://lewinz.org/wiki/git_wike/",
@@ -621,7 +621,7 @@
     } ,
   
     {
-      "title"    : "golang开发环境部署",
+      "title"    : "golang 开发环境部署",
       "category" : "golang",
       
       "url"      : "https://lewinz.org/wiki/golang_install/",
@@ -629,7 +629,7 @@
     } ,
   
     {
-      "title"    : "CDN缓存-jsdelivr",
+      "title"    : "CDN 缓存-jsdelivr",
       "category" : "CDN",
       
       "url"      : "https://lewinz.org/wiki/jsdelivr_cdn_refresh/",
@@ -653,7 +653,7 @@
     } ,
   
     {
-      "title"    : "Mac各类配置记录",
+      "title"    : "Mac 各类配置记录",
       "category" : "Mac",
       
       "url"      : "https://lewinz.org/wiki/mac-some-config/",
@@ -669,7 +669,7 @@
     } ,
   
     {
-      "title"    : "mysql记录",
+      "title"    : "mysql 记录",
       "category" : "mysql",
       
       "url"      : "https://lewinz.org/wiki/mysql_some/",
@@ -693,7 +693,7 @@
     } ,
   
     {
-      "title"    : "vscode设置",
+      "title"    : "vscode 设置",
       "category" : "vscode",
       
       "url"      : "https://lewinz.org/wiki/vscode-wike/",

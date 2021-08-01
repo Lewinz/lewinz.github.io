@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /><title>Linux 命令备忘 &mdash; 阿嫂</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/primer-css/css/primer.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/collection.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/repo-card.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/sections/repo-list.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/boxed-group.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/common.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/responsive.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/posts/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/octicons/octicons/octicons.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/rouge-themes@master/dist/github.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/share.js/dist/css/share.min.css"><link rel="canonical" href="https://lewinz.org/wiki/linux-command-summary/"><link rel="alternate" type="application/atom+xml" title="阿嫂" href="https://lewinz.org/feed.xml"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/favicon.ico"><meta property="og:title" content="Linux 命令备忘"><meta name="keywords" content="Linux, 命令， 备忘"><meta name="og:keywords" content="Linux, 命令， 备忘"><meta name="description" content="常用切换shell```查看所有终端类型cat /etc/shells"><meta name="og:description" content="常用切换shell```查看所有终端类型cat /etc/shells"><meta property="og:url" content="https://lewinz.org/wiki/linux-command-summary/"><meta property="og:site_name" content="阿嫂"><meta property="og:type" content="article"><meta property="og:locale" content="zh_CN" /><meta property="article:published_time" content="2021-08-01"> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/jquery/dist/jquery.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery-ui.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/main.js"></script> <script data-ad-client="ca-pub-7093222719567591" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head><body class="" data-mz=""><header class="site-header"><div class="container"><h1><a href="https://lewinz.org/" title="阿嫂"><span class="octicon octicon-mark-github"></span> 阿嫂</a></h1><button class="collapsed mobile-visible" type="button" onclick="toggleMenu();"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button><nav class="site-header-nav" role="navigation"> <a href="https://lewinz.org/" class=" site-header-nav-item" target="" title="首页">首页</a> <a href="https://lewinz.org/categories/" class=" site-header-nav-item" target="" title="分类">分类</a> <a href="https://lewinz.org/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a> <a href="https://lewinz.org/links/" class=" site-header-nav-item" target="" title="链接">链接</a> <a href="https://lewinz.org/about/" class=" site-header-nav-item" target="" title="关于">关于</a></nav></div></header><section class="collection-head small geopattern" data-pattern-id="Linux 命令备忘"><div class="container"><div class="columns"><div class="column three-fourths"><div class="collection-title"><h1 class="collection-header">Linux 命令备忘</h1></div></div><div class="column one-fourth mobile-hidden"></div></div></div></section><section class="container content"><div class="columns"><div class="column three-fourths" > <ins class="adsbygoogle content-header-ad" data-ad-client="ca-pub-7093222719567591" data-ad-slot="1650902835"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script> <br /><article class="article-content markdown-body"><h3 id="常用">常用</h3><p>切换shell</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 查看所有终端类型
+<!DOCTYPE html><html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /><title>Linux 命令备忘 &mdash; 阿嫂</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/primer-css/css/primer.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/collection.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/repo-card.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/sections/repo-list.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/boxed-group.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/common.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/responsive.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/posts/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/octicons/octicons/octicons.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/rouge-themes@master/dist/github.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/share.js/dist/css/share.min.css"><link rel="canonical" href="https://lewinz.org/wiki/linux-command-summary/"><link rel="alternate" type="application/atom+xml" title="阿嫂" href="https://lewinz.org/feed.xml"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/favicon.ico"><meta property="og:title" content="Linux 命令备忘"><meta name="keywords" content="Linux, 命令， 备忘"><meta name="og:keywords" content="Linux, 命令， 备忘"><meta name="description" content="常用切换 shell```查看所有终端类型cat /etc/shells"><meta name="og:description" content="常用切换 shell```查看所有终端类型cat /etc/shells"><meta property="og:url" content="https://lewinz.org/wiki/linux-command-summary/"><meta property="og:site_name" content="阿嫂"><meta property="og:type" content="article"><meta property="og:locale" content="zh_CN" /><meta property="article:published_time" content="2021-08-01"> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/jquery/dist/jquery.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery-ui.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/main.js"></script> <script data-ad-client="ca-pub-7093222719567591" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head><body class="" data-mz=""><header class="site-header"><div class="container"><h1><a href="https://lewinz.org/" title="阿嫂"><span class="octicon octicon-mark-github"></span> 阿嫂</a></h1><button class="collapsed mobile-visible" type="button" onclick="toggleMenu();"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button><nav class="site-header-nav" role="navigation"> <a href="https://lewinz.org/" class=" site-header-nav-item" target="" title="首页">首页</a> <a href="https://lewinz.org/categories/" class=" site-header-nav-item" target="" title="分类">分类</a> <a href="https://lewinz.org/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a> <a href="https://lewinz.org/links/" class=" site-header-nav-item" target="" title="链接">链接</a> <a href="https://lewinz.org/about/" class=" site-header-nav-item" target="" title="关于">关于</a></nav></div></header><section class="collection-head small geopattern" data-pattern-id="Linux 命令备忘"><div class="container"><div class="columns"><div class="column three-fourths"><div class="collection-title"><h1 class="collection-header">Linux 命令备忘</h1></div></div><div class="column one-fourth mobile-hidden"></div></div></div></section><section class="container content"><div class="columns"><div class="column three-fourths" > <ins class="adsbygoogle content-header-ad" data-ad-client="ca-pub-7093222719567591" data-ad-slot="1650902835"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script> <br /><article class="article-content markdown-body"><h3 id="常用">常用</h3><p>切换 shell</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 查看所有终端类型
 cat /etc/shells
 
 # 切换
@@ -7,31 +7,31 @@ chsh -s /bin/sh
 </code></pre></div></div><h3 id="文件文件夹">文件/文件夹</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    mkdir 新建文件夹  
     rmdir 删除文件夹 
     vim --&gt; i --&gt; esc --&gt; :wq!  修改文件并保存 
-    路pwd 查看文件夹具体径
+    路 pwd 查看文件夹具体径
 </code></pre></div></div><h3 id="tar">tar</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-c 创建新的文档。
--v 显示详细的tar处理的文件信息
+-v 显示详细的 tar 处理的文件信息
 -f 要操作的文件名
--z 调用gunzip操作
+-z 调用 gunzip 操作
 -x 解压文件
 -r 表示增加文件，把要增加的文件追加在压缩文件的末尾
 -t 表示查看文件，查看文件中的文件内容
 
 常用：
-    tar -zvxf 解压.gz文件
-</code></pre></div></div><h3 id="rpm">rpm</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rpm -ivh (--badreloc 强制指定安装目录)(--relocate 指定安装目录)安装  
+    tar -zvxf 解压.gz 文件
+</code></pre></div></div><h3 id="rpm">rpm</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rpm -ivh (--badreloc 强制指定安装目录)(--relocate 指定安装目录) 安装  
 rpm -Uvh 升级  
 rpm -e 反安装  
 rpm -qpi 查询安装包详细信息  
 rpm -qf 查询文件属于哪个安装包  
 rpm -qpl 查询软件会向系统写入哪些文件  
 rpm -qa | grep XXX(moudle name) 查看安装包是否被安装  
-</code></pre></div></div><h3 id="查看java进程">查看java进程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jps
+</code></pre></div></div><h3 id="查看-java-进程">查看 java 进程</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jps
     -q：只输出进程 ID
     -m：输出传入 main 方法的参数
-    -l：输出完全的包名，应用主类名，jar的完全路径名
-    -v：输出jvm参数
-    -V：输出通过flag文件传递到JVM中的参数
-</code></pre></div></div><h3 id="whereis查找文件">whereis查找文件</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>whereis
+    -l：输出完全的包名，应用主类名，jar 的完全路径名
+    -v：输出 jvm 参数
+    -V：输出通过 flag 文件传递到 JVM 中的参数
+</code></pre></div></div><h3 id="whereis-查找文件">whereis 查找文件</h3><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>whereis
     -b 　只查找二进制文件。
     -B&lt;目录&gt; 　只在设置的目录下查找二进制文件。
     -f 　不显示文件名前的路径名称。
@@ -40,21 +40,21 @@ rpm -qa | grep XXX(moudle name) 查看安装包是否被安装
     -s 　只查找原始代码文件。
     -S&lt;目录&gt; 　只在设置的目录下查找原始代码文件。
     -u 　查找不包含指定类型的文件。
-</code></pre></div></div><h3 id="mysql命令">mysql命令</h3><p>启动</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>service mysql start
+</code></pre></div></div><h3 id="mysql-命令">mysql 命令</h3><p>启动</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>service mysql start
 systemctl start mysqld.service
 </code></pre></div></div><p>关闭</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>service mysql stop
 systemctl stop mysqld.service
 </code></pre></div></div><p>重启</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>service mysql restart
 systemctl restart mysqld.service
-</code></pre></div></div><p>登录 <code class="language-plaintext highlighter-rouge">mysql -u用户名 -p用户密码</code></p><p>切换数据库 <code class="language-plaintext highlighter-rouge">use mysql;</code></p><p>导入sql文件在mysql执行 <code class="language-plaintext highlighter-rouge">mysql -u root -p dbname &lt; filename.sql</code></p><p>其他命令：<a href="https://www.cnblogs.com/roadone/p/9834997.html">https://www.cnblogs.com/roadone/p/9834997.html</a></p><h3 id="postgresql命令">postgresql命令</h3><h4 id="登入数据库">登入数据库</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -h 连接IP -d 用户名 -U 数据库名
+</code></pre></div></div><p>登录 <code class="language-plaintext highlighter-rouge">mysql -u 用户名 -p 用户密码</code></p><p>切换数据库 <code class="language-plaintext highlighter-rouge">use mysql;</code></p><p>导入 sql 文件在 mysql 执行 <code class="language-plaintext highlighter-rouge">mysql -u root -p dbname &lt; filename.sql</code></p><p>其他命令：<a href="https://www.cnblogs.com/roadone/p/9834997.html">https://www.cnblogs.com/roadone/p/9834997.html</a></p><h3 id="postgresql-命令">postgresql 命令</h3><h4 id="登入数据库">登入数据库</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># -h 连接 IP -d 用户名 -U 数据库名
 psql -h 127.0.0.1 -d postgres -U postgres
 </code></pre></div></div><h4 id="通过命令行">通过命令行</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 重新设置用户（dif）密码
 \password dlf
 
-# 导入sql在数据库中（exampledb）执行    ps：数据库外执行
+# 导入 sql 在数据库中（exampledb）执行    ps：数据库外执行
 psql exampledb &lt; user.sql
 
-# 导入sql在当前数据库中执行
+# 导入 sql 在当前数据库中执行
 \i aaa.sql
 
 # 列出数据库名
@@ -82,22 +82,22 @@ psql exampledb &lt; user.sql
 \df （\df+ name）
 
 
-</code></pre></div></div><h4 id="通过sql语句">通过SQL语句</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 列出数据库名
+</code></pre></div></div><h4 id="通过-sql-语句">通过 SQL 语句</h4><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 列出数据库名
 select datname from pg_database;
 
 # 列出表名
 select tablename from pg_tables where tablename not like 'pg%' and tablename not like 'sql_%' order by tablename;
 
-# 得到当前db中所有表的信息（这里pg_tables是系统视图）
+# 得到当前 db 中所有表的信息（这里 pg_tables 是系统视图）
 select * from pg_tables;
 
 # 得到所有用户自定义表的名字
 # 这里"tablename"字段是表的名字
-# "schemaname"是schema的名字
-# 用户自定义的表，如果未经特殊处理，默认都是放在名为public的schema下
+# "schemaname"是 schema 的名字
+# 用户自定义的表，如果未经特殊处理，默认都是放在名为 public 的 schema 下
 select tablename from pg_tables where schemaname='public';
 
-# 创建schema
+# 创建 schema
 create schema myschema;
 
 # 创建用户
@@ -106,63 +106,63 @@ create user $username with password '*****';
 # 将数据库所有权限授权给用户
 grant all privileges on database $databasename to $username;
 
-# 将schema所有权限授权给用户
+# 将 schema 所有权限授权给用户
 grant all privileges on schema $schemaname to $username;
 
-# 授权用户schemaname下所有表查询权限
+# 授权用户 schemaname 下所有表查询权限
 grant select on all tables in schema $schemaname to $username;
 
-# 将$schemaname以后新建的表默认授权select给$username
+# 将$schemaname 以后新建的表默认授权 select 给$username
 alter default privileges in schema $schemaname grant select on tables to $username;
 
-# 通用sql
+# 通用 sql
 *创建数据库：
-create database [数据库名];
+create database [数据库名 ];
 
 *删除数据库：
-drop database [数据库名]; 
+drop database [数据库名 ]; 
 
 *创建表：
-create table ([字段名1] [类型1] ;,[字段名2] [类型2],......&lt;,primary key (字段名m,字段名n,...)&gt;;);
+create table ([字段名 1] [类型 1] ;,[字段名 2] [类型 2],......&lt;,primary key (字段名 m,字段名 n,...)&gt;;);
 
 *在表中插入数据：
-insert into 表名 ([字段名m],[字段名n],......) values ([列m的值],[列n的值],......);
+insert into 表名 ([字段名 m],[字段名 n],......) values ([列 m 的值 ],[列 n 的值 ],......);
 
 *重命名一个表：
-alter table [表名A] rename to [表名B];
+alter table [表名 A] rename to [表名 B];
 
 *在已有的表里添加字段：
-alter table [表名] add column [字段名] [类型];
+alter table [表名 ] add column [字段名 ] [类型 ];
 
 *删除表中的字段：
-alter table [表名] drop column [字段名];
+alter table [表名 ] drop column [字段名 ];
 
 *重命名一个字段： 
-alter table [表名] rename column [字段名A] to [字段名B];
+alter table [表名 ] rename column [字段名 A] to [字段名 B];
 
 *给一个字段设置缺省值： 
-alter table [表名] alter column [字段名] set default [新的默认值];
+alter table [表名 ] alter column [字段名 ] set default [新的默认值 ];
 
 *去除缺省值： 
-alter table [表名] alter column [字段名] drop default;
+alter table [表名 ] alter column [字段名 ] drop default;
 
-*可以使用pg_dump和pg_dumpall来完成。比如备份sales数据库：
+*可以使用 pg_dump 和 pg_dumpall 来完成。比如备份 sales 数据库：
 pg_dump drupal&gt;/opt/Postgresql/backup/1.bak
 
-</code></pre></div></div><h3 id="远程拷贝">远程拷贝</h3><h4 id="复制文件">复制文件</h4><p>将本地文件拷贝到远程</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># scp 文件名 用户名@计算机IP或者计算机名称:远程路径
-# 本地192.168.1.8客户端
+</code></pre></div></div><h3 id="远程拷贝">远程拷贝</h3><h4 id="复制文件">复制文件</h4><p>将本地文件拷贝到远程</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># scp 文件名 用户名@计算机 IP 或者计算机名称:远程路径
+# 本地 192.168.1.8 客户端
 
 scp /root/install.* root@192.168.1.12:/usr/local/src
-</code></pre></div></div><p>从远程将文件拷回本地</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># scp 用户名@计算机IP或者计算机名称:文件名  本地路径
-# 本地192.168.1.8客户端取远程服务器12、11上的文件
+</code></pre></div></div><p>从远程将文件拷回本地</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># scp 用户名@计算机 IP 或者计算机名称:文件名  本地路径
+# 本地 192.168.1.8 客户端取远程服务器 12、11 上的文件
 
 scp root@192.168.1.12:/usr/local/src/*.log /root/
-</code></pre></div></div><h4 id="复制文件夹">复制文件夹</h4><p>将本地文件夹拷贝到远程</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># scp -r 目录名 用户名@计算机IP或者计算机名称:远程路径
-# test1为源目录，test2为目标目录，zhidao@192.168.0.1为远程服务器的用户名和ip地址
+</code></pre></div></div><h4 id="复制文件夹">复制文件夹</h4><p>将本地文件夹拷贝到远程</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># scp -r 目录名 用户名@计算机 IP 或者计算机名称:远程路径
+# test1 为源目录，test2 为目标目录，zhidao@192.168.0.1 为远程服务器的用户名和 ip 地址
 
 scp -r /home/test1 zhidao@192.168.0.1:/home/test2
-</code></pre></div></div><p>从远程将文件夹拷回本地</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># scp -r 用户名@计算机IP或者计算机名称:目录名 本地路径
-# zhidao@192.168.0.1为远程服务器的用户名和ip地址，test1为源目录，test2为目标目录
+</code></pre></div></div><p>从远程将文件夹拷回本地</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># scp -r 用户名@计算机 IP 或者计算机名称:目录名 本地路径
+# zhidao@192.168.0.1 为远程服务器的用户名和 ip 地址，test1 为源目录，test2 为目标目录
 
 scp  -r zhidao@192.168.0.1:/home/test2 /home/test1
 </code></pre></div></div><h4 id="防火墙操作">防火墙操作</h4><p>查看防火墙状态</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>systemctl status firewalld
@@ -170,18 +170,18 @@ scp  -r zhidao@192.168.0.1:/home/test2 /home/test1
 active(running)：开启状态，正在运行中
 
 inactive(dead)：关闭状态，未在运行
-</code></pre></div></div><p>开启防火墙</p><p><code class="language-plaintext highlighter-rouge">systemctl start firewalld</code>没有任何提示，表示开启成功</p><p>关闭防火墙</p><p><code class="language-plaintext highlighter-rouge">systemctl stop firewalld</code></p><p>添加端口</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 添加端口8089（--permanent表示永久生效，没有此参数重启后失效）
+</code></pre></div></div><p>开启防火墙</p><p><code class="language-plaintext highlighter-rouge">systemctl start firewalld</code>没有任何提示，表示开启成功</p><p>关闭防火墙</p><p><code class="language-plaintext highlighter-rouge">systemctl stop firewalld</code></p><p>添加端口</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 添加端口 8089（--permanent 表示永久生效，没有此参数重启后失效）
 firewall-cmd --zone=public --add-port=8089/udp --permanent
 # 这个命令必须运行，才能加载成功
 firewall-cmd --reload
-</code></pre></div></div><p>查看端口开启情况</p><p><code class="language-plaintext highlighter-rouge">firewall-cmd --zone=public --query-port=8089/udp</code></p><p>删除防火墙8086端口</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>firewall-cmd --zone=public --remove-port=8086/tcp --permanent
+</code></pre></div></div><p>查看端口开启情况</p><p><code class="language-plaintext highlighter-rouge">firewall-cmd --zone=public --query-port=8089/udp</code></p><p>删除防火墙 8086 端口</p><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>firewall-cmd --zone=public --remove-port=8086/tcp --permanent
 
 firewall-cmd --reload
-</code></pre></div></div><h3 id="tree命令">tree命令</h3><div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>tree
+</code></pre></div></div><h3 id="tree-命令">tree 命令</h3><div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>brew <span class="nb">install </span>tree
 
 tree 
 <span class="nt">-a</span> 显示所有文件和目录。
-<span class="nt">-A</span> 使用ASNI绘图字符显示树状图而非以ASCII字符组合。
+<span class="nt">-A</span> 使用 ASNI 绘图字符显示树状图而非以 ASCII 字符组合。
 <span class="nt">-C</span> 在文件和目录清单加上色彩，便于区分各种类型。
 <span class="nt">-d</span> 显示目录名称而非内容。
 <span class="nt">-D</span> 列出文件或目录的更改时间。
@@ -200,4 +200,4 @@ tree
 <span class="nt">-t</span> 用文件和目录的更改时间排序。
 <span class="nt">-u</span> 列出文件或目录的拥有者名称，没有对应的名称时，则显示用户识别码。
 <span class="nt">-x</span> 将范围局限在现行的文件系统中，若指定目录下的某些子目录，其存放于另一个文件系统上，则将该子目录予以排除在寻找范围外。
-</code></pre></div></div><div style="margin-top:2em;padding:0 1.5em;border:1px solid #d3d3d3;background-color:#deebf7"><h3>文档信息</h3><ul><li>本文作者：<a href="https://lewinz.org" target="_blank">Lewin</a></li><li>本文链接：<a href="https://lewinz.org/wiki/linux-command-summary/" target="_blank">https://lewinz.org/wiki/linux-command-summary/</a></li><li>版权声明：自由转载-非商用-非衍生-保持署名</li></ul></div></article><div class="share"><div class="share-component" data-disabled='qq,weibo,qzone'></div></div><div class="comment"><div id="gitalk-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/gitalk/gitalk.css"> <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> <script> var gitalk = new Gitalk({ id: '/wiki/linux-command-summary/', clientID: '831a35f6d4f6fc049209', clientSecret: '6e80f9a3e9b50b498553e32179ad3adbd893ab7e', repo: 'blog-comments', owner: 'Lewinz', admin: ['Lewinz'], labels: ['gitment'], perPage: 50, }); gitalk.render('gitalk-container'); </script></div></div><div class="column one-fourth"><h3>Search</h3><div id="site_search"> <input style="width:96%" type="text" id="search_box" placeholder="Search"></div><ul id="search_results" style="font-size:14px;list-style-type:none;padding-top:10px;padding-left:10px;"></ul><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/simple-jekyll-search.min.js"></script> <script type="text/javascript"> SimpleJekyllSearch({ searchInput: document.getElementById('search_box'), resultsContainer: document.getElementById('search_results'), json: 'https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@built/assets/search_data.json?v=1627829147', searchResultTemplate: '<li><a href="{url}" title="{title}">{title}</a></li>', noResultsText: 'No results found', limit: 10, fuzzy: false, exclude: ['Welcome'] }) </script><h3 class="post-directory-title mobile-hidden">Table of Contents</h3><div id="post-directory-module" class="mobile-hidden"><section class="post-directory"><dl></dl></section></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery.toc.js"></script></div></div></section><footer class="container"> <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7093222719567591" data-ad-slot="5263168187" data-ad-format="auto" data-full-width-responsive="true"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script><div class="site-footer" role="contentinfo"><div class="copyright left mobile-block"> © 2021 <span title="Lewin">Lewin</span> <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a></div><ul class="site-footer-links right mobile-hidden"><li> <a href="javascript:window.scrollTo(0,0)" >TOP</a></li></ul><a href="https://github.com/Lewinz/lewinz.github.io" target="_blank" aria-label="view source code"> <span class="mega-octicon octicon-mark-github" title="GitHub"></span> </a><ul class="site-footer-links mobile-hidden"><li> <a href="https://lewinz.org/" title="首页" target="">首页</a></li><li> <a href="https://lewinz.org/categories/" title="分类" target="">分类</a></li><li> <a href="https://lewinz.org/wiki/" title="维基" target="">维基</a></li><li> <a href="https://lewinz.org/links/" title="链接" target="">链接</a></li><li> <a href="https://lewinz.org/about/" title="关于" target="">关于</a></li><li><a href="https://lewinz.org/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li></ul><script async src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="mobile-hidden" style="margin-top:8px"> <span id="busuanzi_container_site_pv" style="display:none"> 本站访问量<span id="busuanzi_value_site_pv"></span>次 </span> <span id="busuanzi_container_site_uv" style="display:none"> / 本站访客数<span id="busuanzi_value_site_uv"></span>人 </span> <span id="busuanzi_container_page_pv" style="display:none"> / 本页访问量<span id="busuanzi_value_page_pv"></span>次 / 统计始于2021-04-21 </span></div></div></footer><div class="tools-wrapper"> <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/share.js/dist/js/share.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/geopattern.js"></script> <script> jQuery(document).ready(function($) { $('.geopattern').each(function(){ $(this).geopattern($(this).data('pattern-id')); }); /* hljs.initHighlightingOnLoad(); */ }); </script><div style="display:none"> <script> (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-80669434-1', 'auto'); ga('send', 'pageview'); </script></div></body></html>
+</code></pre></div></div><div style="margin-top:2em;padding:0 1.5em;border:1px solid #d3d3d3;background-color:#deebf7"><h3>文档信息</h3><ul><li>本文作者：<a href="https://lewinz.org" target="_blank">Lewin</a></li><li>本文链接：<a href="https://lewinz.org/wiki/linux-command-summary/" target="_blank">https://lewinz.org/wiki/linux-command-summary/</a></li><li>版权声明：自由转载-非商用-非衍生-保持署名</li></ul></div></article><div class="share"><div class="share-component" data-disabled='qq,weibo,qzone'></div></div><div class="comment"><div id="gitalk-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/gitalk/gitalk.css"> <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> <script> var gitalk = new Gitalk({ id: '/wiki/linux-command-summary/', clientID: '831a35f6d4f6fc049209', clientSecret: '6e80f9a3e9b50b498553e32179ad3adbd893ab7e', repo: 'blog-comments', owner: 'Lewinz', admin: ['Lewinz'], labels: ['gitment'], perPage: 50, }); gitalk.render('gitalk-container'); </script></div></div><div class="column one-fourth"><h3>Search</h3><div id="site_search"> <input style="width:96%" type="text" id="search_box" placeholder="Search"></div><ul id="search_results" style="font-size:14px;list-style-type:none;padding-top:10px;padding-left:10px;"></ul><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/simple-jekyll-search.min.js"></script> <script type="text/javascript"> SimpleJekyllSearch({ searchInput: document.getElementById('search_box'), resultsContainer: document.getElementById('search_results'), json: 'https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@built/assets/search_data.json?v=1627833528', searchResultTemplate: '<li><a href="{url}" title="{title}">{title}</a></li>', noResultsText: 'No results found', limit: 10, fuzzy: false, exclude: ['Welcome'] }) </script><h3 class="post-directory-title mobile-hidden">Table of Contents</h3><div id="post-directory-module" class="mobile-hidden"><section class="post-directory"><dl></dl></section></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery.toc.js"></script></div></div></section><footer class="container"> <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7093222719567591" data-ad-slot="5263168187" data-ad-format="auto" data-full-width-responsive="true"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script><div class="site-footer" role="contentinfo"><div class="copyright left mobile-block"> © 2021 <span title="Lewin">Lewin</span> <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a></div><ul class="site-footer-links right mobile-hidden"><li> <a href="javascript:window.scrollTo(0,0)" >TOP</a></li></ul><a href="https://github.com/Lewinz/lewinz.github.io" target="_blank" aria-label="view source code"> <span class="mega-octicon octicon-mark-github" title="GitHub"></span> </a><ul class="site-footer-links mobile-hidden"><li> <a href="https://lewinz.org/" title="首页" target="">首页</a></li><li> <a href="https://lewinz.org/categories/" title="分类" target="">分类</a></li><li> <a href="https://lewinz.org/wiki/" title="维基" target="">维基</a></li><li> <a href="https://lewinz.org/links/" title="链接" target="">链接</a></li><li> <a href="https://lewinz.org/about/" title="关于" target="">关于</a></li><li><a href="https://lewinz.org/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li></ul><script async src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="mobile-hidden" style="margin-top:8px"> <span id="busuanzi_container_site_pv" style="display:none"> 本站访问量<span id="busuanzi_value_site_pv"></span>次 </span> <span id="busuanzi_container_site_uv" style="display:none"> / 本站访客数<span id="busuanzi_value_site_uv"></span>人 </span> <span id="busuanzi_container_page_pv" style="display:none"> / 本页访问量<span id="busuanzi_value_page_pv"></span>次 / 统计始于2021-04-21 </span></div></div></footer><div class="tools-wrapper"> <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/share.js/dist/js/share.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/geopattern.js"></script> <script> jQuery(document).ready(function($) { $('.geopattern').each(function(){ $(this).geopattern($(this).data('pattern-id')); }); /* hljs.initHighlightingOnLoad(); */ }); </script><div style="display:none"> <script> (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-80669434-1', 'auto'); ga('send', 'pageview'); </script></div></body></html>
