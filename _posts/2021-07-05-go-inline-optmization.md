@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Golang 内联优化
-categories: [golang,inline optimization,内联优化]
+categories: [golang,inline optimization,内联优化 ]
 description: Golang 内联优化
 keywords: golang,inline optimization,内联优化
 ---

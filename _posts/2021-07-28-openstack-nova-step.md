@@ -57,7 +57,7 @@ keywords: openstack, nova
 _build_resources // 准备网络和磁盘
     //Start building networks asynchronously for instance
     self._build_networks_for_instance //为 instance 准备网络资源，实际上是创建一个 neutron port
-        macs = self.driver.macs_for_instance(instance) //分配mac地址。多绝大多数hypersivor，返回None，也就是不预先分配
+        macs = self.driver.macs_for_instance(instance) //分配 mac 地址。多绝大多数 hypersivor，返回 None，也就是不预先分配
         network_info =self._allocate_network //开始异步网络分配
             nwinfo = self.network_api.allocate_for_instance //Allocate network resources for the instance
                 _validate_requested_port_ids //校验 port ids
@@ -65,21 +65,21 @@ _build_resources // 准备网络和磁盘
                 _clean_security_groups //删除 default 安全组
                 _process_security_groups //Processes and validates requested security groups for allocation
                 _create_ports_for_instance //Create port for network_requests that don't have a port_id
-                    _create_port_minimal //如果port 没有的话，则Attempts to create a port for the instance on the given network.
-                        port_client.create_port //调用 port api 来创建 port，包括创建 port，分配MAC及IP地址，更新数据库
-                            _generate_mac //生成MAC地址
+                    _create_port_minimal //如果 port 没有的话，则 Attempts to create a port for the instance on the given network.
+                        port_client.create_port //调用 port api 来创建 port，包括创建 port，分配 MAC 及 IP 地址，更新数据库
+                            _generate_mac //生成 MAC 地址
                             _create_port_with_mac //创建 port
-                                //DHCP 相关操作：port 创建完成后会通知 neutron-dhcp-agent去执行port_create_end函数，它会将port的ip和mac信息加载到dnsmasq所需的配置文件中
-                            _allocate_ips_for_port //为 port 分配 IP，要么用户有指定，要么从subnets 中选择一个
-                                _allocate_specific_ip //如果指定了IP
-                                _generate_ip //如果没指定IP
+                                //DHCP 相关操作：port 创建完成后会通知 neutron-dhcp-agent 去执行 port_create_end 函数，它会将 port 的 ip 和 mac 信息加载到 dnsmasq 所需的配置文件中
+                            _allocate_ips_for_port //为 port 分配 IP，要么用户有指定，要么从 subnets 中选择一个
+                                _allocate_specific_ip //如果指定了 IP
+                                _generate_ip //如果没指定 IP
                     return requests_and_created_ports
-                _update_ports_for_instance //为特殊case 更新 port
+                _update_ports_for_instance //为特殊 case 更新 port
                     _populate_neutron_extension_values
                     _populate_pci_mac_address //只用于处理 SRIOV_PF
                     _populate_mac_address
                     _update_port
-                        port_client.update_port //将上述修改通过调用 port api 得以更新port
+                        port_client.update_port //将上述修改通过调用 port api 得以更新 port
                     _update_port_dns_name
                         neutron.update_port(port_id, port_req_body) //将 port 的 dns_name 设置为 hostname
                 nw_info = self.get_instance_nw_info
@@ -95,12 +95,12 @@ _build_resources // 准备网络和磁盘
             return block_device_mapping
         driver_block_device.attach_block_devices //nova/virt/block_device.py
             _log_and_attach
-                //首先找出instance 将从哪里启动，可能从 volume，snapshot，image 上启动
+                //首先找出 instance 将从哪里启动，可能从 volume，snapshot，image 上启动
                 bdm.attach //真正做 attach 操作
         _block_device_info_to_legacy
         return block_device_info
 
-self.driver.spawn //调用 nova/virt/libvirt/driver.py 中的 spawn 函数，首先创建 image，然后创建domain
+self.driver.spawn //调用 nova/virt/libvirt/driver.py 中的 spawn 函数，首先创建 image，然后创建 domain
        disk_info = blockinfo.get_disk_info
        _create_configdrive
        _create_image //创建镜像
@@ -138,7 +138,7 @@ self.driver.spawn //调用 nova/virt/libvirt/driver.py 中的 spawn 函数，首
            return xml
 
        self._create_domain_and_network
-           //nova侧去等待neutron侧发送network-vif-pluggend事件。neutron-linuxbridge-agent服务检测tap设备，neutron-server发送event事件给nova-api
+           //nova 侧去等待 neutron 侧发送 network-vif-pluggend 事件。neutron-linuxbridge-agent 服务检测 tap 设备，neutron-server 发送 event 事件给 nova-api
            self.virtapi.wait_for_instance_event
            self.plug_vifs(instance, network_info)
            self.firewall_driver.setup_basic_filtering
@@ -149,7 +149,7 @@ self.driver.spawn //调用 nova/virt/libvirt/driver.py 中的 spawn 函数，首
                    domain = self.get_connection().defineXML(xml)
                    return libvirt_guest.Guest(domain)
                return guest
-      _wait_for_boot   //每隔 0.5秒检查虚机是否启动
+      _wait_for_boot   //每隔 0.5 秒检查虚机是否启动
 _update_instance_after_spawn
 _update_scheduler_instance_info
     scheduler_client.update_instance_info
@@ -191,9 +191,9 @@ _notify_about_instance_usage
   - 最终 VM 便真实的获取到与保存在数据库中的 ip 和 mac 信息。neutron-dhcp-agent 只是将所创建 VM 的 ip 和 mac 信息从数据库中获取到自己的配置文件中，然后等到 VM 启动时，为它提供。因此 neutron-dhcp-agent 相当于在 VM 和数据库之间起了个中间桥梁的作用。
 
 - nova 在 domain 被创建后等待 neutron event 的过程（请参考 <http://www.aichengxu.com/linux/9307663.htm>）
-  - 创建VM时， nova-compute服务调用wait_for_instance_event函数等待neutron侧发送event事件。
+  - 创建 VM 时， nova-compute 服务调用 wait_for_instance_event 函数等待 neutron 侧发送 event 事件。
   - neutron 的 neutron-linuxbridge-agent 定时检测 tap 设备的增加或删除，当创建 VM 时，将创建新的 tap 设备，此时将更新 neutron 数据库中的 ports 表，而 neutron-server 服务创建 core_plugin 时，将利用 sqlalchemy 自带的 event 对 neutron 数据库中的 ports 表进行监视，当 ports 表发生变化时，neutron-server 将通过 HTTP 请求的方式发送 event 事件给 nova。
-  - nova侧收到neutron侧发送的event事件，便结束等待，继续创建VM下面的操作。
+  - nova 侧收到 neutron 侧发送的 event 事件，便结束等待，继续创建 VM 下面的操作。
          
 ## 虚机被创建后的 L2 网络操作
 虚机被创建后，nova-compute 节点上的 neutron-linuxbridge-agent 会检测到新建的 tap 设备（通过轮询 /sys/class/net/ 里面的 tap 设备），找到后则执行一系列网络方面的操作，包括设置安全组，

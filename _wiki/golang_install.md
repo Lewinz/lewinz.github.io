@@ -1,6 +1,6 @@
 ---
 layout: wiki
-title: golang开发环境部署
+title: golang 开发环境部署
 categories: ["golang","开发环境"]
 description: 开发环境
 keywords: golang, 开发环境
@@ -8,7 +8,7 @@ keywords: golang, 开发环境
 
 ### windows
 
-下载msi文件安装 [golang中文网](https://studygolang.com/dl)
+下载 msi 文件安装 [golang 中文网](https://studygolang.com/dl)
 
 环境变量配置  
 
@@ -16,9 +16,9 @@ keywords: golang, 开发环境
 GOROOT 安装目录
 GOPATH 项目目录
 
-在path环境变量中添加 %GOROOT%\bin
+在 path 环境变量中添加 %GOROOT%\bin
 
-# 设置go代理，拉取go依赖
+# 设置 go 代理，拉取 go 依赖
 go env -w GOPROXY=https://goproxy.io,direct
 
 或者
@@ -41,7 +41,7 @@ source ~/.zshrc
 go env -w GO111MODULE=on
 ```
 
-### go命令解析
+### go 命令解析
 
 
 

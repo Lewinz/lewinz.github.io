@@ -1,24 +1,24 @@
 ---
 layout: post
 title: Golang 基础类型转换
-categories: [golang,转换]
+categories: [golang,转换 ]
 description: Golang 基础类型转换
 keywords: golang,转换
 ---
 
 ### string
 ``` golang
-// string到int
-// Atoi是ParseInt(s, 10, 0)的简写
+// string 到 int
+// Atoi 是 ParseInt(s, 10, 0) 的简写
 int, err := strconv.Atoi(string)
 
-// string到int64
+// string 到 int64
 int64, err := strconv.ParseInt(string, 10, 64)
 
-// string到float64
+// string 到 float64
 float, err := strconv.ParseFloat(string, 64)
 
-// string到float32
+// string 到 float32
 float, err = strconv.ParseFloat(string, 32)
 ```
 
@@ -39,7 +39,7 @@ string := strconv.Itoa(int)
 string := strconv.FormatInt(int64(int),10)
 
 // int64 转 string
-//第二个参数为基数，可选2~36
+//第二个参数为基数，可选 2~36
 //对于无符号整形，可以使用 FormatUint(i uint64, base int)
 string := strconv.FormatInt(int64,10)
 ```

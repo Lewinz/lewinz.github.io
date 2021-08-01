@@ -10,12 +10,12 @@ nova 创建虚拟机涉及的组件比较多，调用比较复杂，这里只列
 
 **nova-api**
 ``` python
-nova.api.openstack.compute.servers.ServersController.create() # 接受创建请求，解析出image_uuid
+nova.api.openstack.compute.servers.ServersController.create() # 接受创建请求，解析出 image_uuid
   nova.compute.api.API.create ()
-    nova.compute.api.API._create_instance() # 调用glance api获取image对象
+    nova.compute.api.API._create_instance() # 调用 glance api 获取 image 对象
       nova.conductor.api.LocalComputeTaskAPI.build_instances()
-        nova.conductor.manager.ConductorManager.build_instances() # 此处虽然接收block_device_mapping参数，但是是为了兼容旧版，没有使用。实际通过nova.objects.BlockDeviceMappingList.get_by_instance_uuid()获取
-          nova.compute.rpcapi.ComputeAPI.build_and_run_instance() # 使用cast方法调用nova-compute的build_and_run_instance方法。
+        nova.conductor.manager.ConductorManager.build_instances() # 此处虽然接收 block_device_mapping 参数，但是是为了兼容旧版，没有使用。实际通过 nova.objects.BlockDeviceMappingList.get_by_instance_uuid() 获取
+          nova.compute.rpcapi.ComputeAPI.build_and_run_instance() # 使用 cast 方法调用 nova-compute 的 build_and_run_instance 方法。
 ```
 
 **nova-compute**
@@ -31,25 +31,25 @@ nova.compute.manager.ComputeManager.build_and_run_instance()
               nova.volume.cinder.API.create()
 
       nova.virt.libvirt.driver.LibvirtDriver.spwan()
-        nova.virt.libvirt.driver.LibvirtDriver._create_image() # 此处会判断如果不是从volume启动，则调用imagebackend去创建虚拟机镜像
+        nova.virt.libvirt.driver.LibvirtDriver._create_image() # 此处会判断如果不是从 volume 启动，则调用 imagebackend 去创建虚拟机镜像
           nova.virt.libvirt.driver.LibvirtDriver._try_fetch_image_cache()
             nova.virt.libvirt.imagebackend.Image.cache()
 
               nova.virt.libvirt.imagebackend.Rbd.create_image()
                 nova.virt.libvirt.imagebackend.Rbd.clone()
-                  nova.virt.libvirt.storage.rbd_utils.RBDDriver.clone() # 创建虚拟机镜像，此处如果所使用的image后端不支持clone，或者镜像不可clone（比如rbd中不是raw格式的镜像），会触发异常，create_image调用下面的fetch_image函数
+                  nova.virt.libvirt.storage.rbd_utils.RBDDriver.clone() # 创建虚拟机镜像，此处如果所使用的 image 后端不支持 clone，或者镜像不可 clone（比如 rbd 中不是 raw 格式的镜像），会触发异常，create_image 调用下面的 fetch_image 函数
                 
                 nova.virt.libvirt.utils.fetch_image()
                   nova.virt.images.fetch_to_raw()
                     nova.virt.images.fetch()
                       nova.image.API.download()
                     nova.virt.images.convert_image()
-                      nova.virt.images._convert_image() # 将镜像拷贝到本地的/var/lib/instances/_base/目录下，文件名为md5(image).part，然后用qemu-img convert转换为raw格式，名为md5(image).converted，最后重命名为md5(image)
-                nova.virt.libvirt.storage.rbd_utils.RBDDriver.import_image() # 这一步是在clone失败，执行fetch_image的情况下，判断虚拟机镜像不存在，执行import_image将fetch的镜像导入到RBD后端作为虚拟机镜像。
+                      nova.virt.images._convert_image() # 将镜像拷贝到本地的/var/lib/instances/_base/目录下，文件名为 md5(image).part，然后用 qemu-img convert 转换为 raw 格式，名为 md5(image).converted，最后重命名为 md5(image)
+                nova.virt.libvirt.storage.rbd_utils.RBDDriver.import_image() # 这一步是在 clone 失败，执行 fetch_image 的情况下，判断虚拟机镜像不存在，执行 import_image 将 fetch 的镜像导入到 RBD 后端作为虚拟机镜像。
 
                 nova.virt.libvirt.storage.rbd_utils.RBDDriver.resize() # 调整虚拟机镜像大小
 
-              nova.virt.libvirt.imagebackend.Rbd.resize_image() # 调整虚拟机镜像大小，RBD后端实际上在create_image时已经resize了，不会执行这一步，这里应该是为了确保其他后端能够正确设置虚拟机镜像的大小
+              nova.virt.libvirt.imagebackend.Rbd.resize_image() # 调整虚拟机镜像大小，RBD 后端实际上在 create_image 时已经 resize 了，不会执行这一步，这里应该是为了确保其他后端能够正确设置虚拟机镜像的大小
 ```
 
 为了便于分析，用 graphviz 画了在 nova-compute 的调用关系图：
@@ -80,8 +80,8 @@ cloud-init 通过依次尝试解析 /proc/$$/mountinfo、/etc/mtab 和 mount 命
 
 针对不通的文件系统，使用不同的命令扩容：
 ``` sh
-# resize2fs [devpth]    # ext文件系统
-# xfs_growfs [devpth]    # xfs文件系统
-# growfs [devpth]        # ufs文件系统
-# btrfs filesystem resize max [mount_point]    # btrfs文件系统
+# resize2fs [devpth]    # ext 文件系统
+# xfs_growfs [devpth]    # xfs 文件系统
+# growfs [devpth]        # ufs 文件系统
+# btrfs filesystem resize max [mount_point]    # btrfs 文件系统
 ```

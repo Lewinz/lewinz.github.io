@@ -1,7 +1,7 @@
 ---
 layout: post
 title: openstack 制作标准镜像
-categories: [openstack,镜像]
+categories: [openstack,镜像 ]
 description: openstack 制作标准镜像
 keywords: openstack,镜像
 ---
@@ -51,12 +51,12 @@ sudo apt-get install -y qemu-guest-agent
 vi /etc/default/grub
 
 修改的内容：
-GRUB_CMDLINE_LINUX_DEFAULT加上console=tty0 console=ttyS0,115200
+GRUB_CMDLINE_LINUX_DEFAULT 加上 console=tty0 console=ttyS0,115200
 ```
 
 ### CentOS
 #### cloud-init
-允许root远程登录
+允许 root 远程登录
 ``` sh
 yum install cloud-init
 
@@ -82,8 +82,8 @@ service sshd restart
 ```
 
 ### 配置支持系统盘自动扩容
-CentOS7官方镜像自带自动扩容，无需修改  
-CentOS6参考[文档](https://ykfq.github.io/openstack/create-centos6-image-for-openstack)修改
+CentOS7 官方镜像自带自动扩容，无需修改  
+CentOS6 参考[文档](https://ykfq.github.io/openstack/create-centos6-image-for-openstack) 修改
 
 ### qemu-guest-agent(监控)
 虚机内操作
@@ -102,11 +102,11 @@ BLACKLIST_RPC="guest-file-open,guest-file-close,guest-file-read,guest-file-write
 修改镜像元数据，新增
 `hw_qemu_guest_agent=yes`
 
-### 开启nova console log日志输出支持
+### 开启 nova console log 日志输出支持
 #### centos6
 ``` sh
 vim /etc/grub.conf
-console=tty0 console=ttyS0,115200n8 #追加到kernel行末尾
+console=tty0 console=ttyS0,115200n8 #追加到 kernel 行末尾
 
 #注：/etc/grub.conf /boot/grub/menu.lst 都是指向 /boot/grub/grub.conf 的软链。
 ```
@@ -114,10 +114,10 @@ console=tty0 console=ttyS0,115200n8 #追加到kernel行末尾
 #### centos7
 ``` sh
 vim /etc/default/grub
-删除rhgb quiet 并追加 console=tty0 console=ttyS0,115200n8
+删除 rhgb quiet 并追加 console=tty0 console=ttyS0,115200n8
 ``` 
 
-#### 重新生成grub.cfg文件
+#### 重新生成 grub.cfg 文件
 `grub2-mkconfig -o /boot/grub2/grub.cfg`
 
 ### 镜像文件格式转换与压缩
@@ -144,7 +144,7 @@ qemu-img convert -f qcow2 -O raw test.qcow2 test.raw
 #### 压缩镜像文件
 ``` sh
 # -- -18.5G 在原有镜像文件基础上压缩 18.5G
-# CentOS镜像可能会出现压缩后转换格式size变很小，解决办法是压缩时减少压缩大小
+# CentOS 镜像可能会出现压缩后转换格式 size 变很小，解决办法是压缩时减少压缩大小
 qemu-img resize test.raw -- -18.5G
 ```
 #### 重新上传镜像文件

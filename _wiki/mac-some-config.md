@@ -1,24 +1,24 @@
 ---
 layout: wiki
-title: Mac各类配置记录
-categories: [Mac, 配置]
-description: Mac各类配置记录
+title: Mac 各类配置记录
+categories: [Mac, 配置 ]
+description: Mac 各类配置记录
 keywords: Mac, 配置
 ---
 
-## mac提示文件已损坏 
+## mac 提示文件已损坏 
 
 终端执行`sudo spctl --master-disable`  
 
-安全性与隐私->通用->设置任何来源
+安全性与隐私-> 通用-> 设置任何来源
 
 终端输入命令  
 `sudo xattr -r -d com.apple.quarantine `  
 先别回车，将引用程序中软件拖入终端，回车执行
 
-## oh-my-zsh自定义主题
-配置详细文件因makedown格式受限  
-存放在github仓库/config/oh-my-zsh-config.txt中
+## oh-my-zsh 自定义主题
+配置详细文件因 makedown 格式受限  
+存放在 github 仓库/config/oh-my-zsh-config.txt 中
 
 ## mac 软件列表
 **命令行**  
@@ -33,10 +33,10 @@ keywords: Mac, 配置
 **MySQL 客户端**  
 <https://www.sequelpro.com/>  
 
-**神器alfred**  
+**神器 alfred**  
 <https://www.alfredapp.com/>  
 
-**神器tldr**  
+**神器 tldr**  
 `brew tap tldr-pages/tldr && brew install tldr`
 
 **释压神器**  
@@ -46,11 +46,11 @@ brew install thefuck
 # ~/.zshrc 文件末尾添加
 eval $(thefuck --alias FUCK)
 ```
-## mac使用item2进行ssh连接
+## mac 使用 item2 进行 ssh 连接
 使用命令连接
 `ssh -p22 root@47.117.136.250`
 
-### 安装lrzsz (使用rz/sz)
+### 安装 lrzsz (使用 rz/sz)
 
 `brew install lrzsz`
 
@@ -126,7 +126,7 @@ fi
 chmod 777 /usr/local/bin/iterm2-*
 ```
 
-### iTerm2 配置添加rz sz 功能
+### iTerm2 配置添加 rz sz 功能
 
 点击 iTerm2 的设置界面 Perference-> Profiles -> Default -> Advanced -> Triggers 的 Edit 按钮
 
@@ -142,5 +142,5 @@ Parameters: /usr/local/bin/iterm2-recv-zmodem.sh
 ```
 
 **注意**
-使用item2远程ssh连接服务器后，同样需要在远程服务器上安装lrzsz，否则无法上传下载文件
+使用 item2 远程 ssh 连接服务器后，同样需要在远程服务器上安装 lrzsz，否则无法上传下载文件
 `yum install lrzsz`

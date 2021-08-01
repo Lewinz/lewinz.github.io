@@ -6,15 +6,15 @@ description: golang Json Tag 详细用法
 keywords: golang,json,tag
 ---
 
-Go中使用json很多，玩法也很多，整理了一下go中关于json的tag使用
+Go 中使用 json 很多，玩法也很多，整理了一下 go 中关于 json 的 tag 使用
 包含了一些遇到的问题与解决方案
 
 > A field declaration may be followed by an optional string literal tag, which becomes an attribute for all the fields in the corresponding field declaration. The tags are made visible through a reflection interface but are otherwise ignored.
 
-官方的解释是这个标签信息可以通过反射获取，自定义一些规则，比如常见的db json
-Tag是一个以反引号 `包围， 空格分隔的 k:v 对，常用于数据解析，关系映射等
+官方的解释是这个标签信息可以通过反射获取，自定义一些规则，比如常见的 db json
+Tag 是一个以反引号 `包围， 空格分隔的 k:v 对，常用于数据解析，关系映射等
 
-Go中数据类型与Json支持的类型对应关系
+Go 中数据类型与 Json 支持的类型对应关系
 
 ``` golang
 bool                    ==> JSON booleans
@@ -65,8 +65,8 @@ func main() {
 }
 ```
 
-### 指定json字段名
-User结构体中，json标签指定了它的输出字段名，执行将输出
+### 指定 json 字段名
+User 结构体中，json 标签指定了它的输出字段名，执行将输出
 
 ``` json
 {
@@ -81,11 +81,11 @@ User结构体中，json标签指定了它的输出字段名，执行将输出
 }
 ```
 
-### 输出了null
-切片、map、等零值为nil，对应json的值为null  
-如果要输出[]则要赋值为空切片
+### 输出了 null
+切片、map、等零值为 nil，对应 json 的值为 null  
+如果要输出[] 则要赋值为空切片
 ``` golang
-// someOne赋值为
+// someOne 赋值为
 someOne := User{
 		Age:      20,
 		Name:     "老王",
@@ -109,14 +109,14 @@ someOne := User{
     "birthday":"2000-01-01T10:08:00+08:00"
 }
 ```
->要注意的是空map对应的json输出为 {} 而非 []
+> 要注意的是空 map 对应的 json 输出为 {} 而非 []
 
 ### 忽略零值字段
 通过设置`tag`添加`omitempty`，当字段值为其类型对应的零值时，可达到忽略零值字段的目的。  
 在输出结果中`Address`被设置为空字符串，也未被输出，因为`string`类型的零值即为`""`
 
 ### 忽略指定字段
-`User`结构体中`Password`的`tag`被指定为`-`所以，即便被设置了具体的值，在json中也未被输出
+`User`结构体中`Password`的`tag`被指定为`-`所以，即便被设置了具体的值，在 json 中也未被输出
 
 ### 结构体嵌套输出
 比如将用户的技能和新增的个人主页地址，并将一些展示信息独立为`Profile`结构
@@ -163,7 +163,7 @@ someOne := User{
     "name":"老王"
 }
 ```
-由于是匿名嵌套，所以Profile中的字段与User同级输出
+由于是匿名嵌套，所以 Profile 中的字段与 User 同级输出
 
 ### 层级输出
 ```golang
@@ -232,8 +232,8 @@ type User struct {
 ```
 
 ### 忽略字段输出（不修改原结构体）
-比如要忽略`Name`输出，利用的是定义相同json tag来完成
-可使用任意类型，空struct有利于节省内存及统一
+比如要忽略`Name`输出，利用的是定义相同 json tag 来完成
+可使用任意类型，空 struct 有利于节省内存及统一
 ``` golang
 type Omit *struct{}
 type JsonUser struct {
@@ -251,7 +251,7 @@ type MultiType struct {
 	Data json.RawMessage `json:"data"`
 }
 ```
-可以通过先匹配type再对应解析数据，如
+可以通过先匹配 type 再对应解析数据，如
 ```json
 {
 	"type":"array",
@@ -263,10 +263,10 @@ type MultiType struct {
 }
 ```
 
-### json传递数字
-json的数字，对应的是go的float64类型
-这就意味着只有显示的指定字段类型，go才会将数字转换，所以如果超出float64范围的数字，就需要特殊处理  
-另外，如果字段定义为数字类型，int int8等，但入参为字符串"42"这种，会解析错误  
+### json 传递数字
+json 的数字，对应的是 go 的 float64 类型
+这就意味着只有显示的指定字段类型，go 才会将数字转换，所以如果超出 float64 范围的数字，就需要特殊处理  
+另外，如果字段定义为数字类型，int int8 等，但入参为字符串"42"这种，会解析错误  
 以上问题可通过使用`json.Number`类型解决，见[参考链接](https://www.jianshu.com/p/bbcc81074089) 
 
 ``` golang
@@ -276,8 +276,8 @@ type User struct {
 	Password string          `json:"-"`
 }
 ```
-如果确定入参类型只为字符串类型数字，也可通过tag中指定类型来解决
->通过这种定义，输出的数字也将是字符串类型
+如果确定入参类型只为字符串类型数字，也可通过 tag 中指定类型来解决
+> 通过这种定义，输出的数字也将是字符串类型
 ``` golang
 type User struct {
 	Age      uint8     `json:"age,string"`
@@ -296,8 +296,8 @@ type Unmarshaler interface {
 }
 ```
 
-通过实现以上两个接口，达到自定义json格式或解析的目的  
-比如修改time的输出格式以及兼容各种格式的时间字符串解析，时间戳的转换等  
+通过实现以上两个接口，达到自定义 json 格式或解析的目的  
+比如修改 time 的输出格式以及兼容各种格式的时间字符串解析，时间戳的转换等  
 扩展类型的方式或者内嵌方式  
 ``` golang
 type CustomTime struct {

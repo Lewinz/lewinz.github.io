@@ -14,13 +14,13 @@ keywords: golang, viper, file, reload
 ``` golang
 - DynamicConfigDemo // 项目地址
 	- conf   // 配置文件目录
-		- base.yaml  // 采用yaml格式文件，viper同样支持toml、json等格式的配置文件
+		- base.yaml  // 采用 yaml 格式文件，viper 同样支持 toml、json 等格式的配置文件
 	- src // 代码文件夹
 		- dynamic_config // 动态配置文件夹
 			- dynamic_config.go // 配置加载脚本
-	- go.mod // go package管理依赖的包文件
-	- go.sum // go package管理打包产生的文件
-	- main.go // web server的入口，主函数
+	- go.mod // go package 管理依赖的包文件
+	- go.sum // go package 管理打包产生的文件
+	- main.go // web server 的入口，主函数
 ```
 
 ## 代码细节

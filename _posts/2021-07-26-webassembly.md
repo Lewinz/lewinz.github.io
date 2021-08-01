@@ -52,7 +52,7 @@ WebAssembly 是一项伟大的技术，我们需要如何利用 WebAssembly 的�
 为了充分利用 WebAssembly 的特性，我们必须将其与 JS 代码集成在一起，这可以在 JavaScript WebAssembly API 的帮助下完成。
 
 ## 模块编译和实例化
-WebAssembly 代 码驻留在.wasm文件中。这个文件应该被编译成特定于它所运行的机器的机器码。我们可以使用 WebAssembly.compile 方法来编译 WebAssembly 模块。
+WebAssembly 代 码驻留在.wasm 文件中。这个文件应该被编译成特定于它所运行的机器的机器码。我们可以使用 WebAssembly.compile 方法来编译 WebAssembly 模块。
 
 WebAssembly.instantiate 方法实例化已编译模块。 另外，我们也可以从.wasm 文件获得的数组缓冲区传递到 WebAssembly.instantiate 方法中。 这也适用，因为实例化方法有两个重载。
 ``` js

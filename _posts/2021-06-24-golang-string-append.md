@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Golang 字符串拼接性能
-categories: [golang,字符串]
+categories: [golang,字符串 ]
 description: Golang 字符串拼接性能
 keywords: golang,字符串
 ---
@@ -20,10 +20,10 @@ s1 += s2       // s1 == "HelloWorld"
 
 第二种是使用 bytes.Buffer
 ``` golang
-// bytes.Buffer的0值可以直接使用
+// bytes.Buffer 的 0 值可以直接使用
 var buff bytes.Buffer
 
-// 向buff中写入字符/字符串
+// 向 buff 中写入字符/字符串
 buff.Write([]byte("Hello"))
 buff.WriteByte(' ')
 buff.WriteString("World")
@@ -35,10 +35,10 @@ buff.String() // "Hello World"
 
 不过使用 bytes 模块来操作 string 难免让人产生迷惑，所以在 go1.10 中新增了第三种方法：strings.Builder，官方鼓励尽量在 string 的拼接时使用 Builder，byte 拼接时使用 Buffer
 ``` golang
-// strings.Builder的0值可以直接使用
+// strings.Builder 的 0 值可以直接使用
 var builder strings.Builder
 
-// 向builder中写入字符/字符串
+// 向 builder 中写入字符/字符串
 builder.Write([]byte("Hello"))
 builder.WriteByte(' ')
 builder.WriteString("World")
@@ -65,7 +65,7 @@ builder.String() // "Hello World"
 
 下面是测试代码
 ``` golang
-// BenchmarkSpliceAddString10 测试使用 += 拼接N次长度为10的字符串
+// BenchmarkSpliceAddString10 测试使用 += 拼接 N 次长度为 10 的字符串
 func BenchmarkSpliceAddString10(b *testing.B) {
     s := ""
     for i := 0; i < b.N; i++ {
@@ -73,7 +73,7 @@ func BenchmarkSpliceAddString10(b *testing.B) {
     }
 }
 
-// BenchmarkSpliceBuilderString10 测试使用strings.Builder拼接N次长度为10的字符串
+// BenchmarkSpliceBuilderString10 测试使用 strings.Builder 拼接 N 次长度为 10 的字符串
 func BenchmarkSpliceBuilderString10(b *testing.B) {
     var builder strings.Builder
     for i := 0; i < b.N; i++ {
@@ -81,7 +81,7 @@ func BenchmarkSpliceBuilderString10(b *testing.B) {
     }
 }
 
-// BenchmarkSpliceBufferString10 测试使用bytes.Buffer拼接N次长度为10的字符串
+// BenchmarkSpliceBufferString10 测试使用 bytes.Buffer 拼接 N 次长度为 10 的字符串
 func BenchmarkSpliceBufferString10(b *testing.B) {
     var buff bytes.Buffer
     for i := 0; i < b.N; i++ {
@@ -89,7 +89,7 @@ func BenchmarkSpliceBufferString10(b *testing.B) {
     }
 }
 
-// BenchmarkSpliceBufferByte10 测试使用bytes.Buffer拼接N次长度为10的[]byte
+// BenchmarkSpliceBufferByte10 测试使用 bytes.Buffer 拼接 N 次长度为 10 的[]byte
 func BenchmarkSpliceBufferByte10(b *testing.B) {
     var buff bytes.Buffer
     for i := 0; i < b.N; i++ {
@@ -97,7 +97,7 @@ func BenchmarkSpliceBufferByte10(b *testing.B) {
     }
 }
 
-// BenchmarkSpliceBuilderByte10 测试使用string.Builder拼接N次长度为10的[]byte
+// BenchmarkSpliceBuilderByte10 测试使用 string.Builder 拼接 N 次长度为 10 的[]byte
 func BenchmarkSpliceBuilderByte10(b *testing.B) {
     var builder strings.Builder
     for i := 0; i < b.N; i++ {
@@ -116,7 +116,7 @@ func init() {
     rand.Seed(time.Now().Unix()) // 设置随机种子
 }
 
-// GenRandString 生成n个随机字符的string
+// GenRandString 生成 n 个随机字符的 string
 func GenRandString(n int) string {
     max := len(data)
     var buf bytes.Buffer
@@ -127,7 +127,7 @@ func GenRandString(n int) string {
     return buf.String()
 }
 
-// GenRandBytes 生成n个随机字符的[]byte
+// GenRandBytes 生成 n 个随机字符的[]byte
 func GenRandBytes(n int) []byte {
     max := len(data)
     buf := make([]byte, n)

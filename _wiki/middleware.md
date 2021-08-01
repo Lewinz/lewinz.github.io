@@ -9,7 +9,7 @@ keywords: 中间件, 部署
 
 # **JDK**
 
-### rpm方式
+### rpm 方式
 上传准备好的离线安装包到服务器 
 安装  
 `rpm -ivh jdk-8u181-linux-x64.rpm`
@@ -40,10 +40,10 @@ export PATH=$PATH:${JAVA_PATH}
 # **Postgresql**   
 ### 在线安装
 
-1. 安装RPM  
+1. 安装 RPM  
 `yum install`
 
-2. 安装客户端(若安装服务器，则不需要)  
+2. 安装客户端 (若安装服务器，则不需要)  
 `yum install postgresql12`
 
 3. 安装服务端  
@@ -51,9 +51,9 @@ export PATH=$PATH:${JAVA_PATH}
  
 ### 离线安装
 
-**rpm包**  
+**rpm 包**  
 
-准备好如下rpm安装包
+准备好如下 rpm 安装包
 >libicu-50.2-4.el7_7.x86_64.rpm  
 >libxslt-1.1.28-5.el7.x86_64.rpm  
 >postgresql12-libs-12.4-1PGDG.rhel7.x86_64.rpm  
@@ -61,7 +61,7 @@ export PATH=$PATH:${JAVA_PATH}
 >postgresql12-server-12.4-1PGDG.rhel7.x86_64.rpm  
 >postgresql12-contrib-12.4-1PGDG.rhel7.x86_64.rpm  
 
-**安装rpm包<按顺序执行>**
+**安装 rpm 包 <按顺序执行>**
 ```sh
 rpm -ivh libicu-50.2-4.el7_7.x86_64.rpm --force --nodeps
  
@@ -82,13 +82,13 @@ rpm -ivh postgresql12-contrib-12.4-1PGDG.rhel7.x86_64.rpm --force --nodeps
 初始化数据库  
 `/usr/pgsql-12/bin/postgresql-12-setup initdb`
 
-设置开机启动pg服务  
+设置开机启动 pg 服务  
 `systemctl enable postgresql-12`
  
-启动pg服务  
+启动 pg 服务  
 `systemctl start postgresql-12`
 
-修改PostgreSQL远程连接配置  
+修改 PostgreSQL 远程连接配置  
 `vim /var/lib/pgsql/12/data/pg_hba.conf`
 
 ```sh
@@ -105,12 +105,12 @@ host    replication     all             all                     md5
 
 ```sh
 # 新增以下配置
-# 放开远程连接ip限制
+# 放开远程连接 ip 限制
 listen_addresses = '*'
-# 配置pg_stat_statements
+# 配置 pg_stat_statements
 shared_preload_libraries = 'pg_stat_statements'
 track_activity_query_size = 2048
-# 配置流复制模式，允许debezium cdc组件实时抓取 
+# 配置流复制模式，允许 debezium cdc 组件实时抓取 
 wal_level = logical
 max_wal_senders = 10
 max_replication_slots = 10
@@ -124,45 +124,45 @@ min_wal_size = 100MB
 重启服务  
 `systemctl restart postgresql-12`
 
-修改postgres账号密码  
-使用postgres登入数据库  
+修改 postgres 账号密码  
+使用 postgres 登入数据库  
 `psql -h 127.0.0.1 -d postgres -U postgres`
 
-修改postgres密码  
+修改 postgres 密码  
 `alter user postgres with password 'postgres';`
 
-加载pg_stat_statements  
+加载 pg_stat_statements  
 `CREATE EXTENSION pg_stat_statements;`
 
-**挂载外部数据盘 ps: mnt为任意挂载盘**  
-停止pgsql   
+**挂载外部数据盘 ps: mnt 为任意挂载盘**  
+停止 pgsql   
 `systemctl stop postgresql-12`
 
 
 编辑`vim /usr/lib/systemd/system/postgresql-12.service` 
 
-修改文件中PGDATA路径配置为外部数据盘相应文件夹地址  
+修改文件中 PGDATA 路径配置为外部数据盘相应文件夹地址  
 配置由`Environment=PGDATA=/var/lib/pgsql/12/data/`  
 变为`Environment=PGDATA=/mnt/pg/data/`  
  
 将文件夹复制到外部数据盘  
 `mv /var/lib/pgsql/12/data/ /mnt/pg/data/`
 
-将数据目录文件夹所有者改为postgres用户, postgres用户组  
+将数据目录文件夹所有者改为 postgres 用户, postgres 用户组  
 `chown postgres:postgres /mnt/pg/data/ -R`
  
-访问权限改为 750或700  
+访问权限改为 750 或 700  
 `chmod 750 -R /mnt/pg/data/`  
 执行 `systemctl daemon-reload`  
-以后修改配置文件就在/mnt/pg/data下面修改
+以后修改配置文件就在/mnt/pg/data 下面修改
 
 重启服务  
 `systemctl restart postgresql-12`  
 
-### Postgresql主从  
+### Postgresql 主从  
 
-安装PG从库  
-按照前面的安装操作，在另一台服务器安装从库pg。    
+安装 PG 从库  
+按照前面的安装操作，在另一台服务器安装从库 pg。    
 **！！！从库在部署时不能初始化数据库，否则会导致主从库序列号不一致。**
 
 **配置步骤**  
@@ -183,7 +183,7 @@ CREATE ROLE repuser WITH
  
 `vim pg_hba.conf` 在最后一行添加  
 
-`host replication repuser 从库ip/32 md5`
+`host replication repuser 从库 ip/32 md5`
  
 `vim postgresql.conf` 修改以下变量  
 ```sh
@@ -204,12 +204,12 @@ synchronous_standby_names = '*'
 
 确认无误后，在从库服务器执行以下命令，备份主库数据
 ```sh
-cd /mnt/pg/     打开从库pg的数据文件夹处  
-pg_basebackup -R -D /mnt/pg/backup -Fp -Xs -v -P -h 主库ip -p 5432 -U repuser  
+cd /mnt/pg/     打开从库 pg 的数据文件夹处  
+pg_basebackup -R -D /mnt/pg/backup -Fp -Xs -v -P -h 主库 ip -p 5432 -U repuser  
 ```
 
-将原数据文件夹备份 再将backup改名为data  
-更改data文件夹的用户组，权限 
+将原数据文件夹备份 再将 backup 改名为 data  
+更改 data 文件夹的用户组，权限 
 ```sh
 chown postgres:postgres data -R
 chmod 750 -R data
@@ -217,10 +217,10 @@ chmod 750 -R data
 
 检查 postgresql.auto.conf 文件里是否包含如下内容：
 ```sh
-primary_conninfo = 'user=repuser password=''1qazXSW@3edc'' host=主库IP port=5432 sslmode=prefer sslcompression=0 gssencmode=prefer krbsrvname=postgres target_session_attrs=any'
+primary_conninfo = 'user=repuser password=''1qazXSW@3edc'' host=主库 IP port=5432 sslmode=prefer sslcompression=0 gssencmode=prefer krbsrvname=postgres target_session_attrs=any'
 ```
 
-重启从库PG  
+重启从库 PG  
 检查主从是否成功  
 
 在主库中查询流复制信息  
@@ -234,17 +234,17 @@ primary_conninfo = 'user=repuser password=''1qazXSW@3edc'' host=主库IP port=54
 
 检查插件  
 ```sh
-# 会与mysql冲突，如果预装了，先卸载
+# 会与 mysql 冲突，如果预装了，先卸载
 rpm -qa|grep mariadb
 rpm -e --nodeps mariadb-xxxxxxxx.x86_64
 
-# mysql安装依赖插件，如果没有，先安装
+# mysql 安装依赖插件，如果没有，先安装
 rpm -qa|grep libaio
 yum install libaio
 ```
 
 ```sh
-# 安装mysql
+# 安装 mysql
 rpm -ivh mysql-community-common-5.7.22-1.el7.x86_64.rpm
 rpm -ivh mysql-community-libs-5.7.22-1.el7.x86_64.rpm
 rpm -ivh mysql-community-client-5.7.22-1.el7.x86_64.rpm
@@ -254,15 +254,15 @@ rpm -ivh mysql-community-server-5.7.22-1.el7.x86_64.rpm
 执行`yum install perl`  
 
 如果报错`warning: mysql-community-server-5.7.22-1.el7.x86_64.rpm: Header V3 DSA/SHA1 Signature, key ID 5072e1f5: NOKEY`  
-解决办法：`在rpm命令后加上 --force --nodeps`
+解决办法：`在 rpm 命令后加上 --force --nodeps`
 
-初始化数据库，自动创建data文件目录  
+初始化数据库，自动创建 data 文件目录  
 `mysqld --initialize-insecure --user=mysql`
 
-将`/var/lib/mysql`文件所有用户修改为mysql
+将`/var/lib/mysql`文件所有用户修改为 mysql
 `chown mysql:mysql /var/lib/mysql -R`
 
-修改mysql配置  
+修改 mysql 配置  
 `vi /etc/my.cnf`
 ```sh
 # 设置字符编码集 utf8mb4
@@ -285,10 +285,10 @@ wait_timeout=31536000
 interactive_timeout=31536000
 ```
 
-启动mysql  
+启动 mysql  
 `systemctl start mysqld.service`
 
-登陆mysql修改密码  
+登陆 mysql 修改密码  
 ```sh
 mysql -u root
  
@@ -299,7 +299,7 @@ grant all privileges on *.* to 'root'@'%' identified by '123456' with grant opti
 flush privileges;
 ```
 
-退出mysql后，设置开机自启，重启mysql
+退出 mysql 后，设置开机自启，重启 mysql
 ```sh
 systemctl stop mysqld.service
 systemctl enable mysqld.service
@@ -307,9 +307,9 @@ systemctl list-unit-files | grep mysqld
 systemctl start mysqld.service
 ```
 
-linux上Mysql登录
+linux 上 Mysql 登录
 ```sh
-# 使用root登录，-p代表有密码
+# 使用 root 登录，-p 代表有密码
 mysql -u root -h 127.0.0.1 -p
 ```
 
@@ -320,26 +320,26 @@ mysql -u root -h 127.0.0.1 -p
 `vim /etc/my.cnf`
 
 ```sh
-## 设置server_id，一般设置为IP,注意要唯一
+## 设置 server_id，一般设置为 IP,注意要唯一
 server-id=125107
-## 复制过滤：也就是指定哪个数据库不用同步（mysql库一般不同步）
+## 复制过滤：也就是指定哪个数据库不用同步（mysql 库一般不同步）
 binlog-ignore-db=mysql
 binlog-ignore-db=sys
 binlog-ignore-db=information_schema
 binlog-ignore-db=performance_schem
 ## 开启二进制日志功能，可以随便取，最好有含义（关键就是这里了）
 log-bin=mysql-bin
-## 为每个session 分配的内存，在事务过程中用来存储二进制日志的缓存
+## 为每个 session 分配的内存，在事务过程中用来存储二进制日志的缓存
 binlog_cache_size=16M
-## 主从复制的格式（mixed,statement,row，默认格式是statement）
+## 主从复制的格式（mixed,statement,row，默认格式是 statement）
 binlog_format=mixed
-## 二进制日志自动删除/过期的天数。默认值为0，表示不自动删除。
+## 二进制日志自动删除/过期的天数。默认值为 0，表示不自动删除。
 expire_logs_days=30
-## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断。
-## 如：1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致
+## 跳过主从复制中遇到的所有错误或指定类型的错误，避免 slave 端复制中断。
+## 如：1062 错误是指一些主键重复，1032 错误是因为主从数据库数据不一致
 slave_skip_errors=1062
-## 控制binlog的写入频率。每执行多少次事务写入一次
-## 这个参数性能消耗很大，但可减小MySQL崩溃造成的损失，为0表示不控制
+## 控制 binlog 的写入频率。每执行多少次事务写入一次
+## 这个参数性能消耗很大，但可减小 MySQL 崩溃造成的损失，为 0 表示不控制
 sync_binlog = 1
 innodb_flush_log_at_trx_commit = 1
 ```
@@ -362,36 +362,36 @@ GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'slave'@'%';
 `vim /etc/my.cnf`
 
 ```sh
-## 设置server_id，一般设置为IP,注意要唯一
+## 设置 server_id，一般设置为 IP,注意要唯一
 server-id=125111
-## 复制过滤：也就是指定哪个数据库不用同步（mysql库一般不同步）
+## 复制过滤：也就是指定哪个数据库不用同步（mysql 库一般不同步）
 binlog-ignore-db=mysql
 binlog-ignore-db=sys
 binlog-ignore-db=information_schema
 binlog-ignore-db=performance_schem
-## 开启二进制日志功能，以备Slave作为其它Slave的Master时使用
+## 开启二进制日志功能，以备 Slave 作为其它 Slave 的 Master 时使用
 #log-bin=mysql-slave1-bin
-## 为每个session 分配的内存，在事务过程中用来存储二进制日志的缓存
+## 为每个 session 分配的内存，在事务过程中用来存储二进制日志的缓存
 binlog_cache_size=16M
-## 主从复制的格式（mixed,statement,row，默认格式是statement）
+## 主从复制的格式（mixed,statement,row，默认格式是 statement）
 binlog_format=mixed
-## 二进制日志自动删除/过期的天数。默认值为0，表示不自动删除。
+## 二进制日志自动删除/过期的天数。默认值为 0，表示不自动删除。
 expire_logs_days=30
-## 跳过主从复制中遇到的所有错误或指定类型的错误，避免slave端复制中断。
-## 如：1062错误是指一些主键重复，1032错误是因为主从数据库数据不一致
+## 跳过主从复制中遇到的所有错误或指定类型的错误，避免 slave 端复制中断。
+## 如：1062 错误是指一些主键重复，1032 错误是因为主从数据库数据不一致
 slave_skip_errors=1062
-## relay_log配置中继日志
+## relay_log 配置中继日志
 relay_log=mysql-relay-bin
-## log_slave_updates表示slave将复制事件写进自己的二进制日志
-## 主要为了作为其他的master
+## log_slave_updates 表示 slave 将复制事件写进自己的二进制日志
+## 主要为了作为其他的 master
 #log_slave_updates=ON
-## 防止改变数据(除了特殊的线程)
+## 防止改变数据 (除了特殊的线程)
 #read_only=1(为了使备机随时转正，所以这里允许写)
-## MySQL主从复制的时候，当Master和Slave之间的网络中断，但是Master和Slave无法察觉的情况下（比如防火墙或者路由问题）。Slave会等待slave_net_timeout设置的秒数后，才能认为网络出现故障，然后才会重连并且追赶这段时间主库的数据,默认60
+## MySQL 主从复制的时候，当 Master 和 Slave 之间的网络中断，但是 Master 和 Slave 无法察觉的情况下（比如防火墙或者路由问题）。Slave 会等待 slave_net_timeout 设置的秒数后，才能认为网络出现故障，然后才会重连并且追赶这段时间主库的数据,默认 60
 slave-net-timeout = 20                    
 ## 如果启用，此变量将在服务器启动后立即启用自动中继日志恢复。
 relay_log_recovery = ON
-## 该变量确定从站在中继日志中的位置是写入FILE还是写入表
+## 该变量确定从站在中继日志中的位置是写入 FILE 还是写入表
 relay_log_info_repository = TABLE
 ```
 
@@ -400,7 +400,7 @@ relay_log_info_repository = TABLE
 systemctl restart mysqld.service
 ```
 
-登录从节点mysql
+登录从节点 mysql
 ```sh
 # 命令信息需要修改，在主节点执行命令 show master status\G; 获取
 change master to master_host='47.117.136.250', master_user='slave', master_password='a123456', master_port=3306, master_log_file='mysql-bin.000002', master_log_pos=154, master_connect_retry=30,master_heartbeat_period=10;
@@ -413,7 +413,7 @@ change master to master_host='47.117.136.250', master_user='slave', master_passw
 查看主从同步状态  
 `show slave status\G;`
 
-Slave_IO_Running/Slave_SQL_Running 两个属性都为YES即为复制成功
+Slave_IO_Running/Slave_SQL_Running 两个属性都为 YES 即为复制成功
 
 若主从复制信息设置错误，可通过下列命令重置信息  
 ```sh
@@ -434,16 +434,16 @@ errNum:
 **1236** 复制信息有误，重新设置。  
 
 errNum:   
-**1593** 在mysql中使用 `show variables like '%server_%';` 查看 server_id/server_uuid 是否配置生效，server_id配置在my.cnf中，server_uuid在auto.cnf中。  
+**1593** 在 mysql 中使用 `show variables like '%server_%';` 查看 server_id/server_uuid 是否配置生效，server_id 配置在 my.cnf 中，server_uuid 在 auto.cnf 中。  
 
 # Nginx
 
 ### 安装相关依赖
 `yum -y install gcc gcc-c++ pcre pcre-devel zlib zlib-devel openssl openssl-devel gd gd-devel`  
 
-### 安装nginx
+### 安装 nginx
 
-解压ngnix安装包 `tar -zxvf nginx-1.17.3.tar.gz`  
+解压 ngnix 安装包 `tar -zxvf nginx-1.17.3.tar.gz`  
 
 进入解压缩目录,编译监控插件  
 `./configure --add-module=/mnt/nginx/nginx-module-vts`  
@@ -473,7 +473,7 @@ server {
     }
  
     location /info-api/ {
-        proxy_pass http://gateway地址:8080/;
+        proxy_pass http://gateway 地址:8080/;
     }
     #添加监控接口/status/：
     location /status {             
@@ -516,9 +516,9 @@ cd nacos/bin
 
 安装数据库，版本要求：5.6.5+  
 
-初始化mysql数据库，数据库初始化文件：nacos-mysql.sql  
+初始化 mysql 数据库，数据库初始化文件：nacos-mysql.sql  
 
-修改conf/application.properties文件，添加mysql数据源的url、用户名和密码。  
+修改 conf/application.properties 文件，添加 mysql 数据源的 url、用户名和密码。  
 
 ```sh
 spring.datasource.platform=mysql
@@ -528,23 +528,23 @@ db.user=user_name
 db.password=pwd
 ```
 
-修改conf目录下cluster.conf文件  
+修改 conf 目录下 cluster.conf 文件  
 ```sh
 xxx.xxx.xxx.16:8848
 xxx.xxx.xxx.17:8848
 xxx.xxx.xxx.18:8848
 ```
 
-配置mysql数据库  
+配置 mysql 数据库  
 
-无参模式启动startup.sh脚本  
+无参模式启动 startup.sh 脚本  
 `sh startup.sh`
 
 # Kafka
 
-### zookeeper单节点安装（可使用kafka自带）
+### zookeeper 单节点安装（可使用 kafka 自带）
 
-**解压zookeeper压缩包（必须是带"bin"的压缩包，否则启动会报错）**
+**解压 zookeeper 压缩包（必须是带"bin"的压缩包，否则启动会报错）**
 ```sh
 cd /mnt/zookeeper/
 tar -zxvf apache-zookeeper-3.6.2-bin.tar.gz
@@ -562,7 +562,7 @@ vi zoo.cfg
 dataDir=/mnt/data/zookeeper
 dataLogDir=/mnt/logs/zookeeper
 
-# 自动清理日志<非必须> 3.4之后版本可配置
+# 自动清理日志 <非必须> 3.4 之后版本可配置
 autopurge.snapRetainCount=3
 autopurge.purgeInterval=1
 ```
@@ -573,7 +573,7 @@ export ZOOKEEPER_INSTALL=/mnt/zookeeper/apache-zookeeper-3.6.2-bin/
 export PATH=$PATH:$ZOOKEEPER_INSTALL/bin
 ```
 
-**启动zookeeper服务**
+**启动 zookeeper 服务**
 
 `/mnt/zookeeper/apache-zookeeper-3.6.2-bin/bin/zkServer.sh start`  
 
@@ -584,17 +584,17 @@ Using config: /usr/local/zookeeper-3.4.13/bin/../conf/zoo.cfg
 Starting zookeeper ... STARTED
 ```
 
-### zookeeper集群安装
+### zookeeper 集群安装
 
-多台服务器zookeeper单节点安装完毕之后
+多台服务器 zookeeper 单节点安装完毕之后
 
-在zoo.cfg配置的data目录下新增myid文件
+在 zoo.cfg 配置的 data 目录下新增 myid 文件
 `	echo 1 > /mnt/software/zookeeper/data/myid`
 
 `vim /mnt/software/zookeeper/conf/zoo.cfg`
 
 ```sh
-# ip:port:port<port:port为选举leader使用，默认2888:3888，如果是一台服务器部署集群，使用多个不同端口即可>
+# ip:port:port<port:port 为选举 leader 使用，默认 2888:3888，如果是一台服务器部署集群，使用多个不同端口即可>
 server.1=xx.xx.xx.xx:2888:3888
 server.2=xx.xx.xx.xx:2888:3888
 server.3=xx.xx.xx.xx:2888:2888
@@ -602,9 +602,9 @@ server.3=xx.xx.xx.xx:2888:2888
 
 启动服务。
 
-### kafka单节点部署
+### kafka 单节点部署
 
-解压kafka压缩包  
+解压 kafka 压缩包  
 ```sh
 cd /mnt/tools
 
@@ -618,22 +618,22 @@ mkdir log/zookeeper
 mkdir log/kafka
 ```
 
-修改zookeeper配置  
+修改 zookeeper 配置  
 ```sh
 vim config/zookeeper.properties
 dataDir= /mnt/software/kafka/zookeeper
 ```
 
-修改kafka配置 
+修改 kafka 配置 
 ```sh
 vim config/server.properties
 #修改这几项
 log.dirs=/mnt/software/kafka/log/kafka  #日志存放路径
-listeners=PLAINTEXT://10.17.64.110:9092 #IP填本机地址 外网/内网可访问地址
-zookeeper.connect=10.17.64.110:2181  #IP填zookeeper安装地址
+listeners=PLAINTEXT://10.17.64.110:9092 #IP 填本机地址 外网/内网可访问地址
+zookeeper.connect=10.17.64.110:2181  #IP 填 zookeeper 安装地址
 ```
 
-先启动zookeeper  
+先启动 zookeeper  
 ```sh
 sh bin/zookeeper-server-start.sh -daemon  config/zookeeper.properties
 sh bin/kafka-server-start.sh -daemon config/server.properties
@@ -663,15 +663,15 @@ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --f
 --from-beginning 表示从起始位读取
 ``
  
-启动先zookeeper 停止先kafka  
+启动先 zookeeper 停止先 kafka  
 
-### kafka集群部署
-复制kafka文件夹到其它服务器  
+### kafka 集群部署
+复制 kafka 文件夹到其它服务器  
 
-在/mnt/kafka/zookeeper下添加myid文件，写入服务broker.id属性值  
+在/mnt/kafka/zookeeper 下添加 myid 文件，写入服务 broker.id 属性值  
 例如 echo 0 > myid  
 
-修改zookeeper配置文件  
+修改 zookeeper 配置文件  
 `config/zookeeper.properties`
 
 ```sh
@@ -679,40 +679,40 @@ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --f
 #maxClientCnxns=0
 
 #设置连接参数，添加如下配置
-tickTime=2000　　　　#为zk的基本时间单元，毫秒
-initLimit=10　　　　 #Leader-Follower初始通信时限 tickTime*10
-syncLimit=5　　　　　#Leader-Follower同步通信时限 tickTime*5
+tickTime=2000　　　　#为 zk 的基本时间单元，毫秒
+initLimit=10　　　　 #Leader-Follower 初始通信时限 tickTime*10
+syncLimit=5　　　　　#Leader-Follower 同步通信时限 tickTime*5
  
-#设置broker Id的服务地址 id值与服务器IP对应
+#设置 broker Id 的服务地址 id 值与服务器 IP 对应
 server.0=10.17.64.110:2888:3888
 server.1=10.17.64.111:2888:3888
 server.2=10.17.64.112:2888:3888
 ```
 
-修改kafka配置文件 config/server.properties  
+修改 kafka 配置文件 config/server.properties  
 
 ```sh
-broker.id=0  # kafka实例的唯一标识，用整数表示，使用不同的整数值将集群中的kafka实例区分即可
+broker.id=0  # kafka 实例的唯一标识，用整数表示，使用不同的整数值将集群中的 kafka 实例区分即可
 
-# topic 在当前broker上的分片个数，与broker保持一致
+# topic 在当前 broker 上的分片个数，与 broker 保持一致
 num.partitions=3
 zookeeper.connect=node1:2181,node2:2181,node3:2181
  
 1. broker.id：同一个集群中，每台机器均不能一样
-2. zookeeper.connect：有几台zookeeper服务器，设置为几台台，必须全部加进去
-3. listeners：在配置集群的时候，必须设置，不然以后的操作会报找不到leader的错误
+2. zookeeper.connect：有几台 zookeeper 服务器，设置为几台台，必须全部加进去
+3. listeners：在配置集群的时候，必须设置，不然以后的操作会报找不到 leader 的错误
 ```
 
-配置完成后先启动zookeeper 保证服务都启动后在启动kafka  
+配置完成后先启动 zookeeper 保证服务都启动后在启动 kafka  
 
-# ES集群搭建
+# ES 集群搭建
 
 解压安装包
 
-安装rpm  
+安装 rpm  
 `rpm -ivh elasticsearch-7.8.0-x86_64.rpm`
 
-更新es配置  
+更新 es 配置  
 `vim /etc/elasticsearch/elasticsearch.yml`
 
 ```sh
@@ -731,7 +731,7 @@ path.data: /data/elasticsearch/data
 # Path to log files:
 #
 path.logs: /data/elasticsearch/logs
-///本机ip以及端口
+///本机 ip 以及端口
 # Set the bind address to a specific IP (IPv4 or IPv6):
 #
 network.host: 10.0.209.47
@@ -741,7 +741,7 @@ network.publish_host: 10.0.209.47
 # Set a custom port for HTTP:
 #
 http.port: 9200
-///集群ip配置以及主节点数（计算方式：total number of master-eligible nodes / 2 + 1）
+///集群 ip 配置以及主节点数（计算方式：total number of master-eligible nodes / 2 + 1）
 # Pass an initial list of hosts to perform discovery when new node is started:
 # The default list of hosts is ["127.0.0.1", "[::1]"]
 #
@@ -752,8 +752,8 @@ discovery.zen.ping.unicast.hosts: ["10.0.209.47", "10.0.209.44","10.0.209.43"]
 discovery.zen.minimum_master_nodes: 2
 ```
 
-设置jvm参数  
-`vim etc/elasticsearch/jvm.options  （内存允许 设置31g）`
+设置 jvm 参数  
+`vim etc/elasticsearch/jvm.options  （内存允许 设置 31g）`
 
 ```sh
 -Xms31g
@@ -762,7 +762,7 @@ discovery.zen.minimum_master_nodes: 2
 
 配置密码 （公网环境需要设置，客户服务器视情况而定  内网访问可不需要密码）  
 
-执行以下命令输入ElasticSearch的密码
+执行以下命令输入 ElasticSearch 的密码
 
 `/usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive`
 
@@ -790,7 +790,7 @@ cd /mnt/software/redis/
 cc: 错误：../deps/hiredis/libhiredis.a：没有那个文件或目录  
 cc: 错误：../deps/lua/src/liblua.a：没有那个文件或目录  
 
-切换至deps/执行  
+切换至 deps/执行  
 
 `<sudo> make lua hiredis linenoise`  
 
@@ -801,9 +801,9 @@ cd src
 ./redis-server
 ```
 
-### Redis配置成服务
+### Redis 配置成服务
 
-修改配置文件redis.conf  
+修改配置文件 redis.conf  
 `vim /mnt/software/redis/redis.conf`
 
 ```sh
@@ -813,11 +813,11 @@ logfile /mnt/software/redis/logs/redis.log
 dir /mnt/software/redis/data
 ```
 
-将配置文件拷贝到/etc/init.d目录下  
+将配置文件拷贝到/etc/init.d 目录下  
 
 `cp /mnt/software/redis/redis.conf /etc/redis/redis.conf`
 
-将redis启动脚本复制到/etc/init.d目录下  
+将 redis 启动脚本复制到/etc/init.d 目录下  
 
 `cp /mnt/software/redis/utils/redis_init_script /etc/init.d/redis`
 
@@ -830,19 +830,19 @@ dir /mnt/software/redis/data
 CONF="/etc/redis/6379.conf"
 ```
 
-redis文件添加到 systemctl
+redis 文件添加到 systemctl
 
 `systemctl enable redis`
 
-重启Redis  
+重启 Redis  
 ```sh
 <sudo> systemctl stop redis
 <sudo> systemctl start redis
 ```
 
-### Redis配置主从复制  
+### Redis 配置主从复制  
 
-1）各结点启动redis 服务  
+1）各结点启动 redis 服务  
 
 `sudo systemctl start redis`  
 
@@ -854,7 +854,7 @@ redis文件添加到 systemctl
 
 `$ sudo /sbin/chkconfig redis on`  
 
-从redis149上配置文件6379.conf添加  
+从 redis149 上配置文件 6379.conf 添加  
 ```sh
 slaveof 10.16.212.224 6379
 slave-read-only yes
@@ -862,13 +862,13 @@ slave-read-only yes
 
 4）验证  
 
-执行redis-cli 连接到redis-service  
+执行 redis-cli 连接到 redis-service  
 
-执行info Replication命令查看状态  
+执行 info Replication 命令查看状态  
 
 看到从节点上有  
 
-master_host: 10.16.212.224以及slave_read_only:1字样即为配置成功  
+master_host: 10.16.212.224 以及 slave_read_only:1 字样即为配置成功  
 
 ### 集群部署    
 
@@ -885,7 +885,7 @@ x.x.x.x
 9090
 ```
 
-解压缩事先下载好的Prometheus二进制包到/user/local/prometheus目录下  
+解压缩事先下载好的 Prometheus 二进制包到/user/local/prometheus 目录下  
 
 ```sh
 tar -zxvf prometheus-2.14.0.linux-amd64.tar.gz -C /opt/software/
@@ -899,14 +899,14 @@ cd prometheus/
 ./prometheus –version
 ```
  
-备份配置文件，后续修改prometheus.yml配置文件来收集监控信息  
+备份配置文件，后续修改 prometheus.yml 配置文件来收集监控信息  
 `cp prometheus.yml prometheus.yml-bak`
  
-将Prometheus配置为系统服务  
+将 Prometheus 配置为系统服务  
 `vim /etc/systemd/system/prometheus.service`
 
 ```sh
-Ps: ExecStart参数为现在服务安装路径 storage.tsdb.path为数据存储路径 可修改
+Ps: ExecStart 参数为现在服务安装路径 storage.tsdb.path 为数据存储路径 可修改
 [Unit]
 Description=Prometheus Server
 Documentation=https://prometheus.io/docs/introduction/overview/
@@ -921,7 +921,7 @@ ExecStart=/opt/software/prometheus/prometheus \
 WantedBy=multi-user.target
 ```
 
-重新加载systemd系统  
+重新加载 systemd 系统  
 ```sh
 systemctl daemon-reload 
 systemctl start prometheus 
@@ -933,7 +933,7 @@ systemctl enable prometheus.service
  
 浏览器中打开 http://x.x.x.x:9090/若能看到内容，安装成功  
 
-### Grafana安装
+### Grafana 安装
 节点规划
 ```sh
 ip
@@ -942,10 +942,10 @@ x.x.x.x
 3000
 ```
  
-执行rpm安装事前下载好的rpm安装包  
+执行 rpm 安装事前下载好的 rpm 安装包  
 `rpm -Uvh grafana-6.4.4-1.x86_64.rpm`
 
-重新加载systemd系统  
+重新加载 systemd 系统  
 ```sh
 systemctl daemon-reload 
 systemctl start grafana-server.service
@@ -957,7 +957,7 @@ systemctl enable grafana-server.service
 
 浏览器中打开 http://xxx.xxx.xxx.xxx:3000/若能看到登录页面，安装成功
  
-### Kafka-exporter  ps:适用于未加权限的kafka
+### Kafka-exporter  ps:适用于未加权限的 kafka
 节点规划
 ```sh
 ip
@@ -966,24 +966,24 @@ x.x.x.x
 9308
 ```
  
-解压缩事先下载好的kafka-exporter二进制包到/user/local/kafka-exporter目录下  
+解压缩事先下载好的 kafka-exporter 二进制包到/user/local/kafka-exporter 目录下  
 ```sh
 tar -zxvf kafka_exporter-1.2.0.linux-amd64.tar.gz -C /opt/software/
 cd /opt/software/
 mv kafka_exporter-1.2.0.linux-amd64/ kafka-exporter
 ```
  
-编辑host文件，适配大数据平台  
+编辑 host 文件，适配大数据平台  
 `vim/etc/hosts`
 
-若kafka集群有域名地址  
+若 kafka 集群有域名地址  
 添加如下内容  
 `x.x.x.x cdh-xxx`
  
-把kafka-exporter配置为系统服务  
+把 kafka-exporter 配置为系统服务  
 `vim /etc/systemd/system/kafka-exporter.service`
 
-Ps: ExecStart参数为现在服务安装路径 kafka.server参数为要监控的kafka地址，可多个。  
+Ps: ExecStart 参数为现在服务安装路径 kafka.server 参数为要监控的 kafka 地址，可多个。  
 ```sh
  [Unit]
 Description=Kafka exporter
@@ -997,7 +997,7 @@ ExecStart=/opt/software/kafka-exporter/kafka_exporter \
 WantedBy=multi-user.target
 ```
 
-重新加载systemd系统  
+重新加载 systemd 系统  
 ```sh
 systemctl daemon-reload 
 systemctl start kafka-exporter 
@@ -1007,7 +1007,7 @@ systemctl enable kafka-exporter.service
 检查服务状态  
 `systemctl status kafka-exporter`
 
-### Kafka-minion ps:适用于加权限的kafka
+### Kafka-minion ps:适用于加权限的 kafka
 节点规划
 ```sh
 ip
@@ -1016,20 +1016,20 @@ x.x.x.x
 9101
 ```
 
-解压缩事先下载好的kafka-minion二进制包到/user/local/kafka-minion目录下  
+解压缩事先下载好的 kafka-minion 二进制包到/user/local/kafka-minion 目录下  
 ```sh
 tar -zxvf kafka_minion-1.0.2.tar.gz -C /root/software/
 cd /opt/software/
 ```
  
-编辑host文件，适配大数据平台  
+编辑 host 文件，适配大数据平台  
 `vim/etc/hosts`
 
-若kafka集群有域名地址  
+若 kafka 集群有域名地址  
 添加如下内容  
 `x.x.x.x cdh-xxx`
 
-配置kafka-minion启动脚本  
+配置 kafka-minion 启动脚本  
 `vi run.sh`
 
 ```sh
@@ -1050,11 +1050,11 @@ export KAFKA_SASL_GSSAPI_REALM=ZXJTKDC
 ```
 `nohup /root/software/kafka-minion/main &`
 
-把kafka-minion配置为系统服务  
+把 kafka-minion 配置为系统服务  
 `vim /etc/systemd/system/kafka-minion.service`
 
 ```sh
-Ps: ExecStart参数为现在服务安装路径
+Ps: ExecStart 参数为现在服务安装路径
  [Unit]
 Description=Kafka minion
 After=network-online.target
@@ -1066,7 +1066,7 @@ ExecStart=/mnt/software/kafka-minion/run.sh
 WantedBy=multi-user.target
 ```
 
-重新加载systemd系统  
+重新加载 systemd 系统  
 ```sh
 systemctl daemon-reload 
 systemctl start kafka-minion
@@ -1076,7 +1076,7 @@ systemctl enable kafka-minion.service
 检查服务状态  
 `systemctl status kafka-minion`
  
-### Node-exporter安装
+### Node-exporter 安装
 节点规划
 ```sh
 ip
@@ -1085,18 +1085,18 @@ localhost
 9100
 ```
 
-解压缩事先下载好的Node-exporter二进制包到/user/local/node-exporter目录下  
+解压缩事先下载好的 Node-exporter 二进制包到/user/local/node-exporter 目录下  
 ```sh
 tar -zxvf node_exporter-0.18.1.linux-amd64.tar.gz -C /opt/software
 cd /opt/software/
 mv node_exporter-0.18.1.linux-arm64/ node-exporter
 ```
  
-把Node-exporter配置为系统服务  
+把 Node-exporter 配置为系统服务  
 `vim /etc/systemd/system/node-exporter.service`
 
 ```sh
-Ps: ExecStart参数为现在服务安装路径
+Ps: ExecStart 参数为现在服务安装路径
  [Unit]
 Description=Node exporter
 After=network-online.target
@@ -1108,7 +1108,7 @@ ExecStart=/opt/software/node-exporter/node_exporter
 WantedBy=multi-user.target
 ```
  
-重新加载systemd系统  
+重新加载 systemd 系统  
 ```sh
 systemctl daemon-reload 
 systemctl start node-exporter 
@@ -1118,11 +1118,11 @@ systemctl enable node-exporter.service
 检查服务状态  
 `systemctl status node-exporter`
  
-浏览器中打开 http://{ip-address}:9100/metrics若能看到相应的指标列表，则安装成功  
+浏览器中打开 http://{ip-address}:9100/metrics 若能看到相应的指标列表，则安装成功  
 
 【注】：操作系统指标需要被监控的每一台服务器（虚机）上都需要安装.
 
-### Postgres-exporter安装
+### Postgres-exporter 安装
 节点规划
 ```sh
 ip
@@ -1131,18 +1131,18 @@ localhost
 9187
 ```
  
-解压缩事先下载好的Postgres-exporter二进制包到/user/local/postgres-exporter目录下  
+解压缩事先下载好的 Postgres-exporter 二进制包到/user/local/postgres-exporter 目录下  
 ```sh
 tar -zxvf postgres_exporter_v0.8.0_linux-amd64.tar.gz -C /opt/software
 cd /opt/software
 mv postgres_exporter_v0.8.0_linux-amd64/ postgres-exporter
 ```
 
-把Postgres-exporter配置为系统服务  
+把 Postgres-exporter 配置为系统服务  
 `vim /etc/systemd/system/postgres_exporter.service`
 
 ```sh
-Ps: ExecStart参数为现在服务安装路径
+Ps: ExecStart 参数为现在服务安装路径
 [Unit]
 Description=Prometheus PostgreSQL Exporter
 After=network.target
@@ -1157,7 +1157,7 @@ ExecStart=/opt/software/postgres-exporter/postgres_exporter
 WantedBy=multi-user.target 
 ```
 
-重新加载systemd系统  
+重新加载 systemd 系统  
 ```sh
 systemctl daemon-reload 
 systemctl start postgres-exporter
@@ -1167,8 +1167,8 @@ systemctl enable postgres-exporter.service
 检查服务状态  
 `systemctl status postgres-exporter.service`
 
-Prometheus配置  
-更新Prometheus配置文件  
+Prometheus 配置  
+更新 Prometheus 配置文件  
 `vim /opt/software/prometheus/prometheus.yml`
 
 更新配置文件，内容如下：
@@ -1176,7 +1176,7 @@ Prometheus配置
 Ps:
 Prometheus 配置无需更改
 node 配置需要按照实际服务器地址填写 可多个
-spring boot配置需要按照服务所在服务器ip 端口填写
+spring boot 配置需要按照服务所在服务器 ip 端口填写
 Postgres 若是安装在同一台机器则不需要改
 scrape_configs:
   - job_name: "prometheus"
@@ -1220,15 +1220,15 @@ scrape_configs:
       - targets: ["localhost:9187"] 
 ```
 
-Grafana配置  
-首先以默认的的管理员账号登录admin/admin
+Grafana 配置  
+首先以默认的的管理员账号登录 admin/admin
  
-配置Prometheus数据源  
+配置 Prometheus 数据源  
 
-Grafana菜单栏选择Data Sources  
+Grafana 菜单栏选择 Data Sources  
 
-点击[Add]按钮后选择“Prometheus”  
+点击[Add] 按钮后选择“Prometheus”  
 
-配置Prometheus服务器的信息，如下图所示  
+配置 Prometheus 服务器的信息，如下图所示  
 
-【注】localhost更换为Prometheus服务的IP地址。
+【注】localhost 更换为 Prometheus 服务的 IP 地址。

@@ -45,7 +45,7 @@ unit 的定义文件可以根据其后缀名称识别其定义的类型，可以
 - `Wants`：依赖到的其他 unit，弱依赖，即依赖的 unit 启动失败。该 unit 继续启动
 - `Conflicts`：定义冲突关系
 
-### [Unit 类型]
+### [Unit 类型 ]
 #### [Service]：
 - `type`：启动时关系的定义，
   * `simple`：(当设置了 `ExecStart=` 、 但是没有设置 `Type=` 与 `BusName=` 时，这是默认值)， 那么 `ExecStart=` 进程就是该服务的主进程
@@ -79,10 +79,10 @@ unit 的定义文件可以根据其后缀名称识别其定义的类型，可以
 
 ## systemctl 命令
 ``` sh
-# 列出正在运行的Unit
-systemctl list-units，可以直接使用systemctl
+# 列出正在运行的 Unit
+systemctl list-units，可以直接使用 systemctl
 
-# 列出所有Unit，包括没有找到配置文件的或者启动失败的
+# 列出所有 Unit，包括没有找到配置文件的或者启动失败的
 systemctl list-units --all
 
 # 列出所有没有运行的 Unit
@@ -91,7 +91,7 @@ systemctl list-units --all --state=inactive
 # 列出所有加载失败的 Unit
 systemctl list-units --failed
 
-# 列出所有正在运行的、类型为service的Unit
+# 列出所有正在运行的、类型为 service 的 Unit
 systemctl list-units --type=service
 
 # 显示某个 Unit 是否正在运行

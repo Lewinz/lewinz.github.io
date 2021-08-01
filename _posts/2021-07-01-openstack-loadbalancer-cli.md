@@ -38,7 +38,7 @@ export OS_PROJECT_ID=xxxxxxxxxxxxxxxxx
 | 52f0eed5-f398-427c-a4f6-2c6d7c8b88e4 | default                                 | Default security group             | 8561e762e5ce4b79ab5757f9e393a44b | []   |
 | a657ba7b-f2ff-4e10-b986-fe84243a0a16 | RAX-TEST                                | RAX-TEST                           | 5df4e0c1c68647ef800e7904d455b58d | []   |
 | ac3f43c5-fe9d-49bb-befd-c42b2f100150 | octavia_sec_grp                         | security group for octavia amphora | fe1eada6191c45bca8cf2eb1b1a1eb47 | []   |
-| d9386462-0eae-43c1-b815-f999fa3cd833 | 放行进出公网                            | 对30段网络的公网进出全放行         | 5df4e0c1c68647ef800e7904d455b58d | []   |
+| d9386462-0eae-43c1-b815-f999fa3cd833 | 放行进出公网                            | 对 30 段网络的公网进出全放行         | 5df4e0c1c68647ef800e7904d455b58d | []   |
 | ee287eef-0ad2-4d78-97dd-1fef7544879e | default                                 | Default security group             | fe1eada6191c45bca8cf2eb1b1a1eb47 | []   |
 | f0e116a5-35a4-47c6-baeb-06aa15cfdfed | rax-test-20200310                       | rax-test-20200310                  | 5df4e0c1c68647ef800e7904d455b58d | []   |
 | f0e28f3a-167a-4134-93d7-0ef001c72f6d | default                                 | Default security group             | 5df4e0c1c68647ef800e7904d455b58d | []   |

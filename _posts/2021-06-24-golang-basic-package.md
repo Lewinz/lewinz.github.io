@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Golang 基础包
-categories: [golang,基础包]
+categories: [golang,基础包 ]
 description: Golang 基础包
 keywords: golang,基础包
 ---
@@ -27,7 +27,7 @@ fmt.Println(time.Now())
 // func Parse(layout, value string) (Time, error)
 time.Parse("2016-01-02 15:04:05", "2018-04-23 12:24:51")
 
-// func ParseInLocation(layout, value string, loc *Location) (Time, error) (layout已带时区时可直接用Parse)
+// func ParseInLocation(layout, value string, loc *Location) (Time, error) (layout 已带时区时可直接用 Parse)
 time.ParseInLocation("2006-01-02 15:04:05", "2017-05-11 14:06:06", time.Local)
 
 // func Unix(sec int64, nsec int64) Time
@@ -134,11 +134,11 @@ func (d Duration) Truncate(m Duration) Duration      // 向下取整
 我们在来介绍一下时区的相关的函数
 
 ``` golang
-// 默认UTC    
+// 默认 UTC    
 loc, err := time.LoadLocation("") 
-// 服务器设定的时区，一般为CST
+// 服务器设定的时区，一般为 CST
 loc, err := time.LoadLocation("Local")
-// 美国洛杉矶PDT
+// 美国洛杉矶 PDT
 loc, err := time.LoadLocation("America/Los_Angeles")
 
 // 获取指定时区的时间点
@@ -162,7 +162,7 @@ time.After(time.Duration(10) * time.Second)
 start := time.Now()
 fmt.Println(time.Since(start))   // 等价于 Now().Sub(t)， 可用来计算一段业务的消耗时间
 
-func Until(t Time) Duration     //  等价于 t.Sub(Now())，t与当前时间的间隔
+func Until(t Time) Duration     //  等价于 t.Sub(Now())，t 与当前时间的间隔
 
 // func (t Time) Add(d Duration) Time
 fmt.Println(dt.Add(time.Duration(10) * time.Second))   // 加
@@ -174,7 +174,7 @@ fmt.Println(dt.AddDate(1, 1, 1))
 
 // func (t Time) Before(u Time) bool
 // func (t Time) After(u Time) bool
-// func (t Time) Equal(u Time) bool          比较时间点时尽量使用Equal函数
+// func (t Time) Equal(u Time) bool          比较时间点时尽量使用 Equal 函数
 ```
 
 ### 使用场景
@@ -182,7 +182,7 @@ fmt.Println(dt.AddDate(1, 1, 1))
 ``` golang
 dt1 := time.Date(2018, 1, 10, 0, 0, 1, 100, time.Local)
 dt2 := time.Date(2018, 1, 9, 23, 59, 22, 100, time.Local)
-// 不用关注时区，go会转换成时间戳进行计算
+// 不用关注时区，go 会转换成时间戳进行计算
 fmt.Println(dt1.Sub(dt2))
 ```
 
@@ -251,7 +251,7 @@ for _ = range tick {
   // do something
 }
 
-// 可通过调用ticker.Stop取消
+// 可通过调用 ticker.Stop 取消
 ticker := time.NewTicker(1 * time.Minute)
 for _ = range tick {
   // do something

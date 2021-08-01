@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Prometheus 监控系统搭建
-categories: [Prometheus,监控,搭建]
+categories: [Prometheus,监控,搭建 ]
 description: Prometheus 监控系统搭建
 keywords: Prometheus,监控,搭建
 ---
@@ -55,7 +55,7 @@ sudo docker inspect 0c
 ```
 
 ## 配置 Prometheus
-### prometheus.yml配置内容
+### prometheus.yml 配置内容
 * global 块：Prometheus 的全局配置，比如 scrape_interval 表示 Prometheus 多久抓取一次数据，evaluation_interval 表示多久检测一次告警规则；
 * alerting 块：关于 Alertmanager 的配置，这个我们后面再看；
 * rule_files 块：告警规则，这个我们后面再看；
@@ -205,7 +205,7 @@ docker run -d -p 3000:3000 grafana/grafana
 ![grafana_prometheus_stats](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/wiki/grafana_prometheus_stats.jpeg)
 
 ## 使用 Exporter 收集指标
-目前为止，我们看到的都还只是一些没有实际用途的指标，如果我们要在我们的生产环境真正使用 Prometheus，往往需要关注各种各样的指标，譬如服务器的 CPU负载、内存占用量、IO开销、入网和出网流量等等。正如上面所说，Prometheus 是使用 Pull 的方式来获取指标数据的，要让 Prometheus 从目标处获得数据，首先必须在目标上安装指标收集的程序，并暴露出 HTTP 接口供 Prometheus 查询，这个指标收集程序被称为 Exporter，不同的指标需要不同的 Exporter 来收集，目前已经有大量的 Exporter 可供使用，几乎囊括了我们常用的各种系统和软件，官网列出了一份 [常用 Exporter 的清单](https://prometheus.io/docs/instrumenting/exporters/)，各个 Exporter 都遵循一份端口约定，避免端口冲突，即从 9100 开始依次递增，这里是 [完整的 Exporter 端口列表](https://github.com/prometheus/prometheus/wiki/Default-port-allocations)。另外值得注意的是，有些软件和系统无需安装 Exporter，这是因为他们本身就提供了暴露 Prometheus 格式的指标数据的功能，比如 Kubernetes、Grafana、Etcd、Ceph 等。
+目前为止，我们看到的都还只是一些没有实际用途的指标，如果我们要在我们的生产环境真正使用 Prometheus，往往需要关注各种各样的指标，譬如服务器的 CPU 负载、内存占用量、IO 开销、入网和出网流量等等。正如上面所说，Prometheus 是使用 Pull 的方式来获取指标数据的，要让 Prometheus 从目标处获得数据，首先必须在目标上安装指标收集的程序，并暴露出 HTTP 接口供 Prometheus 查询，这个指标收集程序被称为 Exporter，不同的指标需要不同的 Exporter 来收集，目前已经有大量的 Exporter 可供使用，几乎囊括了我们常用的各种系统和软件，官网列出了一份 [常用 Exporter 的清单](https://prometheus.io/docs/instrumenting/exporters/)，各个 Exporter 都遵循一份端口约定，避免端口冲突，即从 9100 开始依次递增，这里是 [完整的 Exporter 端口列表](https://github.com/prometheus/prometheus/wiki/Default-port-allocations)。另外值得注意的是，有些软件和系统无需安装 Exporter，这是因为他们本身就提供了暴露 Prometheus 格式的指标数据的功能，比如 Kubernetes、Grafana、Etcd、Ceph 等。
 
 ### 收集服务器指标
 首先我们来收集服务器的指标，这需要安装 [node_exporter](https://github.com/prometheus/node_exporter)，这个 exporter 用于收集 *NIX 内核的系统，如果你的服务器是 Windows，可以使用 [WMI exporter](https://github.com/martinlindhe/wmi_exporter)。

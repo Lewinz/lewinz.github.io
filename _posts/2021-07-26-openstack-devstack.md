@@ -6,7 +6,7 @@ description: OpenStack 社区部署工具 Devstack
 keywords: openstack, devstack
 ---
 
-## 为什么需要Devstack
+## 为什么需要 Devstack
 `OpenStack` 是一个十分复杂的分布式系统，部署难度较大，调试也较困难。
 
 对于开发者，首先需要一个 `allinone` 的开发环境，可以随时修改代码并查看结果。各大厂商的部署工具一般都支持 `allinone` 的快速部署，比如红帽的 `RDO` 工具等。
@@ -19,22 +19,22 @@ keywords: openstack, devstack
 
 `DevStack` 除了给开发者快速部署最新的 `OpenStack` 开发环境，社区项目的功能测试也是通过 `DevStack` 完成，开发者提交的代码在合并到主分支之前，必须通过 `DevStack` 的所有功能集测试。另外，前面提到 `DevStack` 是基于代码仓库的 `master` 分支部署，如果你想尝试 `OpenStack` 的最新功能或者新项目，也可以通过 `DevStack` 工具快速部署最新代码的测试环境。
 
-## 三步玩转DevStack
+## 三步玩转 DevStack
 刚刚提到 `DevStack` 的强大之处，是不是“蠢蠢欲动"想要小试牛刀？不过在开始之前，我得友情提醒下，`DevStack` 运行后会安装大量 `OpenStack` 依赖的软件包和 `Python` 库，如果你怕弄乱你的系统，建议开一个虚拟机（你说用容器？`you can，you up`)，在虚拟机里跑 `DevStack` 就不用担心会弄坏你的系统了。目前 `DevStack` 支持`Ubuntu 14.04/16.04`、`Fedora 23/24`、`CentOS/RHEL 7`以及 `Debian` 和 `OpenSUSE` 操作系统，不过官方建议使用 `Ubuntu 16.04`，因为该操作系统社区测试最全面，出现的问题最少。
 OK，让我们开始一步步走起吧。
 
-### 创建stack用户
+### 创建 stack 用户
 为了系统的安全， `DevStack` 最好不要在 `root` 用户下直接运行，因此需要创建一个专门的用户 `stack` ，该用户需要有免密码 `sudo` 权限，配置如下:
 ``` sh
 adduser stack
-echo "stack ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers # 建议使用visudo
+echo "stack ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers # 建议使用 visudo
 su stack
 ```
 
 如果已经下载了 `DevStack` 代码， `DevStack` 也提供了一个专门的脚本创建 `stack` 用户，该脚本位于`devstack/tools/create-stack-user.sh`，直接运行该脚本即可。  
 最后请务必检查当前工作用户为 `stack` ，并且能够不输入密码执行 `sudo` 命令。
 
-### 配置DevStack
+### 配置 DevStack
 在 `DevStack` 根目录下创建 `local.conf` 配置文件，包含 `admin` 密码、数据库密码、`RabbitMQ` 密码以及 `Service` 密码：
 ``` sh
 [[local|localrc]]
@@ -80,7 +80,7 @@ deb-src http://mirrors.aliyun.com/ubuntu/ xenial-proposed main restricted univer
 deb-src http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse
 ```
 
-2. 使用国内的pip源
+2. 使用国内的 pip 源
 只需要在当前家目录 `.pip` 目录创建 `pip.conf` 配置文件，以使用阿里云为例，配置文件内容如下：
 `cat ~/.pip/pip.conf`
 ``` sh
@@ -103,7 +103,7 @@ NOVA_BRANCH=new_feature
 
 需要注意的是，国内源存在同步滞后，可能包不兼容或者下载某些包失败问题，出现这种情况时只需要重新替换原来的镜像源，然后重新运行 `./stack.sh` 即可。
 
-## 使用DevStack环境开发
+## 使用 DevStack 环境开发
 `DevStack` 使用了 `Linux` 的终端复用工具 `screen` ，不同的服务运行在不同的 `window` 中，`screen` 的使用方法可参考官方文档。通常情况下，我们都是针对 `OpenStack` 的某个组件进行开发，比如 `Nova` ，只需要找到 `Nova` 的源码路径，修改对应的源码，然后重启对应的服务即可。比如你修改了 `nova` 源码下的 `nova/compute/manager.py` 代码，则需要重启 `nova-compute` 服务，重启步骤如下：
 
 使用 `screen -ls` 命令查找 `stack session`。
@@ -133,8 +133,8 @@ OSLOPOLICY_BRANCH=better_exception
 `./unstack.sh && ./stack.sh`
 这个过程虽然不用重复从网络上下载包，相比第一次部署节省了不少时间，但仍然还是挺耗时间的，不利于单步调试。个人更倾向于改什么就重启什么服务，比如我修改了 `oslo.db` 代码，并且主要是解决 `Nova` 问题，那我只需要重启 `Nova` 服务即可，暂时不需要重新部署整个 `DevStack` 。而若修改了 `client` 代码，不需要重启任何服务，直接就可以测试功能。当然这种方式没有考虑其它服务的依赖，可能引入新问题，因此在确定开发完成后，最好还是完完全全走一遍 `unstack` 、 `stack` 流程。
 
-## 使用DevStack部署其它OpenStack服务
-前面我们使用 `DevStack` 部署了一个精简版的 `OpenStack` 环境，其中只包含了几个核心组件。其它 `OpenStack` 服务是通过插件形式安装， `DevStack` 支持部署的所有插件列表可参考 `DevStack Plugin Registry` ，截至2017年2月份，`DevStack` 共包含132个安装插件。其中包含：
+## 使用 DevStack 部署其它 OpenStack 服务
+前面我们使用 `DevStack` 部署了一个精简版的 `OpenStack` 环境，其中只包含了几个核心组件。其它 `OpenStack` 服务是通过插件形式安装， `DevStack` 支持部署的所有插件列表可参考 `DevStack Plugin Registry` ，截至 2017 年 2 月份，`DevStack` 共包含 132 个安装插件。其中包含：
 - trove: 数据库服务。
 - sahara: 大数据服务。
 - ironic: 裸机服务。

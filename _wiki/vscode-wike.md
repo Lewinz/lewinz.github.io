@@ -1,20 +1,20 @@
 ---
 layout: wiki
-title: vscode设置
+title: vscode 设置
 categories: vscode
-description: vscode设置
+description: vscode 设置
 keywords: vscode
 ---
-## .json配置文件变量
-${workspaceFolder} :表示当前workspace文件夹路径，也即/home/Coding/Test  
+## .json 配置文件变量
+${workspaceFolder} :表示当前 workspace 文件夹路径，也即/home/Coding/Test  
 
-${workspaceRootFolderName}:表示workspace的文件夹名，也即Test  
+${workspaceRootFolderName}:表示 workspace 的文件夹名，也即 Test  
 
 ${file}:文件自身的绝对路径，也即/home/Coding/Test/.vscode/tasks.json  
 
-${relativeFile}:文件在workspace中的路径，也即.vscode/tasks.json  
+${relativeFile}:文件在 workspace 中的路径，也即.vscode/tasks.json  
 
-${fileBasenameNoExtension}:当前文件的文件名，不带后缀，也即tasks  
+${fileBasenameNoExtension}:当前文件的文件名，不带后缀，也即 tasks  
 
 ${fileBasename}:当前文件的文件名，tasks.json
 
@@ -49,7 +49,7 @@ ${env:PATH}:系统中的环境变量
 |   属性    |   介绍    |
 |   ----    |   ----    |
 |   name    |   调试界面下拉选择项的名称    |
-|   type    |   设置为go无需改动，是 vs code 用于计算调试代码需要用哪个扩展    |
+|   type    |   设置为 go 无需改动，是 vs code 用于计算调试代码需要用哪个扩展    |
 |   mode    |   可以设置为 auto, debug, remote, test, exec 中的一个    |
 |   program    |   调试程序的路径（绝对路径）    |
 |   env    |   调试时使用的环境变量。例如:{ "ENVNAME": "ENVVALUE" }    |

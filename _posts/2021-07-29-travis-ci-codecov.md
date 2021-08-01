@@ -20,7 +20,7 @@ Travis CI 是国外的开源持续集成构建项目，支持 Github 项目。�
 ``` sh
 #指定运行环境
 language: node_js
-#指定nodejs版本，可以指定多个
+#指定 nodejs 版本，可以指定多个
 node_js:
   - 0.12.5
 
@@ -60,15 +60,15 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    // 使用的测试框架jasmine, requirejs支持模块化加载
+    // 使用的测试框架 jasmine, requirejs 支持模块化加载
     frameworks: ['jasmine', 'requirejs'],
 
 
     // list of files / patterns to load in the browser
     files: [
-        // karma中用到进行requirejs配置的文件
+        // karma 中用到进行 requirejs 配置的文件
         'test/test-main.js',
-        // 测试中需要用到的文件，includeed设为false表示在页面加载的时候不会加载相应的js文件，也就是可以通过requirejs进行异步加载
+        // 测试中需要用到的文件，includeed 设为 false 表示在页面加载的时候不会加载相应的 js 文件，也就是可以通过 requirejs 进行异步加载
         {pattern: 'node_modules/jquery/dist/jquery.min.js', included: false},
         {pattern: 'node_modules/angular/angular.min.js', included: false},
         {pattern: 'node_modules/angular-mocks/angular-mocks.js', included: false},
@@ -84,7 +84,7 @@ module.exports = function(config) {
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    // 针对bg-single-selector.js生成单测覆盖率结果
+    // 针对 bg-single-selector.js 生成单测覆盖率结果
     preprocessors: {
         'src/bg-single-selector.js': 'coverage'
     },
@@ -103,7 +103,7 @@ module.exports = function(config) {
             type: 'html',
             dir: 'test/coverage'
         }, {
-            // 这就是Codecov支持的文件类型
+            // 这就是 Codecov 支持的文件类型
             type: 'cobertura',
             subdir: '.',
             dir: 'test/coverage'
@@ -144,7 +144,7 @@ module.exports = function(config) {
   })
 }
 ```
-通过 karma 进行单元测试，将命令写到.travis.yml 中就可以在每次 build 的时候运行单测，同时运行 codecov [cobertura-coverage.xml路径] 就会把单测结果上传到 Codecov。在本地运行 codecov 会失败，需要将这个过程加入到 Travis CI 的 build 脚本中，才能成功上传。因为在本地运行就会被作为私有项目，对于私有项目在上传结果时需要加上 Codecov 提供的 token。
+通过 karma 进行单元测试，将命令写到.travis.yml 中就可以在每次 build 的时候运行单测，同时运行 codecov [cobertura-coverage.xml 路径] 就会把单测结果上传到 Codecov。在本地运行 codecov 会失败，需要将这个过程加入到 Travis CI 的 build 脚本中，才能成功上传。因为在本地运行就会被作为私有项目，对于私有项目在上传结果时需要加上 Codecov 提供的 token。
 
 ## 在 github 中加入图标
 到了最后一步，Travis CI 和 Codecov 都提供图标链接来展示结果。我们只需要将图标链接加入到项目的 README 中就可以看到结果了。  

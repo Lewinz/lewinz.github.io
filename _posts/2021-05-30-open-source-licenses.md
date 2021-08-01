@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 开源协议
-categories: [开源协议]
+categories: [开源协议 ]
 description: 开源协议
 keywords: 开源协议
 ---
@@ -16,7 +16,7 @@ keywords: 开源协议
 对于准备编写一款开源软件的开发人员，也非常建议先了解一下当前最热门的开源许可协议，选择一个合适的开源许可协议来最大限度保护自己的软件权益。
 
 ### GNU GPL
-GNU GPL（GNU General Public License，GNU通用公共许可证）
+GNU GPL（GNU General Public License，GNU 通用公共许可证）
 
 只要软件中包含了遵循 GPL 协议的产品或代码，该软件就必须也遵循 GPL 许可协议，也就是必须开源免费，不能闭源收费，因此这个协议并不适合商用软件。
 
@@ -26,7 +26,7 @@ GNU GPL（GNU General Public License，GNU通用公共许可证）
 * 复制自由	允许把软件复制到任何人的电脑中，并且不限制复制的数量。
 * 传播自由	允许软件以各种形式进行传播。
 * 收费传播	允许在各种媒介上出售该软件，但必须提前让买家知道这个软件是可以免费获得的；因此，一般来讲，开源软件都是通过为用户提供有偿服务的形式来盈利的。
-* 修改自由	允许开发人员增加或删除软件的功能，但软件修改后必须依然基于GPL许可协议授权。
+* 修改自由	允许开发人员增加或删除软件的功能，但软件修改后必须依然基于 GPL 许可协议授权。
 
 ### BSD
 BSD（Berkeley Software Distribution，伯克利软件发布版）协议
@@ -63,7 +63,7 @@ LGPL 是 GPL 的一个衍生版本，也被称为 GPL V2，该协议主要是为
 
 LGPL 允许商业软件通过类库引用（link）的方式使用 LGPL 类库，而不需要开源商业软件的代码。这使得采用 LGPL 协议的开源代码可以被商业软件作为类库引用并发布和销售。
 
-但是如果修改 LGPL 协议的代码或者衍生品，则所有修改的代码，涉及修改部分的额外代码和衍生的代码都必须采用 LGPL 协议。因此LGPL协议的开源代码很适合作为第三方类库被商业软件引用，但不适合希望以 LGPL 协议代码为基础，通过修改和衍生的方式做二次开发的商业软件采用。
+但是如果修改 LGPL 协议的代码或者衍生品，则所有修改的代码，涉及修改部分的额外代码和衍生的代码都必须采用 LGPL 协议。因此 LGPL 协议的开源代码很适合作为第三方类库被商业软件引用，但不适合希望以 LGPL 协议代码为基础，通过修改和衍生的方式做二次开发的商业软件采用。
 
 ## 如何选择开源协议
 ![open_source_licenses](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/open_source_licenses.jpeg)

@@ -1,8 +1,8 @@
 ---
 layout: wiki
-title: CDN缓存-jsdelivr
+title: CDN 缓存-jsdelivr
 categories: ["CDN","jsdelivr","缓存"]
-description: CDN缓存-jsdelivr
+description: CDN 缓存-jsdelivr
 keywords: CDN, jsdelivr, 缓存
 ---
 

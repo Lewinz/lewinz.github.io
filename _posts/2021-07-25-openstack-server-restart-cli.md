@@ -74,13 +74,13 @@ service neutron-server restart
 #### 网络节点
 ``` sh
 service openvswitch restart
-#（fuel控制节点默认stop）
+#（fuel 控制节点默认 stop）
 service neutron-openvswitch-agent restart
-#（fuel控制节点默认stop）
+#（fuel 控制节点默认 stop）
 service neutron-l3-agent restart
-#（fuel控制节点默认stop）
+#（fuel 控制节点默认 stop）
 service neutron-dhcp-agent restart
-#（fuel控制节点默认stop）
+#（fuel 控制节点默认 stop）
 service neutron-metadata-agent restart
 ```
 #### 计算节点

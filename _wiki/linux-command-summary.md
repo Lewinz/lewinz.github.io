@@ -7,7 +7,7 @@ keywords: Linux, 命令， 备忘
 ---
 
 ### 常用
-切换shell  
+切换 shell  
 ```
 # 查看所有终端类型
 cat /etc/shells
@@ -27,26 +27,26 @@ passwd 用户名
     mkdir 新建文件夹  
     rmdir 删除文件夹 
     vim --> i --> esc --> :wq!  修改文件并保存 
-    路pwd 查看文件夹具体径
+    路 pwd 查看文件夹具体径
 ```
 
 ### tar
 ```
 -c 创建新的文档。
--v 显示详细的tar处理的文件信息
+-v 显示详细的 tar 处理的文件信息
 -f 要操作的文件名
--z 调用gunzip操作
+-z 调用 gunzip 操作
 -x 解压文件
 -r 表示增加文件，把要增加的文件追加在压缩文件的末尾
 -t 表示查看文件，查看文件中的文件内容
 
 常用：
-    tar -zvxf 解压.gz文件
+    tar -zvxf 解压.gz 文件
 ```
 
 ### rpm
 ```
-rpm -ivh (--badreloc 强制指定安装目录)(--relocate 指定安装目录)安装  
+rpm -ivh (--badreloc 强制指定安装目录)(--relocate 指定安装目录) 安装  
 rpm -Uvh 升级  
 rpm -e 反安装  
 rpm -qpi 查询安装包详细信息  
@@ -55,17 +55,17 @@ rpm -qpl 查询软件会向系统写入哪些文件
 rpm -qa | grep XXX(moudle name) 查看安装包是否被安装  
 ```
 
-### 查看java进程
+### 查看 java 进程
 ```
 jps
     -q：只输出进程 ID
     -m：输出传入 main 方法的参数
-    -l：输出完全的包名，应用主类名，jar的完全路径名
-    -v：输出jvm参数
-    -V：输出通过flag文件传递到JVM中的参数
+    -l：输出完全的包名，应用主类名，jar 的完全路径名
+    -v：输出 jvm 参数
+    -V：输出通过 flag 文件传递到 JVM 中的参数
 ```
 
-### whereis查找文件
+### whereis 查找文件
 ```
 whereis
     -b 　只查找二进制文件。
@@ -78,7 +78,7 @@ whereis
     -u 　查找不包含指定类型的文件。
 ```
 
-### mysql命令
+### mysql 命令
 启动  
 ```
 service mysql start
@@ -98,21 +98,21 @@ systemctl restart mysqld.service
 ```
 
 登录
-`mysql -u用户名 -p用户密码`
+`mysql -u 用户名 -p 用户密码`
 
 切换数据库
 `use mysql;`
 
-导入sql文件在mysql执行
+导入 sql 文件在 mysql 执行
 `mysql -u root -p dbname < filename.sql`
 
 其他命令：<https://www.cnblogs.com/roadone/p/9834997.html>
 
-### postgresql命令
+### postgresql 命令
 
 #### 登入数据库
 ```
-# -h 连接IP -d 用户名 -U 数据库名
+# -h 连接 IP -d 用户名 -U 数据库名
 psql -h 127.0.0.1 -d postgres -U postgres
 ```
 
@@ -121,10 +121,10 @@ psql -h 127.0.0.1 -d postgres -U postgres
 # 重新设置用户（dif）密码
 \password dlf
 
-# 导入sql在数据库中（exampledb）执行    ps：数据库外执行
+# 导入 sql 在数据库中（exampledb）执行    ps：数据库外执行
 psql exampledb < user.sql
 
-# 导入sql在当前数据库中执行
+# 导入 sql 在当前数据库中执行
 \i aaa.sql
 
 # 列出数据库名
@@ -154,7 +154,7 @@ psql exampledb < user.sql
 
 ```
 
-#### 通过SQL语句  
+#### 通过 SQL 语句  
 ```
 # 列出数据库名
 select datname from pg_database;
@@ -162,16 +162,16 @@ select datname from pg_database;
 # 列出表名
 select tablename from pg_tables where tablename not like 'pg%' and tablename not like 'sql_%' order by tablename;
 
-# 得到当前db中所有表的信息（这里pg_tables是系统视图）
+# 得到当前 db 中所有表的信息（这里 pg_tables 是系统视图）
 select * from pg_tables;
 
 # 得到所有用户自定义表的名字
 # 这里"tablename"字段是表的名字
-# "schemaname"是schema的名字
-# 用户自定义的表，如果未经特殊处理，默认都是放在名为public的schema下
+# "schemaname"是 schema 的名字
+# 用户自定义的表，如果未经特殊处理，默认都是放在名为 public 的 schema 下
 select tablename from pg_tables where schemaname='public';
 
-# 创建schema
+# 创建 schema
 create schema myschema;
 
 # 创建用户
@@ -180,47 +180,47 @@ create user $username with password '*****';
 # 将数据库所有权限授权给用户
 grant all privileges on database $databasename to $username;
 
-# 将schema所有权限授权给用户
+# 将 schema 所有权限授权给用户
 grant all privileges on schema $schemaname to $username;
 
-# 授权用户schemaname下所有表查询权限
+# 授权用户 schemaname 下所有表查询权限
 grant select on all tables in schema $schemaname to $username;
 
-# 将$schemaname以后新建的表默认授权select给$username
+# 将$schemaname 以后新建的表默认授权 select 给$username
 alter default privileges in schema $schemaname grant select on tables to $username;
 
-# 通用sql
+# 通用 sql
 *创建数据库：
-create database [数据库名];
+create database [数据库名 ];
 
 *删除数据库：
-drop database [数据库名]; 
+drop database [数据库名 ]; 
 
 *创建表：
-create table ([字段名1] [类型1] ;,[字段名2] [类型2],......<,primary key (字段名m,字段名n,...)>;);
+create table ([字段名 1] [类型 1] ;,[字段名 2] [类型 2],......<,primary key (字段名 m,字段名 n,...)>;);
 
 *在表中插入数据：
-insert into 表名 ([字段名m],[字段名n],......) values ([列m的值],[列n的值],......);
+insert into 表名 ([字段名 m],[字段名 n],......) values ([列 m 的值 ],[列 n 的值 ],......);
 
 *重命名一个表：
-alter table [表名A] rename to [表名B];
+alter table [表名 A] rename to [表名 B];
 
 *在已有的表里添加字段：
-alter table [表名] add column [字段名] [类型];
+alter table [表名 ] add column [字段名 ] [类型 ];
 
 *删除表中的字段：
-alter table [表名] drop column [字段名];
+alter table [表名 ] drop column [字段名 ];
 
 *重命名一个字段： 
-alter table [表名] rename column [字段名A] to [字段名B];
+alter table [表名 ] rename column [字段名 A] to [字段名 B];
 
 *给一个字段设置缺省值： 
-alter table [表名] alter column [字段名] set default [新的默认值];
+alter table [表名 ] alter column [字段名 ] set default [新的默认值 ];
 
 *去除缺省值： 
-alter table [表名] alter column [字段名] drop default;
+alter table [表名 ] alter column [字段名 ] drop default;
 
-*可以使用pg_dump和pg_dumpall来完成。比如备份sales数据库：
+*可以使用 pg_dump 和 pg_dumpall 来完成。比如备份 sales 数据库：
 pg_dump drupal>/opt/Postgresql/backup/1.bak
 
 ```
@@ -231,16 +231,16 @@ pg_dump drupal>/opt/Postgresql/backup/1.bak
 
 将本地文件拷贝到远程  
 ```
-# scp 文件名 用户名@计算机IP或者计算机名称:远程路径
-# 本地192.168.1.8客户端
+# scp 文件名 用户名@计算机 IP 或者计算机名称:远程路径
+# 本地 192.168.1.8 客户端
 
 scp /root/install.* root@192.168.1.12:/usr/local/src
 ```
 
 从远程将文件拷回本地  
 ```
-# scp 用户名@计算机IP或者计算机名称:文件名  本地路径
-# 本地192.168.1.8客户端取远程服务器12、11上的文件
+# scp 用户名@计算机 IP 或者计算机名称:文件名  本地路径
+# 本地 192.168.1.8 客户端取远程服务器 12、11 上的文件
 
 scp root@192.168.1.12:/usr/local/src/*.log /root/
 ```
@@ -248,16 +248,16 @@ scp root@192.168.1.12:/usr/local/src/*.log /root/
 
 将本地文件夹拷贝到远程  
 ```
-# scp -r 目录名 用户名@计算机IP或者计算机名称:远程路径
-# test1为源目录，test2为目标目录，zhidao@192.168.0.1为远程服务器的用户名和ip地址
+# scp -r 目录名 用户名@计算机 IP 或者计算机名称:远程路径
+# test1 为源目录，test2 为目标目录，zhidao@192.168.0.1 为远程服务器的用户名和 ip 地址
 
 scp -r /home/test1 zhidao@192.168.0.1:/home/test2
 ```
 
 从远程将文件夹拷回本地  
 ```
-# scp -r 用户名@计算机IP或者计算机名称:目录名 本地路径
-# zhidao@192.168.0.1为远程服务器的用户名和ip地址，test1为源目录，test2为目标目录
+# scp -r 用户名@计算机 IP 或者计算机名称:目录名 本地路径
+# zhidao@192.168.0.1 为远程服务器的用户名和 ip 地址，test1 为源目录，test2 为目标目录
 
 scp  -r zhidao@192.168.0.1:/home/test2 /home/test1
 ```
@@ -283,7 +283,7 @@ inactive(dead)：关闭状态，未在运行
 
 添加端口
 ```
-# 添加端口8089（--permanent表示永久生效，没有此参数重启后失效）
+# 添加端口 8089（--permanent 表示永久生效，没有此参数重启后失效）
 firewall-cmd --zone=public --add-port=8089/udp --permanent
 # 这个命令必须运行，才能加载成功
 firewall-cmd --reload
@@ -293,20 +293,20 @@ firewall-cmd --reload
 
 `firewall-cmd --zone=public --query-port=8089/udp`
 
-删除防火墙8086端口
+删除防火墙 8086 端口
 ```
 firewall-cmd --zone=public --remove-port=8086/tcp --permanent
 
 firewall-cmd --reload
 ```
 
-### tree命令
+### tree 命令
 ``` sh
 brew install tree
 
 tree 
 -a 显示所有文件和目录。
--A 使用ASNI绘图字符显示树状图而非以ASCII字符组合。
+-A 使用 ASNI 绘图字符显示树状图而非以 ASCII 字符组合。
 -C 在文件和目录清单加上色彩，便于区分各种类型。
 -d 显示目录名称而非内容。
 -D 列出文件或目录的更改时间。

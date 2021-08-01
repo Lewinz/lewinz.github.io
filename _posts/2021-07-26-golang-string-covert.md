@@ -1,8 +1,8 @@
 ---
 layout: post
-title: golang 黑魔法(string 与 []byte 转换)
+title: golang 黑魔法 (string 与 []byte 转换)
 categories: [golang, string, byte, coverted]
-description: golang 黑魔法(string 与 []byte 转换)
+description: golang 黑魔法 (string 与 []byte 转换)
 keywords: golang, string, byte, coverted
 ---
 string 类型和 [] byte 类型是我们编程时最常使用到的数据结构。本文将探讨两者之间的转换方式，通过分析它们之间的内在联系来拨开迷雾。
@@ -61,7 +61,7 @@ func TestString2Bytes(t *testing.T) {
     }
 }
 
-// 测试标准转换string()性能
+// 测试标准转换 string() 性能
 func Benchmark_NormalBytes2String(b *testing.B) {
     x := []byte("Hello Gopher! Hello Gopher! Hello Gopher!")
     for i := 0; i < b.N; i++ {
@@ -69,7 +69,7 @@ func Benchmark_NormalBytes2String(b *testing.B) {
     }
 }
 
-// 测试强转换[]byte到string性能
+// 测试强转换[]byte 到 string 性能
 func Benchmark_Byte2String(b *testing.B) {
     x := []byte("Hello Gopher! Hello Gopher! Hello Gopher!")
     for i := 0; i < b.N; i++ {
@@ -77,7 +77,7 @@ func Benchmark_Byte2String(b *testing.B) {
     }
 }
 
-// 测试标准转换[]byte性能
+// 测试标准转换[]byte 性能
 func Benchmark_NormalString2Bytes(b *testing.B) {
     x := "Hello Gopher! Hello Gopher! Hello Gopher!"
     for i := 0; i < b.N; i++ {
@@ -85,7 +85,7 @@ func Benchmark_NormalString2Bytes(b *testing.B) {
     }
 }
 
-// 测试强转换string到[]byte性能
+// 测试强转换 string 到[]byte 性能
 func Benchmark_String2Bytes(b *testing.B) {
     x := "Hello Gopher! Hello Gopher! Hello Gopher!"
     for i := 0; i < b.N; i++ {
@@ -214,11 +214,11 @@ s = "Tello Gopher!"
 
 那么，以下操作的含义是不同的：
 ``` golang
-s := "S1" // 分配存储"S1"的内存空间，s结构体里的str指针指向这块内存
-s = "S2"  // 分配存储"S2"的内存空间，s结构体里的str指针转为指向这块内存
+s := "S1" // 分配存储"S1"的内存空间，s 结构体里的 str 指针指向这块内存
+s = "S2"  // 分配存储"S2"的内存空间，s 结构体里的 str 指针转为指向这块内存
 
-b := []byte{1} // 分配存储'1'数组的内存空间，b结构体的array指针指向这个数组。
-b = []byte{2}  // 将array的内容改为'2'
+b := []byte{1} // 分配存储 '1' 数组的内存空间，b 结构体的 array 指针指向这个数组。
+b = []byte{2}  // 将 array 的内容改为 '2'
 ```
 图解如下
 ![golang_string_byte_coverted_3](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_string_byte_coverted_3.png)
@@ -267,7 +267,7 @@ func slicestringcopy(to []byte, fm string) int {
         return 0
     }
 
-  // copy的长度取决与string和[]byte的长度最小值
+  // copy 的长度取决与 string 和[]byte 的长度最小值
     n := len(fm)
     if len(to) < n {
         n = len(to)
@@ -279,12 +279,12 @@ func slicestringcopy(to []byte, fm string) int {
         pc := funcPC(slicestringcopy)
         racewriterangepc(unsafe.Pointer(&to[0]), uintptr(n), callerpc, pc)
     }
-  // 如果开启了memory sanitizer -msan
+  // 如果开启了 memory sanitizer -msan
     if msanenabled {
         msanwrite(unsafe.Pointer(&to[0]), uintptr(n))
     }
 
-  // 该方法将string的底层数组从头部复制n个到[]byte对应的底层数组中去（这里就是copy实现的核心方法，在汇编层面实现 源文件为memmove_*.s）
+  // 该方法将 string 的底层数组从头部复制 n 个到[]byte 对应的底层数组中去（这里就是 copy 实现的核心方法，在汇编层面实现 源文件为 memmove_*.s）
     memmove(unsafe.Pointer(&to[0]), stringStructOf(&fm).str, uintptr(n))
     return n
 }
@@ -312,7 +312,7 @@ func slicebytetostring(buf *tmpBuf, b []byte) (str string) {
             getcallerpc(),
             funcPC(slicebytetostring))
     }
-  // 如果开启了memory sanitizer -msan
+  // 如果开启了 memory sanitizer -msan
     if msanenabled {
         msanread(unsafe.Pointer(&b[0]), uintptr(l))
     }
@@ -335,7 +335,7 @@ func slicebytetostring(buf *tmpBuf, b []byte) (str string) {
     return
 }
 
-// 实例stringStruct对象
+// 实例 stringStruct 对象
 func stringStructOf(sp *string) *stringStruct {
     return (*stringStruct)(unsafe.Pointer(sp))
 }

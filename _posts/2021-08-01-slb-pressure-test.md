@@ -7,25 +7,25 @@ keywords: slb, pressure, test
 ---
 ## 如何进行压力测试 {#concept_lqx_1fd_xdb .concept}
 ### 压力测试性能概述 {#section_rnj_cfd_xdb .section}
-四层负载均衡采用开源软件LVS（Linux Virtual Server）+ Keepalived的方式实现负载均衡，七层负载均衡由Tengine实现。其中四层监听经过LVS后直接到达后端服务器，而七层监听经过LVS后，还需要再经过Tengine，最后达到后端服务器。七层比四层多了一个处理环节，因此，七层性能没有四层性能好。
+四层负载均衡采用开源软件 LVS（Linux Virtual Server）+ Keepalived 的方式实现负载均衡，七层负载均衡由 Tengine 实现。其中四层监听经过 LVS 后直接到达后端服务器，而七层监听经过 LVS 后，还需要再经过 Tengine，最后达到后端服务器。七层比四层多了一个处理环节，因此，七层性能没有四层性能好。
 
-如果您使用七层监听进行压来测试，发现根本跑不上去，挂了两台ECS的七层负载均衡监听性能还不如一台ECS的性能，除了七层本身的性能比四层低外，以下情况也可能会造成七层测压性能低：
+如果您使用七层监听进行压来测试，发现根本跑不上去，挂了两台 ECS 的七层负载均衡监听性能还不如一台 ECS 的性能，除了七层本身的性能比四层低外，以下情况也可能会造成七层测压性能低：
 
 - 客户端端口不足
 
-尤其容易发生在压测的时候，客户端端口不足会导致建立连接失败，负载均衡默认会抹除TCP连接的timestamp属性，Linux协议栈的tw_reuse(time_wait 状态连接复用)无法生效，time_wait状态连接堆积导致客户端端口不足。
+尤其容易发生在压测的时候，客户端端口不足会导致建立连接失败，负载均衡默认会抹除 TCP 连接的 timestamp 属性，Linux 协议栈的 tw_reuse(time_wait 状态连接复用) 无法生效，time_wait 状态连接堆积导致客户端端口不足。
 
-解决方法：客户端端使用长连接代替短连接。使用RST报文断开连接（socket设置SO_LINGER属性），而不是发FIN包这种方式断开。
+解决方法：客户端端使用长连接代替短连接。使用 RST 报文断开连接（socket 设置 SO_LINGER 属性），而不是发 FIN 包这种方式断开。
 
-- 后端服务器accept队列满
+- 后端服务器 accept 队列满
 
-后端服务器accept队列满，导致后端服务器不回复syn_ack报文，客户端超时
+后端服务器 accept 队列满，导致后端服务器不回复 syn_ack 报文，客户端超时
 
-解决方法：默认的net.core.somaxconn的值为128，执行sysctl -w net.core.somaxconn=1024更改它的值，并重启后端服务器上的应用。
+解决方法：默认的 net.core.somaxconn 的值为 128，执行 sysctl -w net.core.somaxconn=1024 更改它的值，并重启后端服务器上的应用。
 
 - 后端服务器连接过多
 
-由于架构设计的原因，使用七层负载均衡时，用户长连接经过Tengine后变成短连接，可能造成后端服务器连接过多，从而表现为压测性能上不去。
+由于架构设计的原因，使用七层负载均衡时，用户长连接经过 Tengine 后变成短连接，可能造成后端服务器连接过多，从而表现为压测性能上不去。
 
 - 后端服务器依赖的应用成为瓶颈
 
@@ -44,37 +44,37 @@ keywords: slb, pressure, test
 
 - 压测负载均衡吞吐量建议使用长连接，用于测试带宽上限或特殊业务
 
-压测工具的超时时间建议设置为一个较小值（5秒）。超时时间太大的话，测试结果会体现在平均RT加长，不利于判断压测水位是否已到达。超时时间调小，测试结果会体现在成功率上，便于快速判断压测水位。
+压测工具的超时时间建议设置为一个较小值（5 秒）。超时时间太大的话，测试结果会体现在平均 RT 加长，不利于判断压测水位是否已到达。超时时间调小，测试结果会体现在成功率上，便于快速判断压测水位。
 
 - 后端服务器提供一个静态网页用于压测，以避免应用逻辑带来的损耗
 
 - 压测时，监听配置建议如下：
   - 不开启会话保持功能，否则压力会集中在个别的后端服务器。
   - 监听关闭健康检查功能，减少健康检查请求对后端服务器的访问请求。
-  - 用多个客户端进行进行压测最好多于5个，源IP分散，能够更好的模拟线上实际情况。
+  - 用多个客户端进行进行压测最好多于 5 个，源 IP 分散，能够更好的模拟线上实际情况。
 ### 压力测试工具建议 {#section_xnj_cfd_xdb .section}
-不建议您使用Apache ab作为压力测试工具。
+不建议您使用 Apache ab 作为压力测试工具。
 
-Apache ab在大量并发场景下存在3s，6s，9s阶梯式停顿的现象。Apache ab会通过判断content length来确定请求是否成功，而负载均衡挂载多台后端服务器时，返回的content length会不一致，导致测试结果有误。
+Apache ab 在大量并发场景下存在 3s，6s，9s 阶梯式停顿的现象。Apache ab 会通过判断 content length 来确定请求是否成功，而负载均衡挂载多台后端服务器时，返回的 content length 会不一致，导致测试结果有误。
 
 可以选择多个客户端作为压力测试源，测试结果清晰，并且可以通过配置监控，获取压力测试时后端服务器的性能数据。
 
-### 使用PTS简单压测示例 {#section_ynj_cfd_xdb .section}
-创建一个负载均实例，添加两台ECS实例作为后端服务器，分别创建一个TCP监听和HTTP监听，后端端口设置为80。ECS服务器的配置为CPU 1核，内存512M使用CentOS 6.3 64位的操作系统。
+### 使用 PTS 简单压测示例 {#section_ynj_cfd_xdb .section}
+创建一个负载均实例，添加两台 ECS 实例作为后端服务器，分别创建一个 TCP 监听和 HTTP 监听，后端端口设置为 80。ECS 服务器的配置为 CPU 1 核，内存 512M 使用 CentOS 6.3 64 位的操作系统。
 
-1. 安装Apache Web Server提供Web服务。  
+1. 安装 Apache Web Server 提供 Web 服务。  
 `yum install -y httpd`
 
-2. 初始化默认首页index.html。  
+2. 初始化默认首页 index.html。  
 `echo "testvm" > /var/www/html/index.html`
 
-3. 启动HTTP服务。  
+3. 启动 HTTP 服务。  
 `service httpd start`
 
-4. 访问本地的80端口，确认Web服务可用。  
+4. 访问本地的 80 端口，确认 Web 服务可用。  
 `curl localhost`
 
-5. 在PTS中创建测试脚本，开始压力测试。  
+5. 在 PTS 中创建测试脚本，开始压力测试。  
 注意关闭长连接和设置超时时间：
-- 设置超时时间为5秒： PTS.HttpUtilities.setTimeout(5000)
+- 设置超时时间为 5 秒： PTS.HttpUtilities.setTimeout(5000)
 - 关闭长连接： PTS.HttpUtilities.setKeepAlive(False)

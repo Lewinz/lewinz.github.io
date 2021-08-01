@@ -6,11 +6,11 @@ description: github review
 keywords: github,review
 ---
 ### code review 缩写
-程序员这个行业，不管你是大佬还是小弟，代码code review是必不可少的。那么在github上，大家日常交流的缩写语，往往一下就能看出你道行的深浅，至少是入行时间，哈哈，不要露怯，勇敢的跟大佬过招拆招。
+程序员这个行业，不管你是大佬还是小弟，代码 code review 是必不可少的。那么在 github 上，大家日常交流的缩写语，往往一下就能看出你道行的深浅，至少是入行时间，哈哈，不要露怯，勇敢的跟大佬过招拆招。
 
 | 简写  | 全称（解释）|
 | --- | --- |
-| LGTM | Looks Good To Me「对我来说，还不错」表示认可这次PR，同意merge合并代码到远程仓库 |
+| LGTM | Looks Good To Me「对我来说，还不错」表示认可这次 PR，同意 merge 合并代码到远程仓库 |
 | ASAP | As Soon As Possible「尽快」 |
 | ACK | Acknowledgement「承认，确认，同意」i.e. agreed/accepted change |
 | NACK/NAK | Negative acknowledgement「不同意」 i.e. disagree with change and/or concept |

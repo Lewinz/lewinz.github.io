@@ -1,7 +1,7 @@
 ---
 layout: post
 title: mtr 命令
-categories: [mtr,路由]
+categories: [mtr,路由 ]
 description: mtr 命令
 keywords: mtr,路由
 ---
@@ -26,19 +26,19 @@ cp mtr-packet /usr/local/bin/
 ```sh
 mtr -h 提供帮助命令  
 
-mtr -v 显示mtr的版本信息  
+mtr -v 显示 mtr 的版本信息  
 
 mtr -r 已报告模式显示  
 
 mtr -c 设置每秒发送数据包的数量  
 
-mtr -s 用来指定ping数据包的大小  
+mtr -s 用来指定 ping 数据包的大小  
 
-mtr -n no-dns不对IP地址做域名解析  
+mtr -n no-dns 不对 IP 地址做域名解析  
 
-mtr -a 来设置发送数据包的IP地址 这个对一个主机由多个IP地址是有用的  
+mtr -a 来设置发送数据包的 IP 地址 这个对一个主机由多个 IP 地址是有用的  
 
-mtr -i 使用这个参数来设置ICMP返回之间的要求默认是1秒  
+mtr -i 使用这个参数来设置 ICMP 返回之间的要求默认是 1 秒  
 
 mtr -4 IPv4  
 
@@ -46,9 +46,9 @@ mtr -6 IPv6
 ```
 
 数据含义：  
-​Host 列是途经的IP或本机域名
+​Host 列是途经的 IP 或本机域名
 
-Loss% 列就是对应IP行的丢包率了，值得一提的是，只有最后的目标丢包才算是真正的丢包
+Loss% 列就是对应 IP 行的丢包率了，值得一提的是，只有最后的目标丢包才算是真正的丢包
 
 Last 列则是最后一次返回的延迟，按毫秒计算的
 

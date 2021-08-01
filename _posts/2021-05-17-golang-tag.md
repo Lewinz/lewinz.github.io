@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Golang Tag 汇总
-categories: [golang,tag,汇总]
+categories: [golang,tag,汇总 ]
 description: Golang Tag 汇总
 keywords: golang,tag,汇总
 ---
@@ -20,7 +20,7 @@ type peerInfo struct {
 ```
 #### Encode 和 Decode
 ##### Encode
-要把 golang 的数据结构转换成 JSON 字符串（encode），可以使用 Marshal函数
+要把 golang 的数据结构转换成 JSON 字符串（encode），可以使用 Marshal 函数
 ```golang
 func Marshal(v interface{}) ([]byte, error)
 ```
@@ -32,7 +32,7 @@ func Unmarshal(data []byte, v interface{}) error
 data 中存放的是 JSON 值，v 会存放解析后的数据，所以必须是指针，可以保证函数中做的修改能保存下来  
 
 #### 更多控制
-Json Tag控制字段有三种：
+Json Tag 控制字段有三种：
 * -：不要解析这个字段  
 * omitempty：当字段为空（默认值）时，不要解析这个字段。比如 false、0、nil、长度为 0 的 array，map，* * 
 slice，string  
@@ -45,18 +45,18 @@ slice，string
 导包`import "encoding/xml"`  
 
 #### 解析和读取规则
-golang对xml的解析和读取是通过stuct和refect实现的,对于struct中的tag以什么方式对应到xml的元素上,golang的文档中做了如下描述:
+golang 对 xml 的解析和读取是通过 stuct 和 refect 实现的,对于 struct 中的 tag 以什么方式对应到 xml 的元素上,golang 的文档中做了如下描述:
 
 ``` txt
-1、结构体中的XMLName字段或者类型为xml.Name的字段,会被删除.使用此字段tag上定义的属性进行解析
-2、结构体tag中”-” 在解析过程中会忽略结构体中的这个字段
-3、结构体tag中”name,attr” 使用name作输出为xml属性,对应字段值作为属性值
-4、结构体tag中”,attr” 使用字段名作为xml属性,字段值作为xml属性值
-5、结构体tag中”,chardata” 不作为xml的节点输出,把该字段对应的值作为字符输出
-6、结构体tag中 “,innerxml” 如果结构体改字段是基本类型如:string,int等,和”,chardata”输出无区别,如果是一个结构体,输出值会是一个完整的xml结构
-7、结构体tag中 “,comment” 输出xml中的注释
-8、结构体tag中”omitempty” 该字段是go中的空值:false, 0,空指针,空接口,任何长度为0的切片,数组,字符串和map. 都会被忽略
-9、结构体中不包含tag 会以该字段作为xml属性名称,值作为xml属性值
+1、结构体中的 XMLName 字段或者类型为 xml.Name 的字段,会被删除.使用此字段 tag 上定义的属性进行解析
+2、结构体 tag 中”-” 在解析过程中会忽略结构体中的这个字段
+3、结构体 tag 中”name,attr” 使用 name 作输出为 xml 属性,对应字段值作为属性值
+4、结构体 tag 中”,attr” 使用字段名作为 xml 属性,字段值作为 xml 属性值
+5、结构体 tag 中”,chardata” 不作为 xml 的节点输出,把该字段对应的值作为字符输出
+6、结构体 tag 中 “,innerxml” 如果结构体改字段是基本类型如:string,int 等,和”,chardata”输出无区别,如果是一个结构体,输出值会是一个完整的 xml 结构
+7、结构体 tag 中 “,comment” 输出 xml 中的注释
+8、结构体 tag 中”omitempty” 该字段是 go 中的空值:false, 0,空指针,空接口,任何长度为 0 的切片,数组,字符串和 map. 都会被忽略
+9、结构体中不包含 tag 会以该字段作为 xml 属性名称,值作为 xml 属性值
 ```
 
 代码示例
@@ -132,7 +132,7 @@ type Person struct {
 
 #### 内嵌结构
 内嵌结构可设置```mapstructure:",squash"```将该结构体的字段提到父结构中  
-另外需要注意一点，如果父结构体中有同名的字段，那么mapstructure会将JSON 中对应的值同时设置到这两个字段中，即这两个字段有相同的值。
+另外需要注意一点，如果父结构体中有同名的字段，那么 mapstructure 会将 JSON 中对应的值同时设置到这两个字段中，即这两个字段有相同的值。
 
 示例：
 ```golang
@@ -146,9 +146,9 @@ type Person struct {
 ```
 
 #### 未映射的值
-如果源数据中有未映射的值（即结构体中无对应的字段），mapstructure默认会忽略它。
+如果源数据中有未映射的值（即结构体中无对应的字段），mapstructure 默认会忽略它。
 
-我们可以在结构体中定义一个字段，为其设置mapstructure:",remain"标签。这样未映射的值就会添加到这个字段中。注意，这个字段的类型只能为`map[string]interface{}`或`map[interface{}]interface{}`。
+我们可以在结构体中定义一个字段，为其设置 mapstructure:",remain"标签。这样未映射的值就会添加到这个字段中。注意，这个字段的类型只能为`map[string]interface{}`或`map[interface{}]interface{}`。
 
 示例：
 ```golang
@@ -161,7 +161,7 @@ type Person struct {
 ```
 
 #### 逆向转换
-前面我们都是将`map[string]interface{}`解码到 Go 结构体中。mapstructure当然也可以将 Go 结构体反向解码为`map[string]interface{}`。在反向解码时，我们可以为某些字段设置`mapstructure:",omitempty"`。这样当这些字段为默认值时，就不会出现在结构的`map[string]interface{}`中：
+前面我们都是将`map[string]interface{}`解码到 Go 结构体中。mapstructure 当然也可以将 Go 结构体反向解码为`map[string]interface{}`。在反向解码时，我们可以为某些字段设置`mapstructure:",omitempty"`。这样当这些字段为默认值时，就不会出现在结构的`map[string]interface{}`中：
 
 ```golang
 type Person struct {
@@ -172,7 +172,7 @@ type Person struct {
 ```
 
 #### Metadata
-解码时会产生一些有用的信息，mapstructure可以使用Metadata收集这些信息。Metadata结构如下：
+解码时会产生一些有用的信息，mapstructure 可以使用 Metadata 收集这些信息。Metadata 结构如下：
 ```golang
 // mapstructure.go
 type Metadata struct {
@@ -181,11 +181,11 @@ type Metadata struct {
 }
 ```
 
-Metadata只有两个导出字段：
+Metadata 只有两个导出字段：
 * Keys：解码成功的键名；
 * Unused：在源数据中存在，但是目标结构中不存在的键名。
 
-为了收集这些数据，我们需要使用DecodeMetadata来代替Decode方法：
+为了收集这些数据，我们需要使用 DecodeMetadata 来代替 Decode 方法：
 ```golang
 type Person struct {
   Name string
@@ -233,7 +233,7 @@ func main() {
   }
 }
 ```
-虽然键name对应的值123是int类型，但是在WeakDecode中会将其转换为string类型以匹配Person.Name字段的类型。同样的，age的值"18"是string类型，在WeakDecode中会将其转换为int类型以匹配Person.Age字段的类型。 需要注意一点，如果类型转换失败了，WeakDecode同样会返回错误。例如将上例中的age设置为"bad value"，它就不能转为int类型，故而返回错误。
+虽然键 name 对应的值 123 是 int 类型，但是在 WeakDecode 中会将其转换为 string 类型以匹配 Person.Name 字段的类型。同样的，age 的值"18"是 string 类型，在 WeakDecode 中会将其转换为 int 类型以匹配 Person.Age 字段的类型。 需要注意一点，如果类型转换失败了，WeakDecode 同样会返回错误。例如将上例中的 age 设置为"bad value"，它就不能转为 int 类型，故而返回错误。
 
 参考博客：  
 <https://zhuanlan.zhihu.com/p/165419292>
