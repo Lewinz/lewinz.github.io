@@ -573,6 +573,14 @@
     } ,
   
     {
+      "title"    : "gRPC",
+      "category" : "gRPC",
+      
+      "url"      : "https://lewinz.org/2021/08/01/google-grpc/",
+      "keywords" : "gRPC"
+    } ,
+  
+    {
       "title"    : "nova 虚拟机镜像从创建到文件系统 resize 完整流程",
       "category" : "openstack",
       
