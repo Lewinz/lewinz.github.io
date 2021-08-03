@@ -1,4 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-08-01T23:58:46+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">Golang 基于 viper 的配置热加载或动态变更方法介绍</title><link href="https://lewinz.org/2021/08/01/golang-viper/" rel="alternate" type="text/html" title="Golang 基于 viper 的配置热加载或动态变更方法介绍" /><published>2021-08-01T00:00:00+08:00</published><updated>2021-08-01T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/01/golang-viper</id><content type="html" xml:base="https://lewinz.org/2021/08/01/golang-viper/">&lt;h2 id=&quot;概述&quot;&gt;概述&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-08-03T23:08:20+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">Linux ssh 相关问题</title><link href="https://lewinz.org/2021/08/03/linux-ssh-setting/" rel="alternate" type="text/html" title="Linux ssh 相关问题" /><published>2021-08-03T00:00:00+08:00</published><updated>2021-08-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/03/linux-ssh-setting</id><content type="html" xml:base="https://lewinz.org/2021/08/03/linux-ssh-setting/">&lt;h2 id=&quot;ssh-client-设置轮询导致-ssh-禁用&quot;&gt;ssh client 设置轮询导致 ssh 禁用&lt;/h2&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# vi /etc/hosts.allow&lt;/span&gt;
+sshd:all
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;ssh-请求连接时间长&quot;&gt;ssh 请求连接时间长&lt;/h2&gt;
+&lt;h3 id=&quot;使用了-dns-反查导致耗时&quot;&gt;使用了 DNS 反查导致耗时&lt;/h3&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# vi /etc/ssh/sshd_config&lt;/span&gt;
+
+UseDNS no
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;默认情况下会有一行被注释的配置 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;# UseDNS yes&lt;/code&gt;, 但是 ssh 缺省情况下默认是 yes ，所以需要显式配置为 no&lt;/p&gt;
+
+&lt;p&gt;这个配置会导致 ssh 在 dns 解析的时候，如果 dns 中没有域名解析记录，会等待 dns 服务器超时返回。&lt;/p&gt;
+
+&lt;h3 id=&quot;kerberos-方式验证导致耗时&quot;&gt;Kerberos 方式验证导致耗时&lt;/h3&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# vi /etc/ssh/sshd_config&lt;/span&gt;
+
+GSSAPIAuthentication no
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;一般 ssh 依次进行的认证方式是 publickey, gssapi-keyex, gssapi-with-mic, password，一般我们常用的是 publickey、password，但是 gssapi（基于 Kerberos） 每次验证还是会尝试，非常耗时，修改 GSSAPIAuthentication 配置可关闭 gssapi 验证过程。&lt;/p&gt;
+
+&lt;h2 id=&quot;重启&quot;&gt;重启&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;service sshd restart&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="linux" /><category term="ssh" /><summary type="html">ssh client 设置轮询导致 ssh 禁用 # vi /etc/hosts.allow sshd:all</summary></entry><entry><title type="html">Golang 基于 viper 的配置热加载或动态变更方法介绍</title><link href="https://lewinz.org/2021/08/01/golang-viper/" rel="alternate" type="text/html" title="Golang 基于 viper 的配置热加载或动态变更方法介绍" /><published>2021-08-01T00:00:00+08:00</published><updated>2021-08-01T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/01/golang-viper</id><content type="html" xml:base="https://lewinz.org/2021/08/01/golang-viper/">&lt;h2 id=&quot;概述&quot;&gt;概述&lt;/h2&gt;
 &lt;p&gt;在写 web server 时，往往需要引入各种各样的配置信息，如依赖的其他中间件（redis、elasticsearch）等，一旦这些服务发生变更，我们需要重新启动 web server，以使配置生效。在 Golang 中，基于 viper 的动态配置就可以省去这些繁琐的步骤了。接下来用一个示例来说明如何使用 viper 的配置热加载：&lt;/p&gt;
 
 &lt;h2 id=&quot;项目结构&quot;&gt;项目结构&lt;/h2&gt;
@@ -1167,251 +1192,4 @@ total 0
 
 &lt;p&gt;缺点：以相同的镜像创建的所有虚拟机依赖共同的 base-image，如果 base-image 意外损坏或删除，上层依赖的虚拟机都会受到影响。&lt;/p&gt;
 
-&lt;p&gt;速度和安全性往往是一对矛盾体，两种方式需要做一定的权衡。可以在完整拷贝镜像创建虚拟机的方案中提升硬件性能，比如通过高配的磁盘和带宽来降低拷贝镜像的时间。也可以在写时复制（copy on write）的方案中，在虚拟机创建成功后的某个恰当时刻，通过后台执行 ceph 的 rbd flatten 命令断开 base-image 和增量 clone 虚拟磁盘的依赖链，达到每个虚拟机相互独立。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="nova" /><summary type="html">OpenStack 管理虚拟机生命周期的组件是 Nova，Nova 创建虚拟机从后端存储类型分为本地 LVM 存储和远程分布式存储（例如：Ceph/SheepDog/GlusterFS），从启动方式一般分为镜像启动和卷启动两大类，按启动方式和存储后端可以有 4 种组合</summary></entry><entry><title type="html">openstack nova 创建虚拟机步骤</title><link href="https://lewinz.org/2021/07/28/openstack-nova-step/" rel="alternate" type="text/html" title="openstack nova 创建虚拟机步骤" /><published>2021-07-28T00:00:00+08:00</published><updated>2021-07-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/28/openstack-nova-step</id><content type="html" xml:base="https://lewinz.org/2021/07/28/openstack-nova-step/">&lt;h2 id=&quot;nova-创建虚机总流程&quot;&gt;nova 创建虚机总流程&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_nova_step_1.png&quot; alt=&quot;openstack_nova_step&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;nova-创建虚机请求流&quot;&gt;nova 创建虚机请求流&lt;/h3&gt;
-&lt;ol&gt;
-  &lt;li&gt;Dashboard 或者 CLI 获取用户的登录信息，调用 Keystone 的 REST API 去做用户身份验证。&lt;/li&gt;
-  &lt;li&gt;Keystone 对用户登录信息进行校验，然后产生验证 token 并发回。它会被用于后续 REST 调用请求。&lt;/li&gt;
-  &lt;li&gt;Dashboard 或者 CLI 将创建虚机的 REST 请求中的‘launch instance’ 或‘nova-boot’ 部分进行转换，然后调用 nova-api 的 REST 接口。&lt;/li&gt;
-  &lt;li&gt;nova-api 接到请求，向 keystone 发送 auth-token 校验和权限认证请求。&lt;/li&gt;
-  &lt;li&gt;Keystone 校验 token，并将 auth headers 发回，它包括了 roles 和 permissions。&lt;/li&gt;
-  &lt;li&gt;nova-api 和 nova-database 进行交互。&lt;/li&gt;
-  &lt;li&gt;nova-database 为新实例创建一个数据库条目。&lt;/li&gt;
-  &lt;li&gt;nova-api 向 nova-scheduler 发送  rpc.call 请求，期望它能通过附带的 host ID 获取到数据库条目。&lt;/li&gt;
-  &lt;li&gt;nova-scheduler 从 queue 中获取到请求。&lt;/li&gt;
-  &lt;li&gt;nova-scheduler 和 nova-database 交互，获取集群中计算节点的信息和状态。&lt;/li&gt;
-  &lt;li&gt;nova-scheuler 通过过滤（filtering）和称重（weighting）找到一个合适的计算节点（host）。&lt;/li&gt;
-  &lt;li&gt;nova-scheduler 向找到的那个 host 上的 nova-compute 发送 rpc.cast 请求去启动虚机。&lt;/li&gt;
-  &lt;li&gt;目标 host 上的 nova-compute 从 queue 中获取到请求。&lt;/li&gt;
-  &lt;li&gt;nova-compute 向 nova-condutor 发送 rpc.call 请求去获取待创建虚机的信息比如 host ID 和 flavor 等。&lt;/li&gt;
-  &lt;li&gt;nova-conductor 从 queue 中获取到请求。&lt;/li&gt;
-  &lt;li&gt;nova-conductor 和 nova-database 交互。&lt;/li&gt;
-  &lt;li&gt;nova-database 向 nova-conductor 返回虚机的信息。&lt;/li&gt;
-  &lt;li&gt;nova-conductor 向 nova-compute 发送 rpc.call，附带所请求的信息。图中应该是遗漏了一个步骤，就是 nova-compute 从 queue 中获取返回的数据。&lt;/li&gt;
-  &lt;li&gt;nova-compute 调用 glance-api 的 REST API，传入 auth-token，去根据镜像 ID 获取镜像 URI，从镜像存储中下载（原文为 upload）镜像。&lt;/li&gt;
-  &lt;li&gt;glance-api 向 keystone 校验 auth-token。&lt;/li&gt;
-  &lt;li&gt;nova-compute 获取 image 的元数据。&lt;/li&gt;
-  &lt;li&gt;nova-compute 调用 Neutron API ，传入 auth-token，去分配和配置网络，比如虚机的 IP 地址。&lt;/li&gt;
-  &lt;li&gt;neutron-server 通过 keystone 校验 auth-token。&lt;/li&gt;
-  &lt;li&gt;nova-compute 获得网络信息。&lt;/li&gt;
-  &lt;li&gt;nova-compute 调用 Cinder API，传入 auth-token，去将 volume 挂接到实例。&lt;/li&gt;
-  &lt;li&gt;cinder-api 通过 keystone 校验 auth-token。&lt;/li&gt;
-  &lt;li&gt;nova-compute 获得块存储信息。&lt;/li&gt;
-  &lt;li&gt;nova-compute 为 hypervisor driver 产生数据，并调用 Hypersior 执行请求（通过 libvirt 或者 api）。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;下表列出了每个步骤中实例的状态&quot;&gt;下表列出了每个步骤中实例的状态：&lt;/h3&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Status&lt;/th&gt;
-      &lt;th&gt;Task&lt;/th&gt;
-      &lt;th&gt;Power state&lt;/th&gt;
-      &lt;th&gt;Steps&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Build&lt;/td&gt;
-      &lt;td&gt;scheduling&lt;/td&gt;
-      &lt;td&gt;None&lt;/td&gt;
-      &lt;td&gt;3-12&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Build&lt;/td&gt;
-      &lt;td&gt;networking&lt;/td&gt;
-      &lt;td&gt;None&lt;/td&gt;
-      &lt;td&gt;22-24&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Build&lt;/td&gt;
-      &lt;td&gt;block_device_mapping&lt;/td&gt;
-      &lt;td&gt;None&lt;/td&gt;
-      &lt;td&gt;25-27&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Build&lt;/td&gt;
-      &lt;td&gt;spawing&lt;/td&gt;
-      &lt;td&gt;None&lt;/td&gt;
-      &lt;td&gt;28&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Active&lt;/td&gt;
-      &lt;td&gt;none&lt;/td&gt;
-      &lt;td&gt;Running&lt;/td&gt;
-      &lt;td&gt; &lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&quot;nova-compute-接到指令后开始创建虚机的代码分析-第-19-步之后&quot;&gt;nova compute 接到指令后开始创建虚机的代码分析 （第 19 步之后）&lt;/h2&gt;
-&lt;p&gt;代码在 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;https://github.com/openstack/nova/blob/master/nova/compute/manager.py&lt;/code&gt; 中的 def _build_and_run_instance 函数中：&lt;/p&gt;
-
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;_build_resources&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;准备网络和磁盘&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Start&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;building&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;networks&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;asynchronously&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt;
-    &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_build_networks_for_instance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;为&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;准备网络资源&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;实际上是创建一个&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;neutron&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;macs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;macs_for_instance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;分配&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mac&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;地址&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;多绝大多数&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hypersivor&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;返回&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;也就是不预先分配&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;network_info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_allocate_network&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;开始异步网络分配&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;nwinfo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;network_api&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;allocate_for_instance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Allocate&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;network&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;resources&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;_validate_requested_port_ids&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;校验&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ids&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;_validate_requested_network_ids&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;校验&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;network&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ids&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;_clean_security_groups&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;删除&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;安全组&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;_process_security_groups&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Processes&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;validates&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;requested&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;security&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;groups&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;allocation&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;_create_ports_for_instance&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Create&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;network_requests&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;that&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;don&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'t have a port_id
-                    _create_port_minimal //如果 port 没有的话，则 Attempts to create a port for the instance on the given network.
-                        port_client.create_port //调用 port api 来创建 port，包括创建 port，分配 MAC 及 IP 地址，更新数据库
-                            _generate_mac //生成 MAC 地址
-                            _create_port_with_mac //创建 port
-                                //DHCP 相关操作：port 创建完成后会通知 neutron-dhcp-agent 去执行 port_create_end 函数，它会将 port 的 ip 和 mac 信息加载到 dnsmasq 所需的配置文件中
-                            _allocate_ips_for_port //为 port 分配 IP，要么用户有指定，要么从 subnets 中选择一个
-                                _allocate_specific_ip //如果指定了 IP
-                                _generate_ip //如果没指定 IP
-                    return requests_and_created_ports
-                _update_ports_for_instance //为特殊 case 更新 port
-                    _populate_neutron_extension_values
-                    _populate_pci_mac_address //只用于处理 SRIOV_PF
-                    _populate_mac_address
-                    _update_port
-                        port_client.update_port //将上述修改通过调用 port api 得以更新 port
-                    _update_port_dns_name
-                        neutron.update_port(port_id, port_req_body) //将 port 的 dns_name 设置为 hostname
-                nw_info = self.get_instance_nw_info
-                    _build_network_info_model //Return list of ordered VIFs attached to instance
-                        _gather_port_ids_and_networks //Return an instance'&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;complete&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port_ids&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;networks&lt;/span&gt;
-                            &lt;span class=&quot;n&quot;&gt;ifaces&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_network_info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nw_info&lt;/span&gt;
-
-    &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Start&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;building&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;device&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mappings&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt;
-    &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_prep_block_device&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Set&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;up&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;device&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;an&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;block_device_info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_block_device_info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bdms&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Converts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;block&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;device&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mappings&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;format&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;mapping&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;block_device_info_get_mapping&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;block_device_info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;block_device_mapping&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;driver_block_device&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attach_block_devices&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nova&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;virt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;block_device&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;_log_and_attach&lt;/span&gt;
-                &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;首先找出&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;将从哪里启动&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;可能从&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;volume&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;snapshot&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;上启动&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;bdm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attach&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;真正做&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;attach&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;操作&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;_block_device_info_to_legacy&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;block_device_info&lt;/span&gt;
-
-&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;spawn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;调用&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nova&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;virt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;libvirt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;中的&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;spawn&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;函数&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;首先创建&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;然后创建&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;domain&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;disk_info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;blockinfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_disk_info&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;_create_configdrive&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;_create_image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;创建镜像&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;libvirt_utils&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fetch_raw_image&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;IMAGE_API&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;download&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;调用&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;glance&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;API&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;去下载镜像&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;_create_and_inject_local_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;做文件注入&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;_create_ephemeral&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;libvirt_utils&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;create_image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'raw'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'%dG'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ephemeral_size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                   &lt;span class=&quot;n&quot;&gt;utils&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'qemu-img'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'create'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'-f'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;disk_format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;_create_swap&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;libvirt_utils&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;create_image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'raw'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'%dM'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;swap_mb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;nova&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;privsep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unprivileged_mkfs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'swap'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-       &lt;span class=&quot;n&quot;&gt;xml&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_get_guest_xml&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;生成&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;domain&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xml&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;字符串&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_get_guest_config&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_get_guest_numa_config&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_get_guest_memory_backing_config&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_get_guest_config_meta&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_update_guest_cputune&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_cpu_config_to_vcpu_model&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_configure_guest_by_virt_type&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_set_features&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_set_clock&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_get_guest_storage_config&lt;/span&gt;
-               &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vif_driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_config&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_create_consoles&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_guest_add_spice_channel&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_add_video_driver&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_set_qemu_guest_agent&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_guest_add_pci_devices&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_guest_add_watchdog_action&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_guest_add_memory_balloon&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;_guest_add_mdevs&lt;/span&gt;
-               &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;guest&lt;/span&gt;
-           &lt;span class=&quot;n&quot;&gt;xml&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;conf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;to_xml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-           &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xml&lt;/span&gt;
-
-       &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_create_domain_and_network&lt;/span&gt;
-           &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nova&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;侧去等待&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;neutron&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;侧发送&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;network&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vif&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pluggend&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;事件&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;neutron&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;linuxbridge&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;agent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;服务检测&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tap&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;设备&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;neutron&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;发送&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;event&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;事件给&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nova&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;api&lt;/span&gt;
-           &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;virtapi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wait_for_instance_event&lt;/span&gt;
-           &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plug_vifs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;instance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;network_info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-           &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firewall_driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setup_basic_filtering&lt;/span&gt;
-           &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firewall_driver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prepare_instance_filter&lt;/span&gt;
-           &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_create_domain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;n&quot;&gt;libvirt_guest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Guest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                   &lt;span class=&quot;n&quot;&gt;write_instance_config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nova&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;virt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;libvirt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;py&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;中&lt;/span&gt;
-                   &lt;span class=&quot;n&quot;&gt;domain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_connection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;defineXML&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;libvirt_guest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Guest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;domain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-               &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;guest&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;_wait_for_boot&lt;/span&gt;   &lt;span class=&quot;o&quot;&gt;//&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;每隔&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;秒检查虚机是否启动&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;_update_instance_after_spawn&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;_update_scheduler_instance_info&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;scheduler_client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;update_instance_info&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;_notify_about_instance_usage&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;补充&quot;&gt;补充：&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;port 创建成功后的 dhcp 相关操作（参考 &lt;a href=&quot;https://blog.csdn.net/gj19890923/article/details/51558598&quot;&gt;https://blog.csdn.net/gj19890923/article/details/51558598&lt;/a&gt;）：
-    &lt;ul&gt;
-      &lt;li&gt;创建 VM 时，nova-compute 与 neutron 的 plugin 交互，在 neutron 的数据库中创建 VM 所需的 port 信息。&lt;/li&gt;
-      &lt;li&gt;neutron 数据库中的 port 信息创建完成后，通知 neutron-dhcp-agent 去执行 port_create_end 函数。该函数将数据库中的 port 中的 ip 和 mac 信息加载到 dnsmasq 所需的配置文件中 (包括 host 和 addn_hosts 文件)。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@nova 43c0e274-28e3-482e-a32b-d783980fc3ed]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;addn_hosts
-
-  1.1.1.1 host-1-1-1-1.openstacklocal host-1-1-1-1
-
-  1.1.1.2 host-1-1-1-2.openstacklocal host-1-1-1-2
-
-  1.1.1.10        host-1-1-1-10.openstacklocal host-1-1-1-10
-
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@nova 43c0e274-28e3-482e-a32b-d783980fc3ed]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;host
-
-  fa:16:3e:d1:d7:72,host-1-1-1-1.openstacklocal,1.1.1.1
-
-  fa:16:3e:da:42:50,host-1-1-1-2.openstacklocal,1.1.1.2
-
-  fa:16:3e:3c:a3:3e,host-1-1-1-10.openstacklocal,1.1.1.10
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@nova 43c0e274-28e3-482e-a32b-d783980fc3ed]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;leases
-
-  1464599134 fa:16:3e:3c:a3:3e 1.1.1.10 host-1-1-1-10 01:fa:16:3e:3c:a3:3e
-
-  1464598886 fa:16:3e:da:42:50 1.1.1.2 host-1-1-1-2 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
-
-  1464598886 fa:16:3e:d1:d7:72 1.1.1.1 host-1-1-1-1 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;在 VM 启动时，广播 dhcp discover 请求，当 dnsmasq 进程的监听接口 ns-xxx 监听到这种请求时，dnsmasq 进程将根据配置文件 (host 和 leases 文件) 中的内容去判定是否有未分配的 ip 和 mac 为请求者进行提供。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;最终 VM 便真实的获取到与保存在数据库中的 ip 和 mac 信息。neutron-dhcp-agent 只是将所创建 VM 的 ip 和 mac 信息从数据库中获取到自己的配置文件中，然后等到 VM 启动时，为它提供。因此 neutron-dhcp-agent 相当于在 VM 和数据库之间起了个中间桥梁的作用。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;nova 在 domain 被创建后等待 neutron event 的过程（请参考 &lt;a href=&quot;http://www.aichengxu.com/linux/9307663.htm&quot;&gt;http://www.aichengxu.com/linux/9307663.htm&lt;/a&gt;）&lt;/p&gt;
-    &lt;ul&gt;
-      &lt;li&gt;创建 VM 时， nova-compute 服务调用 wait_for_instance_event 函数等待 neutron 侧发送 event 事件。&lt;/li&gt;
-      &lt;li&gt;neutron 的 neutron-linuxbridge-agent 定时检测 tap 设备的增加或删除，当创建 VM 时，将创建新的 tap 设备，此时将更新 neutron 数据库中的 ports 表，而 neutron-server 服务创建 core_plugin 时，将利用 sqlalchemy 自带的 event 对 neutron 数据库中的 ports 表进行监视，当 ports 表发生变化时，neutron-server 将通过 HTTP 请求的方式发送 event 事件给 nova。&lt;/li&gt;
-      &lt;li&gt;nova 侧收到 neutron 侧发送的 event 事件，便结束等待，继续创建 VM 下面的操作。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;虚机被创建后的-l2-网络操作&quot;&gt;虚机被创建后的 L2 网络操作&lt;/h2&gt;
-&lt;p&gt;虚机被创建后，nova-compute 节点上的 neutron-linuxbridge-agent 会检测到新建的 tap 设备（通过轮询 /sys/class/net/ 里面的 tap 设备），找到后则执行一系列网络方面的操作，包括设置安全组，&lt;/p&gt;
-
-&lt;p&gt;tap 设备示例：&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@test net]# &lt;span class=&quot;nb&quot;&gt;ls
-&lt;/span&gt;brq8165bc3d-40 eth0 eth1 eth1.120 eth2 lo tap712a2c63-e6 tap83e7c095-f0 tap8f4fcfbb-2b
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;tap 设备信息：&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Port tap93121330-58 updated. Details: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;u&lt;span class=&quot;s1&quot;&gt;'profile'&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{}&lt;/span&gt;, u&lt;span class=&quot;s1&quot;&gt;'allowed_address_pairs'&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt;, u&lt;span class=&quot;s1&quot;&gt;'admin_state_up'&lt;/span&gt;: True, u&lt;span class=&quot;s1&quot;&gt;'network_id'&lt;/span&gt;: u&lt;span class=&quot;s1&quot;&gt;'8165bc3d-400a-48a0-9186-bf59f7f94b05'&lt;/span&gt;, u&lt;span class=&quot;s1&quot;&gt;'segmentation_id'&lt;/span&gt;: 120,u&lt;span class=&quot;s1&quot;&gt;'device_owner'&lt;/span&gt;: u&lt;span class=&quot;s1&quot;&gt;'compute:nova'&lt;/span&gt;,
-u&lt;span class=&quot;s1&quot;&gt;'physical_network'&lt;/span&gt;: u&lt;span class=&quot;s1&quot;&gt;'physnet1'&lt;/span&gt;, u&lt;span class=&quot;s1&quot;&gt;'mac_address'&lt;/span&gt;: u&lt;span class=&quot;s1&quot;&gt;'fa:16:3e:9f:6f:c5'&lt;/span&gt;, u&lt;span class=&quot;s1&quot;&gt;'device'&lt;/span&gt;: u&lt;span class=&quot;s1&quot;&gt;'tap93121330-58'&lt;/span&gt;, u&lt;span class=&quot;s1&quot;&gt;'port_security_enabled'&lt;/span&gt;: True, u&lt;span class=&quot;s1&quot;&gt;'port_id'&lt;/span&gt;: u&lt;span class=&quot;s1&quot;&gt;'93121330-58'&lt;/span&gt;, u&lt;span class=&quot;s1&quot;&gt;'fixed_ips'&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[{&lt;/span&gt;u&lt;span class=&quot;s1&quot;&gt;'subnet_id'&lt;/span&gt;: u&lt;span class=&quot;s1&quot;&gt;'ec1028b2-7cb0-4feb-b974-6b8ea7e7f08f'&lt;/span&gt;, u&lt;span class=&quot;s1&quot;&gt;'ip_address'&lt;/span&gt;: u&lt;span class=&quot;s1&quot;&gt;'172.16.0.7'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}]&lt;/span&gt;,
-u&lt;span class=&quot;s1&quot;&gt;'network_type'&lt;/span&gt;: u&lt;span class=&quot;s1&quot;&gt;'vlan'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="nova" /><summary type="html">nova 创建虚机总流程</summary></entry></feed>
+&lt;p&gt;速度和安全性往往是一对矛盾体，两种方式需要做一定的权衡。可以在完整拷贝镜像创建虚拟机的方案中提升硬件性能，比如通过高配的磁盘和带宽来降低拷贝镜像的时间。也可以在写时复制（copy on write）的方案中，在虚拟机创建成功后的某个恰当时刻，通过后台执行 ceph 的 rbd flatten 命令断开 base-image 和增量 clone 虚拟磁盘的依赖链，达到每个虚拟机相互独立。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="nova" /><summary type="html">OpenStack 管理虚拟机生命周期的组件是 Nova，Nova 创建虚拟机从后端存储类型分为本地 LVM 存储和远程分布式存储（例如：Ceph/SheepDog/GlusterFS），从启动方式一般分为镜像启动和卷启动两大类，按启动方式和存储后端可以有 4 种组合</summary></entry></feed>
