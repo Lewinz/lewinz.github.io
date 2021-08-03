@@ -1,4 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-08-03T23:08:20+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">Linux ssh 相关问题</title><link href="https://lewinz.org/2021/08/03/linux-ssh-setting/" rel="alternate" type="text/html" title="Linux ssh 相关问题" /><published>2021-08-03T00:00:00+08:00</published><updated>2021-08-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/03/linux-ssh-setting</id><content type="html" xml:base="https://lewinz.org/2021/08/03/linux-ssh-setting/">&lt;h2 id=&quot;ssh-client-设置轮询导致-ssh-禁用&quot;&gt;ssh client 设置轮询导致 ssh 禁用&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-08-03T23:45:58+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">DNSPod 是什么</title><link href="https://lewinz.org/2021/08/03/dnspod/" rel="alternate" type="text/html" title="DNSPod 是什么" /><published>2021-08-03T00:00:00+08:00</published><updated>2021-08-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/03/dnspod</id><content type="html" xml:base="https://lewinz.org/2021/08/03/dnspod/">&lt;p&gt;2005 年 10 月为了解决南北互通情况下，广告投放系统的广告显示速度问题，由吴洪声个人开发了一套根据用户来路 IP，分别把用户引导到电信或者网通服务器的 DNS 程序，并应用到线上的业务系统中。此程序为 DNSPod 前身。&lt;/p&gt;
+
+&lt;p&gt;DNSPod 建立于 2006 年 3 月份，是一款免费智能 DNS 产品。 DNSPod 可以为同时有电信、联通、教育网服务器的网站提供智能的解析，让电信用户访问电信的服务器，联通的用户访问联通的服务器，教育网的用户访问教育网的服务器，达到互联互通的效果。公司官网：&lt;a href=&quot;https://www.dnspod.cn/&quot;&gt;https://www.dnspod.cn/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;DNSPod 是 DNS 解析服务提供商、域名托管商。它除了实时生效、不限制用户添加的域名和记录数量、提供 URL 转发、搜索引擎优化、域名共享管理、域名锁定、IPv6 的支持、动态域名解析、API 接口、批量修改管理等先进功能外，还拥有：云 DNS、DNSPod DNS Protector（DNSPod 自主研发的 DNS 防护软件）、宕机监控、安全中心、7*24 小时专业技术支持。并且所有功能都是免费向所有用户提供。&lt;/p&gt;
+
+&lt;p&gt;DNSPod 以稳定性、安全性、功能强大、智能免费、高速等优 势深得广大站长和企业用户们的喜爱，以至于越来越多的企业站、地方门户站、游戏站等等都在使用 DNSPod，他们喜欢的是 DNSPod 给他们带来的稳定性、承受能力强、访问速度快以及极高的用户体验，使用普通的 DNS（像域名注册商提供的）不是不可以 “用”，但是避免不了因为不稳定导致网站时常经常打不开，由于功 能限制不能实现想要实现的功能、因为用户体验不够好等丢失客户。所以选择一个好的 DNS 服务商可以为自己的网站带来很大的、意想不到的收益，避开不必要的损失。功能上：除了智能 DNS 解析，普通 DNS 解析也可以满足用户的稳定、高速等需求。相对竞争对手的产品，DNSPod 除了实时生效，不限制用户添加的域名和记录数量外，还率先提供 了 IPv6 的支持和动态域名解析的功能，另外还支持 DNS 轮询、URL 转发、API 接口、批量修改管理等先进功能。并且所有功能都是免费提供。&lt;/p&gt;
+
+&lt;p&gt;据北京神州绿盟信息安全科技股份有限公司提交的创业板首发招股说明书披露，腾讯关联公司世纪凯旋已于 2011 年 6 月收购了 DNSPod，转让价格为 4000 万元。2013 年 8 月 14 日 DNSPod 解析域名总量达 1,398,958，成为中国第一大域名解析服务商。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="dns" /><category term="dnspod" /><summary type="html">2005 年 10 月为了解决南北互通情况下，广告投放系统的广告显示速度问题，由吴洪声个人开发了一套根据用户来路 IP，分别把用户引导到电信或者网通服务器的 DNS 程序，并应用到线上的业务系统中。此程序为 DNSPod 前身。</summary></entry><entry><title type="html">Linux ssh 相关问题</title><link href="https://lewinz.org/2021/08/03/linux-ssh-setting/" rel="alternate" type="text/html" title="Linux ssh 相关问题" /><published>2021-08-03T00:00:00+08:00</published><updated>2021-08-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/03/linux-ssh-setting</id><content type="html" xml:base="https://lewinz.org/2021/08/03/linux-ssh-setting/">&lt;h2 id=&quot;ssh-client-设置轮询导致-ssh-禁用&quot;&gt;ssh client 设置轮询导致 ssh 禁用&lt;/h2&gt;
 &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# vi /etc/hosts.allow&lt;/span&gt;
 sshd:all
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -1072,124 +1080,4 @@ module.exports = function(config) {
   &lt;li&gt;负载度策略&lt;/li&gt;
   &lt;li&gt;响应策略&lt;/li&gt;
   &lt;li&gt;哈希策略&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="lvc" /><category term="nginx" /><category term="haproxy" /><summary type="html">负载均衡的三种实现方式 基于 DNS 负载均衡 直接通过 DNS 来实现负载均衡。优点是非常简单，缺点是调整后不知道啥时生效 (当然正常情况下几十分钟，长的也可能更长) 基于硬件负载均衡 购买硬件，也就是我们常常说的 F5（F5 Network Big-IP），不过 F5 就贵一般来说单台硬件也得几十万块，要是搞个双机，多机就更贵了 基于软件负载均衡 基于软件的方式也非常多，类似几个主流 LVS、Nginx、HAproxy (当然 IBM 也有个 HIS)，接下来就针对以下几种具体说明：</summary></entry><entry><title type="html">openstack 秒级创建虚机方案</title><link href="https://lewinz.org/2021/07/28/openstack-create-nova/" rel="alternate" type="text/html" title="openstack 秒级创建虚机方案" /><published>2021-07-28T00:00:00+08:00</published><updated>2021-07-28T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/28/openstack-create-nova</id><content type="html" xml:base="https://lewinz.org/2021/07/28/openstack-create-nova/">&lt;p&gt;OpenStack 管理虚拟机生命周期的组件是 Nova，Nova 创建虚拟机从后端存储类型分为本地 LVM 存储和远程分布式存储（例如：Ceph/SheepDog/GlusterFS），从启动方式一般分为镜像启动和卷启动两大类，按启动方式和存储后端可以有 4 种组合&lt;/p&gt;
-
-&lt;h2 id=&quot;本地-lvm--镜像启动&quot;&gt;本地 LVM + 镜像启动&lt;/h2&gt;
-
-&lt;p&gt;此种方式，虚拟机镜像事先一般也会存放在远端的分布式存储上（Ceph 或 Swift）。当在计算节点首次创建虚拟机时，会从远端分布式存储下载镜像到计算节点做格式转换并缓存为 base-image，然后复制完整的镜像到 /var/lib/nova/instances/{instance-uuid} 目录下作为系统盘，耗时跟镜像大小和带宽有关，一般约数分数以上。&lt;/p&gt;
-
-&lt;p&gt;如果在相同的计算节点上第二次以相同的镜像创建虚拟机，因为已经有了镜像缓存，不需要再到远端分布式存储下载镜像，直接从本地计算节点拷贝镜像到虚拟机启动目录作为系统盘，耗时跟镜像大小有关，一般也得数分钟以上。&lt;/p&gt;
-
-&lt;h2 id=&quot;本地-lvm--卷启动&quot;&gt;本地 LVM + 卷启动&lt;/h2&gt;
-
-&lt;p&gt;此种方式，虚拟机镜像事先一般也会存放在远端的分布式存储上（Ceph 或 Swift）。当在计算节点首次创建虚拟机时，会从远端分布式存储下载镜像到计算节点做格式转换并缓存为 base-image，然后调用 cinder 在控制节点以 base-image 创建可 bootable 的卷，最后以该卷启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
-
-&lt;p&gt;如果在相同的计算节点上第二次以相同的镜像从卷启动创建虚拟机，因为已经有了镜像缓存，不需要再到远端分布式存储下载镜像，直接调用 cinder 在控制节点以 base-image 创建可 bootable 的卷，最后以该卷启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
-
-&lt;h2 id=&quot;远程分布式存储-ceph--镜像启动采用默认配置&quot;&gt;远程分布式存储 Ceph + 镜像启动（采用默认配置）&lt;/h2&gt;
-
-&lt;p&gt;此种方式，虚拟机镜像事先一般也会存放在远端的分布式存储 Ceph 上。当在计算节点首次创建虚拟机时，首先会从远程 Ceph 上下载镜像到该计算节点做格式转换并缓存为 base-image，然后上传 base-image 到远程 Ceph Rbd 的 pool 中作为系统盘，最后以 CephRbd pool 中的系统盘启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
-
-&lt;p&gt;在相同的计算节点上第二次以相同的镜像创建虚拟机，因为已经有了镜像缓存，不需要再到远端 Ceph 下载镜像，直接上传 base-image 到远程 Ceph Rbd 的 pool 中作为系统盘，最后以 CephRbd pool 中的系统盘启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
-
-&lt;h2 id=&quot;远程分布式存储-ceph--卷启动采用默认配置&quot;&gt;远程分布式存储 Ceph + 卷启动（采用默认配置）&lt;/h2&gt;
-
-&lt;p&gt;此种方式，虚拟机镜像事先一般也会存放在远端的分布式存储 Ceph 上。当在计算节点首次创建虚拟机时，首先会从远程 Ceph 上下载镜像到该计算节点做格式转换并缓存为 base-image，然后调用 cinder 通过 base-image 在远程 Ceph Rbd 的 pool 中创建可 bootable 的启动卷，最后以 Ceph Rbd pool 中的卷启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
-
-&lt;p&gt;在相同的计算节点上第二次以相同的镜像以卷启动创建虚拟机，因为已经有了镜像缓存，不需要再到远端 Ceph 下载镜像，直接调用 cinder 通过 base-image 在远程 Ceph Rbd 的 pool 中创建可 bootable 的启动卷，最后以 Ceph Rbd pool 中的卷启动虚拟机。耗时跟镜像大小和带宽有关，一般也得数分钟以上。&lt;/p&gt;
-
-&lt;h2 id=&quot;秒级创建虚拟机优化方案&quot;&gt;秒级创建虚拟机优化方案&lt;/h2&gt;
-
-&lt;p&gt;在优化之前，如果按照上述 4 种组合任一一种来创建虚拟机，如果批量创建几百台虚拟机，因为有镜像的下载、上传或者拷贝流程，整个创建流程会非常耗时，有些会因为接口超时导致失败。&lt;/p&gt;
-
-&lt;p&gt;为了达到秒级创建虚拟机的性能，Glance、Cinder 和 Nova 的后端存储统一以 Ceph 作为共享存储。Glance 上传的虚拟机镜像会上传到 Ceph images pool 中，Cinder 创建的卷会保存在 Ceph volumes pool 中，Nova 系统盘保存在 Cephinstances pool 中。&lt;/p&gt;
-
-&lt;p&gt;如果是以镜像启动创建虚拟机，在同一个计算节点选择相同的镜像不论是第一次还是第二次创建虚拟机，会直接基于 ceph images pool 的镜像先做 snapshot，然后基于该 snapshot 进行 clone（copy on write）到 Cephinstances pool，最后以该系统盘启动虚拟机。利用 ceph 写时复制特性，不存在镜像的上传、下载和完整拷贝，所以创建速度非常快，可以达到秒级。&lt;/p&gt;
-
-&lt;p&gt;如果是以卷启动创建虚拟机，在同一个计算节点选择相同的镜像不论是第一次还是第二次创建虚拟机，会直接基于 ceph images pool 的镜像先做 snapshot，然后调用 cinder 基于该 snapshot 进行 clone（copy on write）到 Ceph volumes pool，最后以该卷启动虚拟机。利用 ceph 写时复制特性，不存在镜像的上传、下载和完整拷贝，所以创建速度非常快，可以达到秒级。&lt;/p&gt;
-
-&lt;h2 id=&quot;秒级创建虚拟机的优化步骤&quot;&gt;秒级创建虚拟机的优化步骤&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;在 controller 控制节点上修改 /etc/glance/glance-api.conf 镜像配置文件，把 show_image_direct_url 参数设置为 True。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;vim /etc/glance/glance-api.conf&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_1.png&quot; alt=&quot;openstack_create_nova_1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;注意：一定要在【DEFAULT】下添加。&lt;/p&gt;
-
-&lt;p&gt;然后利用命令 serviceopenstack-glance-api restart 重启镜像管理服务。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;转换镜像格式，通过 glance 上传的镜像一定要是 raw 格式。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;在上传之前需要命令转换好后上传，转换命令：&lt;/p&gt;
-
-&lt;p&gt;qemu-img convert -O raw src-img.qcow2dst-img.raw&lt;/p&gt;
-
-&lt;p&gt;用命令行转换成 raw 格式，主要是解决如下 no bootable device 问题。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_2.png&quot; alt=&quot;openstack_create_nova_2&quot; /&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;在计算节点上进入 /var/lib/nova/instances/_base/ 目录，清空该目录下所有的缓存镜像。由于后台程序会先检测该目录下有没有缓存镜像，如果有，会把该缓存镜像上传到 ceph 中，如果没有，直接在 ceph 中 clone 镜像。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;步骤如下：&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@openstack _base]# &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt;/var/lib/nova/instances/_base/
-
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@openstack _base]# ll
-
-&lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; 1 qemu qemu 41126400 Jul 24 01:01d7fca384a7c355afa3b70667b60f04dd08cd6f35
-
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@openstack _base]# &lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rfd7fca384a7c355afa3b70667b60f04dd08cd6f35&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@openstack _base]# ll
-
-total 0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;相关的流程源码如下：&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_3.png&quot; alt=&quot;openstack_create_nova_3&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_4.png&quot; alt=&quot;openstack_create_nova_4&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[root@openstack ~]# vim /usr/lib/python2.7/site-packages/nova/virt/libvirt/imagebackend.py&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_5.png&quot; alt=&quot;openstack_create_nova_5&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[root@openstack ~]# vim /usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_6.jpeg&quot; alt=&quot;openstack_create_nova_6&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[root@openstack ~]# vim/usr/lib/python2.7/site-packages/glance/api/v2/images.py&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/openstack_create_nova_7.jpeg&quot; alt=&quot;openstack_create_nova_7&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-
-&lt;p&gt;上述介绍的不同种类的创建虚拟机的组合方式，从核心原理分析其实只有两类。一种是需要完整拷贝镜像，另一种是写时复制（copy on write）。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;完整拷贝镜像创建虚拟机&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;优点：是每个虚拟机独立，不会相互影响。&lt;/p&gt;
-
-&lt;p&gt;缺点：存在镜像下载、上传或者拷贝，创建速度慢。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;写时复制（copyon write）&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;优点：每次创建虚拟机都只有很小的增量文件，不存在全量镜像拷贝，创建速度很快。&lt;/p&gt;
-
-&lt;p&gt;缺点：以相同的镜像创建的所有虚拟机依赖共同的 base-image，如果 base-image 意外损坏或删除，上层依赖的虚拟机都会受到影响。&lt;/p&gt;
-
-&lt;p&gt;速度和安全性往往是一对矛盾体，两种方式需要做一定的权衡。可以在完整拷贝镜像创建虚拟机的方案中提升硬件性能，比如通过高配的磁盘和带宽来降低拷贝镜像的时间。也可以在写时复制（copy on write）的方案中，在虚拟机创建成功后的某个恰当时刻，通过后台执行 ceph 的 rbd flatten 命令断开 base-image 和增量 clone 虚拟磁盘的依赖链，达到每个虚拟机相互独立。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="openstack" /><category term="nova" /><summary type="html">OpenStack 管理虚拟机生命周期的组件是 Nova，Nova 创建虚拟机从后端存储类型分为本地 LVM 存储和远程分布式存储（例如：Ceph/SheepDog/GlusterFS），从启动方式一般分为镜像启动和卷启动两大类，按启动方式和存储后端可以有 4 种组合</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="lvc" /><category term="nginx" /><category term="haproxy" /><summary type="html">负载均衡的三种实现方式 基于 DNS 负载均衡 直接通过 DNS 来实现负载均衡。优点是非常简单，缺点是调整后不知道啥时生效 (当然正常情况下几十分钟，长的也可能更长) 基于硬件负载均衡 购买硬件，也就是我们常常说的 F5（F5 Network Big-IP），不过 F5 就贵一般来说单台硬件也得几十万块，要是搞个双机，多机就更贵了 基于软件负载均衡 基于软件的方式也非常多，类似几个主流 LVS、Nginx、HAproxy (当然 IBM 也有个 HIS)，接下来就针对以下几种具体说明：</summary></entry></feed>
