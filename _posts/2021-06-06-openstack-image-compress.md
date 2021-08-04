@@ -33,9 +33,15 @@ ssh_pwauth: true
 修改 sshd_config
 ```sh
 vi /etc/ssh/sshd_config
-# 修改的内容：
+# 修改的内容
 PasswordAuthentication yes
 PermitRootLogin yes
+UseDNS no # 关闭 DNS 反查，提高 ssh 连接速度
+GSSAPIAuthentication no # 关闭 gssapi 验证方式，提高 ssh 连接速度
+
+vi /etc/hosts.allow
+# 新增的内容
+sshd:all # 防止 client 轮询导致的 IP 封禁
 ```
 重启 sshd 服务： `service sshd restart` 
 #### 设置系统盘自动扩容
@@ -53,6 +59,25 @@ vi /etc/default/grub
 修改的内容：
 GRUB_CMDLINE_LINUX_DEFAULT 加上 console=tty0 console=ttyS0,115200
 ```
+
+#### 设置 DNS
+##### Ubuntu 18.04
+``` sh
+vi /etc/systemd/resolved.conf
+
+[Resolve]
+DNS=114.114.114.114 114.114.115.115 223.5.5.5 223.6.6.6
+#FallbackDNS=
+#Domains=
+LLMNR=no
+#MulticastDNS=no
+#DNSSEC=no
+#Cache=yes
+#DNSStubListener=yes
+```
+
+#### 设置系统时间
+`timedatectl set-timezone Asia/Shanghai`
 
 ### CentOS
 #### cloud-init
@@ -76,16 +101,23 @@ vi /etc/ssh/sshd_config
 # 修改
 PasswordAuthentication yes # 注意不能有多个
 PermitRootLogin yes
+UseDNS no # 关闭 DNS 反查，提高 ssh 连接速度
+GSSAPIAuthentication no # 关闭 gssapi 验证方式，提高 ssh 连接速度
+
+vi /etc/hosts.allow
+
+# 新增的内容：
+sshd:all # 防止 client 轮询导致的 IP 封禁
 
 # 重启 sshd 服务
 service sshd restart
 ```
 
-### 配置支持系统盘自动扩容
+#### 配置支持系统盘自动扩容
 CentOS7 官方镜像自带自动扩容，无需修改  
 CentOS6 参考[文档](https://ykfq.github.io/openstack/create-centos6-image-for-openstack) 修改
 
-### qemu-guest-agent(监控)
+#### qemu-guest-agent(监控)
 虚机内操作
 ```sh
 yum install qemu-guest-agent
@@ -102,8 +134,11 @@ BLACKLIST_RPC="guest-file-open,guest-file-close,guest-file-read,guest-file-write
 修改镜像元数据，新增
 `hw_qemu_guest_agent=yes`
 
-### 开启 nova console log 日志输出支持
-#### centos6
+#### 设置系统时间
+`timedatectl set-timezone Asia/Shanghai`
+
+#### 开启 nova console log 日志输出支持
+##### centos6
 ``` sh
 vim /etc/grub.conf
 console=tty0 console=ttyS0,115200n8 #追加到 kernel 行末尾
@@ -111,7 +146,7 @@ console=tty0 console=ttyS0,115200n8 #追加到 kernel 行末尾
 #注：/etc/grub.conf /boot/grub/menu.lst 都是指向 /boot/grub/grub.conf 的软链。
 ```
 
-#### centos7
+##### centos7
 ``` sh
 vim /etc/default/grub
 删除 rhgb quiet 并追加 console=tty0 console=ttyS0,115200n8
@@ -129,7 +164,7 @@ source auth.sh
 export OS_USERNAME=openstack_username
 export OS_PASSWORD=openstack_password
 export OS_TENANT_NAME=name
-export OS_AUTH_URL=https://qvm-wz.qiniu.com:5000/v3
+export OS_AUTH_URL=https://xxxxxx:5000/v3
 export OS_USER_DOMAIN_NAME=Default
 export OS_PROJECT_DOMAIN_NAME=Default
 export OS_IDENTITY_API_VERSION=3
@@ -145,9 +180,12 @@ qemu-img convert -f qcow2 -O raw test.qcow2 test.raw
 ``` sh
 # -- -18.5G 在原有镜像文件基础上压缩 18.5G
 # CentOS 镜像可能会出现压缩后转换格式 size 变很小，解决办法是压缩时减少压缩大小
-qemu-img resize test.raw -- -18.5G
+qemu-img resize -f raw --shrink centos.raw -- -5G
 ```
 #### 重新上传镜像文件
 ``` sh
-glance image-create --name Ubuntu --disk-format raw --container-format bare --property os_type="linux" --property os_distro="UbuntuServer16.04-64" --file test.qcow2
+glance image-create --name Ubuntu --disk-format qcow2 --container-format bare --property os_type="linux" --property os_distro="UbuntuServer16.04-64" --file test.qcow2
 ```
+
+### 参考
+[参考](https://github.com/guojy8993/blogs/blob/master/OpenStack%E9%95%9C%E5%83%8F(%E5%9F%BA%E4%BA%8ECentOS7)%E7%9A%84%E5%88%B6%E4%BD%9C%E4%B8%8E%E8%AF%B4%E6%98%8E)
