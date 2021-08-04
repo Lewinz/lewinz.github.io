@@ -144,3 +144,50 @@ Parameters: /usr/local/bin/iterm2-recv-zmodem.sh
 **注意**
 使用 item2 远程 ssh 连接服务器后，同样需要在远程服务器上安装 lrzsz，否则无法上传下载文件
 `yum install lrzsz`
+
+## item2 添加 ssh tab 区分
+安装 oh-my-zsh 之后，修改 oh-my-zsh 文件，文件末尾添加以下配置  
+`vi ~/.oh-my-zsh/oh-my-zsh.sh`
+``` sh
+# Usage:
+# source iterm2.zsh
+
+# iTerm2 tab color commands
+# https://iterm2.com/documentation-escape-codes.html
+
+if [[ -n "$ITERM_SESSION_ID" ]]; then
+    tab-color() {
+        echo -ne "\033]6;1;bg;red;brightness;$1\a"
+        echo -ne "\033]6;1;bg;green;brightness;$2\a"
+        echo -ne "\033]6;1;bg;blue;brightness;$3\a"
+    }
+    tab-red() { tab-color 255 0 0 }
+    tab-green() { tab-color 0 255 0 }
+    tab-blue() { tab-color 0 0 255 }
+    tab-reset() { echo -ne "\033]6;1;bg;*;default\a" }
+
+    function iterm2_tab_precmd() {
+        tab-reset
+    }
+
+    function iterm2_tab_preexec() {
+        if [[ "$1" =~ "^ssh " ]]; then
+            if [[ "$1" =~ "prod" ]]; then
+                tab-color 255 160 160
+            else
+                tab-color 160 255 160
+            fi
+        else
+            tab-color 160 160 255
+        fi
+    }
+
+    autoload -U add-zsh-hook
+    add-zsh-hook precmd  iterm2_tab_precmd
+    add-zsh-hook preexec iterm2_tab_preexec
+fi
+```
+
+修改完成后重新启动 item2 ，使用 ssh 连接服务器之后，tab 页会显示与其他不同的颜色
+
+线上操作，谨慎而为。
