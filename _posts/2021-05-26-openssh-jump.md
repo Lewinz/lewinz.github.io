@@ -114,5 +114,11 @@ ssh 10.10.0.1
 ssh username@target -p22
 ssh username@10.10.0.1 -p22
 ```
+
+### scp 使用跳板机
+`scp -P endpoint_server_port -o 'ProxyJump user1@jump_server_ip_or_name -p port' file.txt user2@endpoint_server_ip_or_name:~`
+
+精简版  
+`scp -o 'ProxyJump user@1.2.3.4' file.txt user2@5.6.7.8:~`
 ### 参考博客
 <https://zhuanlan.zhihu.com/p/74193910>
