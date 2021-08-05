@@ -629,6 +629,14 @@
     } ,
   
     {
+      "title"    : "linux nc 监听 TCP/UDP",
+      "category" : "linux",
+      
+      "url"      : "https://lewinz.org/2021/08/05/linux-nc-listener/",
+      "keywords" : "linux, nc, listener"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
