@@ -145,7 +145,7 @@ Parameters: /usr/local/bin/iterm2-recv-zmodem.sh
 使用 item2 远程 ssh 连接服务器后，同样需要在远程服务器上安装 lrzsz，否则无法上传下载文件
 `yum install lrzsz`
 
-## item2 添加 ssh tab 区分
+### item2 添加 ssh tab 区分
 安装 oh-my-zsh 之后，修改 oh-my-zsh 文件，文件末尾添加以下配置  
 `vi ~/.oh-my-zsh/oh-my-zsh.sh`
 ``` sh
@@ -191,3 +191,12 @@ fi
 修改完成后重新启动 item2 ，使用 ssh 连接服务器之后，tab 页会显示与其他不同的颜色
 
 线上操作，谨慎而为。
+
+### ssh 别名配置
+`~/.ssh/config`
+``` sh
+Host myserver # myserver 可以替换为想设置的别名
+    HostName ip # 远程主机的 IP 地址
+    User user # 远程主机的用户名
+    Port port # 远程主机的端口号
+```
