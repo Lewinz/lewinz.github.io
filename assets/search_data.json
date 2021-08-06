@@ -637,6 +637,22 @@
     } ,
   
     {
+      "title"    : "golang channel",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/2021/08/06/golang-channel/",
+      "keywords" : "golang, channel"
+    } ,
+  
+    {
+      "title"    : "golang 日志库 logrus",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/2021/08/06/golang-logrus/",
+      "keywords" : "golang, logger, logrus"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       

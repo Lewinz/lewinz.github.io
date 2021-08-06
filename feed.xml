@@ -1,4 +1,108 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-08-05T23:29:00+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">linux nc 监听 TCP/UDP</title><link href="https://lewinz.org/2021/08/05/linux-nc-listener/" rel="alternate" type="text/html" title="linux nc 监听 TCP/UDP" /><published>2021-08-05T00:00:00+08:00</published><updated>2021-08-05T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/05/linux-nc-listener</id><content type="html" xml:base="https://lewinz.org/2021/08/05/linux-nc-listener/">&lt;p&gt;Linux 提供了一个很好的工具用来监控 TCP 或者 UDP 端口&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-08-06T16:06:21+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang channel</title><link href="https://lewinz.org/2021/08/06/golang-channel/" rel="alternate" type="text/html" title="golang channel" /><published>2021-08-06T00:00:00+08:00</published><updated>2021-08-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/06/golang-channel</id><content type="html" xml:base="https://lewinz.org/2021/08/06/golang-channel/">&lt;h2 id=&quot;基本定义&quot;&gt;基本定义&lt;/h2&gt;
+&lt;p&gt;channel 是 Go 语言中的一个核心类型，可以把它看成管道。并发核心单元通过它就可以发送或者接收数据进行通讯，这在一定程度上又进一步降低了编程的难度。channel 是一个数据类型，主要用来解决 go 程的同步问题以及协程之间数据共享（数据传递）的问题。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;channle 本质上是一个数据结构 ——（队列），数据是先进先出。&lt;/li&gt;
+  &lt;li&gt;具有线程安全机制，多个 go 程访问时，不需要枷锁，也就是说 channel 本身是线程安全的。（写入/写出 数据操作都有互斥锁机制保护，线程安全。）&lt;/li&gt;
+  &lt;li&gt;channel 是有类型的，如一个 string 类型的 channel 只能存放 string 类型数据。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;channel-遍历读取&quot;&gt;channel 遍历读取&lt;/h2&gt;
+&lt;h3 id=&quot;简单的读&quot;&gt;简单的读&lt;/h3&gt;
+&lt;p&gt;data:=&amp;lt;-ch   （如果读多次，需要用循环）&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ch8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ 
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mm1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;ch8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+ 
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mm1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;注：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;写入的次数与读取的次数需要一致（本例是 10）；&lt;/li&gt;
+  &lt;li&gt;如果读的次数多于写的次数会发生：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fatal error: all goroutines are asleep - deadlock!&lt;/code&gt; ，若在 mm1 中对 ch8 进行关闭（执行  close (ch8) ），多于的次数读到的数据为 0（数据默认值）。&lt;/li&gt;
+  &lt;li&gt;读的次数少于写的次数，会读取出次数对应的内容，不会报错。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;断言方式&quot;&gt;断言方式&lt;/h3&gt;
+&lt;p&gt;if  value, ok := &amp;lt;-ch; ok {&lt;/p&gt;
+
+&lt;p&gt;}&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ch8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ 
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mm1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;ch8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;nb&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mm1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ok&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;如果写端没有写数据，也没有关闭。&amp;lt;-ch; 会阻塞  —【重点】&lt;/li&gt;
+  &lt;li&gt;如果写端写数据， value 保存 &amp;lt;-ch 读到的数据。 ok 被设置为 true&lt;/li&gt;
+  &lt;li&gt;如果写端关闭。 value 为数据类型默认值。ok 被设置为 false&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;range-方式&quot;&gt;range 方式&lt;/h3&gt;
+&lt;p&gt;for num := range ch {  &lt;br /&gt;
+}&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ch8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+ 
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mm1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;ch8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;nb&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ch8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+ 
+	&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mm1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ch8&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;注：写完之后一定要关闭（ 执行：close (ch8)  ），否则会出现以下运行结果：&lt;/p&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;特别说明：以上实例都是子 go 程写，主 go 程读。如在子 go 程中写，另一个子 go 程中读，不管哪种方法，都不会出现以上错误问题。（多次实例验证）&lt;/p&gt;
+
+&lt;p&gt;总结：通过以上验证，为了保证程序的健壮性，在设计程序时，最好将 channel 的读、写分别在子 go 程中进行。写完数据之后，记得关闭 channel。&lt;/p&gt;
+
+&lt;p&gt;补充一点：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;channel 不像文件一样需要经常去关闭，只有当你确实没有任何发送数据了，或者你想显式的结束 range 循环之类的，才去关闭 channel；&lt;/li&gt;
+  &lt;li&gt;关闭 channel 后，无法向 channel 再发送数据 (引发 panic 错误后导致接收立即返回零值)；&lt;/li&gt;
+  &lt;li&gt;关闭 channel 后，可以继续从 channel 接收数据；&lt;/li&gt;
+  &lt;li&gt;对于 nil channel，无论收发都会被阻塞。&lt;/li&gt;
+&lt;/ol&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="channel" /><summary type="html">基本定义 channel 是 Go 语言中的一个核心类型，可以把它看成管道。并发核心单元通过它就可以发送或者接收数据进行通讯，这在一定程度上又进一步降低了编程的难度。channel 是一个数据类型，主要用来解决 go 程的同步问题以及协程之间数据共享（数据传递）的问题。</summary></entry><entry><title type="html">golang 日志库 logrus</title><link href="https://lewinz.org/2021/08/06/golang-logrus/" rel="alternate" type="text/html" title="golang 日志库 logrus" /><published>2021-08-06T00:00:00+08:00</published><updated>2021-08-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/06/golang-logrus</id><content type="html" xml:base="https://lewinz.org/2021/08/06/golang-logrus/"></content><author><name>Lewin</name></author><category term="golang" /><category term="logger" /><category term="logrus" /><summary type="html"></summary></entry><entry><title type="html">linux nc 监听 TCP/UDP</title><link href="https://lewinz.org/2021/08/05/linux-nc-listener/" rel="alternate" type="text/html" title="linux nc 监听 TCP/UDP" /><published>2021-08-05T00:00:00+08:00</published><updated>2021-08-05T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/05/linux-nc-listener</id><content type="html" xml:base="https://lewinz.org/2021/08/05/linux-nc-listener/">&lt;p&gt;Linux 提供了一个很好的工具用来监控 TCP 或者 UDP 端口&lt;/p&gt;
 
 &lt;h2 id=&quot;安装&quot;&gt;安装&lt;/h2&gt;
 &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum install nc -y&lt;/code&gt;&lt;/p&gt;
@@ -525,243 +629,4 @@ Frame Payload：根据不同 Type 有不同的格式。&lt;/p&gt;
       &lt;li&gt;关闭长连接： PTS.HttpUtilities.setKeepAlive(False)&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Lewin</name></author><category term="slb" /><category term="pressure" /><category term="test" /><summary type="html">如何进行压力测试 {#concept_lqx_1fd_xdb .concept} 压力测试性能概述 {#section_rnj_cfd_xdb .section} 四层负载均衡采用开源软件 LVS（Linux Virtual Server）+ Keepalived 的方式实现负载均衡，七层负载均衡由 Tengine 实现。其中四层监听经过 LVS 后直接到达后端服务器，而七层监听经过 LVS 后，还需要再经过 Tengine，最后达到后端服务器。七层比四层多了一个处理环节，因此，七层性能没有四层性能好。</summary></entry><entry><title type="html">ssl 证书生成</title><link href="https://lewinz.org/2021/08/01/ssl-cert/" rel="alternate" type="text/html" title="ssl 证书生成" /><published>2021-08-01T00:00:00+08:00</published><updated>2021-08-01T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/01/ssl-cert</id><content type="html" xml:base="https://lewinz.org/2021/08/01/ssl-cert/">&lt;h2 id=&quot;用-openssl-生成-nginxkey&quot;&gt;用 openssl 生成 nginx.key&lt;/h2&gt;
-
-&lt;p&gt;1.key 的生成
-openssl genrsa -des3 -out server.key 2048
-这样是生成 rsa 私钥，des3 算法，openssl 格式，2048 位强度。server.key 是密钥文件名。为了生成这样的密钥，需要一个至少四位的密码。
-可以通过以下方法生成没有密码的 key:
-openssl rsa -in server.key -out server.key
-server.key 就是没有密码的版本了。&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;生成 CA 的 crt
-openssl req -new -x509 -key server.key -out ca.crt -days 3650
-生成的 ca.crt 文件是用来签署下面的 server.csr 文件。&lt;/li&gt;
-  &lt;li&gt;csr 的生成方法
-openssl req -new -key server.key -out server.csr
-需要依次输入国家，地区，组织，email。最重要的是有一个 common name，可以写你的名字或者域名。如果为了 https 申请，这个必须和域名吻合，否则会引发浏览器警报。生成的 csr 文件交给 CA 签名后形成服务端自己的证书。&lt;/li&gt;
-  &lt;li&gt;crt 生成方法
-CSR 文件必须有 CA 的签名才可形成证书，可将此文件发送到 verisign 等地方由它验证，要交一大笔钱，何不自己做 CA 呢。
-openssl x509 -req -days 3650 -in server.csr -CA ca.crt -CAkey server.key -CAcreateserial -out server.crt
-输入 key 的密钥后，完成证书生成。-CA 选项指明用于被签名的 csr 证书，-CAkey 选项指明用于签名的密钥，-CAserial 指明序列号文件，而 - CAcreateserial 指明文件不存在时自动生成。
-最后生成了私用密钥：server.key 和自己认证的 SSL 证书：server.crt
-证书合并：
-cat server.key server.crt &amp;gt; server.pem
-     其中第一步生成的无密码 key 就是我们想要的 nginx.key
-使用 StartSSL 免费 SSL 证书：
-     登录网站：https://www.startssl.com
-     找到 StartSSL Free，点击 Start Now
-     这里提示需要登录，通过邮箱进行注册并登录
-     然后在 Validations Wizard 这里选择要进行网站认证还是邮箱认证
-     按照网站提示一步一步进行
-提交 nginx.key 生成 nginx.crt 证书：
-     在 StartSSL 审核通过后，会提示输入本地 key
-     我们的需求是要配置 nginx 的 SSL 验证，将前面用 openssl 生成 nginx.key 添加到网站指定的输入框中，提交审核，等待网站审核通过
-     网站审核通过后，会提示可以在 Tool Box 中下载以生成的证书
-     下载后，得到一个以认证域名命名的压缩包
-     解压缩后，包内有 ApacheServer.zip, IISServer.zip, NginxServer.zip, OtherServer.zip
-     我们需要的文件在 NginxServer.zip 中，解压后得到 1_gjtest.parteam.cn_bundle.crt 文件
-得到 crt 证书后，服务器上的设置：
-     在服务器 /etc/nginx/ssl/ 文件夹下创建 gjtest.parteam.cn.crt 文件，用命令行 cat 命令查看        1_gjtest.parteam.cn_bundle.crt 文件，并将内容拷贝到 gjtest.parteam.cn.crt 中。
-     在服务器 /etc/nginx/ssl/ 文件夹下创建 gjtest.parteam.cn.key 文件，将开始生成的 nginx.key 内容拷贝进去。
-在 nginx 配置文件 /etc/nginx/conf.d/**.conf 的 443 端口监听 server 中，设置 SSL 安全监测：
-ssl_certificate      ssl/gjtest_parteam_cn.crt;
-ssl_certificate_key  ssl/gjtest_parteam_cn.key;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;ssl_ciphers          ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128    -GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES    256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:    AES128-GCM-SHA256:AES256-GCM-SHA384:DES-CBC3-SHA;&lt;/p&gt;
-
-&lt;p&gt;ssl_prefer_server_ciphers  on;&lt;/p&gt;
-
-&lt;p&gt;ssl_protocols        TLSv1 TLSv1.1 TLSv1.2;
-重新启动 nginx 服务，使得新的修改生效。
-可能会出现以下错误信息：
-error：nginx[15608]: nginx: [emerg] SSL_CTX_use_PrivateKey_file(“/etc/nginx/ssl/gjtest_parteam_cn.ke
-       PS：检查 ssl 文件夹中的 key 和 crt 文件是否对照成对&lt;/p&gt;
-
-&lt;p&gt;● nginx.service - A high performance web server and a reverse proxy server
-Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
-Active: failed (Result: exit-code) since Thu 2016-11-10 15:13:17 CST; 5s ago
-Process: 15430 ExecStop=/sbin/start-stop-daemon –quiet –stop –retry QUIT/5 –pidfile /run/nginx.pid (code=exited, status=0/SUCCE
-Process: 929 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
-Process: 15532 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=1/FAILURE)
-Main PID: 951 (code=exited, status=0/SUCCESS)
-Nov 10 15:13:17 iZ2zeipvbenilb2wia99kqZ systemd[1]: Stopped A high performance web server and a reverse proxy server.
-Nov 10 15:13:17 iZ2zeipvbenilb2wia99kqZ systemd[1]: Starting A high performance web server and a reverse proxy server…
-Nov 10 15:13:17 iZ2zeipvbenilb2wia99kqZ nginx[15532]: Enter PEM pass phrase:
-Nov 10 15:13:17 iZ2zeipvbenilb2wia99kqZ nginx[15532]: nginx: [emerg] SSL_CTX_use_PrivateKey_file(“/etc/nginx/ssl/gjtest_parteam_cn.ke
-Nov 10 15:13:17 iZ2zeipvbenilb2wia99kqZ nginx[15532]: nginx: configuration file /etc/nginx/nginx.conf test failed
-Nov 10 15:13:17 iZ2zeipvbenilb2wia99kqZ systemd[1]: nginx.service: Control process exited, code=exited status=1
-Nov 10 15:13:17 iZ2zeipvbenilb2wia99kqZ systemd[1]: Failed to start A high performance web server and a reverse proxy server.
-Nov 10 15:13:17 iZ2zeipvbenilb2wia99kqZ systemd[1]: nginx.service: Unit entered failed state.
-Nov 10 15:13:17 iZ2zeipvbenilb2wia99kqZ systemd[1]: nginx.service: Failed with result ‘exit-code’.
-root@iZ2zeipvbenilb2wia99kqZ:/etc/nginx/ssl# service nginx restart
-Job for nginx.service failed because the control process exited with error code. See “systemctl status nginx.service” and “journalctl -xe” for details.
-PS：出现这样的错误时，
-       1、openssl rsa -in server.key -out unserver.key
-      输入一次私钥的密码：&lt;strong&gt;**&lt;/strong&gt;
-      把 unserver.key 文件修改为 server.key
-      重启 nginx 问题解决。
-      2、openssl req -new -x509 -nodes -out server.crt -keyout server.key，重新生成 key（此处的 server 就是 nginx）&lt;/p&gt;
-
-&lt;p&gt;阿里云开发文档
-https://help.aliyun.com/document_detail/85969.html?spm=a2c4g.11186623.6.764.216b5cf9U3AU6K&lt;/p&gt;</content><author><name>Lewin</name></author><category term="ssl" /><category term="cert" /><category term="create" /><summary type="html">用 openssl 生成 nginx.key</summary></entry><entry><title type="html">Github 装逼指南 Travis CI 和 Codecov</title><link href="https://lewinz.org/2021/07/29/travis-ci-codecov/" rel="alternate" type="text/html" title="Github 装逼指南 Travis CI 和 Codecov" /><published>2021-07-29T00:00:00+08:00</published><updated>2021-07-29T00:00:00+08:00</updated><id>https://lewinz.org/2021/07/29/travis-ci-codecov</id><content type="html" xml:base="https://lewinz.org/2021/07/29/travis-ci-codecov/">&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/travis_ci_codecov_1.png&quot; alt=&quot;travis_ci_codecov_1&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;觉得挺酷的。打算在自己的开源组件中也整一套。
-经过 Google 决定使用 TravisCI 来进行持续集成，Codecov 来统计单测覆盖率。&lt;/p&gt;
-
-&lt;h2 id=&quot;travis-ci&quot;&gt;Travis CI&lt;/h2&gt;
-&lt;p&gt;Travis CI 是国外的开源持续集成构建项目，支持 Github 项目。使用十分方便。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;使用 Github 账号登录 Travis CI；&lt;/li&gt;
-  &lt;li&gt;登录之后会自动同步 Github 项目，选择需要使用 Travis CI 的项目&lt;/li&gt;
-  &lt;li&gt;在项目的根目录新增.travis.yml 文件，内容如下：
-``` sh
-#指定运行环境
-language: node_js
-#指定 nodejs 版本，可以指定多个
-node_js:
-    &lt;ul&gt;
-      &lt;li&gt;0.12.5&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;#运行的脚本命令
-script:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;npm run ci&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;#指定分支，只有指定的分支提交时才会运行脚本
-branches:
-  only:
-    - master&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-更多语法请看[这里](https://link.segmentfault.com/?url=https%3A%2F%2Fdocs.travis-ci.com%2F)。使用起来非常方便，这样当你每次向 github push 代码的时候，Travis CI 就会自动运行.travis.yml 里面的 script。自动进行编译以及运行单测。
-
-由于 Travis CI 每次 build 之前都会运行 npm install 安装项目依赖的 npm 包，所以在提交代码的时候要保证把所有依赖的包都已经在 package.json 中声明了，否则 build 就会失败。
-
-## Codecov
-Codecov 是一个开源的测试结果展示平台，将测试结果可视化。Github 上许多开源项目都使用了 Codecov 来展示单测结果。
-
-Codecov 跟 Travis CI 一样都支持 Github 账号登录，同样会同步 Github 中的项目。在 nodejs 环境下使用 Codecov 需要安装对于的 npm 包，运行下面这个命令进行安装：
-
-`npm install codecov --save-dev`
-
-这个包的作用是将我们运行单测产生的结果文件上传到 Codecov 上进行可视化展示。同时 codecov 支持的结果文件类型为 cobertura。所以需要保证单测执行的结果文件的类型为 cobertura。
-前端项目进行单元测试推进 karma + 'jasmine' 的组合。这两个具体是什么东西大家 Google 一下就知道。使用 karma 可以通过简单的配置来运行单测。下面是我一个项目中的配置文件，供大家参考：
-``` js
-// Karma configuration
-// Generated on Mon Feb 01 2016 21:34:22 GMT+0800 (中国标准时间)
-
-module.exports = function(config) {
-  config.set({
-
-    // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
-
-
-    // frameworks to use
-    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    // 使用的测试框架 jasmine, requirejs 支持模块化加载
-    frameworks: ['jasmine', 'requirejs'],
-
-
-    // list of files / patterns to load in the browser
-    files: [
-        // karma 中用到进行 requirejs 配置的文件
-        'test/test-main.js',
-        // 测试中需要用到的文件，includeed 设为 false 表示在页面加载的时候不会加载相应的 js 文件，也就是可以通过 requirejs 进行异步加载
-        {pattern: 'node_modules/jquery/dist/jquery.min.js', included: false},
-        {pattern: 'node_modules/angular/angular.min.js', included: false},
-        {pattern: 'node_modules/angular-mocks/angular-mocks.js', included: false},
-        {pattern: 'src/bg-single-selector.js', included: false},
-        {pattern: 'test/selector.spec.js', included: false}
-    ],
-
-
-    // list of files to exclude
-    exclude: [
-    ],
-
-
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    // 针对 bg-single-selector.js 生成单测覆盖率结果
-    preprocessors: {
-        'src/bg-single-selector.js': 'coverage'
-    },
-
-
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
-    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    // 测试结果的几种输出方式
-    reporters: ['progress', 'coverage', 'verbose'],
-    // 测试结果报告的类型
-    coverageReporter:{
-        reporters: [{
-            type:'text-summary'
-        }, {
-            type: 'html',
-            dir: 'test/coverage'
-        }, {
-            // 这就是 Codecov 支持的文件类型
-            type: 'cobertura',
-            subdir: '.',
-            dir: 'test/coverage'
-        }]
-    },
-
-    // web server port
-    port: 9876,
-
-
-    // enable / disable colors in the output (reporters and logs)
-    colors: true,
-
-
-    // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
-
-
-    // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
-
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
-    // 运行测试依赖的插件
-    plugins: [
-        'karma-jasmine',
-        'karma-coverage',
-        'karma-verbose-reporter',
-        'karma-phantomjs-launcher',
-        'karma-requirejs'
-    ],
-
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
-    singleRun: true
-  })
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;通过 karma 进行单元测试，将命令写到.travis.yml 中就可以在每次 build 的时候运行单测，同时运行 codecov [cobertura-coverage.xml 路径] 就会把单测结果上传到 Codecov。在本地运行 codecov 会失败，需要将这个过程加入到 Travis CI 的 build 脚本中，才能成功上传。因为在本地运行就会被作为私有项目，对于私有项目在上传结果时需要加上 Codecov 提供的 token。&lt;/p&gt;
-
-&lt;h2 id=&quot;在-github-中加入图标&quot;&gt;在 github 中加入图标&lt;/h2&gt;
-&lt;p&gt;到了最后一步，Travis CI 和 Codecov 都提供图标链接来展示结果。我们只需要将图标链接加入到项目的 README 中就可以看到结果了。&lt;br /&gt;
-对于 Travis CI 来说，点击下图中的图标：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/travis_ci_codecov_2.png&quot; alt=&quot;travis_ci_codecov_2&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;就会弹出图标的地址。&lt;br /&gt;
-对于 Codecov 来说，打开项目的设置列表就会看到，如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/travis_ci_codecov_3.png&quot; alt=&quot;travis_ci_codecov_3&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;最后只需要将对应的链接加到 README 文件中就可以了。下面是最后的效果：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/travis_ci_codecov_4.png&quot; alt=&quot;travis_ci_codecov_4&quot; /&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="github" /><category term="travis" /><category term="codecov" /><summary type="html"></summary></entry></feed>
+&lt;/ol&gt;</content><author><name>Lewin</name></author><category term="slb" /><category term="pressure" /><category term="test" /><summary type="html">如何进行压力测试 {#concept_lqx_1fd_xdb .concept} 压力测试性能概述 {#section_rnj_cfd_xdb .section} 四层负载均衡采用开源软件 LVS（Linux Virtual Server）+ Keepalived 的方式实现负载均衡，七层负载均衡由 Tengine 实现。其中四层监听经过 LVS 后直接到达后端服务器，而七层监听经过 LVS 后，还需要再经过 Tengine，最后达到后端服务器。七层比四层多了一个处理环节，因此，七层性能没有四层性能好。</summary></entry></feed>
