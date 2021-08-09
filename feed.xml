@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-08-09T16:59:29+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang channel</title><link href="https://lewinz.org/2021/08/06/golang-channel/" rel="alternate" type="text/html" title="golang channel" /><published>2021-08-06T00:00:00+08:00</published><updated>2021-08-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/06/golang-channel</id><content type="html" xml:base="https://lewinz.org/2021/08/06/golang-channel/">&lt;h2 id=&quot;基本定义&quot;&gt;基本定义&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-08-09T17:03:28+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang channel</title><link href="https://lewinz.org/2021/08/06/golang-channel/" rel="alternate" type="text/html" title="golang channel" /><published>2021-08-06T00:00:00+08:00</published><updated>2021-08-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/06/golang-channel</id><content type="html" xml:base="https://lewinz.org/2021/08/06/golang-channel/">&lt;h2 id=&quot;基本定义&quot;&gt;基本定义&lt;/h2&gt;
 &lt;p&gt;channel 是 Go 语言中的一个核心类型，可以把它看成管道。并发核心单元通过它就可以发送或者接收数据进行通讯，这在一定程度上又进一步降低了编程的难度。channel 是一个数据类型，主要用来解决 go 程的同步问题以及协程之间数据共享（数据传递）的问题。&lt;/p&gt;
 
 &lt;ol&gt;
@@ -102,7 +102,7 @@
   &lt;li&gt;关闭 channel 后，无法向 channel 再发送数据 (引发 panic 错误后导致接收立即返回零值)；&lt;/li&gt;
   &lt;li&gt;关闭 channel 后，可以继续从 channel 接收数据；&lt;/li&gt;
   &lt;li&gt;对于 nil channel，无论收发都会被阻塞。&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="channel" /><summary type="html">基本定义 channel 是 Go 语言中的一个核心类型，可以把它看成管道。并发核心单元通过它就可以发送或者接收数据进行通讯，这在一定程度上又进一步降低了编程的难度。channel 是一个数据类型，主要用来解决 go 程的同步问题以及协程之间数据共享（数据传递）的问题。</summary></entry><entry><title type="html">golang 日志库 logrus</title><link href="https://lewinz.org/2021/08/06/golang-logrus/" rel="alternate" type="text/html" title="golang 日志库 logrus" /><published>2021-08-06T00:00:00+08:00</published><updated>2021-08-06T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/06/golang-logrus</id><content type="html" xml:base="https://lewinz.org/2021/08/06/golang-logrus/"></content><author><name>Lewin</name></author><category term="golang" /><category term="logger" /><category term="logrus" /><summary type="html"></summary></entry><entry><title type="html">linux nc 监听 TCP/UDP</title><link href="https://lewinz.org/2021/08/05/linux-nc-listener/" rel="alternate" type="text/html" title="linux nc 监听 TCP/UDP" /><published>2021-08-05T00:00:00+08:00</published><updated>2021-08-05T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/05/linux-nc-listener</id><content type="html" xml:base="https://lewinz.org/2021/08/05/linux-nc-listener/">&lt;p&gt;Linux 提供了一个很好的工具用来监控 TCP 或者 UDP 端口&lt;/p&gt;
+&lt;/ol&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="channel" /><summary type="html">基本定义 channel 是 Go 语言中的一个核心类型，可以把它看成管道。并发核心单元通过它就可以发送或者接收数据进行通讯，这在一定程度上又进一步降低了编程的难度。channel 是一个数据类型，主要用来解决 go 程的同步问题以及协程之间数据共享（数据传递）的问题。</summary></entry><entry><title type="html">linux nc 监听 TCP/UDP</title><link href="https://lewinz.org/2021/08/05/linux-nc-listener/" rel="alternate" type="text/html" title="linux nc 监听 TCP/UDP" /><published>2021-08-05T00:00:00+08:00</published><updated>2021-08-05T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/05/linux-nc-listener</id><content type="html" xml:base="https://lewinz.org/2021/08/05/linux-nc-listener/">&lt;p&gt;Linux 提供了一个很好的工具用来监控 TCP 或者 UDP 端口&lt;/p&gt;
 
 &lt;h2 id=&quot;安装&quot;&gt;安装&lt;/h2&gt;
 &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum install nc -y&lt;/code&gt;&lt;/p&gt;
@@ -629,4 +629,43 @@ Frame Payload：根据不同 Type 有不同的格式。&lt;/p&gt;
       &lt;li&gt;关闭长连接： PTS.HttpUtilities.setKeepAlive(False)&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Lewin</name></author><category term="slb" /><category term="pressure" /><category term="test" /><summary type="html">如何进行压力测试 {#concept_lqx_1fd_xdb .concept} 压力测试性能概述 {#section_rnj_cfd_xdb .section} 四层负载均衡采用开源软件 LVS（Linux Virtual Server）+ Keepalived 的方式实现负载均衡，七层负载均衡由 Tengine 实现。其中四层监听经过 LVS 后直接到达后端服务器，而七层监听经过 LVS 后，还需要再经过 Tengine，最后达到后端服务器。七层比四层多了一个处理环节，因此，七层性能没有四层性能好。</summary></entry></feed>
+&lt;/ol&gt;</content><author><name>Lewin</name></author><category term="slb" /><category term="pressure" /><category term="test" /><summary type="html">如何进行压力测试 {#concept_lqx_1fd_xdb .concept} 压力测试性能概述 {#section_rnj_cfd_xdb .section} 四层负载均衡采用开源软件 LVS（Linux Virtual Server）+ Keepalived 的方式实现负载均衡，七层负载均衡由 Tengine 实现。其中四层监听经过 LVS 后直接到达后端服务器，而七层监听经过 LVS 后，还需要再经过 Tengine，最后达到后端服务器。七层比四层多了一个处理环节，因此，七层性能没有四层性能好。</summary></entry><entry><title type="html">ssl 证书生成</title><link href="https://lewinz.org/2021/08/01/ssl-cert/" rel="alternate" type="text/html" title="ssl 证书生成" /><published>2021-08-01T00:00:00+08:00</published><updated>2021-08-01T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/01/ssl-cert</id><content type="html" xml:base="https://lewinz.org/2021/08/01/ssl-cert/">&lt;h2 id=&quot;openssl-生成证书&quot;&gt;openssl 生成证书&lt;/h2&gt;
+&lt;h3 id=&quot;生成私钥-serverkey&quot;&gt;生成私钥 server.key&lt;/h3&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# rsa 私钥&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# des3 算法&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# openssl 格式&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 2048 位强度&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 需要输入四位密码&lt;/span&gt;
+openssl genrsa &lt;span class=&quot;nt&quot;&gt;-des3&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-out&lt;/span&gt; server.key 2048
+
+&lt;span class=&quot;c&quot;&gt;# 将私钥 server.key 转换为无密码证书&lt;/span&gt;
+openssl rsa &lt;span class=&quot;nt&quot;&gt;-in&lt;/span&gt; server.key &lt;span class=&quot;nt&quot;&gt;-out&lt;/span&gt; server.key
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;生成-ca-证书的公钥&quot;&gt;生成 CA 证书的公钥&lt;/h3&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# 3650 十年有效期&lt;/span&gt;
+openssl req &lt;span class=&quot;nt&quot;&gt;-new&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-x509&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-key&lt;/span&gt; server.key &lt;span class=&quot;nt&quot;&gt;-out&lt;/span&gt; ca.crt &lt;span class=&quot;nt&quot;&gt;-days&lt;/span&gt; 3650
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;生成证书-csr-文件&quot;&gt;生成证书 csr 文件&lt;/h3&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# 需要依次输入国家，地区，组织，email。最重要的是有一个 common name，可以写你的名字或者域名。如果为了 https 申请，这个必须和域名吻合，否则会引发浏览器警报。生成的 csr 文件交给 CA 签名后形成服务端自己的证书。&lt;/span&gt;
+openssl req &lt;span class=&quot;nt&quot;&gt;-new&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-key&lt;/span&gt; server.key &lt;span class=&quot;nt&quot;&gt;-out&lt;/span&gt; server.csr
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;生成证书-crt-文件&quot;&gt;生成证书 crt 文件&lt;/h3&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# 使用前面生成的 CA 证书公钥认证&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -CA 指被签名的 csr 证书&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -CAkey 选项指明用于签名的密钥&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -CAserial 指明序列号文件&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# -CAcreateserial 指明文件不存在时自动生成&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 最后生成了私用密钥：server.key 和自己认证的 SSL 证书：server.crt&lt;/span&gt;
+openssl x509 &lt;span class=&quot;nt&quot;&gt;-req&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-days&lt;/span&gt; 3650 &lt;span class=&quot;nt&quot;&gt;-in&lt;/span&gt; server.csr &lt;span class=&quot;nt&quot;&gt;-CA&lt;/span&gt; ca.crt &lt;span class=&quot;nt&quot;&gt;-CAkey&lt;/span&gt; server.key &lt;span class=&quot;nt&quot;&gt;-CAcreateserial&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-out&lt;/span&gt; server.crt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;证书合并&quot;&gt;证书合并&lt;/h3&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# 将证书内容 crt 文件与私钥内容 key 文件合并为 pem 文件&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;server.crt server.key &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; server.pem
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;其他参考文档&quot;&gt;其他参考文档&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://help.aliyun.com/document_detail/85969.html?spm=a2c4g.11186623.6.764.216b5cf9U3AU6K&quot;&gt;阿里云开发文档&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="ssl" /><category term="cert" /><category term="create" /><summary type="html">openssl 生成证书 生成私钥 server.key ``` sh rsa 私钥 des3 算法 openssl 格式 2048 位强度 需要输入四位密码 openssl genrsa -des3 -out server.key 2048</summary></entry></feed>
