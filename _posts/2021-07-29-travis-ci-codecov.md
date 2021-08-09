@@ -12,8 +12,9 @@ keywords: github, travis, codecov
 
 1. 使用 Github 账号登录 Travis CI；
 2. 登录之后会自动同步 Github 项目，选择需要使用 Travis CI 的项目进行设置
-3. 在项目的根目录新增.travis.yml 文件，示例：  
-``` sh
+3. 在项目的根目录新增.travis.yml 文件，示例： 
+
+``` yml
 matrix:
   include:
     - language: go
