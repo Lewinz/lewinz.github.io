@@ -7,36 +7,46 @@ keywords: github, travis, codecov
 ---
 
 ![travis_ci_codecov_1](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/travis_ci_codecov_1.png)
-
-觉得挺酷的。打算在自己的开源组件中也整一套。
-经过 Google 决定使用 TravisCI 来进行持续集成，Codecov 来统计单测覆盖率。
-
 ## Travis CI
-Travis CI 是国外的开源持续集成构建项目，支持 Github 项目。使用十分方便。
+[Travis CI](https://travis-ci.com/) 是国外的开源持续集成构建项目，支持 Github 项目。使用十分方便。
 
 1. 使用 Github 账号登录 Travis CI；
-2. 登录之后会自动同步 Github 项目，选择需要使用 Travis CI 的项目
-3. 在项目的根目录新增.travis.yml 文件，内容如下：
-``` sh
-#指定运行环境
-language: node_js
-#指定 nodejs 版本，可以指定多个
-node_js:
-  - 0.12.5
+2. 登录之后会自动同步 Github 项目，选择需要使用 Travis CI 的项目进行设置
+3. 在项目的根目录新增.travis.yml 文件，示例： 
 
-#运行的脚本命令
-script:
-  - npm run ci
+``` yml
+matrix:
+  include:
+    - language: go
+      sudo: true
 
-#指定分支，只有指定的分支提交时才会运行脚本
-branches:
-  only:
-    - master
+      go:
+        - "1.16"
+
+      install:
+        - cd $TRAVIS_BUILD_DIR
+        - export GOPRIVATE=github.com/lewinz/*
+        - git config --global url."git@github.com:".insteadOf "https://github.com/"
+
+      addons:
+        apt:
+          update: true
+
+      script:
+        - cd $TRAVIS_BUILD_DIR
+        - cat /etc/resolv.conf
+        - echo "$TRAVIS_BRANCH"@"$TRAVIS_COMMIT"
+        - echo $TRAVIS_BUILD_DIR
+        - go env -w GOPRIVATE=github.com/lewinz/*
+        - go mod download
+        - go install ./...
+        #- CGO_ENABLED=0 go test -v -coverprofile=coverage.txt $(go list ./... | grep -v 'qvm/test/e2e')
+
+      #after_success:
+      #  - bash <(curl -s https://codecov.io/bash)
 ```
 
-更多语法请看[这里](https://link.segmentfault.com/?url=https%3A%2F%2Fdocs.travis-ci.com%2F)。使用起来非常方便，这样当你每次向 github push 代码的时候，Travis CI 就会自动运行.travis.yml 里面的 script。自动进行编译以及运行单测。
-
-由于 Travis CI 每次 build 之前都会运行 npm install 安装项目依赖的 npm 包，所以在提交代码的时候要保证把所有依赖的包都已经在 package.json 中声明了，否则 build 就会失败。
+[官方文档](https://link.segmentfault.com/?url=https%3A%2F%2Fdocs.travis-ci.com%2F)。使用起来非常方便，这样当你每次向 github push 代码的时候，Travis CI 就会自动运行.travis.yml 里面的 script。自动进行编译以及运行单测。
 
 ## Codecov
 Codecov 是一个开源的测试结果展示平台，将测试结果可视化。Github 上许多开源项目都使用了 Codecov 来展示单测结果。
