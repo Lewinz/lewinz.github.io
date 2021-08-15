@@ -90,6 +90,8 @@
   
   
   
+  
+  
 
   
     {
@@ -642,6 +644,22 @@
       
       "url"      : "https://lewinz.org/2021/08/06/golang-channel/",
       "keywords" : "golang, channel"
+    } ,
+  
+    {
+      "title"    : "linux tee 命令",
+      "category" : "linux",
+      
+      "url"      : "https://lewinz.org/2021/08/10/linux-tee/",
+      "keywords" : "linux, tee"
+    } ,
+  
+    {
+      "title"    : "linux 与 freeBSD",
+      "category" : "linux",
+      
+      "url"      : "https://lewinz.org/2021/08/15/linux-freebsd/",
+      "keywords" : "linux, FreeBSD"
     } ,
   
     {
