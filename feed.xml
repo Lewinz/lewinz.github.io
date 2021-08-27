@@ -1,4 +1,152 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-08-15T15:30:10+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">linux 与 freeBSD</title><link href="https://lewinz.org/2021/08/15/linux-freebsd/" rel="alternate" type="text/html" title="linux 与 freeBSD" /><published>2021-08-15T00:00:00+08:00</published><updated>2021-08-15T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/15/linux-freebsd</id><content type="html" xml:base="https://lewinz.org/2021/08/15/linux-freebsd/">&lt;p&gt;传说中 FreeBSD 比 linux 稳定，大型网站几乎都建立在 FreeBSD 系统上，我一直疑惑难道 linux 是否真的不能做大型网站。于是用 netcraft 网站做了个测试：&lt;br /&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-08-27T15:10:23+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">mock server 方案</title><link href="https://lewinz.org/2021/08/26/mock-server-scheme/" rel="alternate" type="text/html" title="mock server 方案" /><published>2021-08-26T00:00:00+08:00</published><updated>2021-08-26T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/26/mock-server-scheme</id><content type="html" xml:base="https://lewinz.org/2021/08/26/mock-server-scheme/">&lt;h2 id=&quot;项目背景&quot;&gt;项目背景&lt;/h2&gt;
+&lt;p&gt;项目主要使用的是 golang，底层服务依赖第三方。由于一直处于项目功能实现阶段，测试类的编写还没有形成规范，最近需要使用 travis CI，所以需要好好弄弄测试。&lt;/p&gt;
+
+&lt;h2 id=&quot;方案设计历程&quot;&gt;方案设计历程&lt;/h2&gt;
+&lt;p&gt;经过团队讨论（大佬指点），我们需要对现有的第三方依赖接口做 mock 处理。&lt;/p&gt;
+
+&lt;h3 id=&quot;独立的-server&quot;&gt;独立的 server&lt;/h3&gt;
+&lt;p&gt;开发一个独立的 mock 服务，通过页面或者数据上传的方式建立 mock 数据，可以设计延时、正向数据、反向数据等功能。&lt;/p&gt;
+
+&lt;p&gt;部署方式：单独部署维护在国内。&lt;br /&gt;
+缺点：开发成本大，mock 数据维护难度大，travis ci 机器在国外，存在网络问题。&lt;br /&gt;
+优点：同一请求可设置多种结果，可设计响应规则，mock 数据全面且易调整。&lt;/p&gt;
+
+&lt;h3 id=&quot;缓存真实请求数据&quot;&gt;缓存真实请求数据&lt;/h3&gt;
+&lt;p&gt;在 dev 环境进行测试时，就将请求第三方的数据缓存到 DB 或者文件当中，可以制造适量的异常数据做反向测试。&lt;/p&gt;
+
+&lt;p&gt;优点：mock 数据不需要再额外维护，只需要将测试代码做到足够完善，设立一个测试代码标准即可。&lt;br /&gt;
+缺点：只能模拟在预期的业务异常数据，对于非预期异常的测试覆盖不够。&lt;/p&gt;
+
+&lt;h3 id=&quot;与项目并行的-http-服务&quot;&gt;与项目并行的 http 服务&lt;/h3&gt;
+&lt;p&gt;在项目中另外编写一个 http 服务，充当 mock server 的角色，可解决网络问题。&lt;/p&gt;
+
+&lt;h3 id=&quot;最终方案&quot;&gt;最终方案&lt;/h3&gt;
+&lt;p&gt;最终经历以上方面的方案讨论，最终决定在项目中编写一个 http 服务充当 mock server 的角色，在本地测试过程中记录真实请求和响应数据，以文件的形式提交到仓库。&lt;/p&gt;
+
+&lt;h2 id=&quot;代码实现&quot;&gt;代码实现&lt;/h2&gt;
+&lt;h3 id=&quot;第一版&quot;&gt;第一版&lt;/h3&gt;
+&lt;p&gt;在运行 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go test&lt;/code&gt; 运行测试之前，读取指定的文件目录下 mock 数据文件，按照数据中储存的信息注册 gin 框架 route，并启动 http 服务。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go test&lt;/code&gt; 运行期间，所有需要进行第三方调用的接口，通过 transport 转到 mock 请求处理中进行模拟。&lt;/p&gt;
+
+&lt;p&gt;实现思路：这个 mock server 相当于第三方服务的角色，从调用顺序，环境因素等角度都尽可能模拟出了真实情况&lt;/p&gt;
+
+&lt;p&gt;代码细节：在 http transport 中取出 request 的 url 与 body，response 中取 body，压缩之后存储在相关路径下，存储文件以 request method 为区分（最初想的是这个 mock data 文件会很大，单纯的想做一下文件分割）。在项目目录下添加 mock 目录，用来加载相关路径下的 mock 文件，注册 gin 服务，使用 request 的 url、method、param、body 作为唯一请求判断，返回响应的 response body。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/mock_server_scheme_1.png&quot; alt=&quot;mock_server_scheme_1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;缺点：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;需要启动一个单独的 mock server&lt;/li&gt;
+  &lt;li&gt;这个版本的实现，mock 数据是做了包级别隔离，同包下，同样参数的请求调用顺序不可控，response 的返回数据也不可控，mock 结果不稳定&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;第二版&quot;&gt;第二版&lt;/h3&gt;
+&lt;p&gt;在第一版存储、读取 mock 文件操作不变情况下，对 mock server 部署方式、请求判定条件做出一些优化：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;将 transport 改为拔插式控件，消除对业务的耦合&lt;/li&gt;
+  &lt;li&gt;将原有的 gin 单独服务改为 gin + httptest，在 m *testing.M 方法中初始化 transport 的逻辑。&lt;/li&gt;
+  &lt;li&gt;原有的 m.run() 测试，包下测试方法执行顺序不能确定（文件层级一般情况下是按顺序的，但是不能保证一定是顺序的，同文件下方法执行顺序是不一定的），将所有测试类都改为 struct 的方法，用反射调用，反射获取 method 列表是按照方法名的 ASCLL 顺序的。&lt;/li&gt;
+  &lt;li&gt;将测试方法改为反射调用之后，将方法执行改为了异步执行。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;测试执行部分的改动：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// init_test.go&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TestMain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;exitCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exitCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;// other test *.go&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TestA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;// do something&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;===== &amp;gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// init_test.go&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;flagMethodName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;m&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;执行方法名&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;          &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;wg&lt;/span&gt;         &lt;span class=&quot;n&quot;&gt;sync&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WaitGroup&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TestMain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;M&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;flag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;          &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;testCore&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;testCore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;adminCore&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;adminCore&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;testServer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;testServer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;testMisc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;testMisc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;wg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;         &lt;span class=&quot;n&quot;&gt;sync&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WaitGroup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;testVal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reflect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ValueOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;params&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reflect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Value&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;params&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reflect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ValueOf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flagMethodName&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;methodNames&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flagMethodName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;,&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;methodNames&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;testVal&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MethodByName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;methodNames&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;methodCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;testVal&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NumMethod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;methodCount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;testVal&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Wait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;// other test *.go&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TestA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;// do something&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;修改完成之后，进行 mock 数据制作和本地测试，发现结果不是那么稳定，日志每次都会出现不一样的异常信息（理论上 mock server 使用起来是稳定不变的）。&lt;/p&gt;
+
+&lt;h3 id=&quot;第三版&quot;&gt;第三版&lt;/h3&gt;
+&lt;p&gt;第二版做完之后，开始记录真实请求保存 mock 数据，准备做 mock 数据的提交了。但是本地跑好测试类之后，启用 read mock 总是有会一些非预期的请求错误和一些断言 faild，经过仔细回顾整个代码，发现几个问题：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;本地跑测试的时候，一些错误实际是发生了的，但是日志太多，并没有被关注到，最终测试结论却是 PASS，导致原因就是第二版将测试执行方式改为了反射，os.Exit 这个关键步骤没有了，所以很多错误就被忽视了。&lt;/li&gt;
+  &lt;li&gt;改为 goroutine 后，请求顺序更加随机了，返回的 response 顺序更加混乱。&lt;/li&gt;
+  &lt;li&gt;文件风格之后并没有提供什么便利，反而每次做 mock 数据的时候会需要时间思考文件名。&lt;/li&gt;
+  &lt;li&gt;mock 数据的包级别隔离，并没有什么比较好的方法去设定测试执行顺序，且不影响测试过程中的其他表现。&lt;/li&gt;
+  &lt;li&gt;测试方法不够完善，有很强的业务状态依赖。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;实现修改：&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;将反射调用方法改回 m.run os.exit 方式&lt;/li&gt;
+  &lt;li&gt;将 mock 数据改为方法级别隔离，在 request 中添加一个 header 传入 funcname&lt;/li&gt;
+  &lt;li&gt;取消 mock 数据文件分隔&lt;/li&gt;
+  &lt;li&gt;完善测试方法，用轮询的方式解决状态依赖&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;最后实现效果：不论是记录 mock 数据还是读取 mock 数据，不需要再关注 mock server 的实现，只需要关注 mock 的两个环境变量，然后正常执行测试即可，本地测试时只需保证 PASS 且可重复执行即可。&lt;/p&gt;
+
+&lt;h3 id=&quot;仍可优化部分&quot;&gt;仍可优化部分&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;反射调用测试类带来的是可以多协程执行，可考虑解决 os.exit 问题后重新改回反射。&lt;/li&gt;
+  &lt;li&gt;mock 数据很大程度依赖测试方法的代码质量。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="mock" /><category term="scheme" /><summary type="html">项目背景 项目主要使用的是 golang，底层服务依赖第三方。由于一直处于项目功能实现阶段，测试类的编写还没有形成规范，最近需要使用 travis CI，所以需要好好弄弄测试。</summary></entry><entry><title type="html">linux 与 freeBSD</title><link href="https://lewinz.org/2021/08/15/linux-freebsd/" rel="alternate" type="text/html" title="linux 与 freeBSD" /><published>2021-08-15T00:00:00+08:00</published><updated>2021-08-15T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/15/linux-freebsd</id><content type="html" xml:base="https://lewinz.org/2021/08/15/linux-freebsd/">&lt;p&gt;传说中 FreeBSD 比 linux 稳定，大型网站几乎都建立在 FreeBSD 系统上，我一直疑惑难道 linux 是否真的不能做大型网站。于是用 netcraft 网站做了个测试：&lt;br /&gt;
 &lt;a href=&quot;http://toolbar.netcraft.com/site_report?url=www.phpchina.com&quot;&gt;http://toolbar.netcraft.com/site_report?url=www.phpchina.com&lt;/a&gt;&lt;br /&gt;
 按照上面的链接你就可以查询任何一个网站的服务器架构，当然，可信度和准确度我不能保证。下面是我测试的案例：&lt;/p&gt;
 
@@ -632,145 +780,4 @@ service:
   &lt;li&gt;第二次调用时，则打印出最新配置的 redis host 信息&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_viper_file_reload.png&quot; alt=&quot;golang_viper_file_reload&quot; /&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="viper" /><category term="file" /><category term="reload" /><summary type="html">概述 在写 web server 时，往往需要引入各种各样的配置信息，如依赖的其他中间件（redis、elasticsearch）等，一旦这些服务发生变更，我们需要重新启动 web server，以使配置生效。在 Golang 中，基于 viper 的动态配置就可以省去这些繁琐的步骤了。接下来用一个示例来说明如何使用 viper 的配置热加载：</summary></entry><entry><title type="html">gRPC</title><link href="https://lewinz.org/2021/08/01/google-grpc/" rel="alternate" type="text/html" title="gRPC" /><published>2021-08-01T00:00:00+08:00</published><updated>2021-08-01T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/01/google-grpc</id><content type="html" xml:base="https://lewinz.org/2021/08/01/google-grpc/">&lt;p&gt;gRPC 是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于 HTTP/2 协议标准而设计，基于 ProtoBuf (Protocol Buffers) 序列化协议开发，且支持众多开发语言。&lt;/p&gt;
-
-&lt;p&gt;gRPC 是基于 HTTP/2 协议的，要深刻理解 gRPC，理解下 HTTP/2 是必要的，这里先简单介绍一下 HTTP/2 相关的知识，然后再介绍下 gRPC 是如何基于 HTTP/2 构建的。&lt;/p&gt;
-
-&lt;h2 id=&quot;http1x&quot;&gt;HTTP/1.x&lt;/h2&gt;
-&lt;p&gt;HTTP 协议可以算是现阶段 Web 上面最通用的协议了，在之前很长一段时间，很多应用都是基于 HTTP/1.x 协议，HTTP/1.x 协议是一个文本协议，可读性非常好，但其实并不高效，笔者主要碰到过几个问题：&lt;/p&gt;
-&lt;h3 id=&quot;parser&quot;&gt;Parser&lt;/h3&gt;
-&lt;p&gt;如果要解析一个完整的 HTTP 请求，首先我们需要能正确的读出 HTTP header。HTTP header 各个 fields 使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;\r\n&lt;/code&gt; 分隔，然后跟 body 之间使用 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;\r\n\r\n&lt;/code&gt; 分隔。&lt;/p&gt;
-
-&lt;p&gt;解析完 header 之后，我们才能从 header 里面的 content-length 拿到 body 的 size，从而读取 body。&lt;/p&gt;
-
-&lt;p&gt;这套流程其实并不高效，因为我们需要读取多次，才能将一个完整的 HTTP 请求给解析出来，虽然在代码实现上面，有很多优化方式，譬如：&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;一次将一大块数据读取到 buffer 里面避免多次 IO read
-读取的时候直接匹配 \r\n 的方式流式解析&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;但上面的方式对于高性能服务来说，终归还是会有开销。其实最主要的问题在于，HTTP/1.x 的协议是文本协议，&lt;strong&gt;是给人看的&lt;/strong&gt;，对机器不友好，如果要对机器友好，二进制协议才是更好的选择。&lt;/p&gt;
-
-&lt;p&gt;如果大家对解析 HTTP/1.x 很感兴趣，可以研究下 http-parser，一个非常高效小巧的 C library，见过不少框架都是集成了这个库来处理 HTTP/1.x 的。&lt;/p&gt;
-
-&lt;h3 id=&quot;requestresponse&quot;&gt;Request/Response&lt;/h3&gt;
-&lt;p&gt;HTTP/1.x 另一个问题就在于它的交互模式，&lt;strong&gt;一个连接每次只能一问一答&lt;/strong&gt;，也就是 client 发送了 request 之后，必须等到 response，才能继续发送下一次请求。&lt;/p&gt;
-
-&lt;p&gt;这套机制是非常简单，但会造成网络连接利用率不高。如果需要同时进行大量的交互，client 需要跟 server 建立多条连接，但连接的建立也是有开销的，所以为了性能，通常这些连接都是长连接一直保活的，虽然对于 server 来说同时处理百万连接也没啥太大的挑战，但终归效率不高。&lt;/p&gt;
-
-&lt;h3 id=&quot;push&quot;&gt;Push&lt;/h3&gt;
-&lt;p&gt;用 HTTP/1.x 做过推送的同学，大概就知道有多么的痛苦，因为 HTTP/1.x 并没有推送机制。所以通常两种做法：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Long polling 方式,也就是直接给 server 挂一个连接，等待一段时间（譬如 1 分钟），如果 server 有返回或者超时，则再次重新 poll。&lt;/li&gt;
-  &lt;li&gt;Web-socket，通过 upgrade 机制显式的将这条 HTTP 连接变成裸的 TCP，进行双向交互。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;相比 Long polling，笔者还是更喜欢 web-socket 一点，毕竟更加高效，只是 web-socket 后面的交互并不是传统意义上面的 HTTP 了。&lt;/p&gt;
-
-&lt;h2 id=&quot;http2&quot;&gt;HTTP/2&lt;/h2&gt;
-&lt;p&gt;虽然 HTTP/1.x 协议可能仍然是当今互联网运用最广泛的协议，但随着 Web 服务规模的不断扩大，HTTP/1.x 越发显得捉紧见拙，我们急需另一套更好的协议来构建我们的服务，于是就有了 HTTP/2。&lt;/p&gt;
-
-&lt;p&gt;HTTP/2 是一个二进制协议，这也就意味着它的可读性几乎为 0，但幸运的是，我们还是有很多工具，譬如 Wireshark， 能够将其解析出来。&lt;/p&gt;
-
-&lt;p&gt;在了解 HTTP/2 之前，需要知道一些通用术语：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Stream： 一个双向流，一条连接可以有多个 streams。&lt;/li&gt;
-  &lt;li&gt;Message： 也就是逻辑上面的 request，response。&lt;/li&gt;
-  &lt;li&gt;Frame:：数据传输的最小单位。每个 Frame 都属于一个特定的 stream 或者整个连接。一个 message 可能有多个 frame 组成。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;frame-format&quot;&gt;Frame Format&lt;/h3&gt;
-&lt;p&gt;Frame 是 HTTP/2 里面最小的数据传输单位，一个 Frame 定义如下（直接从官网 copy 的）：&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;Flag 和 R：保留位，可以先不管。
-Stream Identifier：标识所属的 stream，如果为 0，则表示这个 frame 属于整条连接。
-Frame Payload：根据不同 Type 有不同的格式。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;可以看到，Frame 的格式定义还是非常的简单，按照官方协议，可以非常方便的写一个出来。&lt;/p&gt;
-
-&lt;h3 id=&quot;multiplexing&quot;&gt;Multiplexing&lt;/h3&gt;
-&lt;p&gt;HTTP/2 通过 stream 支持了连接的多路复用，提高了连接的利用率。Stream 有很多重要特性：&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;一条连接可以包含多个 streams，多个 streams 发送的数据互相不影响。&lt;/li&gt;
-  &lt;li&gt;Stream 可以被 client 和 server 单方面或者共享使用。&lt;/li&gt;
-  &lt;li&gt;Stream 可以被任意一段关闭。&lt;/li&gt;
-  &lt;li&gt;Stream 会确定好发送 frame 的顺序，另一端会按照接受到的顺序来处理。&lt;/li&gt;
-  &lt;li&gt;Stream 用一个唯一 ID 来标识。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;这里再说一下 Stream ID，如果是 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;client&lt;/code&gt; 创建的 stream，ID 就是&lt;strong&gt;奇数&lt;/strong&gt;，如果是 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server&lt;/code&gt; 创建的，ID 就是&lt;strong&gt;偶数&lt;/strong&gt;。ID 0x00 和 0x01 都有特定的使用场景。&lt;/p&gt;
-
-&lt;p&gt;Stream ID 不可能被重复使用，如果一条连接上面 ID 分配完了，client 会新建一条连接。而 server 则会给 client 发送一个 GOAWAY frame 强制让 client 新建一条连接。&lt;/p&gt;
-
-&lt;p&gt;为了更大的提高一条连接上面的 stream 并发，可以考虑调大 SETTINGS_MAX_CONCURRENT_STREAMS，在 TiKV 里面，我们就遇到过这个值比较小，整体吞吐上不去的问题。&lt;/p&gt;
-
-&lt;p&gt;这里还需要注意，虽然一条连接上面能够处理更多的请求了，但一条连接远远是不够的。一条连接通常只有一个线程来处理，所以并不能充分利用服务器多核的优势。同时，每个请求编解码还是有开销的，所以用一条连接还是会出现瓶颈。&lt;/p&gt;
-
-&lt;p&gt;在 TiKV 有一个版本中，我们就过分相信一条连接跑多 streams 这种方式没有问题，就让 client 只用一条连接跟 TiKV 交互，结果发现性能完全没法用，不光处理连接的线程 CPU 跑满，整体的性能也上不去，后来我们换成了多条连接，情况才好转。&lt;/p&gt;
-
-&lt;h3 id=&quot;priority&quot;&gt;Priority&lt;/h3&gt;
-&lt;p&gt;因为一条连接允许多个 streams 在上面发送 frame，那么在一些场景下面，我们还是希望 stream 有优先级，方便对端为不同的请求分配不同的资源。譬如对于一个 Web 站点来说，优先加载重要的资源，而对于一些不那么重要的图片啥的，则使用低的优先级。&lt;/p&gt;
-
-&lt;p&gt;我们还可以设置 Stream Dependencies，形成一棵 streams priority tree。假设 Stream A 是 parent，Stream B 和 C 都是它的孩子，B 的 weight 是 4，C 的 weight 是 12，假设现在 A 能分配到所有的资源，那么后面 B 能分配到的资源只有 C 的 1/3。&lt;/p&gt;
-
-&lt;h3 id=&quot;flow-control&quot;&gt;Flow Control&lt;/h3&gt;
-&lt;p&gt;HTTP/2 也支持流控，如果 sender 端发送数据太快，receiver 端可能因为太忙，或者压力太大，或者只想给特定的 stream 分配资源，receiver 端就可能不想处理这些数据。譬如，如果 client 给 server 请求了一个视频，但这时候用户暂停观看了，client 就可能告诉 server 别再发送数据了。&lt;/p&gt;
-
-&lt;p&gt;虽然 TCP 也有 flow control，但它仅仅只对一个连接有效果。HTTP/2 在一条连接上面会有多个 streams，有时候，我们仅仅只想对一些 stream 进行控制，所以 HTTP/2 单独提供了流控机制。Flow control 有如下特性：&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Flow control 是单向的。Receiver 可以选择给 stream 或者整个连接设置 window size。&lt;/li&gt;
-  &lt;li&gt;Flow control 是基于信任的。Receiver 只是会给 sender 建议它的初始连接和 stream 的 flow control window size。&lt;/li&gt;
-  &lt;li&gt;Flow control 不可能被禁止掉。当 HTTP/2 连接建立起来之后，client 和 server 会交换 SETTINGS frames，用来设置 flow control window size。&lt;/li&gt;
-  &lt;li&gt;Flow control 是 hop-by-hop，并不是 end-to-end 的，也就是我们可以用一个中间人来进行 flow control。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;这里需要注意，HTTP/2 默认的 window size 是 64 KB，实际这个值太小了，在 TiKV 里面我们直接设置成 1 GB。&lt;/p&gt;
-
-&lt;h3 id=&quot;hpack&quot;&gt;HPACK&lt;/h3&gt;
-&lt;p&gt;在一个 HTTP 请求里面，我们通常在 header 上面携带很多该请求的元信息，用来描述要传输的资源以及它的相关属性。在 HTTP/1.x 时代，我们采用纯文本协议，并且使用 \r\n 来分隔，如果我们要传输的元数据很多，就会导致 header 非常的庞大。&lt;/p&gt;
-
-&lt;p&gt;另外，多数时候，在一条连接上面的多数请求，其实 header 差不了多少，譬如我们第一个请求可能 GET /a.txt，后面紧接着是 GET /b.txt，两个请求唯一的区别就是 URL path 不一样，但我们仍然要将其他所有的 fields 完全发一遍。&lt;/p&gt;
-
-&lt;p&gt;HTTP/2 为了结果这个问题，使用了 HPACK。虽然 HPACK 的 RFC 文档 看起来比较恐怖，但其实原理非常的简单易懂。&lt;/p&gt;
-
-&lt;p&gt;HPACK 提供了一个静态和动态的 table，静态 table 定义了通用的 HTTP header fields，譬如 method，path 等。发送请求的时候，只要指定 field 在静态 table 里面的索引，双方就知道要发送的 field 是什么了。&lt;/p&gt;
-
-&lt;p&gt;对于动态 table，初始化为空，如果两边交互之后，发现有新的 field，就添加到动态 table 上面，这样后面的请求就可以跟静态 table 一样，只需要带上相关的 index 就可以了。&lt;/p&gt;
-
-&lt;p&gt;同时，为了减少数据传输的大小，使用 Huffman 进行编码。这里就不再详细说明 HPACK 和 Huffman 如何编码了。&lt;/p&gt;
-
-&lt;h3 id=&quot;小结&quot;&gt;小结&lt;/h3&gt;
-&lt;p&gt;上面只是大概列举了一些 HTTP/2 的特性，还有一些，譬如 push，以及不同的 frame 定义等都没有提及，大家感兴趣，可以自行参考 HTTP/2 RFC 文档。&lt;/p&gt;
-
-&lt;h2 id=&quot;grpc&quot;&gt;gRPC&lt;/h2&gt;
-&lt;p&gt;gRPC 是 Google 基于 HTTP/2 以及 protobuf 的，要了解 gRPC 协议，只需要知道 gRPC 是如何在 HTTP/2 上面传输就可以了。&lt;/p&gt;
-
-&lt;p&gt;gRPC 通常有四种模式，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unary&lt;/code&gt;，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;client streaming&lt;/code&gt;，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server streaming&lt;/code&gt; 以及 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bidirectional streaming&lt;/code&gt;，对于底层 HTTP/2 来说，它们都是 stream，并且仍然是一套 request + response 模型。&lt;/p&gt;
-
-&lt;h3 id=&quot;request&quot;&gt;Request&lt;/h3&gt;
-&lt;p&gt;gRPC 的 request 通常包含 Request-Headers, 0 或者多个 Length-Prefixed-Message 以及 EOS。&lt;/p&gt;
-
-&lt;p&gt;Request-Headers 直接使用的 HTTP/2 headers，在 HEADERS 和 CONTINUATION frame 里面派发。定义的 header 主要有 Call-Definition 以及 Custom-Metadata。Call-Definition 里面包括 Method（其实就是用的 HTTP/2 的 POST），Content-Type 等。而 Custom-Metadata 则是应用层自定义的任意 key-value，key 不建议使用 grpc- 开头，因为这是为 gRPC 后续自己保留的。&lt;/p&gt;
-
-&lt;p&gt;Length-Prefixed-Message 主要在 DATA frame 里面派发，它有一个 Compressed flag 用来表示该 message 是否压缩，如果为 1，表示该 message 采用了压缩，而压缩算啊定义在 header 里面的 Message-Encoding 里面。然后后面跟着四字节的 message length 以及实际的 message。&lt;/p&gt;
-
-&lt;p&gt;EOS（end-of-stream） 会在最后的 DATA frame 里面带上了 END_STREAM 这个 flag。用来表示 stream 不会再发送任何数据，可以关闭了。&lt;/p&gt;
-
-&lt;h3 id=&quot;response&quot;&gt;Response&lt;/h3&gt;
-&lt;p&gt;Response 主要包含 Response-Headers，0 或者多个 Length-Prefixed-Message 以及 Trailers。如果遇到了错误，也可以直接返回 Trailers-Only。&lt;/p&gt;
-
-&lt;p&gt;Response-Headers 主要包括 HTTP-Status，Content-Type 以及 Custom-Metadata 等。Trailers-Only 也有 HTTP-Status ，Content-Type 和 Trailers。Trailers 包括了 Status 以及 0 或者多个 Custom-Metadata。&lt;/p&gt;
-
-&lt;p&gt;HTTP-Status 就是我们通常的 HTTP 200，301，400 这些，很通用就不再解释。Status 也就是 gRPC 的 status， 而 Status-Message 则是 gRPC 的 message。Status-Message 采用了 Percent-Encoded 的编码方式，具体参考这里。&lt;/p&gt;
-
-&lt;p&gt;如果在最后收到的 HEADERS frame 里面，带上了 Trailers，并且有 END_STREAM 这个 flag，那么就意味着 response 的 EOS。&lt;/p&gt;
-
-&lt;h3 id=&quot;protobuf&quot;&gt;Protobuf&lt;/h3&gt;
-&lt;p&gt;gRPC 的 service 接口是基于 protobuf 定义的，我们可以非常方便的将 service 与 HTTP/2 关联起来。&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;Path : /Service-Name/{method name}&lt;/li&gt;
-  &lt;li&gt;Service-Name : ?( {proto package name} “.” ) {service name}&lt;/li&gt;
-  &lt;li&gt;Message-Type : {fully qualified proto message name}&lt;/li&gt;
-  &lt;li&gt;Content-Type : “application/grpc+proto”&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="gRPC" /><summary type="html">gRPC 是一个高性能、通用的开源 RPC 框架，其由 Google 主要面向移动应用开发并基于 HTTP/2 协议标准而设计，基于 ProtoBuf (Protocol Buffers) 序列化协议开发，且支持众多开发语言。</summary></entry></feed>
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang_viper_file_reload.png&quot; alt=&quot;golang_viper_file_reload&quot; /&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="viper" /><category term="file" /><category term="reload" /><summary type="html">概述 在写 web server 时，往往需要引入各种各样的配置信息，如依赖的其他中间件（redis、elasticsearch）等，一旦这些服务发生变更，我们需要重新启动 web server，以使配置生效。在 Golang 中，基于 viper 的动态配置就可以省去这些繁琐的步骤了。接下来用一个示例来说明如何使用 viper 的配置热加载：</summary></entry></feed>
