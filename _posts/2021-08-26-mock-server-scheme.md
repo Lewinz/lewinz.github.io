@@ -46,7 +46,260 @@ keywords: mock, scheme
 缺点：
 1. 需要启动一个单独的 mock server
 2. 这个版本的实现，mock 数据是做了包级别隔离，同包下，同样参数的请求调用顺序不可控，response 的返回数据也不可控，mock 结果不稳定
+#### 存储实现
+![mock_server_scheme_2](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/mock_server_scheme_2.png)
 
+存储 mock 数据是在原有 transport 的基础上再包裹一层存储数据的处理，在 http client 初始化的时候通过参数传入，下面举例说明一下代码的具体实现过程：
+
+项目中原有的 http client 实现
+``` golang
+type Transport struct {
+	Transport http.RoundTripper
+}
+
+// Client Provider
+type Client struct {
+	tr     *Transport
+	client *http.Client
+}
+
+// NewClient ..
+func NewClient() *Client {
+	tr := &Transport{
+		Transport: http.DefaultTransport,
+	}
+
+	return &Client{
+		tr:     tr,
+		client: &http.Client{Transport: tr},
+	}
+}
+```
+
+修改为
+``` golang
+func NewClient(transport ...http.RoundTripper) *Client {
+	tr := &Transport{
+		Transport: http.DefaultTransport,
+	}
+
+	if len(transport) > 0 {
+		tr.Transport = transport[0]
+	}
+
+	return &Client{
+		tr:     tr,
+		client: &http.Client{Transport: tr},
+	}
+}
+```
+
+测试入口代码
+``` golang
+transport := InitTestMockTransport()
+
+client := client.NewClient(&client.Config{
+			AuthHost: inspurConfig.AuthHost,
+			Username: inspurConfig.Username,
+			Password: inspurConfig.Password,
+		}, transport...)
+```
+
+mock_transport.go
+``` golang
+// NewMockTransport ..
+func NewMockTransport(readDir, writeDir string) *MockTransport {
+	transport := &MockTransport{
+		Transport: Transport{
+			Transport: http.DefaultTransport,
+		},
+		ServerParam: &MockServerParam{
+			MockReadDir:  readDir,
+			MockWriteDir: writeDir,
+		},
+	}
+
+	if readDir != "" {
+		transport.ServerParam.Engine = mock.HTTPTestGIN(readDir)
+	}
+	return transport
+}
+
+// MockTransport ..
+type MockTransport struct {
+	Transport
+	ServerParam *MockServerParam
+}
+
+// MockServerParam ..
+type MockServerParam struct {
+	MockReadDir  string
+	MockWriteDir string
+	Engine       *gin.Engine
+}
+
+// RoundTrip ..
+func (t *MockTransport) RoundTrip(req *http.Request) (resp *http.Response, err error) {
+	reqBodyBackup := ""
+	if req.Body != nil {
+		reqBodyBackup = string(mock.CopyRequestBody(req))
+	}
+
+	if t.ServerParam.MockReadDir != "" {
+		req.Header.Add(mock.RequestHeaderFuncName, mock.GetTestFunctionName())
+
+		recorder := httptest.NewRecorder()
+		t.ServerParam.Engine.ServeHTTP(recorder, req)
+		resp = recorder.Result()
+	} else {
+		resp, err = t.Transport.RoundTrip(req)
+	}
+
+	if t.ServerParam.MockWriteDir != "" {
+		t.SaveMockData(req, resp, reqBodyBackup, err)
+	}
+	return
+}
+
+// SaveMockData 单测保存 mock 数据
+func (t *MockTransport) SaveMockData(req *http.Request, resp *http.Response, reqBodyBackUP string, reqErr error) {
+	mockFilePath := mock.AppendMockFilePath(t.ServerParam.MockWriteDir)
+
+	mockData := make(mock.Data)
+	err := mock.ReadMockFile(mockFilePath, mockData)
+	if err != nil {
+		log.Fatalf("%v", err)
+		return
+	}
+
+	mockMessage := mock.InitMessageMock(req, resp, reqBodyBackUP, reqErr)
+
+	mockURL := mockMessage.RequestData.URL
+	if val, ok := mockData[mockURL]; ok {
+		mockData[mockURL] = append(val, mockMessage)
+	} else {
+		mockData[mockURL] = make([]*mock.MessageMock, 1)
+		mockData[mockURL][0] = mockMessage
+	}
+
+	err = mock.WriteMockFile(mockFilePath, mockData)
+	if err != nil {
+		log.Fatalf("%v", err)
+		return
+	}
+}
+```
+
+#### 读取实现
+mock.go
+``` golang
+// HTTPTestGIN  获取 httptest 使用的 gin
+func HTTPTestGIN(mockDirPath string) *gin.Engine {
+	engine := gin.Default()
+
+	dirs := strings.Split(mockDirPath, ",")
+
+	mockData := make(Data)
+	for i := 0; i < len(dirs); i++ {
+		dirPath := dirs[i]
+
+		err := filepath.Walk(dirPath, func(path string, info fs.FileInfo, err error) error {
+			if info == nil || info.IsDir() {
+				return nil
+			}
+
+			return ReadMockFile(path, mockData)
+		})
+		if err != nil {
+			log.Fatal("mock data reload err")
+		}
+	}
+
+	for k, v := range mockData {
+		engineURL := strings.TrimPrefix(k, v[0].RequestData.Method+MockURLConnect)
+		switch v[0].RequestData.Method {
+		case http.MethodGet:
+			engine.GET(engineURL, func(c *gin.Context) {
+				engineRouteFunc(c, mockData)
+			})
+		case http.MethodPost:
+			engine.POST(engineURL, func(c *gin.Context) {
+				engineRouteFunc(c, mockData)
+			})
+		case http.MethodHead:
+			engine.HEAD(engineURL, func(c *gin.Context) {
+				engineRouteFunc(c, mockData)
+			})
+		case http.MethodPut:
+			engine.PUT(engineURL, func(c *gin.Context) {
+				engineRouteFunc(c, mockData)
+			})
+		case http.MethodPatch:
+			engine.PATCH(engineURL, func(c *gin.Context) {
+				engineRouteFunc(c, mockData)
+			})
+		case http.MethodDelete:
+			engine.DELETE(engineURL, func(c *gin.Context) {
+				engineRouteFunc(c, mockData)
+			})
+		case http.MethodOptions:
+			engine.OPTIONS(engineURL, func(c *gin.Context) {
+				engineRouteFunc(c, mockData)
+			})
+		}
+	}
+
+	engine.GET("/ping", func(c *gin.Context) {
+		c.String(http.StatusOK, "pong")
+	})
+
+	return engine
+}
+
+// engineRouteFunc addRoute 请求 mock
+func engineRouteFunc(c *gin.Context, mockData map[string][]*MessageMock) {
+	var engineReqBody []byte
+	if c.Request.Body != nil {
+		engineReqBody, _ = ioutil.ReadAll(c.Request.Body)
+	}
+
+	mocks := mockData[c.Request.Method+MockURLConnect+c.Request.URL.Path]
+
+	responseList := []*MessageMock{}
+	for i := 0; i < len(mocks); i++ {
+		// 判断条件：body / query / header 携带的 funcName 都一致
+		if mocks[i].RequestData.Body == string(engineReqBody) &&
+			mocks[i].RequestData.Param == c.Request.URL.RawQuery &&
+			mocks[i].RequestData.FuncName == c.Request.Header.Get(RequestHeaderFuncName) {
+			responseList = append(responseList, mocks[i])
+		}
+	}
+
+	if len(responseList) == 1 {
+		contextResponse(c, responseList[0])
+	}
+
+	if len(responseList) > 1 {
+		for i := 0; i < len(responseList); i++ {
+			if !responseList[i].Used {
+				contextResponse(c, responseList[i])
+				responseList[i].Used = true
+				break
+			}
+		}
+	}
+}
+
+// contextResponse ..
+func contextResponse(c *gin.Context, mock *MessageMock) {
+	if json.Valid([]byte(mock.ResponseData.Body)) {
+		reader := strings.NewReader(mock.ResponseData.Body)
+		c.DataFromReader(mock.ResponseData.StatusCode, int64(len(mock.ResponseData.Body)), "application/json; charset=utf-8", reader, nil)
+	} else {
+		c.String(mock.ResponseData.StatusCode, "%v", string(mock.ResponseData.Body))
+	}
+}
+```
 ### 第二版
 在第一版存储、读取 mock 文件操作不变情况下，对 mock server 部署方式、请求判定条件做出一些优化：
 1. 将 transport 改为拔插式控件，消除对业务的耦合
