@@ -46,7 +46,32 @@ matrix:
       #  - bash <(curl -s https://codecov.io/bash)
 ```
 
-[官方文档](https://link.segmentfault.com/?url=https%3A%2F%2Fdocs.travis-ci.com%2F)。使用起来非常方便，这样当你每次向 github push 代码的时候，Travis CI 就会自动运行.travis.yml 里面的 script。自动进行编译以及运行单测。
+### travis 生命周期
+- install - 安装所需的依赖
+- script - 执行构建脚本
+
+在 install 和 script 两个步骤前后可以自定义很多步骤：
+- Before-install - 在安装阶段之前所需要做的步骤
+- Before-script - 在执行脚本之前所需要做的步骤
+- After-script - 在执行脚本之后所需要做的步骤
+- After-success - 当构建成功时（比如生成构建文档），在 travis_test_result 环境变量下的结果
+- After-failure - 当构建失败时（比如上传日志文件），在 travis_test_result 环境变量下的结果
+
+除此之外还有其他几个部署阶段命令，整合后完整的生命周期为：
+1. apt addons （可选安装）
+2. cache components （可选安装）
+3. before_install
+4. install
+5. before_script
+6. script
+7. before_cache (只有当缓存生效的时候)
+8. after_success 或者 after_failure
+9. before_deploy (只有当 deploy 被激活时)
+10. deploy
+11. after_deploy (只有当 deploy 被激活时)
+12. after_script
+
+[travis 官方文档](https://link.segmentfault.com/?url=https%3A%2F%2Fdocs.travis-ci.com%2F)。使用起来非常方便，这样当你每次向 github push 代码的时候，Travis CI 就会自动运行.travis.yml 里面的 script。自动进行编译以及运行单测。
 
 ## Codecov
 Codecov 是一个开源的测试结果展示平台，将测试结果可视化。Github 上许多开源项目都使用了 Codecov 来展示单测结果。
