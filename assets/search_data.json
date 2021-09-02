@@ -679,6 +679,14 @@
     } ,
   
     {
+      "title"    : "golang 文件操作权限位",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/2021/09/02/golang-os-file/",
+      "keywords" : "golang, file"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
