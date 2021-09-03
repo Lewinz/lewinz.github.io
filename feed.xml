@@ -1,4 +1,138 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-09-02T16:18:01+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang 文件操作权限位</title><link href="https://lewinz.org/2021/09/02/golang-os-file/" rel="alternate" type="text/html" title="golang 文件操作权限位" /><published>2021-09-02T00:00:00+08:00</published><updated>2021-09-02T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/02/golang-os-file</id><content type="html" xml:base="https://lewinz.org/2021/09/02/golang-os-file/">&lt;h2 id=&quot;openfile&quot;&gt;OpenFile&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-09-03T17:46:52+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang log 中 panic 和 fatal 区别</title><link href="https://lewinz.org/2021/09/03/golang-panic-fatal/" rel="alternate" type="text/html" title="golang log 中 panic 和 fatal 区别" /><published>2021-09-03T00:00:00+08:00</published><updated>2021-09-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/03/golang-panic-fatal</id><content type="html" xml:base="https://lewinz.org/2021/09/03/golang-panic-fatal/">&lt;h2 id=&quot;osexit&quot;&gt;os.Exit&lt;/h2&gt;
+&lt;p&gt;在讲两者区别之前我们先看一下 os.Exit () 函数的定义：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;code&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;Exit&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;causes&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;program&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exit&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;given&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;Conventionally&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;zero&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indicates&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;non&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zero&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;an&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;program&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;terminates&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;immediately&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;deferred&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;functions&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;are&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;注意两点：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;应用程序马上退出。&lt;/li&gt;
+  &lt;li&gt;defer 函数不会执行。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;logfatal&quot;&gt;log.Fatal&lt;/h2&gt;
+&lt;p&gt;再来看 log.Fatal 函数定义&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fatal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;Fatal&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;equivalent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;followed&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;by&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;看源代码：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go/src/log/log.go&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// Fatal is equivalent to l.Print() followed by a call to os.Exit(1).&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Logger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fatal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Sprint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;总结起来 log.Fatal 函数完成：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;打印输出内容&lt;/li&gt;
+  &lt;li&gt;退出应用程序&lt;/li&gt;
+  &lt;li&gt;defer 函数不会执行&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;和 os.Exit () 相比多了第一步。&lt;/p&gt;
+
+&lt;h2 id=&quot;panic&quot;&gt;panic&lt;/h2&gt;
+&lt;p&gt;再来看内置函数 panic () 函数定义：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// The panic built-in function stops normal execution of the current&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// goroutine. When a function F calls panic, normal execution of F stops&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// immediately. Any functions whose execution was deferred by F are run in&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// the usual way, and then F returns to its caller. To the caller G, the&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// invocation of F then behaves like a call to panic, terminating G's&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// execution and running any deferred functions. This continues until all&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// functions in the executing goroutine have stopped, in reverse order. At&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// that point, the program is terminated and the error condition is reported,&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// including the value of the argument to panic. This termination sequence&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// is called panicking and can be controlled by the built-in function&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;// recover.&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;panic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;注意几点：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;1.函数立刻停止执行 (注意是函数本身，不是应用程序停止)&lt;/li&gt;
+  &lt;li&gt;2.defer 函数被执行&lt;/li&gt;
+  &lt;li&gt;3.返回给调用者 (caller)&lt;/li&gt;
+  &lt;li&gt;4.调用者函数假装也收到了一个 panic 函数，从而&lt;/li&gt;
+  &lt;li&gt;4.1 立即停止执行当前函数&lt;/li&gt;
+  &lt;li&gt;4.2 它 defer 函数被执行&lt;/li&gt;
+  &lt;li&gt;4.3 返回给它的调用者 (caller)&lt;/li&gt;
+  &lt;li&gt;…(递归重复上述步骤，直到最上层函数)&lt;/li&gt;
+  &lt;li&gt;应用程序停止。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;panic-的行为&quot;&gt;panic 的行为&lt;/h3&gt;
+&lt;p&gt;简单的总结 panic () 就有点类似 java 语言的 exception 的处理，因而 panic 的行为和 java 的 exception 处理行为就非常类似，行为结合 catch，和 final 语句块的处理流程。&lt;/p&gt;
+
+&lt;p&gt;下面给几个例子：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;例子 1&lt;/strong&gt;：log.Fatal&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;log&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;3333&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Fatal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;4444&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1111&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;2222&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;9999&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;运行结果：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;go build &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./main
+2018/08/20 17:48:44 1111
+2018/08/20 17:48:44 4444
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;可见 defer 函数的内容并没有被执行，程序在 log.Fatal (…) 处直接就退出了。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;例子 2&lt;/strong&gt;：panic () 函数&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&quot;log&quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;3333&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;panic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;4444&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1111&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;2222&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;9999&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;运行结果：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;go build &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./main
+2018/08/20 17:49:28 1111
+2018/08/20 17:49:28 3333
+2018/08/20 17:49:28 2222
+panic: 4444
+
+goroutine 1 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;running]:
+main.foo&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+        /home/.../main.go:9 +0x55
+main.main&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+        /home/.../main.go:15 +0x82
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;可见所有的 defer 都被调用到了，函数根据父子调用关系所有的 defer 都被调用直到最上层。
+当然如果其中某一层函数定义了 recover () 功能，那么 panic 会在那一层函数里面被截获，然后由 recover () 定义如何处理这个 panic，是丢弃，还是向上再抛出。(是不是和 exception 的处理机制一模一样呢？)&lt;/p&gt;
+
+&lt;h2 id=&quot;其他&quot;&gt;其他&lt;/h2&gt;
+&lt;p&gt;在使用 gin 框架编写代码时，如果手动实现了异步日志，需要注意勿将 panic 级别日志也异步了，否则会导致整个程序中断，原因是 gin 框架中全局对 panic 进行 recover 的部分是捕捉不到这个 panic 的。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="panic" /><category term="fatal" /><summary type="html">os.Exit 在讲两者区别之前我们先看一下 os.Exit () 函数的定义： ``` golang func Exit(code int)</summary></entry><entry><title type="html">golang 文件操作权限位</title><link href="https://lewinz.org/2021/09/02/golang-os-file/" rel="alternate" type="text/html" title="golang 文件操作权限位" /><published>2021-09-02T00:00:00+08:00</published><updated>2021-09-02T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/02/golang-os-file</id><content type="html" xml:base="https://lewinz.org/2021/09/02/golang-os-file/">&lt;h2 id=&quot;openfile&quot;&gt;OpenFile&lt;/h2&gt;
 &lt;p&gt;Go 语言的 os 包下有一个 OpenFile 函数，其原型如下所示：&lt;/p&gt;
 &lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OpenFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flag&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;perm&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FileMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -963,29 +1097,4 @@ kernel 支援 tty snoop，可以监控线上使用者 (不像 linux 那个半调
 
 &lt;p&gt;DNSPod 以稳定性、安全性、功能强大、智能免费、高速等优 势深得广大站长和企业用户们的喜爱，以至于越来越多的企业站、地方门户站、游戏站等等都在使用 DNSPod，他们喜欢的是 DNSPod 给他们带来的稳定性、承受能力强、访问速度快以及极高的用户体验，使用普通的 DNS（像域名注册商提供的）不是不可以 “用”，但是避免不了因为不稳定导致网站时常经常打不开，由于功 能限制不能实现想要实现的功能、因为用户体验不够好等丢失客户。所以选择一个好的 DNS 服务商可以为自己的网站带来很大的、意想不到的收益，避开不必要的损失。功能上：除了智能 DNS 解析，普通 DNS 解析也可以满足用户的稳定、高速等需求。相对竞争对手的产品，DNSPod 除了实时生效，不限制用户添加的域名和记录数量外，还率先提供 了 IPv6 的支持和动态域名解析的功能，另外还支持 DNS 轮询、URL 转发、API 接口、批量修改管理等先进功能。并且所有功能都是免费提供。&lt;/p&gt;
 
-&lt;p&gt;据北京神州绿盟信息安全科技股份有限公司提交的创业板首发招股说明书披露，腾讯关联公司世纪凯旋已于 2011 年 6 月收购了 DNSPod，转让价格为 4000 万元。2013 年 8 月 14 日 DNSPod 解析域名总量达 1,398,958，成为中国第一大域名解析服务商。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="dns" /><category term="dnspod" /><summary type="html">2005 年 10 月为了解决南北互通情况下，广告投放系统的广告显示速度问题，由吴洪声个人开发了一套根据用户来路 IP，分别把用户引导到电信或者网通服务器的 DNS 程序，并应用到线上的业务系统中。此程序为 DNSPod 前身。</summary></entry><entry><title type="html">Linux ssh 相关问题</title><link href="https://lewinz.org/2021/08/03/linux-ssh-setting/" rel="alternate" type="text/html" title="Linux ssh 相关问题" /><published>2021-08-03T00:00:00+08:00</published><updated>2021-08-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/03/linux-ssh-setting</id><content type="html" xml:base="https://lewinz.org/2021/08/03/linux-ssh-setting/">&lt;h2 id=&quot;ssh-client-设置轮询导致-ssh-禁用&quot;&gt;ssh client 设置轮询导致 ssh 禁用&lt;/h2&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# vi /etc/hosts.allow&lt;/span&gt;
-sshd:all
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;ssh-请求连接时间长&quot;&gt;ssh 请求连接时间长&lt;/h2&gt;
-&lt;h3 id=&quot;使用了-dns-反查导致耗时&quot;&gt;使用了 DNS 反查导致耗时&lt;/h3&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# vi /etc/ssh/sshd_config&lt;/span&gt;
-
-UseDNS no
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;默认情况下会有一行被注释的配置 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;# UseDNS yes&lt;/code&gt;, 但是 ssh 缺省情况下默认是 yes ，所以需要显式配置为 no&lt;/p&gt;
-
-&lt;p&gt;这个配置会导致 ssh 在 dns 解析的时候，如果 dns 中没有域名解析记录，会等待 dns 服务器超时返回。&lt;/p&gt;
-
-&lt;h3 id=&quot;kerberos-方式验证导致耗时&quot;&gt;Kerberos 方式验证导致耗时&lt;/h3&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# vi /etc/ssh/sshd_config&lt;/span&gt;
-
-GSSAPIAuthentication no
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;一般 ssh 依次进行的认证方式是 publickey, gssapi-keyex, gssapi-with-mic, password，一般我们常用的是 publickey、password，但是 gssapi（基于 Kerberos） 每次验证还是会尝试，非常耗时，修改 GSSAPIAuthentication 配置可关闭 gssapi 验证过程。&lt;/p&gt;
-
-&lt;h2 id=&quot;重启&quot;&gt;重启&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;service sshd restart&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="linux" /><category term="ssh" /><summary type="html">ssh client 设置轮询导致 ssh 禁用 # vi /etc/hosts.allow sshd:all</summary></entry></feed>
+&lt;p&gt;据北京神州绿盟信息安全科技股份有限公司提交的创业板首发招股说明书披露，腾讯关联公司世纪凯旋已于 2011 年 6 月收购了 DNSPod，转让价格为 4000 万元。2013 年 8 月 14 日 DNSPod 解析域名总量达 1,398,958，成为中国第一大域名解析服务商。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="dns" /><category term="dnspod" /><summary type="html">2005 年 10 月为了解决南北互通情况下，广告投放系统的广告显示速度问题，由吴洪声个人开发了一套根据用户来路 IP，分别把用户引导到电信或者网通服务器的 DNS 程序，并应用到线上的业务系统中。此程序为 DNSPod 前身。</summary></entry></feed>
