@@ -703,6 +703,14 @@
     } ,
   
     {
+      "title"    : "CentOS 6 添加 dns 缓存",
+      "category" : "centos",
+      
+      "url"      : "https://lewinz.org/2021/09/13/centos-6-dnsmasq/",
+      "keywords" : "centos, dns, cache"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
@@ -756,6 +764,14 @@
       
       "url"      : "https://lewinz.org/wiki/mac-some-config/",
       "keywords" : "Mac, 配置"
+    } ,
+  
+    {
+      "title"    : "Mac 工具总结",
+      "category" : "Mac",
+      
+      "url"      : "https://lewinz.org/wiki/mac-tools/",
+      "keywords" : "Mac, tool"
     } ,
   
     {
