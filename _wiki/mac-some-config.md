@@ -20,32 +20,6 @@ keywords: Mac, 配置
 配置详细文件因 makedown 格式受限  
 存放在 github 仓库/config/oh-my-zsh-config.txt 中
 
-## mac 软件列表
-**命令行**  
-<https://www.iterm2.com/>  
-
-**shell**  
-<https://ohmyz.sh/>  
-
-**软件包管理**  
-<https://brew.sh/>  
-
-**MySQL 客户端**  
-<https://www.sequelpro.com/>  
-
-**神器 alfred**  
-<https://www.alfredapp.com/>  
-
-**神器 tldr**  
-`brew tap tldr-pages/tldr && brew install tldr`
-
-**释压神器**  
-``` sh
-brew install thefuck
-
-# ~/.zshrc 文件末尾添加
-eval $(thefuck --alias FUCK)
-```
 ## mac 使用 item2 进行 ssh 连接
 使用命令连接
 `ssh -p22 root@47.117.136.250`
