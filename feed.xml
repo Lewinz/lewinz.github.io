@@ -1,4 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-09-13T16:29:22+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">CentOS 6 添加 dns 缓存</title><link href="https://lewinz.org/2021/09/13/centos-6-dnsmasq/" rel="alternate" type="text/html" title="CentOS 6 添加 dns 缓存" /><published>2021-09-13T00:00:00+08:00</published><updated>2021-09-13T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/13/centos-6-dnsmasq</id><content type="html" xml:base="https://lewinz.org/2021/09/13/centos-6-dnsmasq/">&lt;h3 id=&quot;安装-dnsmasq&quot;&gt;安装 dnsmasq&lt;/h3&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-09-15T11:33:30+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">Apache http server</title><link href="https://lewinz.org/2021/09/15/apache-http-server/" rel="alternate" type="text/html" title="Apache http server" /><published>2021-09-15T00:00:00+08:00</published><updated>2021-09-15T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/15/apache-http-server</id><content type="html" xml:base="https://lewinz.org/2021/09/15/apache-http-server/">&lt;h2 id=&quot;apache-服务概览&quot;&gt;Apache 服务概览&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;软件包： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;httpd&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;httpd-devel&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;httpd-manual&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;服务类型：由 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemd&lt;/code&gt; 启动的守护进程&lt;/li&gt;
+  &lt;li&gt;配置单元： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/lib/systemd/system/httpd.service&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;守护进程： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/sbin/httpd&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;端口： 80 (http), 443 (https)&lt;/li&gt;
+  &lt;li&gt;配置： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/httpd/&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Web 文档： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/html/&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Apache 日志记录目录：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/log/httpd/&lt;/code&gt;&lt;br /&gt;
+该目录下有两种文件：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;access_log      &lt;span class=&quot;c&quot;&gt;# 记录客户端访问Apache的信息，比如客户端的ip&lt;/span&gt;
+error_log       &lt;span class=&quot;c&quot;&gt;# 记录访问页面错误信息&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Apache 服务启动的记录日志：&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/var/log/messages   &lt;span class=&quot;c&quot;&gt;# 这个日志是系统的大集合&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;安装 Apache&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;httpd
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;设置 httpd 服务开机启动&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;httpd
+Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;启动 Apache&lt;/strong&gt;
+systemctl start httpd&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;查看 Apache 的状态&lt;/strong&gt;
+systemctl status httpd&lt;/p&gt;
+
+&lt;p&gt;即可通过服务器 IP 直接访问，端口分别是 80 (http)、443 (https)&lt;/p&gt;
+
+&lt;h2 id=&quot;apache-命令&quot;&gt;Apache 命令&lt;/h2&gt;
+&lt;h3 id=&quot;停止-apache-服务&quot;&gt;停止 Apache 服务&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl stop httpd&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;启动-apache-服务&quot;&gt;启动 Apache 服务&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl start httpd&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;重启-apache-服务&quot;&gt;重启 Apache 服务&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl restart httpd&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;禁用-apache-开机自启动&quot;&gt;禁用 Apache 开机自启动&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl disable httpd&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;apache-开机自启动&quot;&gt;Apache 开机自启动&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl enable httpd&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;更改配置后重新加载-apache-服务&quot;&gt;更改配置后重新加载 Apache 服务&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl reload httpd&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;apache-的主配置文件&quot;&gt;Apache 的主配置文件&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/httpd/conf/httpd.conf&lt;/code&gt; 安装完后就可以到 Apache 的默认目录 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/html&lt;/code&gt; 添加一个简单的 index.html&lt;/p&gt;
+
+&lt;p&gt;``` html
+&amp;lt;!DOCTYPE html&amp;gt;&lt;/p&gt;
+&lt;head&gt;
+        &lt;title&gt;test&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+        &lt;p&gt;Hello World!&lt;/p&gt;
+&lt;/body&gt;
+&lt;p&gt;&amp;lt;/html&amp;gt;
+html&lt;/p&gt;</content><author><name>Lewin</name></author><category term="apache" /><category term="http" /><category term="server" /><summary type="html">Apache 服务概览 软件包： httpd, httpd-devel, httpd-manual 服务类型：由 systemd 启动的守护进程 配置单元： /usr/lib/systemd/system/httpd.service 守护进程： /usr/sbin/httpd 端口： 80 (http), 443 (https) 配置： /etc/httpd/ Web 文档： /var/www/html/</summary></entry><entry><title type="html">CentOS 6 添加 dns 缓存</title><link href="https://lewinz.org/2021/09/13/centos-6-dnsmasq/" rel="alternate" type="text/html" title="CentOS 6 添加 dns 缓存" /><published>2021-09-13T00:00:00+08:00</published><updated>2021-09-13T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/13/centos-6-dnsmasq</id><content type="html" xml:base="https://lewinz.org/2021/09/13/centos-6-dnsmasq/">&lt;h3 id=&quot;安装-dnsmasq&quot;&gt;安装 dnsmasq&lt;/h3&gt;
 &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum install dnsmasq -y&lt;/code&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;修改配置文件&quot;&gt;修改配置文件：&lt;/h3&gt;
@@ -1052,21 +1121,4 @@ kernel 支援 tty snoop，可以监控线上使用者 (不像 linux 那个半调
   &lt;li&gt;关闭 channel 后，无法向 channel 再发送数据 (引发 panic 错误后导致接收立即返回零值)；&lt;/li&gt;
   &lt;li&gt;关闭 channel 后，可以继续从 channel 接收数据；&lt;/li&gt;
   &lt;li&gt;对于 nil channel，无论收发都会被阻塞。&lt;/li&gt;
-&lt;/ol&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="channel" /><summary type="html">基本定义 channel 是 Go 语言中的一个核心类型，可以把它看成管道。并发核心单元通过它就可以发送或者接收数据进行通讯，这在一定程度上又进一步降低了编程的难度。channel 是一个数据类型，主要用来解决 go 程的同步问题以及协程之间数据共享（数据传递）的问题。</summary></entry><entry><title type="html">linux nc 监听 TCP/UDP</title><link href="https://lewinz.org/2021/08/05/linux-nc-listener/" rel="alternate" type="text/html" title="linux nc 监听 TCP/UDP" /><published>2021-08-05T00:00:00+08:00</published><updated>2021-08-05T00:00:00+08:00</updated><id>https://lewinz.org/2021/08/05/linux-nc-listener</id><content type="html" xml:base="https://lewinz.org/2021/08/05/linux-nc-listener/">&lt;p&gt;Linux 提供了一个很好的工具用来监控 TCP 或者 UDP 端口&lt;/p&gt;
-
-&lt;h2 id=&quot;安装&quot;&gt;安装&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum install nc -y&lt;/code&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;监听-tcp-端口与测试&quot;&gt;监听 TCP 端口与测试&lt;/h2&gt;
-&lt;h3 id=&quot;监听在tcp的3307端口&quot;&gt;监听在tcp的3307端口&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nc -lv 3307&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;往tcp的3307端口发送消息&quot;&gt;往tcp的3307端口发送消息&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nc localhost 3307&lt;/code&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;监听-udp-端口与测试&quot;&gt;监听 UDP 端口与测试&lt;/h2&gt;
-&lt;h3 id=&quot;监听在udp的3307端口&quot;&gt;监听在UDP的3307端口&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nc -lvu 3307&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;往udp端口发送消息&quot;&gt;往UDP端口发送消息&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;echo -n &quot;hello world,UDP&quot; &amp;gt;/dev/udp/localhost/3307&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="linux" /><category term="nc" /><category term="listener" /><summary type="html">Linux 提供了一个很好的工具用来监控 TCP 或者 UDP 端口</summary></entry></feed>
+&lt;/ol&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="channel" /><summary type="html">基本定义 channel 是 Go 语言中的一个核心类型，可以把它看成管道。并发核心单元通过它就可以发送或者接收数据进行通讯，这在一定程度上又进一步降低了编程的难度。channel 是一个数据类型，主要用来解决 go 程的同步问题以及协程之间数据共享（数据传递）的问题。</summary></entry></feed>
