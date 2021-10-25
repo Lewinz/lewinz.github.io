@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-09-15T11:33:30+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">Apache http server</title><link href="https://lewinz.org/2021/09/15/apache-http-server/" rel="alternate" type="text/html" title="Apache http server" /><published>2021-09-15T00:00:00+08:00</published><updated>2021-09-15T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/15/apache-http-server</id><content type="html" xml:base="https://lewinz.org/2021/09/15/apache-http-server/">&lt;h2 id=&quot;apache-服务概览&quot;&gt;Apache 服务概览&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-10-25T15:52:44+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">Apache http server</title><link href="https://lewinz.org/2021/09/15/apache-http-server/" rel="alternate" type="text/html" title="Apache http server" /><published>2021-09-15T00:00:00+08:00</published><updated>2021-09-15T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/15/apache-http-server</id><content type="html" xml:base="https://lewinz.org/2021/09/15/apache-http-server/">&lt;h2 id=&quot;apache-服务概览&quot;&gt;Apache 服务概览&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;软件包： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;httpd&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;httpd-devel&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;httpd-manual&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;服务类型：由 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemd&lt;/code&gt; 启动的守护进程&lt;/li&gt;
@@ -19,13 +19,35 @@ error_log       &lt;span class=&quot;c&quot;&gt;# 记录访问页面错误信息
 &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/var/log/messages   &lt;span class=&quot;c&quot;&gt;# 这个日志是系统的大集合&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
+&lt;h3 id=&quot;centos&quot;&gt;CentOS&lt;/h3&gt;
+
 &lt;p&gt;&lt;strong&gt;安装 Apache&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;httpd
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;httpd &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;strong&gt;设置 httpd 服务开机启动&lt;/strong&gt;&lt;/p&gt;
 &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;httpd
 Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;启动 Apache&lt;/strong&gt;
+systemctl start httpd&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;查看 Apache 的状态&lt;/strong&gt;
+systemctl status httpd&lt;/p&gt;
+
+&lt;h3 id=&quot;ubuntu&quot;&gt;Ubuntu&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;安装 Apache&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apt &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;apache2 &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;设置 httpd 服务开机启动&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;httpd
+Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;配置 UFW 防火墙&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ufw allow &lt;span class=&quot;s1&quot;&gt;'Apache'&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;strong&gt;启动 Apache&lt;/strong&gt;
@@ -58,16 +80,15 @@ systemctl status httpd&lt;/p&gt;
 &lt;h2 id=&quot;apache-的主配置文件&quot;&gt;Apache 的主配置文件&lt;/h2&gt;
 &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/httpd/conf/httpd.conf&lt;/code&gt; 安装完后就可以到 Apache 的默认目录 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/html&lt;/code&gt; 添加一个简单的 index.html&lt;/p&gt;
 
-&lt;p&gt;``` html
-&amp;lt;!DOCTYPE html&amp;gt;&lt;/p&gt;
-&lt;head&gt;
-        &lt;title&gt;test&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-        &lt;p&gt;Hello World!&lt;/p&gt;
-&lt;/body&gt;
-&lt;p&gt;&amp;lt;/html&amp;gt;
-html&lt;/p&gt;</content><author><name>Lewin</name></author><category term="apache" /><category term="http" /><category term="server" /><summary type="html">Apache 服务概览 软件包： httpd, httpd-devel, httpd-manual 服务类型：由 systemd 启动的守护进程 配置单元： /usr/lib/systemd/system/httpd.service 守护进程： /usr/sbin/httpd 端口： 80 (http), 443 (https) 配置： /etc/httpd/ Web 文档： /var/www/html/</summary></entry><entry><title type="html">CentOS 6 添加 dns 缓存</title><link href="https://lewinz.org/2021/09/13/centos-6-dnsmasq/" rel="alternate" type="text/html" title="CentOS 6 添加 dns 缓存" /><published>2021-09-13T00:00:00+08:00</published><updated>2021-09-13T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/13/centos-6-dnsmasq</id><content type="html" xml:base="https://lewinz.org/2021/09/13/centos-6-dnsmasq/">&lt;h3 id=&quot;安装-dnsmasq&quot;&gt;安装 dnsmasq&lt;/h3&gt;
+&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;test&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;Hello World!&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="apache" /><category term="http" /><category term="server" /><summary type="html">Apache 服务概览 软件包： httpd, httpd-devel, httpd-manual 服务类型：由 systemd 启动的守护进程 配置单元： /usr/lib/systemd/system/httpd.service 守护进程： /usr/sbin/httpd 端口： 80 (http), 443 (https) 配置： /etc/httpd/ Web 文档： /var/www/html/</summary></entry><entry><title type="html">CentOS 6 添加 dns 缓存</title><link href="https://lewinz.org/2021/09/13/centos-6-dnsmasq/" rel="alternate" type="text/html" title="CentOS 6 添加 dns 缓存" /><published>2021-09-13T00:00:00+08:00</published><updated>2021-09-13T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/13/centos-6-dnsmasq</id><content type="html" xml:base="https://lewinz.org/2021/09/13/centos-6-dnsmasq/">&lt;h3 id=&quot;安装-dnsmasq&quot;&gt;安装 dnsmasq&lt;/h3&gt;
 &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum install dnsmasq -y&lt;/code&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;修改配置文件&quot;&gt;修改配置文件：&lt;/h3&gt;
