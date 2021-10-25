@@ -26,15 +26,40 @@ Apache 服务启动的记录日志：
 /var/log/messages   # 这个日志是系统的大集合
 ```
 
+### CentOS
+
 **安装 Apache**
 ``` sh
-yum install httpd
+yum install httpd -y
 ```
 
 **设置 httpd 服务开机启动**
 ``` sh
 $ systemctl enable httpd
 Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
+```
+
+**启动 Apache**
+systemctl start httpd
+
+**查看 Apache 的状态**
+systemctl status httpd
+
+### Ubuntu
+**安装 Apache**
+``` sh
+apt install apache2 -y
+```
+
+**设置 httpd 服务开机启动**
+``` sh
+$ systemctl enable httpd
+Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
+```
+
+**配置 UFW 防火墙**
+``` sh
+$ ufw allow 'Apache'
 ```
 
 **启动 Apache**
@@ -76,4 +101,4 @@ systemctl status httpd
         <p>Hello World!</p>
 </body>
 </html>
-html
+```
