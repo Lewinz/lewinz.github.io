@@ -719,6 +719,14 @@
     } ,
   
     {
+      "title"    : "Linux Shell Pipe",
+      "category" : "linux",
+      
+      "url"      : "https://lewinz.org/2021/10/25/linux-shell/",
+      "keywords" : "linux, shell, Pipe"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       

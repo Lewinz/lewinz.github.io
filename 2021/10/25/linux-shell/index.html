@@ -1,0 +1,279 @@
+<!DOCTYPE html><html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /><title>Linux Shell Pipe &mdash; 阿嫂</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/primer-css/css/primer.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/collection.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/repo-card.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/sections/repo-list.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/boxed-group.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/common.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/responsive.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/posts/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/octicons/octicons/octicons.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/rouge-themes@master/dist/github.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/share.js/dist/css/share.min.css"><link rel="canonical" href="https://lewinz.org/2021/10/25/linux-shell/"><link rel="alternate" type="application/atom+xml" title="阿嫂" href="https://lewinz.org/feed.xml"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/favicon.ico"><meta property="og:title" content="Linux Shell Pipe"><meta name="keywords" content="linux, shell, Pipe"><meta name="og:keywords" content="linux, shell, Pipe"><meta name="description" content="命令执行顺序控制通常情况下，我们在终端只能执行一条命令，然后按下回车执行，那么如何执行多条命令呢？"><meta name="og:description" content="命令执行顺序控制通常情况下，我们在终端只能执行一条命令，然后按下回车执行，那么如何执行多条命令呢？"><meta property="og:url" content="https://lewinz.org/2021/10/25/linux-shell/"><meta property="og:site_name" content="阿嫂"><meta property="og:type" content="article"><meta property="og:locale" content="zh_CN" /><meta property="article:published_time" content="2021-10-25"> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/jquery/dist/jquery.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery-ui.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/main.js"></script> <script data-ad-client="ca-pub-7093222719567591" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head><body class="" data-mz=""><header class="site-header"><div class="container">
+<h1><a href="https://lewinz.org/" title="阿嫂"><span class="octicon octicon-mark-github"></span> 阿嫂</a></h1>
+<button class="collapsed mobile-visible" type="button" onclick="toggleMenu();"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button><nav class="site-header-nav" role="navigation"> <a href="https://lewinz.org/" class=" site-header-nav-item" target="" title="首页">首页</a> <a href="https://lewinz.org/categories/" class=" site-header-nav-item" target="" title="分类">分类</a> <a href="https://lewinz.org/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a> <a href="https://lewinz.org/links/" class=" site-header-nav-item" target="" title="链接">链接</a> <a href="https://lewinz.org/about/" class=" site-header-nav-item" target="" title="关于">关于</a></nav>
+</div></header><section class="collection-head small geopattern" data-pattern-id="Linux Shell Pip"><div class="container"><div class="columns">
+<div class="column three-fourths"><div class="collection-title">
+<h1 class="collection-header">Linux Shell Pipe</h1>
+<div class="collection-info"> <span class="meta-info"> <span class="octicon octicon-calendar"></span> 2021/10/25 </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#linux" title="linux">linux</a> </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#shell" title="shell">shell</a> </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#Pipe" title="Pipe">Pipe</a> </span> <span class="meta-info"> <span class="octicon octicon-clock"></span> 共 7024 字，约 21 分钟 </span>
+</div>
+</div></div>
+<div class="column one-fourth mobile-hidden"><div class="collection-title"></div></div>
+</div></div></section><section class="container content"><div class="columns">
+<div class="column three-fourths"> <ins class="adsbygoogle content-header-ad" data-ad-client="ca-pub-7093222719567591" data-ad-slot="1650902835"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script> <br><article class="article-content markdown-body"><h2 id="命令执行顺序控制">命令执行顺序控制</h2>
+<p>通常情况下，我们在终端只能执行一条命令，然后按下回车执行，那么如何执行多条命令呢？</p>
+<ol>
+<li>顺序执行多条命令：command1;command2;command3;<br> 简单的顺序指令可以通过 ; 来实现</li>
+<li>有条件的执行多条命令：which command1 &amp;&amp; command2 || command3<br> &amp;&amp; : 如果前一条命令执行成功则执行下一条命令，如果 command1 执行成功（返回 0）, 则执行 command2<br> || : 与 &amp;&amp; 命令相反，执行不成功时执行这个命令</li>
+<li>$?: 存储上一次命令的返回结果</li>
+</ol>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子：
+<span class="nv">$ </span>which git&gt;/dev/null <span class="o">&amp;&amp;</span> git <span class="nt">--help</span>  // 如果存在 git 命令，执行 git <span class="nt">--help</span> 命令
+<span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$?</span> 
+</code></pre></div></div>
+<h2 id="管道命令">管道命令</h2>
+<blockquote><p>管道是一种通信机制，通常用于进程间的通信（也可通过 socket 进行网络通信），它表现出来的形式将前面每一个进程的输出（stdout）直接作为下一个进程的输入（stdin）。</p></blockquote>
+<table><tbody><tr>
+<td>管道命令使用</td>
+<td>作为界定符号，管道命令与上面说的连续执行命令不一样。</td>
+</tr></tbody></table>
+<ul>
+<li><p>管道命令仅能处理 standard output, 对于 standard error output 会予以忽略。<br> less,more,head,tail… 都是可以接受 standard input 的命令，所以他们是管道命令<br> ls,cp,mv 并不会接受 standard input 的命令，所以他们就不是管道命令了。</p></li>
+<li><p>管道命令必须要能够接受来自前一个命令的数据成为 standard input 继续处理才行。</p></li>
+</ul>
+<h3 id="选取命令-cutgrep">选取命令 「cut」「grep」</h3>
+<ul><li>cut: 从某一行信息中取出某部分我们想要的信息。<blockquote>
+<p>cut -d ‘分隔字符’ -f field // 用于分隔字符<br> cut -c 字符范围<br> [参数说明]<br> -d : 后面接分隔字符, 通常与 -f 一起使用<br> -f : 根据 - d 将信息分隔成数段，-f 后接数字 表示取出第几段<br> -c : 以字符为单位取出固定字符区间的信息</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子 1：
+打印 / etc/passwd 文件中以: 为分隔符的第 1 个字段和第 6 个字段分别表示用户名和家目录
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat </span>etc/passwd | <span class="nb">cut</span> <span class="nt">-d</span> <span class="s1">':'</span> <span class="nt">-f</span> 1,6
+root:/root
+bin:/bin
+daemon:/sbin
+adm:/var/adm
+lp:/var/spool/lpd
+</code></pre></div></div>
+</blockquote>
+</li></ul>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子 2：
+打印 / etc/passwd 文件中每一行的前 10 个字符：
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat</span> /etc/passwd | <span class="nb">cut</span> <span class="nt">-c</span> 1-10
+root:x:0:0
+bin:x:1:1:
+daemon:x:2
+adm:x:3:4:
+lp:x:4:7:l
+</code></pre></div></div>
+<p><strong>ps:cut 在处理多空格相连的数据时，比较吃力。</strong></p>
+<ul><li>grep: 分析一行信息，如果其中有我们需要的信息，就将该行拿出来<blockquote><p>grep [-acinv] [–color=auto] ‘查找字符串’ filename<br> [参数]<br> -a : 将 binary 文件以 text 文件的方式查找数据<br> -c : 计算找到 ‘查找字符串’的次数<br> -i : 忽略大小写的不同<br> -n : 输出行号<br> -v : 反向选择，显示没有查找内容的行<br> –color=auto : 将找到的关键字部分加上颜色显示</p></blockquote>
+</li></ul>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子 3：
+取出含有 fanco 的 / etc/passwd 文件的行
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat </span>etc/passwd | <span class="nb">grep</span> <span class="nt">-n</span> <span class="nt">-c</span> <span class="s1">'fanco'</span>
+1
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat </span>etc/passwd | <span class="nb">grep</span> <span class="nt">-n</span> <span class="s1">'fanco'</span>
+23:fanco:x:1001:1001::/home/fanco:/bin/bash
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat </span>etc/passwd | <span class="nb">grep</span> <span class="nt">-n</span> <span class="nt">-v</span> <span class="s1">'fanco'</span>
+1:root:x:0:0:root:/root:/bin/bash
+2:bin:x:1:1:bin:/bin:/sbin/nologin
+3:daemon:x:2:2:daemon:/sbin:/sbin/nologin
+4:adm:x:3:4:adm:/var/adm:/sbin/nologin
+5:lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+...
+</code></pre></div></div>
+<h3 id="排序命令-sortuniqwc">排序命令 「sort」「uniq」「wc」</h3>
+<ul><li>sort<blockquote><p>sort [-fbMnrtuk] [file or stdin]<br> [参数]<br> -f ：忽略大小写的差异，例如 A 与 a 视为编码相同<br> -b ：忽略最前面的空格部分<br> -M ：以月份的名字来排序，例如 JAN, DEC 等等的排序方法<br> -n ：使用『纯数字』进行排序默认是以文字型态来排序的)<br> -r ：反向排序<br> -u ：就是 uniq ，相同的资料中，仅出现一行代表<br> -t ：分隔符号，预设是用 [tab] 键来分隔<br> -k ：以那个区间 (field) 来进行排序的意思</p></blockquote>
+</li></ul>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子 4：
+对 / etc/passwd 的账号进行排序
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat</span> /etc/passwd | <span class="nb">sort
+</span>adm:x:3:4:adm:/var/adm:/sbin/nologin
+bin:x:1:1:bin:/bin:/sbin/nologin
+chrony:x:998:996::/var/lib/chrony:/sbin/nologin
+...
+通过 / etc/passwd 第 5 列来进行排序
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat </span>etc/passwd | <span class="nb">sort</span> <span class="nt">-t</span> <span class="s1">':'</span> <span class="nt">-k</span> 3
+root:x:0:0:root:/root:/bin/bash
+fanco:x:1001:1001::/home/fanco:/bin/bash
+operator:x:11:0:operator:/root:/sbin/nologin
+bin:x:1:1:bin:/bin:/sbin/nologin
+games:x:12:100:games:/usr/games:/sbin/nologin
+ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+这里排序还是按照文字进行排序的，切换成数字排序
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat </span>etc/passwd | <span class="nb">sort</span> <span class="nt">-t</span> <span class="s1">':'</span> <span class="nt">-k</span> 3 <span class="nt">-n</span>
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+</code></pre></div></div>
+<ul><li>uniq<blockquote><p>uniq [-ic]<br> [参数]<br> -i ：忽略大小写的不同<br> -c ：进行计数</p></blockquote>
+</li></ul>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子 5
+使用 last 取出历史登录信息的账号，排序，去重
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# last | <span class="nb">cut</span> <span class="nt">-d</span> <span class="s1">' '</span> <span class="nt">-f</span> 1 | <span class="nb">sort</span> | <span class="nb">uniq</span> <span class="nt">-c</span>
+      1 
+      7 reboot
+     19 root
+      1 wtmp
+</code></pre></div></div>
+<ul><li>wc<blockquote><p>wc [-lwm]<br> [参数]<br> -l ：仅列出行<br> -w ：仅列出多少字 (英文单字)<br> -m ：多少字符</p></blockquote>
+</li></ul>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子 6
+查看 etc/passwd 中有多少账号
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat</span> /etc/passwd | <span class="nb">wc</span> <span class="nt">-l</span>
+23
+计算最近登录系统的人次
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# last | <span class="nb">grep</span> <span class="o">[</span>a-zA-Z] | <span class="nb">grep</span> <span class="nt">-v</span> <span class="s1">'wtmp'</span> | <span class="nb">wc</span> <span class="nt">-l</span>
+2
+查看某个文件的行数 字数 字符数
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat </span>etc/passwd | <span class="nb">wc
+     </span>23      32     997
+</code></pre></div></div>
+<h3 id="双向重定向命令-tee">双向重定向命令 「tee」</h3>
+<ul><li>tee：在数据流的处理过程中将某段信息保存下来，使其既能输出到屏幕又能保存到某一个文件中。</li></ul>
+<p><img src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux_shell_1.png" alt="linux_shell_1"></p>
+<blockquote><p>tee [-a] file<br> [参数]<br> -a : 以累加的方式，将数据加入 file 中</p></blockquote>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子 7
+查询最近用户登录情况，并将其保存到文件中
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# last | <span class="nb">tee </span>info | <span class="nb">cut</span> <span class="nt">-d</span> <span class="s1">' '</span> <span class="nt">-f</span> 1
+root
+...
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# less info
+root     pts/0        112.28.181.159   Sun Jul  1 14:28   still logged <span class="k">in   
+</span>root     pts/0        112.28.181.159   Sun Jul  1 14:24 - 14:27  <span class="o">(</span>00:03<span class="o">)</span>    
+root     pts/0        112.28.181.159   Sun Jul  1 13:19 - 14:24  <span class="o">(</span>01:04<span class="o">)</span>    
+root     tty1                          Sun Jul  1 12:46   still logged <span class="k">in</span>  
+</code></pre></div></div>
+<p>如果 tee 后接的文件已存在，内容会被覆盖掉，加上 -a 参数则会累加</p>
+<h3 id="字符转换命令-trcoljoinpasteexpand">字符转换命令 「tr」「col」「join」「paste」「expand」</h3>
+<ul><li>tr：用来删除一段信息当中的文字，或者进行文字信息得替换<blockquote><p>tr [-ds] set<br> [参数]<br> -d : 删除信息当中的 set1 这个字符串<br> -s : 替换掉重复的字符</p></blockquote>
+</li></ul>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子 8
+将上一步生成的 info 文件删除掉所有的 root
+删除前
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat </span>info
+root     pts/0        112.28.180.86    Thu May 10 18:01 - 18:12  <span class="o">(</span>00:11<span class="o">)</span>    
+reboot   system boot  3.10.0-693.2.2.e Fri May 11 02:00 - 16:31 <span class="o">(</span>51+14:30<span class="o">)</span>  
+ 删除后
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat </span>info | <span class="nb">tr</span> <span class="nt">-d</span> <span class="s1">'root'</span>  
+     ps/0        112.28.180.86    Thu May 10 18:01 - 18:12  <span class="o">(</span>00:11<span class="o">)</span>    
+eb   sysem b  3.10.0-693.2.2.e Fi May 11 02:00 - 16:31 <span class="o">(</span>51+14:30<span class="o">)</span>  
+
+删除时并不是只删除连续的字符，reboot 也被删除掉了 root 部分
+</code></pre></div></div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>除去 dos 文件留下来的 ^M 符号
+<span class="nv">$ </span><span class="nb">cat</span> /root/passwd | <span class="nb">tr</span> <span class="nt">-d</span> <span class="s1">'\r'</span> <span class="o">&gt;</span> /root/passwd.linux
+^M 可以用 <span class="se">\ </span>r 替代
+</code></pre></div></div>
+<ul><li>col<blockquote><p>col [-xb]<br> [参数]<br> -x ： 将 tab 键换成对等的空格键<br> -b : 在文字内有反斜杠 (/) 时，仅保留反斜杠最后接的那个字符<br> ``` shell 栗子 9 将上图中的 ^I 换成空格键 [root@izuf6i29flb2df231kt91hz /]# cat info | col -x | cat -A | more root pts/0 112.28.181.159 Sun Jul 1 14:28 still logged in$ col 经常被用于将 man page 转存为纯文本文件</p></blockquote>
+</li></ul>
+<p>join: 主要讲两个文件有相同数据的一行，相同字段放在前面 join [-ti12] file1 file2 [参数] -t : join 默认以空格符分隔数据，并且对比第一个字段的数据 , 如果两个文件相同，则将两条数据连成一行 -i : 忽略大小写的差异 -1 : 说明第一个文件通过那个字段来进行分析 -2 : 说明第二个文件通过那个字段来分析</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>``` shell
+栗子 10
+将 / etc/passwd 与  /etc/shadow 相关数据整合成一列
+[root@izuf6i29flb2df231kt91hz /]# head -3 /etc/passwd /etc/shadow
+==&gt; /etc/passwd &lt;==
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+
+==&gt; /etc/shadow &lt;==
+root:$6$RNGEziM7$2e/EJd3hThS8TMqHSgDIfeDf7dJUG1dbJ0ik1goybGYmLGZL.sHNv1Ltb4.1HUksxTI0Cs3PJw5g/YirSImKg1:17643:0:99999:7:::
+bin:*:17110:0:99999:7:::
+daemon:*:17110:0:99999:7:::
+[root@izuf6i29flb2df231kt91hz /]# join -t ':' /etc/passwd /etc/shadow
+root:x:0:0:root:/root:/bin/bash:$6$RNGEziM7$2e/EJd3hThS8TMqHSgDIfeDf7dJUG1dbJ0ik1goybGYmLGZL.sHNv1Ltb4.1HUksxTI0Cs3PJw5g/YirSImKg1:17643:0:99999:7:::
+bin:x:1:1:bin:/bin:/sbin/nologin:*:17110:0:99999:7:::
+daemon:x:2:2:daemon:/sbin:/sbin/nologin:*:17110:0:99999:7:::
+
+将 etc/passwd 按：分隔的第 4 个字段 与 etc/group 的第 3 个字段 比较，如果相同，则将他两同行数据放在一起
+[root@izuf6i29flb2df231kt91hz /]# join -t ':' -1 4 /etc/passwd -2 3 /etc/group
+0:root:x:0:root:/root:/bin/bash:root:x:
+1:bin:x:1:bin:/bin:/sbin/nologin:bin:x:
+2:daemon:x:2:daemon:/sbin:/sbin/nologin:daemon:x:
+4:adm:x:3:adm:/var/adm:/sbin/nologin:adm:x:
+join: /etc/passwd:6: is not sorted: sync:x:5:0:sync:/sbin:/bin/sync
+7:lp:x:4:lp:/var/spool/lpd:/sbin/nologin:lp:x:
+</code></pre></div></div>
+<ul><li>paste: 直接将两个文件两行贴在一起，中间以 [tab] 键隔开<blockquote>
+<p>paste [-d] file1 file2<br> [ 参数]<br> -d : 后面可以接分隔字符，默认以 [tab] 来分隔的</p>
+<ul><li>: 如果 file 部分写成 -，表示接受 standard input 数据的意思</li></ul>
+</blockquote>
+</li></ul>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子 11
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">paste </span>info info2
+    root     pts/0        112.28.181.159   Sun Jul  1 14:28   still logged <span class="k">in       </span>root     pts/0        112.28.181.159   Sun Jul  1 14:28   still logged <span class="k">in   
+</span>root     pts/0        112.28.181.159   Sun Jul  1 14:24 - 14:27  <span class="o">(</span>00:03<span class="o">)</span>        root     pts/0        112.28.181.159   Sun Jul  1 14:24 - 14:27  <span class="o">(</span>00:03<span class="o">)</span>    
+root     pts/0        112.28.181.159   Sun Jul  1 13:19 - 14:24  <span class="o">(</span>01:04<span class="o">)</span>        root     pts/0        112.28.181.159   Sun Jul  1 13:19 - 14:24  <span class="o">(</span>01:04<span class="o">)</span> 
+</code></pre></div></div>
+<ul>
+<li>expand: 把 tab 键转为空格键<blockquote>
+<p>expand [-t] file<br> [参数]<br> -t : 后面接数字，一般，一个 tab 可以用 8 个空格代替，可以自行定义代表几个空格</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子 12
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cat </span>info | <span class="nb">expand</span> <span class="nt">-3</span> info
+ root     pts/0        112.28.181.159   Sun Jul  1 14:28   still logged <span class="k">in   
+</span>root     pts/0        112.28.181.159   Sun Jul  1 14:24 - 14:27  <span class="o">(</span>00:03<span class="o">)</span>    
+root     pts/0        112.28.181.159   Sun Jul  1 13:19 - 14:24  <span class="o">(</span>01:04<span class="o">)</span>    
+root     tty1                          Sun Jul  1 12:46   still logged <span class="k">in</span>
+</code></pre></div></div>
+</blockquote>
+</li>
+<li>切割命令：split, 顾名思义，讲一个大文件依据文件大小或行数切割成为小文件<blockquote>
+<p>split [-bl] file prefix<br> [参数]<br> -b : 后面可接欲切割文件的大小，可加单位，例如 b,k,m 等<br> -l : 以行数来进行切割<br> PREFIX : 代表前导符，可作为切割文件的前导文字</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>栗子 13
+<span class="nv">$ </span><span class="nb">split</span> <span class="nt">-b</span> 300K /etc/passwd
+将 <span class="nb">ls</span> <span class="nt">-al</span> 输出文件  按 10 行分成一个新的文件
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">ls</span> <span class="nt">-al</span> / | <span class="nb">split</span> <span class="nt">-l</span> 10 - lsrrot
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">ls 
+</span>b    boot  dev  home  info2  lib64       lsrrotaa  lsrrotac  mnt  opt   root  sbin  sys  usr
+bin  c     etc  info  lib    lost+found  lsrrotab  media     n    proc  run   srv   tmp  var
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">cd</span> /
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">ls
+</span>b    boot  dev  home  info2  lib64       lsrrotaa  lsrrotac  mnt  opt   root  sbin  sys  usr
+bin  c     etc  info  lib    lost+found  lsrrotab  media     n    proc  run   srv   tmp  var
+<span class="o">[</span>root@izuf6i29flb2df231kt91hz /]# <span class="nb">wc</span> <span class="nt">-l</span> lsrrot<span class="k">*</span>
+10 lsrrotaa
+10 lsrrotab
+ 9 lsrrotac
+29 total
+</code></pre></div></div>
+</blockquote>
+</li>
+</ul>
+<div style="margin-top:2em;padding:0 1.5em;border:1px solid #d3d3d3;background-color:#deebf7">
+<h3>文档信息</h3>
+<ul>
+<li>本文作者：<a href="https://lewinz.org" target="_blank">Lewin</a>
+</li>
+<li>本文链接：<a href="https://lewinz.org/2021/10/25/linux-shell/" target="_blank">https://lewinz.org/2021/10/25/linux-shell/</a>
+</li>
+<li>版权声明：自由转载-非商用-非衍生-保持署名</li>
+</ul>
+</div></article><div class="share"><div class="share-component" data-disabled="qq,weibo,qzone"></div></div>
+<div class="comment">
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/gitalk/gitalk.css"> <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> <script> var gitalk = new Gitalk({ id: '/2021/10/25/linux-shell/', clientID: '831a35f6d4f6fc049209', clientSecret: '6e80f9a3e9b50b498553e32179ad3adbd893ab7e', repo: 'blog-comments', owner: 'Lewinz', admin: ['Lewinz'], labels: ['gitment'], perPage: 50, }); gitalk.render('gitalk-container'); </script>
+</div>
+</div>
+<div class="column one-fourth">
+<h3>Search</h3>
+<div id="site_search"> <input style="width:96%" type="text" id="search_box" placeholder="Search">
+</div>
+<ul id="search_results" style="font-size:14px;list-style-type:none;padding-top:10px;padding-left:10px;"></ul>
+<script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/simple-jekyll-search.min.js"></script> <script type="text/javascript"> SimpleJekyllSearch({ searchInput: document.getElementById('search_box'), resultsContainer: document.getElementById('search_results'), json: 'https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@built/assets/search_data.json?v=1635393860', searchResultTemplate: '<li><a href="{url}" title="{title}">{title}</a></li>', noResultsText: 'No results found', limit: 10, fuzzy: false, exclude: ['Welcome'] }) </script><h3 class="post-directory-title mobile-hidden">Table of Contents</h3>
+<div id="post-directory-module" class="mobile-hidden"><section class="post-directory"><dl></dl></section></div>
+<script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery.toc.js"></script>
+</div>
+</div></section><footer class="container"> <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7093222719567591" data-ad-slot="5263168187" data-ad-format="auto" data-full-width-responsive="true"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script><div class="site-footer" role="contentinfo">
+<div class="copyright left mobile-block"> © 2021 <span title="Lewin">Lewin</span> <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+</div>
+<ul class="site-footer-links right mobile-hidden"><li> <a href="javascript:window.scrollTo(0,0)">TOP</a>
+</li></ul>
+<a href="https://github.com/Lewinz/lewinz.github.io" target="_blank" aria-label="view source code"> <span class="mega-octicon octicon-mark-github" title="GitHub"></span> </a><ul class="site-footer-links mobile-hidden">
+<li> <a href="https://lewinz.org/" title="首页" target="">首页</a>
+</li>
+<li> <a href="https://lewinz.org/categories/" title="分类" target="">分类</a>
+</li>
+<li> <a href="https://lewinz.org/wiki/" title="维基" target="">维基</a>
+</li>
+<li> <a href="https://lewinz.org/links/" title="链接" target="">链接</a>
+</li>
+<li> <a href="https://lewinz.org/about/" title="关于" target="">关于</a>
+</li>
+<li><a href="https://lewinz.org/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+</ul>
+<script async src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="mobile-hidden" style="margin-top:8px"> <span id="busuanzi_container_site_pv" style="display:none"> 本站访问量<span id="busuanzi_value_site_pv"></span>次 </span> <span id="busuanzi_container_site_uv" style="display:none"> / 本站访客数<span id="busuanzi_value_site_uv"></span>人 </span> <span id="busuanzi_container_page_pv" style="display:none"> / 本页访问量<span id="busuanzi_value_page_pv"></span>次 / 统计始于2021-04-21 </span>
+</div>
+</div></footer><div class="tools-wrapper"> <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a>
+</div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/share.js/dist/js/share.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/geopattern.js"></script> <script> jQuery(document).ready(function($) { $('.geopattern').each(function(){ $(this).geopattern($(this).data('pattern-id')); }); /* hljs.initHighlightingOnLoad(); */ }); </script><div style="display:none"> <script> (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-80669434-1', 'auto'); ga('send', 'pageview'); </script>
+</div></body></html>
