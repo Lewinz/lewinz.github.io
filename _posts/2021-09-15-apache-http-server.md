@@ -16,25 +16,25 @@ keywords: apache, http, server
 
 Apache 日志记录目录：`/var/log/httpd/`  
 该目录下有两种文件：
-``` sh
+``` shell
 access_log      # 记录客户端访问Apache的信息，比如客户端的ip
 error_log       # 记录访问页面错误信息
 ```
 
 Apache 服务启动的记录日志：
-``` sh
+``` shell
 /var/log/messages   # 这个日志是系统的大集合
 ```
 
 ### CentOS
 
 **安装 Apache**
-``` sh
+``` shell
 yum install httpd -y
 ```
 
 **设置 httpd 服务开机启动**
-``` sh
+``` shell
 $ systemctl enable httpd
 Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
 ```
@@ -47,18 +47,18 @@ systemctl status httpd
 
 ### Ubuntu
 **安装 Apache**
-``` sh
+``` shell
 apt install apache2 -y
 ```
 
 **设置 httpd 服务开机启动**
-``` sh
+``` shell
 $ systemctl enable httpd
 Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
 ```
 
 **配置 UFW 防火墙**
-``` sh
+``` shell
 $ ufw allow 'Apache'
 ```
 

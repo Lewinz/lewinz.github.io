@@ -28,7 +28,7 @@ unit 的定义文件可以根据其后缀名称识别其定义的类型，可以
 
 ## 文件组成
 文件通常由 3 段组成：
-``` sh
+``` shell
 [Unit]
 
 [unit 的类型：service target socket]
@@ -78,7 +78,7 @@ unit 的定义文件可以根据其后缀名称识别其定义的类型，可以
 - WanteBy: 表示该服务所在的 Target，含义是服务组，表示一组服务。WantedBy=multi-user.target 指的是，sshd 所在的 Target 是 multi-user.target。
 
 ## systemctl 命令
-``` sh
+``` shell
 # 列出正在运行的 Unit
 systemctl list-units，可以直接使用 systemctl
 

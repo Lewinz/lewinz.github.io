@@ -33,7 +33,7 @@ func smallAllocation() *smallStruct {
 `main.go:14:9: &smallStruct literal escapes to heap`
 
 借助 go tool compile -S main.go 命令得到这段程序的汇编代码，可以同样明确地向我们展示具体的分配细节：
-``` sh
+``` shell
 0x001d 00029 (main.go:14)   LEAQ   type."".smallStruct(SB), AX
 0x0024 00036 (main.go:14)  PCDATA $0, $0
 0x0024 00036 (main.go:14)  MOVQ   AX, (SP)

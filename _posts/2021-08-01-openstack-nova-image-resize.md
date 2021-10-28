@@ -66,11 +66,11 @@ nova.compute.manager.ComputeManager.build_and_run_instance()
 cloud-init 支持使用 growpart 和 gpart 对分区进行扩容，时配置的 mode 而定，默认会按顺序检测系统中是否安装了这两个工具，使用第一个找到的。
 
 growpart 是 AWS 的扩展分区工具，它分别使用 sfdisk 和 sgdisk 对 MBR 和 GPT 分区表操作，先将分区表导出，然后改写分区的其实扇区位置，最后将改写后的分区表导入，完成分区的扩容。
-``` sh
+``` shell
 # growpart [diskdev] [partnum]
 ```
 gpart 是 FreeBSD 推出的磁盘管理工具，GPT 分区表将 metadata 的主本保存在硬盘的开始，将副本保存在硬盘的末尾，所以当虚拟机镜像被扩容，相当于硬盘的容量变大，在 GPT 看来末尾的 metadata 副本丢失了，需要先执行 recover 命令恢复，然后再进行扩容。
-``` sh
+``` shell
 # gpart recover [diskdev]
 # gpart resize -i [partnum] [diskdev]
 ```
@@ -79,7 +79,7 @@ gpart 是 FreeBSD 推出的磁盘管理工具，GPT 分区表将 metadata 的主
 cloud-init 通过依次尝试解析 /proc/$$/mountinfo、/etc/mtab 和 mount 命令的输出，来获取根目录所挂载的分区和文件系统格式。
 
 针对不通的文件系统，使用不同的命令扩容：
-``` sh
+``` shell
 # resize2fs [devpth]    # ext 文件系统
 # xfs_growfs [devpth]    # xfs 文件系统
 # growfs [devpth]        # ufs 文件系统

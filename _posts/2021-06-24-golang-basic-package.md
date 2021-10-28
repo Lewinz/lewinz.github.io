@@ -390,7 +390,7 @@ func main() {
 }
 ```
 运行结果如下：
-``` sh
+``` shell
 main.exe
 ```
 
@@ -419,7 +419,7 @@ func main() {
 }
 ```
 运行结果如下：
-``` sh
+``` shell
 2019/12/13 15:12:14 用户名： LENOVO-PC\Administrator
 2019/12/13 15:12:14 用户 id S-1-5-21-711400000-2334436127-1750000211-000
 2019/12/13 15:12:14 用户主目录： C:\Users\Administrator
@@ -454,7 +454,7 @@ func main() {
 }
 ```
 运行该程序，然后在 CMD 窗口中通过 Ctrl+C 来结束该程序，便会得到输出结果：
-``` sh
+``` shell
 Got signal: interrupt
 ```
 

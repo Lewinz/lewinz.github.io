@@ -27,7 +27,7 @@ keywords: linux, ssh, timeout
 ### 修改服务端配置
 `vi ~/.ssh/config`
 
-``` sh
+``` shell
 TCPKeepAlive yes #表示 TCP 保持连接不断开
 ClientAliveInterval 300 #指定服务端向客户端请求消息的时间间隔，单位是秒，默认是 0，不发送。设置个 300 表示 5 分钟发送一次（注意，这里是服务端主动发起），然后等待客户端响应，成功，则保持连接。
 ClientAliveCountMax 3 #指服务端发出请求后客户端无响应则自动断开的最大次数。使用默认给的 3 即可。
@@ -39,7 +39,7 @@ ClientAliveCountMax 3 #指服务端发出请求后客户端无响应则自动断
 ### 修改客户端配置（推荐！！）
 `vi ~/.ssh/config`
 
-``` sh
+``` shell
 Host * #表示需要启用该规则的服务端（域名或 ip）
   ServerAliveInterval 60 #表示没 60 秒去给服务端发起一次请求消息（这个设置好就行了）
   ServerAliveCountMax 3 #表示最大连续尝试连接次数（这个基本不用设置）
@@ -69,7 +69,7 @@ host.allow 文件列出了允许连接到一个特定服务的主机，而 hosts
 不过，这两个文件只控制对有 hosts_access 功能的服务（如 xinetd 所管理的那些服务、sshd 和某些配置的 sendmail）的访问。
 
 **`/etc/hosts.allow`文件格式**  
-``` sh
+``` shell
 #
 # hosts.allow This file describes the names of the hosts which are
 # allowed to use the local INET services, as decided
@@ -84,7 +84,7 @@ sshd:222.77.15.*:allow
 all:218.24.129.110 // 他表示接受 110 这个 ip 的所有请求！
 
 **`/etc/hosts.deny` 文件格式**
-``` sh
+``` shell
 #
 # hosts.deny This file describes the names of the hosts which are
 # *not* allowed to use the local INET services, as decided

@@ -94,7 +94,7 @@ func Benchmark_String2Bytes(b *testing.B) {
 }
 ```
 测试结果如下
-``` sh
+``` shell
 $ go test -bench="." -benchmem
 goos: darwin
 goarch: amd64
@@ -109,7 +109,7 @@ ok      workspace/example/stringBytes   3.170s
 注意，-benchmem 可以提供每次操作分配内存的次数，以及每次操作分配的字节数。
 
 当 x 的数据均为 "Hello Gopher!" 时，测试结果如下
-``` sh
+``` shell
 $ go test -bench="." -benchmem
 goos: darwin
 goarch: amd64

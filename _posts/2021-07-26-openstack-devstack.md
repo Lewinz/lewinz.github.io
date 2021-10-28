@@ -25,7 +25,7 @@ OK，让我们开始一步步走起吧。
 
 ### 创建 stack 用户
 为了系统的安全， `DevStack` 最好不要在 `root` 用户下直接运行，因此需要创建一个专门的用户 `stack` ，该用户需要有免密码 `sudo` 权限，配置如下:
-``` sh
+``` shell
 adduser stack
 echo "stack ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers # 建议使用 visudo
 su stack
@@ -36,7 +36,7 @@ su stack
 
 ### 配置 DevStack
 在 `DevStack` 根目录下创建 `local.conf` 配置文件，包含 `admin` 密码、数据库密码、`RabbitMQ` 密码以及 `Service` 密码：
-``` sh
+``` shell
 [[local|localrc]]
 ADMIN_PASSWORD=secret
 DATABASE_PASSWORD=$ADMIN_PASSWORD
@@ -51,7 +51,7 @@ SERVICE_PASSWORD=$ADMIN_PASSWORD
 `./stack.sh`
 
 就这么简单？是的，一键部署，只需要一个命令！接下来你唯一需要做的，就是砌一杯咖啡静静地等待，取决于你的网络，通常需要等待半个小时。部署完后，会输出 `Dashboard` 地址以及默认创建的两个账号，一个是管理员账号 `admin` ，另一个是普通账号 `demo` ，如下：
-``` sh
+``` shell
 This is your host IP address: 172.16.0.41
 This is your host IPv6 address: ::1
 Horizon is now available at http://172.16.0.41/dashboard
@@ -67,7 +67,7 @@ The password: secret
 
 1. 使用国内的镜像源
 对于 `Ubuntu` 系统就是修改 `APT` 源，比如阿里云镜像源，只需要修改 `/etc/apt/source.list` 配置文件即可，替换为需要使用的镜像源。如：
-``` sh
+``` shell
 deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted universe multiverse
 deb http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted universe multiverse
 deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted universe multiverse
@@ -83,7 +83,7 @@ deb-src http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted unive
 2. 使用国内的 pip 源
 只需要在当前家目录 `.pip` 目录创建 `pip.conf` 配置文件，以使用阿里云为例，配置文件内容如下：
 `cat ~/.pip/pip.conf`
-``` sh
+``` shell
 [global]
 index-url = http://mirrors.aliyun.com/pypi/simple/
 [install]
@@ -107,7 +107,7 @@ NOVA_BRANCH=new_feature
 `DevStack` 使用了 `Linux` 的终端复用工具 `screen` ，不同的服务运行在不同的 `window` 中，`screen` 的使用方法可参考官方文档。通常情况下，我们都是针对 `OpenStack` 的某个组件进行开发，比如 `Nova` ，只需要找到 `Nova` 的源码路径，修改对应的源码，然后重启对应的服务即可。比如你修改了 `nova` 源码下的 `nova/compute/manager.py` 代码，则需要重启 `nova-compute` 服务，重启步骤如下：
 
 使用 `screen -ls` 命令查找 `stack session`。
-``` sh
+``` shell
 # screen -ls
 os3:~> screen -list
 There is a screen on:
@@ -122,7 +122,7 @@ There is a screen on:
 
 有些服务跑在 `Web` 服务器中，比如 `Keystone` 服务，此时重启 `Keystone` 服务只需要重启 `Apache` 服务即可。  
 如果你需要修改 `oslo` 代码或者 `python-xxxclient` 代码就相对麻烦点，因为这些代码不同于 `OpenStack` 源码，它默认不是从代码仓库中拉取，而是从已发布的 `pypi` 仓库中直接安装。你需要覆盖默认配置，手动配置代码仓库源:
-``` sh
+``` shell
 [[local|localrc]]
 LIBS_FROM_GIT=oslo.policy
 OSLOPOLICY_REPO=/home/sdague/oslo.policy
@@ -148,14 +148,14 @@ OSLOPOLICY_BRANCH=better_exception
 
 其中 `plugin_name` 为插件名称，可以在插件列表中找到，`code repo` 为代码仓库地址，不配置就使用默认的地址。  
 比如我们需要开启 `Sahara` 服务，只需要在 `local.conf` 增加以下配置项:
-``` sh
+``` shell
 enable_plugin sahara https://github.com/openstack/sahara.git
 enable_plugin sahara-dashboard https://github.com/openstack/sahara-dashboard.git
 ```
 
 注意以上我们同时开启了两个 `Sahara` 相关的插件，前者是 `Sahara` 插件，而后者是 `dashboard` 的 `Sahara` 插件，若不配置该插件，在 `dashboard` 中将看不到 `Sahara` 面板。  
 除了 `OpenStack` 服务外，`DevStack` 还支持其它和 `Openstack` 相关的插件，比如默认情况下都是使用本地文件系统存储作为 `OpenStack` 存储后端，如果需要测试 `Ceph` 后端，则需要开启 `devstack-plugin-ceph` 插件，该插件会自动部署一个单节点 `Ceph` 集群，然后就可以配置 `Glance` 、 `Nova` 、 `Cinder` 、 `Manila` 等服务使用 `Ceph` 后端了。
-``` sh
+``` shell
 enable_plugin devstack-plugin-ceph git://git.openstack.org/openstack/devstack-plugin-ceph
 ENABLE_CEPH_CINDER=True     # ceph backend for cinder
 ENABLE_CEPH_GLANCE=True     # store images in ceph

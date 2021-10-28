@@ -7,7 +7,7 @@ keywords: openstack,命令行,loadbalancer
 ---
 
 ## 鉴权文件格式
-``` sh
+``` shell
 export OS_USERNAME=admin
 export OS_PASSWORD=adminPassword
 export OS_TENANT_NAME=admin
@@ -20,7 +20,7 @@ export OS_PROJECT_ID=xxxxxxxxxxxxxxxxx
 
 ## CLI
 ### 查询环境中有的子网和安全组
-``` sh
+``` shell
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ openstack network list
 +--------------------------------------+------------+--------------------------------------+
 | ID                                   | Name       | Subnets                              |
@@ -47,7 +47,7 @@ export OS_PROJECT_ID=xxxxxxxxxxxxxxxxx
 ```
 
 ### 创建一个在子网 NET-B 上负载均衡 IP 172.25.255.202 名字为 test2
-``` sh
+``` shell
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ openstack loadbalancer create --name test2 --vip-subnet-id e0531da2-b031-4e0a-9303-33f10d9c3aec --vip-address 172.25.255.202
 +---------------------+--------------------------------------+
 | Field               | Value                                |
@@ -75,7 +75,7 @@ export OS_PROJECT_ID=xxxxxxxxxxxxxxxxx
 [lookback@LookdeMacBook-Pro ~/OpenStack]$
 ```
 ### 给 vip port 的安全组添加 icmpk 可以 ping 的规则
-``` sh
+``` shell
 openstack loadbalancer list
 loadbalancer_id=26a6049b-f5d0-4ac4-b64f-b3e6671ae6e0
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ openstack security group rule create --protocol icmp --remote-ip 0.0.0.0/0 $(openstack port show $(openstack loadbalancer show $loadbalancer_id | awk '$2=="vip_port_id"{print $4}') | awk '$2=="security_group_ids"{print $4}')
@@ -103,7 +103,7 @@ loadbalancer_id=26a6049b-f5d0-4ac4-b64f-b3e6671ae6e0
 [lookback@LookdeMacBook-Pro ~/OpenStack]$
 ```
 ### 给 vip 添加安全组
-``` sh
+``` shell
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ openstack port set --security-group d9386462-0eae-43c1-b815-f999fa3cd833 abe786ea-7c9a-4937-816d-edd996dde5a5
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ 
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ 
@@ -188,7 +188,7 @@ loadbalancer_id=26a6049b-f5d0-4ac4-b64f-b3e6671ae6e0
 [lookback@LookdeMacBook-Pro ~/OpenStack]$
 ```
 ### 创建一个 listener 监控器
-``` sh
+``` shell
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ openstack loadbalancer listener create --name listener-test2 --protocol TCP --protocol-port 4200 test2
 +-----------------------------+--------------------------------------+
 | Field                       | Value                                |
@@ -223,7 +223,7 @@ loadbalancer_id=26a6049b-f5d0-4ac4-b64f-b3e6671ae6e0
 [lookback@LookdeMacBook-Pro ~/OpenStack]$
 ```
 ### 创建一个资源池
-``` sh
+``` shell
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ openstack loadbalancer pool create --name pool-test2 --lb-algorithm SOURCE_IP --listener listener-test2 --protocol TCP
 +----------------------+--------------------------------------+
 | Field                | Value                                |
@@ -252,7 +252,7 @@ loadbalancer_id=26a6049b-f5d0-4ac4-b64f-b3e6671ae6e0
 [lookback@LookdeMacBook-Pro ~/OpenStack]$
 ```
 ### 添加监控监控
-``` sh
+``` shell
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ openstack loadbalancer healthmonitor create --delay 3 --type TCP --max-retries 3 --timeout 3 --name healthmonitor-test2 pool-test2
 +---------------------+--------------------------------------+
 | Field               | Value                                |
@@ -280,7 +280,7 @@ loadbalancer_id=26a6049b-f5d0-4ac4-b64f-b3e6671ae6e0
 [lookback@LookdeMacBook-Pro ~/OpenStack]$
 ```
 ### 给负载均衡器添加后端成员
-``` sh
+``` shell
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ openstack loadbalancer member create --subnet-id e0531da2-b031-4e0a-9303-33f10d9c3aec --protocol-port 4200 --address 172.25.106.17 --name member1-test2 pool-test2 
 +---------------------+--------------------------------------+
 | Field               | Value                                |
@@ -324,7 +324,7 @@ loadbalancer_id=26a6049b-f5d0-4ac4-b64f-b3e6671ae6e0
 [lookback@LookdeMacBook-Pro ~/OpenStack]$
 ```
 ### 查看
-``` sh
+``` shell
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ openstack loadbalancer amphora list
 +--------------------------------------+--------------------------------------+-----------+--------+----------------+----------------+
 | id                                   | loadbalancer_id                      | status    | role   | lb_network_ip  | ha_ip          |
@@ -477,7 +477,7 @@ loadbalancer_id=26a6049b-f5d0-4ac4-b64f-b3e6671ae6e0
 [lookback@LookdeMacBook-Pro ~/OpenStack]$
 ```
 ### 测试可用性
-``` sh
+``` shell
 [lookback@LookdeMacBook-Pro ~/OpenStack]$ telnet 172.25.255.202 4200
 Trying 172.25.255.202...
 Connected to 172.25.255.202.

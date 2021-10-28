@@ -33,7 +33,7 @@ keywords: Mac, tool
 可以用于纠正错误命令的工具  
 ps:更多的是释压
 
-``` sh
+``` shell
 brew install thefuck
 
 # ~/.zshrc 文件末尾添加
@@ -42,7 +42,7 @@ eval $(thefuck --alias FUCK)
 
 ### 智能跳转目录 z
 保存 `z.sh` 文件至 `$ZSH/`，文件内容：
-```sh
+``` shell
 # Copyright (c) 2009 rupa deadwyler. Licensed under the WTFPL license, Version 2
 
 # maintains a jump-list of the directories you actually use

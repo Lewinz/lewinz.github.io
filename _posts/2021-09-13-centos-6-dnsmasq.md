@@ -10,7 +10,7 @@ keywords: centos, dns, cache
 
 ### 修改配置文件：
 #### 修改配置文件：`/etc/dnsmasq.conf` 添加以下内容：
-``` sh
+``` shell
 resolv-file=/etc/resolv.dnsmasq.conf
 listen-address=127.0.0.1
 no-dhcp-interface=lo
@@ -19,14 +19,14 @@ no-negcache
 ```
 
 #### 修改配置文件： `/etc/resolv.conf`  添加以下内容：
-``` sh
+``` shell
 nameserver 127.0.0.1
 nameserver 119.28.28.28
 nameserver 114.114.114.114
 ```
 
 #### 修改配置文件：`/etc/resolv.dnsmasq.conf`  添加以下内容：
-``` sh
+``` shell
 nameserver 119.29.29.29
 nameserver 119.28.28.28
 nameserver 114.114.114.114

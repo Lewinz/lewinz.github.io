@@ -77,7 +77,7 @@ func main() {
 }
 ```
 假设源码文件为 `main.go`，可通过执行 `go build -gcflags="-m -m" main.go` 命令查看编译器的优化策略。
-``` sh
+``` shell
 $ go build -gcflags="-m -m" main.go
 # command-line-arguments
 ./main.go:3:6: can inline add with cost 4 as: func(int, int) int { return a + b }
@@ -86,7 +86,7 @@ $ go build -gcflags="-m -m" main.go
 ./main.go:15:6: can inline main with cost 67 as: func() { n := 100; _ = iter(n) }
 ```
 通过以上信息，可知编译器判断 `add` 函数与 `main` 函数都可以被内联优化，并将 `add` 函数内联。同时可以注意到的是，`iter` 函数由于存在循环语句并不能被内联：`cannot inline iter: unhandled op FOR`。实际上，除了 `for` 循环，还有一些情况不会被内联，例如闭包，`select`，`for`，`defer`，`go` 关键字所开启的新 `goroutine` 等，详细可见 `src/cmd/compile/internal/gc/inl.go` 相关内容。
-``` sh
+``` shell
     case OCLOSURE,
         OCALLPART,
         ORANGE,
@@ -112,15 +112,15 @@ func add(a, b int) int {
 }
 ```
 执行 `go build -gcflags="-m -m" main.go` 命令，得到信息
-``` sh
+``` shell
 ./main.go:3:6: can inline add with cost 9 as: func(int, int) int { a = a + 1; return a + b }
 ```
 对比之前的信息
-``` sh
+``` shell
 ./main.go:3:6: can inline add with cost 4 as: func(int, int) int { return a + b }
 ```
 可以发现，存在 cost 4 与 cost 9 的区别。这里的数值代表的是抽象语法树 AST 的节点，a = a + 1 包含的是 5 个节点。Go 函数中超过 80 个节点的代码量就不再内联。例如，如果在 add 中写入 16 个 a = a + 1，则不再内联。
-``` sh
+``` shell
 ./main.go:3:6: cannot inline add: function too complex: cost 84 exceeds budget 80
 ```
 ### 内联表
@@ -146,7 +146,7 @@ func main() {
 }
 ```
 在该代码样例中，max 函数将被内联。执行程序，输出结果如下
-``` sh
+``` shell
 panic: i am a panic information
 
 goroutine 1 [running]:
@@ -158,7 +158,7 @@ main.main()
         /Users/slp/go/src/workspace/example/main.go:17 +0x3a
 ```
 我们可以发现，panic 依然输出了正确的程序堆栈信息，包括源文件位置和行号信息。那，Go 是如何做到的呢？这是由于 Go 内部会为每个存在内联优化的 goroutine 维持一个内联树（inlining tree），该树可通过 go build -gcflags="-d pctab=pctoinline" main.go 命令查看
-``` sh
+``` shell
 funcpctab "".sub [valfunc=pctoinline]
 ...
 wrote 3 bytes to 0xc000082668

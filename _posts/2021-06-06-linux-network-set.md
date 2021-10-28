@@ -8,12 +8,12 @@ keywords: linux,网卡
 
 ## centos7.4 设置网卡
 修改配置文件
-``` sh
+``` shell
 // ens34 为网卡名
 vim /etc/sysconfig/network-scripts/ifcfg-ens34
 ```
 
-``` sh
+``` shell
 TYPE=Ethernet    # 网卡类型：为以太网
 PROXY_METHOD=none    # 代理方式：关闭状态
 BROWSER_ONLY=no      # 只是浏览器：否
@@ -37,7 +37,7 @@ HWADDR=78:2B:CB:57:28:E5  # mac 地址
 ```
 
 ## ip 命令常用参数
-``` sh
+``` shell
 Ip  [选项 ]  操作对象 {link|addr|route...}
 
 ip link show                           # 显示网络接口信息

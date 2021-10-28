@@ -162,7 +162,7 @@ _notify_about_instance_usage
   - 创建 VM 时，nova-compute 与 neutron 的 plugin 交互，在 neutron 的数据库中创建 VM 所需的 port 信息。
   - neutron 数据库中的 port 信息创建完成后，通知 neutron-dhcp-agent 去执行 port_create_end 函数。该函数将数据库中的 port 中的 ip 和 mac 信息加载到 dnsmasq 所需的配置文件中 (包括 host 和 addn_hosts 文件)。
 
-``` sh
+``` shell
 [root@nova 43c0e274-28e3-482e-a32b-d783980fc3ed]# cat addn_hosts
 
   1.1.1.1 host-1-1-1-1.openstacklocal host-1-1-1-1
@@ -199,12 +199,12 @@ _notify_about_instance_usage
 虚机被创建后，nova-compute 节点上的 neutron-linuxbridge-agent 会检测到新建的 tap 设备（通过轮询 /sys/class/net/ 里面的 tap 设备），找到后则执行一系列网络方面的操作，包括设置安全组，
 
 tap 设备示例：
-``` sh
+``` shell
 [root@test net]# ls
 brq8165bc3d-40 eth0 eth1 eth1.120 eth2 lo tap712a2c63-e6 tap83e7c095-f0 tap8f4fcfbb-2b
 ```
 tap 设备信息：
-``` sh
+``` shell
 Port tap93121330-58 updated. Details: {u'profile': {}, u'allowed_address_pairs': [], u'admin_state_up': True, u'network_id': u'8165bc3d-400a-48a0-9186-bf59f7f94b05', u'segmentation_id': 120,u'device_owner': u'compute:nova',
 u'physical_network': u'physnet1', u'mac_address': u'fa:16:3e:9f:6f:c5', u'device': u'tap93121330-58', u'port_security_enabled': True, u'port_id': u'93121330-58', u'fixed_ips': [{u'subnet_id': u'ec1028b2-7cb0-4feb-b974-6b8ea7e7f08f', u'ip_address': u'172.16.0.7'}],
 u'network_type': u'vlan'}

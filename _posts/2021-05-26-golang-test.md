@@ -51,7 +51,7 @@ func TestFib(t *testing.T) {
 }
 ```
 执行 `go test .`，输出：
-```sh
+``` shell
 $ go test .
 ok      chapter09/testing    0.007s
 ```
@@ -67,7 +67,7 @@ func Fib(n int) int {
 }
 ```
 再执行 `go test .`，输出：
-```sh
+``` shell
 $ go test .
 --- FAIL: TestSum (0.00s)
     t_test.go:16: Fib(10) = 64; expected 13
