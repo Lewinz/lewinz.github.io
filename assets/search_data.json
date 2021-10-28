@@ -783,6 +783,14 @@
     } ,
   
     {
+      "title"    : "Mac 软件快捷键记录",
+      "category" : "mac",
+      
+      "url"      : "https://lewinz.org/wiki/mac_software_keys/",
+      "keywords" : "mac, software, keys"
+    } ,
+  
+    {
       "title"    : "中间件部署文档",
       "category" : "中间件",
       
