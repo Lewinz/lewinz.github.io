@@ -30,13 +30,13 @@ keywords: Mac, 配置
 
 ### 新增配置文件
 
-``` sh
+``` shell
 touch /usr/local/bin/iterm2-recv-zmodem.sh
 touch /usr/local/bin/iterm2-send-zmodem.sh
 ```
 
 修改 `vi /usr/local/bin/iterm2-recv-zmodem.sh`
-```sh
+``` shell
 #!/bin/bash
 # Author: Matt Mastracci (matthew@mastracci.com)
 # AppleScript from http://stackoverflow.com/questions/4309087/cancel-button-on-osascript-in-a-bash-script
@@ -68,7 +68,7 @@ fi
 ```
 
 修改 `vi /usr/local/bin/iterm2-send-zmodem.sh`
-```sh
+``` shell
 # Author: Matt Mastracci (matthew@mastracci.com)
 # AppleScript from http://stackoverflow.com/questions/4309087/cancel-button-on-osascript-in-a-bash-script
 # licensed under cc-wiki with attribution required 
@@ -96,7 +96,7 @@ fi
 ```
 
 给两个文件授权
-```sh
+``` shell
 chmod 777 /usr/local/bin/iterm2-*
 ```
 
@@ -122,7 +122,7 @@ Parameters: /usr/local/bin/iterm2-recv-zmodem.sh
 ### item2 添加 ssh tab 区分
 安装 oh-my-zsh 之后，修改 oh-my-zsh 文件，文件末尾添加以下配置  
 `vi ~/.oh-my-zsh/oh-my-zsh.sh`
-``` sh
+``` shell
 # Usage:
 # source iterm2.zsh
 
@@ -168,7 +168,7 @@ fi
 
 ### ssh 别名配置
 `~/.ssh/config`
-``` sh
+``` shell
 Host myserver # myserver 可以替换为想设置的别名
     HostName ip # 远程主机的 IP 地址
     User user # 远程主机的用户名

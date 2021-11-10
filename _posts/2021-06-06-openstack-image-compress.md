@@ -21,7 +21,7 @@ keywords: openstack,镜像
 ### Ubuntu
 #### 设置密码和 root 登录
 修改 cloud-init config
-```sh
+``` shell
 vi /etc/cloud/cloud.cfg
 
 # 修改内容：
@@ -31,7 +31,7 @@ ssh_pwauth: true
 ```
 
 修改 sshd_config
-```sh
+``` shell
 vi /etc/ssh/sshd_config
 # 修改的内容
 PasswordAuthentication yes
@@ -47,13 +47,13 @@ sshd:all # 防止 client 轮询导致的 IP 封禁
 #### 设置系统盘自动扩容
 Ubuntu 的官方 Cloud 镜像自带这个功能，所以不需要操作
 #### 配置监控
-```sh
+``` shell
 sudo apt-get update -y
 
 sudo apt-get install -y qemu-guest-agent
 ```
 #### 配置开启 nova console log
-```sh
+``` shell
 vi /etc/default/grub
 
 修改的内容：
@@ -62,7 +62,7 @@ GRUB_CMDLINE_LINUX_DEFAULT 加上 console=tty0 console=ttyS0,115200
 
 #### 设置 DNS
 ##### Ubuntu 18.04
-``` sh
+``` shell
 vi /etc/systemd/resolved.conf
 
 [Resolve]
@@ -82,7 +82,7 @@ LLMNR=no
 ### CentOS
 #### cloud-init
 允许 root 远程登录
-``` sh
+``` shell
 yum install cloud-init
 
 # 修改 /etc/cloud/cloud.cfg
@@ -95,7 +95,7 @@ user: root
 ```
 
 #### sshd_config
-``` sh
+``` shell
 vi /etc/ssh/sshd_config
 
 # 修改
@@ -119,7 +119,7 @@ CentOS6 参考[文档](https://ykfq.github.io/openstack/create-centos6-image-for
 
 #### qemu-guest-agent(监控)
 虚机内操作
-```sh
+``` shell
 yum install qemu-guest-agent
 
 vi /etc/sysconfig/qemu-ga
@@ -139,7 +139,7 @@ BLACKLIST_RPC="guest-file-open,guest-file-close,guest-file-read,guest-file-write
 
 #### 开启 nova console log 日志输出支持
 ##### centos6
-``` sh
+``` shell
 vim /etc/grub.conf
 console=tty0 console=ttyS0,115200n8 #追加到 kernel 行末尾
 
@@ -147,7 +147,7 @@ console=tty0 console=ttyS0,115200n8 #追加到 kernel 行末尾
 ```
 
 ##### centos7
-``` sh
+``` shell
 vim /etc/default/grub
 删除 rhgb quiet 并追加 console=tty0 console=ttyS0,115200n8
 ``` 
@@ -157,7 +157,7 @@ vim /etc/default/grub
 
 ### 镜像文件格式转换与压缩
 #### openstack 命令行客户端鉴权
-``` sh
+``` shell
 source auth.sh
 
 # auth.sh 为鉴权文件，例如
@@ -171,19 +171,19 @@ export OS_IDENTITY_API_VERSION=3
 export OS_PROJECT_ID=project_id
 ```
 #### 镜像格式转换
-``` sh
+``` shell
 # -f 转换前格式
 # -O 转换后格式
 qemu-img convert -f qcow2 -O raw test.qcow2 test.raw
 ```
 #### 压缩镜像文件
-``` sh
+``` shell
 # -- -18.5G 在原有镜像文件基础上压缩 18.5G
 # CentOS 镜像可能会出现压缩后转换格式 size 变很小，解决办法是压缩时减少压缩大小
 qemu-img resize -f raw --shrink centos.raw -- -5G
 ```
 #### 重新上传镜像文件
-``` sh
+``` shell
 glance image-create --name Ubuntu --disk-format qcow2 --container-format bare --property os_type="linux" --property os_distro="UbuntuServer16.04-64" --file test.qcow2
 ```
 

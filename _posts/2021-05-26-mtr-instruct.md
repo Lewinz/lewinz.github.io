@@ -13,7 +13,7 @@ mtr 命令是 ping 和 tracert 命令的结合，同时具有 测试丢包率（
 1. 命令安装 `brew install mtr`
 
 2. MTR 安装之后并未把程序文件复制到 /usr/local/bin 目录下，需要手动复制
-```sh
+``` shell
 cd /usr/local/Cellar/mtr/0.92/sbin
 cp mtr /usr/local/bin/
 cp mtr-packet /usr/local/bin/
@@ -23,7 +23,7 @@ cp mtr-packet /usr/local/bin/
 `sudo mtr www.baidu.com`
 
 ### 命令详解
-```sh
+``` shell
 mtr -h 提供帮助命令  
 
 mtr -v 显示 mtr 的版本信息  

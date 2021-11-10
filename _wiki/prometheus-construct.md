@@ -10,7 +10,7 @@ keywords: Prometheus,监控,搭建
 ### wget
 从 [官网](https://prometheus.io/download/) 获取 Prometheus 的最新版本和下载地址
 
-``` sh
+``` shell
 从官网下载安装包
 wget https://github.com/prometheus/prometheus/releases/download/v2.4.3/prometheus-2.4.3.linux-amd64.tar.gz
 
@@ -25,12 +25,12 @@ tar xvfz prometheus-2.4.3.linux-amd64.tar.gz
 ```
 
 ### docker
-``` sh
+``` shell
 sudo docker run -d -p 9090:9090 prom/prometheus
 ```
 
 指定配置配置文件地址
-```sh
+``` shell
 sudo docker run -d -p 9090:9090 \
     -v ~/docker/prometheus/:/etc/prometheus/ \
     prom/prometheus
@@ -38,7 +38,7 @@ sudo docker run -d -p 9090:9090 \
 
 我们把配置文件放在本地 ~/docker/prometheus/prometheus.yml，这样可以方便编辑和查看，通过 -v 参数将本地的配置文件挂载到 /etc/prometheus/ 位置，这是 prometheus 在容器中默认加载的配置文件位置。如果我们不确定默认的配置文件在哪，可以先执行上面的不带 -v 参数的命令，然后通过 docker inspect 命名看看容器在运行时默认的参数有哪些（下面的 Args 参数）：
 
-```sh
+``` shell
 sudo docker inspect 0c
 [...]
         "Id": "0c4c2d0eed938395bcecf1e8bb4b6b87091fc4e6385ce5b404b6bb7419010f46",
@@ -104,23 +104,23 @@ Counter 用于计数，例如：**请求次数**、**任务完成数**、**错�
 ### PromQL 入门
 我们从一些例子开始学习 PromQL，最简单的 PromQL 就是直接输入指标名称，比如：
 
-``` sh
+``` shell
 # 表示 Prometheus 能否抓取 target 的指标，用于 target 的健康检查
 up
 ```
 这条语句会查出 Prometheus 抓取的所有 target 当前运行情况，譬如下面这样：
-``` sh
+``` shell
 up{instance="192.168.0.107:9090",job="prometheus"}    1
 up{instance="192.168.0.108:9090",job="prometheus"}    1
 up{instance="192.168.0.107:9100",job="server"}    1
 up{instance="192.168.0.108:9104",job="mysql"}    0
 ```
 也可以指定某个 label 来查询：
-```sh
+``` shell
 up{job="prometheus"}
 ```
 这种写法被称为 [Instant vector selectors](https://prometheus.io/docs/prometheus/latest/querying/basics/#instant-vector-selectors)，这里不仅可以使用 `=` 号，还可以使用 `!=`、`=~`、`!~`，比如下面这样：
-``` sh
+``` shell
 up{job!="prometheus"}
 up{job=~"server|mysql"}
 up{job=~"192\.168\.0\.107.+"}
@@ -129,13 +129,13 @@ up{job=~"192\.168\.0\.107.+"}
 
 和 Instant vector selectors 相应的，还有一种选择器，叫做 [Range vector selectors](https://prometheus.io/docs/prometheus/latest/querying/basics/#range-vector-selectors)，它可以查出一段时间内的所有数据：
 
-``` sh
+``` shell
 http_requests_total[5m]
 ```
 
 这条语句查出 5 分钟内所有抓取的 HTTP 请求数，注意它返回的数据类型是 `Range vector`，没办法在 Graph 上显示成曲线图，一般情况下，会用在 Counter 类型的指标上，并和 `rate()` 或 `irate()` 函数一起使用（注意 rate 和 irate 的区别）。
 
-``` sh
+``` shell
 # 计算的是每秒的平均值，适用于变化很慢的 counter
 # per-second average rate of increase, for slow-moving counters
 rate(http_requests_total[5m])
@@ -174,7 +174,7 @@ irate(http_requests_total[5m])
 Grafana 是一个用于可视化大型测量数据的开源系统，它的功能非常强大，界面也非常漂亮，使用它可以创建自定义的控制面板，你可以在面板中配置要显示的数据和显示方式，它 支持很多不同的数据源，比如：Graphite、InfluxDB、OpenTSDB、Elasticsearch、Prometheus 等，而且它也 支持众多的插件。
 
 下面我们就体验下使用 Grafana 来展示 Prometheus 的指标数据。首先我们来安装 Grafana，我们使用最简单的 Docker 安装方式：
-``` sh 
+``` shell 
 docker run -d -p 3000:3000 grafana/grafana
 ```
 
@@ -211,7 +211,7 @@ docker run -d -p 3000:3000 grafana/grafana
 首先我们来收集服务器的指标，这需要安装 [node_exporter](https://github.com/prometheus/node_exporter)，这个 exporter 用于收集 *NIX 内核的系统，如果你的服务器是 Windows，可以使用 [WMI exporter](https://github.com/martinlindhe/wmi_exporter)。
 
 和 Prometheus server 一样，node_exporter 也是开箱即用的：
-``` sh
+``` shell
 wget https://github.com/prometheus/node_exporter/releases/download/v0.16.0/node_exporter-0.16.0.linux-amd64.tar.gz
 
 tar xvfz node_exporter-0.16.0.linux-amd64.tar.gz
@@ -222,12 +222,12 @@ cd node_exporter-0.16.0.linux-amd64
 ```
 
 node_exporter 启动之后，我们访问下 /metrics 接口看看是否能正常获取服务器指标：
-``` sh
+``` shell
 curl http://localhost:9100/metrics
 ```
 
 如果一切 OK，我们可以修改 Prometheus 的配置文件，将服务器加到 scrape_configs 中：
-``` sh
+``` shell
 scrape_configs:
   - job_name: 'prometheus'
     static_configs:
@@ -238,7 +238,7 @@ scrape_configs:
 ```
 
 修改配置后，需要重启 Prometheus 服务，或者发送 HUP 信号也可以让 Prometheus 重新加载配置：
-``` sh
+``` shell
 killall -HUP prometheus
 ```
 
@@ -256,7 +256,7 @@ killall -HUP prometheus
 
 #### 注意事项
 一般情况下，node_exporter 都是直接运行在要收集指标的服务器上的，官方不推荐用 Docker 来运行 node_exporter。如果逼不得已一定要运行在 Docker 里，要特别注意，这是因为 Docker 的文件系统和网络都有自己的 namespace，收集的数据并不是宿主机真实的指标。可以使用一些变通的方法，比如运行 Docker 时加上下面这样的参数：
-``` sh
+``` shell
 docker run -d \
   --net="host" \
   --pid="host" \
@@ -270,7 +270,7 @@ docker run -d \
 ### 收集 MySQL 指标
 mysqld_exporter 是 Prometheus 官方提供的一个 exporter，我们首先 下载最新版本 并解压（开箱即用）：
 
-``` sh
+``` shell
 wget https://github.com/prometheus/mysqld_exporter/releases/download/v0.11.0/mysqld_exporter-0.11.0.linux-amd64.tar.gz
 tar xvfz mysqld_exporter-0.11.0.linux-amd64.tar.gz
 cd mysqld_exporter-0.11.0.linux-amd64/
@@ -278,18 +278,18 @@ cd mysqld_exporter-0.11.0.linux-amd64/
 
 mysqld_exporter 需要连接到 mysqld 才能收集它的指标，可以通过两种方式来设置 mysqld 数据源。第一种是通过环境变量 DATA_SOURCE_NAME，这被称为 DSN（数据源名称），它必须符合 DSN 的格式，一个典型的 DSN 格式像这样：`user:password@(host:port)/`。
 
-``` sh
+``` shell
 export DATA_SOURCE_NAME='root:123456@(192.168.0.107:3306)/'
 ./mysqld_exporter
 ```
 
 另一种方式是通过配置文件，默认的配置文件是 `~/.my.cnf`，或者通过 `--config.my-cnf` 参数指定：
-``` sh
+``` shell
 ./mysqld_exporter --config.my-cnf=".my.cnf"
 ```
 
 配置文件的格式如下：
-``` sh
+``` shell
 $ cat .my.cnf
 [client]
 host=localhost
@@ -302,7 +302,7 @@ password=123456
 
 #### 注意事项
 这里为简单起见，在 mysqld_exporter 中直接使用了 root 连接数据库，在真实环境中，可以为 mysqld_exporter 创建一个单独的用户，并赋予它受限的权限（PROCESS、REPLICATION CLIENT、SELECT），最好还限制它的最大连接数（MAX_USER_CONNECTIONS）。
-``` sh
+``` shell
 CREATE USER 'exporter'@'localhost' IDENTIFIED BY 'password' WITH MAX_USER_CONNECTIONS 3;
 GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'localhost';
 ```
@@ -318,17 +318,17 @@ GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'localhost';
 最后让我们来看下如何收集 Java 应用的指标，Java 应用的指标一般是通过 JMX（Java Management Extensions） 来获取的，顾名思义，JMX 是管理 Java 的一种扩展，它可以方便的管理和监控正在运行的 Java 程序。
 
 JMX Exporter 用于收集 JMX 指标，很多使用 Java 的系统，都可以使用它来收集指标，比如：**Kafaka**、**Cassandra** 等。首先我们下载 JMX Exporter：
-``` sh
+``` shell
 wget https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.3.1/jmx_prometheus_javaagent-0.3.1.jar
 ```
 
 JMX Exporter 是一个 Java Agent 程序，在运行 Java 程序时通过 -javaagent 参数来加载：
-``` sh
+``` shell
 java -javaagent:jmx_prometheus_javaagent-0.3.1.jar=9404:config.yml -jar spring-boot-sample-1.0-SNAPSHOT.jar
 ```
 
 其中，9404 是 JMX Exporter 暴露指标的端口，config.yml 是 JMX Exporter 的配置文件，它的内容可以 参考 JMX Exporter 的配置说明 。然后检查下指标数据是否正确获取：
-``` sh
+``` shell
 curl http://localhost:9404/metrics
 ```
 ## 告警和通知
@@ -336,12 +336,12 @@ curl http://localhost:9404/metrics
 
 ### 配置告警规则
 我们在上面介绍 Prometheus 的配置文件时了解到，它的默认配置文件 prometheus.yml 有四大块：global、alerting、rule_files、scrape_config，其中 **rule_files** 块就是告警规则的配置项，alerting 块用于配置 Alertmanager，这个我们下一节再看。现在，先让我们在 rule_files 块中添加一个告警规则文件：
-``` sh
+``` shell
 rule_files:
   - "alert.rules"
 ```
 然后参考 官方文档，创建一个告警规则文件 alert.rules：
-``` sh
+``` shell
 groups:
 - name: example
   rules:
@@ -378,7 +378,7 @@ groups:
 
 ### 使用 Alertmanager 发送告警通知
 虽然 Prometheus 的 /alerts 页面可以看到所有的告警，但是还差最后一步：触发告警时自动发送通知。这是由 Alertmanager 来完成的，我们首先 下载并安装 Alertmanager，和其他 Prometheus 的组件一样，Alertmanager 也是开箱即用的：
-``` sh
+``` shell
 wget https://github.com/prometheus/alertmanager/releases/download/v0.15.2/alertmanager-0.15.2.linux-amd64.tar.gz
 
 tar xvfz alertmanager-0.15.2.linux-amd64.tar.gz
@@ -390,7 +390,7 @@ cd alertmanager-0.15.2.linux-amd64
 
 Alertmanager 启动后默认可以通过 http://localhost:9093/ 来访问，但是现在还看不到告警，因为我们还没有把 Alertmanager 配置到 Prometheus 中，我们回到 Prometheus 的配置文件 prometheus.yml，添加下面几行：
 
-``` sh
+``` shell
 alerting:
   alertmanagers:
   - scheme: http
@@ -400,7 +400,7 @@ alerting:
 ```
 
 这个配置告诉 Prometheus，当发生告警时，将告警信息发送到 Alertmanager，Alertmanager 的地址为 `http://192.168.0.107:9093`。也可以使用命名行的方式指定 Alertmanager：
-``` sh
+``` shell
 ./prometheus -alertmanager.url=http://192.168.0.107:9093
 ```
 这个时候再访问 Alertmanager，可以看到 Alertmanager 已经接收到告警了：
@@ -408,7 +408,7 @@ alerting:
 ![alertmanager_alerts](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/wiki/alertmanager_alerts.jpeg)
 
 下面的问题就是如何让 Alertmanager 将告警信息发送给我们了，我们打开默认的配置文件 alertmanager.ym：
-``` sh
+``` shell
 global:
   resolve_timeout: 5m
  
@@ -431,7 +431,7 @@ inhibit_rules:
 ```
 
 参考 官方的配置手册 了解各个配置项的功能，其中 global 块表示一些全局配置；route 块表示通知路由，可以根据不同的标签将告警通知发送给不同的 receiver，这里没有配置 routes 项，表示所有的告警都发送给下面定义的 web.hook 这个 receiver；如果要配置多个路由，可以参考 这个例子：
-``` sh
+``` shell
 routes:
 - receiver: 'database-pager'
   group_wait: 10s

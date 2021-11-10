@@ -7,13 +7,13 @@ keywords: 监控,CPU
 ---
 
 ### 命令
-``` sh
+``` shell
 for i in `seq 1 $(cat /proc/cpuinfo |grep "processor" |wc -l)`; do dd if=/dev/zero of=/dev/null; done
 ```
 
 ### 分析
 首先，我们把这一行命令拆分一下，增强下代码的可读性：
-``` sh
+``` shell
 #!/bin/bash
 N=`cat /proc/cpuinfo | grep "processor" | wc -l`
 List=`seq 1 $N`
@@ -23,19 +23,19 @@ dd if=/dev/zero of=/dev/null
 done
 ```
 下面来解释下每一行吧。
-```sh
+``` shell
 cat /proc/cpuinfo | grep "processor" | wc -l
 ```
 这条最简单了，获取 CPU 核数。
-```sh
+``` shell
 seq 1 N
 ```
 根据 N 的值生成一个序列。
-``` sh
+``` shell
 for i in `seq 1 N`
 ```
 循环执行命令，从１到Ｎ。
-``` sh
+``` shell
 dd if=/dev/zero of=/dev/null
 ```
 执行 dd 命令，输出到`/dev/null`, 实际上只占用 CPU，没有 IO 操作。  

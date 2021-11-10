@@ -108,7 +108,7 @@ Host 10.10.0.*      # 可以用*通配符
     ProxyCommand ssh tiaoban -W %h:%p
 ```
 使用方法同上：
-``` sh
+``` shell
 ssh target
 ssh 10.10.0.1
 ssh username@target -p22

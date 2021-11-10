@@ -6,7 +6,7 @@ description: openstack 秘钥
 keywords: openstack,秘钥
 ---
 
-``` sh
+``` shell
 nova help | grep key
     flavor-key          Set or unset extra_spec for a flavor.
     keypair-add         Create a new key pair for use with instances.
@@ -16,14 +16,14 @@ nova help | grep key
 ```
 
 #### 上传秘钥
-``` sh
+``` shell
 # /root/.ssh/id_rsa.pub 文件位置
 # terrykey 秘钥名
 nova keypair-add --pub-key /root/.ssh/id_rsa.pub terrykey
 ```
 
 #### 查看秘钥列表
-``` sh
+``` shell
 nova keypair-list
 
 +----------+-------------------------------------------------+

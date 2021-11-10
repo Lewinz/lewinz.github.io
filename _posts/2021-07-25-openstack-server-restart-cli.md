@@ -7,22 +7,22 @@ keywords: openstack, restart, cli
 ---
 
 ### 重启 openstack 的整个服务
-``` sh
+``` shell
 openstack-service restart
 ```
 
 ### 重启 dashboard
-``` sh
+``` shell
 service httpd  restart 
 service memcached restart
 ```
 ### 重启 ceilometer
 #### cinder
-``` sh
+``` shell
 service mongod restart
 ```
 #### controller
-``` sh
+``` shell
 service openstack-ceilometer-api restart  
 service openstack-ceilometer-notification restart
 service openstack-ceilometer-central restart
@@ -31,26 +31,26 @@ service openstack-ceilometer-alarm-evaluator restart
 service openstack-ceilometer-alarm-notifier restart
 ```
 #### compute
-``` sh
+``` shell
 service openstack-nova-compute restart
 ```
 #### controller
-``` sh
+``` shell
 service openstack-glance-api restart
 service openstack-glance-registry restart
 Block Storage service
 ```
 #### controller node
-``` sh
+``` shell
 service   openstack-cinder-api restart
 service   openstack-cinder-scheduler restart
 ```
 #### cinder
-``` sh
+``` shell
 service    openstack-cinder-volume  restart
 ```
 ### 重启 Fuel 服务
-``` sh
+``` shell
 docker restart fuel-core-6.1-nailgun
 docker restart fuel-core-6.1-keystone
 docker restart fuel-core-6.1-rsync
@@ -65,14 +65,14 @@ docker restart fuel-core-6.1-cobbler
 ```
 ### Neutron 服务
 #### 控制节点
-``` sh
+``` shell
 service openstack-nova-api restart
 service openstack-nova-scheduler restart
 service openstack-nova-conductor restart
 service neutron-server restart
 ```
 #### 网络节点
-``` sh
+``` shell
 service openvswitch restart
 #（fuel 控制节点默认 stop）
 service neutron-openvswitch-agent restart
@@ -84,18 +84,18 @@ service neutron-dhcp-agent restart
 service neutron-metadata-agent restart
 ```
 #### 计算节点
-``` sh
+``` shell
 service neutron-openvswitch-agent restart
 service openvswitch restart
 ```
 ### 重启 cinder 服务
 #### 控制节点
-``` sh
+``` shell
 service openstack-cinder-api restart
 service openstack-cinder-scheduler restart
 ```
 #### 存储节点
-``` sh
+``` shell
 service openstack-cinder-volume restart
 ```
 ### 重启 glance 服务
@@ -104,12 +104,12 @@ service openstack-glance-api restart
 service openstack-glance-registry restart
 ### 重启 Swift 服务
 #### 控制节点
-``` sh
+``` shell
 service openstack-swift-proxy restart
 service memcached restart
 ```
 #### 存储节点
-``` sh
+``` shell
 service openstack-swift-account restart
 service openstack-swift-account-auditor restart
 service openstack-swift-account-reaper restart
@@ -125,7 +125,7 @@ service openstack-swift-object-updater restart
 ```
 ### 重启 Nova 服务
 #### 控制节点
-``` sh
+``` shell
 service openstack-nova-api restart
 service openstack-nova-cert restart
 service openstack-nova-consoleauth restart
@@ -134,7 +134,7 @@ service openstack-nova-conductor restart
 service openstack-nova-novncproxy restart
 ```
 #### 计算节点
-``` sh
+``` shell
 service libvirtd restart
 service openstack-nova-compute restart
 ```

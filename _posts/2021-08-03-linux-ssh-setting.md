@@ -7,14 +7,14 @@ keywords: linux, ssh
 ---
 
 ## ssh client 设置轮询导致 ssh 禁用
-``` sh
+``` shell
 # vi /etc/hosts.allow
 sshd:all
 ```
 
 ## ssh 请求连接时间长
 ### 使用了 DNS 反查导致耗时
-``` sh
+``` shell
 # vi /etc/ssh/sshd_config
 
 UseDNS no
@@ -25,7 +25,7 @@ UseDNS no
 这个配置会导致 ssh 在 dns 解析的时候，如果 dns 中没有域名解析记录，会等待 dns 服务器超时返回。
 
 ### Kerberos 方式验证导致耗时
-``` sh
+``` shell
 # vi /etc/ssh/sshd_config
 
 GSSAPIAuthentication no

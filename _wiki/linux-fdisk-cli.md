@@ -16,7 +16,7 @@ keywords: Linux 磁盘分区、格式化、挂载
 `fdisk(选项)(参数)`
 
 #### 选项
-``` sh
+``` shell
 -b <大小>             扇区大小 (512、1024、2048 或 4096)
 -c[=<模式>]           兼容模式：“dos”或“nondos”(默认)
 -h                    打印此帮助文本
@@ -32,7 +32,7 @@ keywords: Linux 磁盘分区、格式化、挂载
 
 ### 示例
 **磁盘情况查询**
-``` sh
+``` shell
 [root@test-lewin ~]# fdisk -l
 
 磁盘 /dev/vda：42.9 GB, 42949672960 字节，83886080 个扇区
@@ -60,7 +60,7 @@ I/O 大小 (最小/最佳)：512 字节 / 512 字节
 ```
 
 **选择磁盘进行操作**
-``` sh
+``` shell
 [root@test-lewin ~]# fdisk /dev/vda
 欢迎使用 fdisk (util-linux 2.23.2)。
 
@@ -72,7 +72,7 @@ I/O 大小 (最小/最佳)：512 字节 / 512 字节
 
 **使用命令进行磁盘操作**
 
-``` sh
+``` shell
 a   toggle a bootable flag
 b   edit bsd disklabel
 c   toggle the dos compatibility flag
@@ -105,7 +105,7 @@ x   extra functionality (experts only)
 **开机自动挂载分区**
 修改 `/etc/fstab` 文件
 
-``` sh
+``` shell
 [root@localhost ~]# vim /etc/fstab
 
 /dev/VolGroup00/LogVol00 /                       ext3    defaults        1 1

@@ -301,7 +301,7 @@ firewall-cmd --reload
 ```
 
 ### tree 命令
-``` sh
+``` shell
 brew install tree
 
 tree 

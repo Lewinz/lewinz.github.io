@@ -67,7 +67,7 @@ qemu-img convert -O raw src-img.qcow2dst-img.raw
 3. 在计算节点上进入 /var/lib/nova/instances/_base/ 目录，清空该目录下所有的缓存镜像。由于后台程序会先检测该目录下有没有缓存镜像，如果有，会把该缓存镜像上传到 ceph 中，如果没有，直接在 ceph 中 clone 镜像。
 
 步骤如下：
-``` sh
+``` shell
 [root@openstack _base]# cd/var/lib/nova/instances/_base/
 
 [root@openstack _base]# ll
