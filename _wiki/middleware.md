@@ -262,20 +262,40 @@ rpm -ivh mysql-community-server-5.7.22-1.el7.x86_64.rpm
 将`/var/lib/mysql`文件所有用户修改为 mysql
 `chown mysql:mysql /var/lib/mysql -R`
 
-修改 mysql 配置  
+替换 mysql 配置  
 `vi /etc/my.cnf`
 ```sh
-# 设置字符编码集 utf8mb4
-[client] 
-default-character-set = utf8mb4 
- 
-[mysql] 
-default-character-set = utf8mb4 
- 
-[mysqld] 
-character-set-client-handshake = FALSE 
-character-set-server = utf8mb4 
-collation-server = utf8mb4_general_ci 
+# For advice on how to change settings please see
+# http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html
+
+[mysqld]
+#
+# Remove leading # and set to the amount of RAM for the most important data
+# cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
+# innodb_buffer_pool_size = 128M
+#
+# Remove leading # to turn on a very important data integrity option: logging
+# changes to the binary log between backups.
+# log_bin
+#
+# Remove leading # to set options mainly useful for reporting servers.
+# The server defaults are faster for transactions and fast SELECTs.
+# Adjust sizes as needed, experiment to find the optimal values.
+# join_buffer_size = 128M
+# sort_buffer_size = 2M
+# read_rnd_buffer_size = 2M
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+character-set-client-handshake = FALSE
+character-set-server = utf8mb4
+collation-server = utf8mb4_general_ci
 init_connect='SET NAMES utf8mb4'
 
 user=mysql
@@ -283,6 +303,13 @@ skip-name-resolve
 max_connections=500
 wait_timeout=31536000
 interactive_timeout=31536000
+
+# 设置字符编码集 utf8mb4
+[client]
+default-character-set = utf8mb4
+
+[mysql]
+default-character-set = utf8mb4
 ```
 
 启动 mysql  
