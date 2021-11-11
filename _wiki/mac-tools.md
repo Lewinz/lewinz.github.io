@@ -315,3 +315,8 @@ fi
 修改 `~/.zshrc`，添加 `source $ZSH/z.sh`
 
 执行命令 `source ~/.zshrc` 重新生效
+
+### 网络发现和安全审计的网络安全工具 nmap
+``` shell
+brew install nmap
+```
