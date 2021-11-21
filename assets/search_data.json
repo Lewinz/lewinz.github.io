@@ -727,6 +727,14 @@
     } ,
   
     {
+      "title"    : "ChinaNet 和 CN2 的区别",
+      "category" : "chinanet",
+      
+      "url"      : "https://lewinz.org/2021/11/21/chinanet-cn2/",
+      "keywords" : "chinanet, cn2"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
