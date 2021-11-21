@@ -23,7 +23,7 @@ import "unsafe"
  
 
 func main() {
-    fmt.Println(unsafe.Sizeof("true"))                // 16
+  fmt.Println(unsafe.Sizeof("true"))                // 16
 	fmt.Println(unsafe.Sizeof(true))                  // 1
 	fmt.Println(unsafe.Sizeof(int8(0)))               // 1
 	fmt.Println(unsafe.Sizeof(int16(10)))             // 2
@@ -177,14 +177,14 @@ part1 size: 32, align: 8
 ## 内存对齐
 有的小伙伴可能会认为内存读取，就是一个简单的字节数组摆放
 
-![golang-memory-alignment_1](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang-memory-alignment_1.jpg)
+![golang-memory-alignment_1](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang-memory-alignment_1.png)
 
 上图表示一个坑一个萝卜的内存读取方式。但实际上 CPU 并不会以一个一个字节去读取和写入内存。
 
 ### 敲重点啦：
 相反 CPU 读取内存是一块一块读取的，块的大小可以为 2、4、6、8、16 字节等大小。块大小我们称其为内存访问粒度。如下图：
 
-![golang-memory-alignment_2](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang-memory-alignment_2.jpg)
+![golang-memory-alignment_2](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang-memory-alignment_2.png)
 
 在样例中，假设访问粒度为 4。 CPU 是以每 4 个字节大小的访问粒度去读取和写入内存的。这才是正确的姿势
 
@@ -198,7 +198,7 @@ part1 size: 32, align: 8
 
 * 性能原因：若访问未对齐的内存，将会导致 CPU 进行两次内存访问，并且要花费额外的时钟周期来处理对齐及运算。而本身就对齐的内存仅需要一次访问就可以完成读取动作
 
-![golang-memory-alignment_3](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang-memory-alignment_3.jpg)
+![golang-memory-alignment_3](https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/golang-memory-alignment_3.png)
 
 在上图中，假设从 Index 1 开始读取，将会出现很崩溃的问题。因为它的内存访问边界是不对齐的。因此 CPU 会做一些额外的处理工作。如下：
 
