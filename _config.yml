@@ -5,7 +5,7 @@ baseurl:
 url: https://lewinz.org
 date_format: "ordinal"
 title: 阿嫂
-subtitle: "一个渐行渐胖的程序员~"
+subtitle: "一个渐行渐<del>胖</del>瘦的程序员~"
 description: "阿嫂个人博客"
 keywords: 阿嫂, Zheng xianglin, Lewin
 timezone: Asia/Shanghai
