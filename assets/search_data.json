@@ -745,6 +745,14 @@
     } ,
   
     {
+      "title"    : "DNS 信息查询命令「dig」",
+      "category" : "dns",
+      
+      "url"      : "https://lewinz.org/2021/11/22/linux-cli-dig/",
+      "keywords" : "dns, dig"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
