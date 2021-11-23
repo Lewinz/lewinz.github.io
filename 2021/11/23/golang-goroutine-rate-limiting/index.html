@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /><title>golang 并发两种限速方式 &mdash; 阿嫂</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/primer-css/css/primer.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/collection.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/repo-card.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/sections/repo-list.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/boxed-group.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/common.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/responsive.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/posts/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/octicons/octicons/octicons.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/rouge-themes@master/dist/github.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/share.js/dist/css/share.min.css"><link rel="canonical" href="https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/"><link rel="alternate" type="application/atom+xml" title="阿嫂" href="https://lewinz.org/feed.xml"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/favicon.ico"><meta property="og:title" content="golang 并发两种限速方式"><meta name="keywords" content="golang, goroutine, rate-limiting"><meta name="og:keywords" content="golang, goroutine, rate-limiting"><meta name="description" content="引子golang 提供了 goroutine 快速实现并发编程，在实际环境中，如果 goroutine 中的代码要消耗大量资源时（CPU、内存、带宽等），我们就需要对程序限速，以防止 goroutine 将资源耗尽。以下面伪代码为例，看看 goroutine 如何拖垮一台 DB。假设 userList 长度为 10000，先从数据库中查询 userList 中的 user 是否在数据库中存在，存在则忽略，不存在则创建。``` golang//不使用goroutine，程序运行时间长，但数据库压力不大for _,v:=range userList { user:=db.user.Get(v.ID) if user==nil { newUser:=user{ID:v.ID,UserName:v.UserName} db.user.Insert(newUser) }}"><meta name="og:description" content="引子golang 提供了 goroutine 快速实现并发编程，在实际环境中，如果 goroutine 中的代码要消耗大量资源时（CPU、内存、带宽等），我们就需要对程序限速，以防止 goroutine 将资源耗尽。以下面伪代码为例，看看 goroutine 如何拖垮一台 DB。假设 userList 长度为 10000，先从数据库中查询 userList 中的 user 是否在数据库中存在，存在则忽略，不存在则创建。``` golang//不使用goroutine，程序运行时间长，但数据库压力不大for _,v:=range userList { user:=db.user.Get(v.ID) if user==nil { newUser:=user{ID:v.ID,UserName:v.UserName} db.user.Insert(newUser) }}"><meta property="og:url" content="https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/"><meta property="og:site_name" content="阿嫂"><meta property="og:type" content="article"><meta property="og:locale" content="zh_CN" /><meta property="article:published_time" content="2021-11-23"> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/jquery/dist/jquery.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery-ui.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/main.js"></script> <script data-ad-client="ca-pub-7093222719567591" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head><body class="" data-mz=""><header class="site-header"><div class="container"><h1><a href="https://lewinz.org/" title="阿嫂"><span class="octicon octicon-mark-github"></span> 阿嫂</a></h1><button class="collapsed mobile-visible" type="button" onclick="toggleMenu();"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button><nav class="site-header-nav" role="navigation"> <a href="https://lewinz.org/" class=" site-header-nav-item" target="" title="首页">首页</a> <a href="https://lewinz.org/categories/" class=" site-header-nav-item" target="" title="分类">分类</a> <a href="https://lewinz.org/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a> <a href="https://lewinz.org/links/" class=" site-header-nav-item" target="" title="链接">链接</a> <a href="https://lewinz.org/about/" class=" site-header-nav-item" target="" title="关于">关于</a></nav></div></header><section class="collection-head small geopattern" data-pattern-id="golang 并发两种限速方式"><div class="container"><div class="columns"><div class="column three-fourths"><div class="collection-title"><h1 class="collection-header">golang 并发两种限速方式</h1><div class="collection-info"> <span class="meta-info"> <span class="octicon octicon-calendar"></span> 2021/11/23 </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#golang" title="golang">golang</a> </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#goroutine" title="goroutine">goroutine</a> </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#rate-limiting" title="rate-limiting">rate-limiting</a> </span> <span class="meta-info"> <span class="octicon octicon-clock"></span> 共 2775 字，约 8 分钟 </span></div></div></div><div class="column one-fourth mobile-hidden"><div class="collection-title"></div></div></div></div></section><section class="container content"><div class="columns"><div class="column three-fourths" > <ins class="adsbygoogle content-header-ad" data-ad-client="ca-pub-7093222719567591" data-ad-slot="1650902835"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script> <br /><article class="article-content markdown-body"><h2 id="引子">引子</h2><p>golang 提供了 goroutine 快速实现并发编程，在实际环境中，如果 goroutine 中的代码要消耗大量资源时（CPU、内存、带宽等），我们就需要对程序限速，以防止 goroutine 将资源耗尽。 以下面伪代码为例，看看 goroutine 如何拖垮一台 DB。假设 userList 长度为 10000，先从数据库中查询 userList 中的 user 是否在数据库中存在，存在则忽略，不存在则创建。</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">//不使用goroutine，程序运行时间长，但数据库压力不大</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">v</span><span class="o">:=</span><span class="k">range</span> <span class="n">userList</span> <span class="p">{</span>
+    <span class="n">user</span><span class="o">:=</span><span class="n">db</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">ID</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user</span><span class="o">==</span><span class="no">nil</span> <span class="p">{</span>
+        <span class="n">newUser</span><span class="o">:=</span><span class="n">user</span><span class="p">{</span><span class="n">ID</span><span class="o">:</span><span class="n">v</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span><span class="n">UserName</span><span class="o">:</span><span class="n">v</span><span class="o">.</span><span class="n">UserName</span><span class="p">}</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">newUser</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c">//使用goroutine，程序运行时间短，但数据库可能被拖垮</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">v</span><span class="o">:=</span><span class="k">range</span> <span class="n">userList</span> <span class="p">{</span>
+    <span class="n">u</span><span class="o">:=</span><span class="n">v</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">(){</span>
+        <span class="n">user</span><span class="o">:=</span><span class="n">db</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">ID</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">==</span><span class="no">nil</span> <span class="p">{</span>
+            <span class="n">newUser</span><span class="o">:=</span><span class="n">user</span><span class="p">{</span><span class="n">ID</span><span class="o">:</span><span class="n">u</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span><span class="n">UserName</span><span class="o">:</span><span class="n">u</span><span class="o">.</span><span class="n">UserName</span><span class="p">}</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">newUser</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+<span class="p">}</span>
+
+<span class="k">select</span><span class="p">{}</span>
+</code></pre></div></div><p>在示例中，DB 在 1 秒内接收 10000 次读操作，最大还会接受 10000 次写操作，普通的 DB 服务器很难支撑。针对 DB，可以在连接池上做手脚，控制访问 DB 的速度，这里我们讨论两种通用的方法。</p><h2 id="方案一">方案一</h2><p>在限速时，一种方案是丢弃请求，即请求速度太快时，对后进入的请求直接抛弃。</p><h3 id="实现">实现</h3><p>实现逻辑如下：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"sync"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="c">//LimitRate 限速</span>
+<span class="k">type</span> <span class="n">LimitRate</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">rate</span>     <span class="kt">int</span>
+    <span class="n">begin</span>    <span class="n">time</span><span class="o">.</span><span class="n">Time</span>
+    <span class="n">count</span>    <span class="kt">int</span>
+    <span class="n">lock</span>     <span class="n">sync</span><span class="o">.</span><span class="n">Mutex</span>
+<span class="p">}</span>
+
+<span class="c">//Limit Limit</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">l</span> <span class="o">*</span><span class="n">LimitRate</span><span class="p">)</span> <span class="n">Limit</span><span class="p">()</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="n">result</span> <span class="o">:=</span> <span class="no">true</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+    <span class="c">//达到每秒速率限制数量，检测记数时间是否大于1秒</span>
+    <span class="c">//大于则速率在允许范围内，开始重新记数，返回true</span>
+    <span class="c">//小于，则返回false，记数不变</span>
+    <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="n">l</span><span class="o">.</span><span class="n">rate</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Sub</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">begin</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">time</span><span class="o">.</span><span class="n">Second</span> <span class="p">{</span>
+            <span class="c">//速度允许范围内，开始重新记数</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="m">0</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="no">false</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c">//没有达到速率限制数量，记数加1</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">count</span><span class="o">++</span>
+    <span class="p">}</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+<span class="p">}</span>
+
+<span class="c">//SetRate 设置每秒允许的请求数</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">l</span> <span class="o">*</span><span class="n">LimitRate</span><span class="p">)</span> <span class="n">SetRate</span><span class="p">(</span><span class="n">r</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c">//GetRate 获取每秒允许的请求数</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">l</span> <span class="o">*</span><span class="n">LimitRate</span><span class="p">)</span> <span class="n">GetRate</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">l</span><span class="o">.</span><span class="n">rate</span>
+<span class="p">}</span>
+</code></pre></div></div><h3 id="测试">测试</h3><p>下面是测试代码：</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    <span class="k">var</span> <span class="n">lr</span> <span class="n">LimitRate</span>
+    <span class="n">lr</span><span class="o">.</span><span class="n">SetRate</span><span class="p">(</span><span class="m">3</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span><span class="o">:=</span><span class="m">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="m">10</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">{</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+            <span class="k">go</span> <span class="k">func</span><span class="p">(){</span>
+                <span class="k">if</span> <span class="n">lr</span><span class="o">.</span><span class="n">Limit</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Got it!"</span><span class="p">)</span><span class="c">//显示3次Got it!</span>
+                <span class="p">}</span>            
+                <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+            <span class="p">}()</span>
+    <span class="p">}</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div><p>运行结果</p><div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Got it!
+Got it!
+Got it!
+</code></pre></div></div><p>只显示 3 次 Got it!，说明另外 7 次 Limit 返回的结果为 false。限速成功。</p><h2 id="方案二">方案二</h2><p>在限速时，另一种方案是等待，即请求速度太快时，后到达的请求等待前面的请求完成后才能运行。这种方案类似一个队列。</p><h3 id="实现-1">实现</h3><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">//LimitRate 限速</span>
+<span class="k">type</span> <span class="n">LimitRate</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="n">rate</span>       <span class="kt">int</span>
+    <span class="n">interval</span>   <span class="n">time</span><span class="o">.</span><span class="n">Duration</span>
+    <span class="n">lastAction</span> <span class="n">time</span><span class="o">.</span><span class="n">Time</span>
+    <span class="n">lock</span>       <span class="n">sync</span><span class="o">.</span><span class="n">Mutex</span>
+<span class="p">}</span>
+
+<span class="c">//Limit 限速</span>
+<span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"sync"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="p">(</span><span class="n">l</span> <span class="o">*</span><span class="n">LimitRate</span><span class="p">)</span> <span class="n">Limit</span><span class="p">()</span> <span class="kt">bool</span> <span class="p">{</span>
+    <span class="n">result</span> <span class="o">:=</span> <span class="no">false</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+        <span class="c">//判断最后一次执行的时间与当前的时间间隔是否大于限速速率</span>
+        <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span><span class="o">.</span><span class="n">Sub</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">lastAction</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">l</span><span class="o">.</span><span class="n">interval</span> <span class="p">{</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">lastAction</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="no">true</span>
+            <span class="p">}</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">lock</span><span class="o">.</span><span class="n">Unlock</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">result</span>
+        <span class="p">}</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">Sleep</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">interval</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c">//SetRate 设置Rate</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">l</span> <span class="o">*</span><span class="n">LimitRate</span><span class="p">)</span> <span class="n">SetRate</span><span class="p">(</span><span class="n">r</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">l</span><span class="o">.</span><span class="n">interval</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">Microsecond</span> <span class="o">*</span> <span class="n">time</span><span class="o">.</span><span class="n">Duration</span><span class="p">(</span><span class="m">1000</span><span class="o">*</span><span class="m">1000</span><span class="o">/</span><span class="n">l</span><span class="o">.</span><span class="n">Rate</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c">//GetRate 获取Rate</span>
+<span class="k">func</span> <span class="p">(</span><span class="n">l</span> <span class="o">*</span><span class="n">LimitRate</span><span class="p">)</span> <span class="n">GetRate</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">l</span><span class="o">.</span><span class="n">rate</span> 
+<span class="p">}</span>
+</code></pre></div></div><h3 id="测试-1">测试</h3><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">package</span> <span class="n">main</span>
+
+<span class="k">import</span> <span class="p">(</span>
+    <span class="s">"fmt"</span>
+    <span class="s">"sync"</span>
+    <span class="s">"time"</span>
+<span class="p">)</span>
+
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">wg</span> <span class="n">sync</span><span class="o">.</span><span class="n">WaitGroup</span>
+    <span class="k">var</span> <span class="n">lr</span> <span class="n">LimitRate</span>
+    <span class="n">lr</span><span class="o">.</span><span class="n">SetRate</span><span class="p">(</span><span class="m">3</span><span class="p">)</span>
+    
+    <span class="n">b</span><span class="o">:=</span><span class="n">time</span><span class="o">.</span><span class="n">Now</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="o">:=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="m">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="n">wg</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+        <span class="k">go</span> <span class="k">func</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">lr</span><span class="o">.</span><span class="n">Limit</span><span class="p">()</span> <span class="p">{</span>
+                <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="s">"Got it!"</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="n">wg</span><span class="o">.</span><span class="n">Done</span><span class="p">()</span>
+        <span class="p">}()</span>
+    <span class="p">}</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">Wait</span><span class="p">()</span>
+    <span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">Since</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div><p>运行结果</p><div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Got it!
+Got it!
+Got it!
+Got it!
+Got it!
+Got it!
+Got it!
+Got it!
+Got it!
+Got it!
+3.004961704s
+</code></pre></div></div><p>与方案一不同，显示了 10 次 Got it! 但是运行时间是 3.00496 秒，同样每秒没有超过 3 次。限速成功。</p><h2 id="改造">改造</h2><p>回到最初的例子中，我们将限速功能加进去。这里需要注意，我们的例子中，请求是不能被丢弃的，只能排队等待，所以我们使用方案二的限速方法。</p><div class="language-golang highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="n">lr</span> <span class="n">LimitRate</span><span class="c">//方案二</span>
+<span class="c">//限制每秒运行20次，可以根据实际环境调整限速设置，或者由程序动态调整。</span>
+<span class="n">lr</span><span class="o">.</span><span class="n">SetRate</span><span class="p">(</span><span class="m">20</span><span class="p">)</span>
+
+<span class="c">//使用goroutine，程序运行时间短，但数据库可能被拖垮</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">v</span><span class="o">:=</span><span class="k">range</span> <span class="n">userList</span> <span class="p">{</span>
+    <span class="n">u</span><span class="o">:=</span><span class="n">v</span>
+    <span class="k">go</span> <span class="k">func</span><span class="p">(){</span>
+        <span class="n">lr</span><span class="o">.</span><span class="n">Limit</span><span class="p">()</span>
+        <span class="n">user</span><span class="o">:=</span><span class="n">db</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">Get</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">ID</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user</span><span class="o">==</span><span class="no">nil</span> <span class="p">{</span>
+            <span class="n">newUser</span><span class="o">:=</span><span class="n">user</span><span class="p">{</span><span class="n">ID</span><span class="o">:</span><span class="n">u</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span><span class="n">UserName</span><span class="o">:</span><span class="n">u</span><span class="o">.</span><span class="n">UserName</span><span class="p">}</span>
+            <span class="n">db</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">Insert</span><span class="p">(</span><span class="n">newUser</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}()</span>
+<span class="p">}</span>
+<span class="k">select</span><span class="p">{}</span>
+</code></pre></div></div><div style="margin-top:2em;padding:0 1.5em;border:1px solid #d3d3d3;background-color:#deebf7"><h3>文档信息</h3><ul><li>本文作者：<a href="https://lewinz.org" target="_blank">Lewin</a></li><li>本文链接：<a href="https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/" target="_blank">https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/</a></li><li>版权声明：自由转载-非商用-非衍生-保持署名</li></ul></div></article><div class="share"><div class="share-component" data-disabled='qq,weibo,qzone'></div></div><div class="comment"><div id="gitalk-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/gitalk/gitalk.css"> <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> <script> var gitalk = new Gitalk({ id: '/2021/11/23/golang-goroutine-rate-limiting/', clientID: '831a35f6d4f6fc049209', clientSecret: '6e80f9a3e9b50b498553e32179ad3adbd893ab7e', repo: 'blog-comments', owner: 'Lewinz', admin: ['Lewinz'], labels: ['gitment'], perPage: 50, }); gitalk.render('gitalk-container'); </script></div></div><div class="column one-fourth"><h3>Search</h3><div id="site_search"> <input style="width:96%" type="text" id="search_box" placeholder="Search"></div><ul id="search_results" style="font-size:14px;list-style-type:none;padding-top:10px;padding-left:10px;"></ul><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/simple-jekyll-search.min.js"></script> <script type="text/javascript"> SimpleJekyllSearch({ searchInput: document.getElementById('search_box'), resultsContainer: document.getElementById('search_results'), json: 'https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@built/assets/search_data.json?v=1637633489', searchResultTemplate: '<li><a href="{url}" title="{title}">{title}</a></li>', noResultsText: 'No results found', limit: 10, fuzzy: false, exclude: ['Welcome'] }) </script><h3 class="post-directory-title mobile-hidden">Table of Contents</h3><div id="post-directory-module" class="mobile-hidden"><section class="post-directory"><dl></dl></section></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery.toc.js"></script></div></div></section><footer class="container"> <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7093222719567591" data-ad-slot="5263168187" data-ad-format="auto" data-full-width-responsive="true"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script><div class="site-footer" role="contentinfo"><div class="copyright left mobile-block"> © 2021 <span title="Lewin">Lewin</span> <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a></div><ul class="site-footer-links right mobile-hidden"><li> <a href="javascript:window.scrollTo(0,0)" >TOP</a></li></ul><a href="https://github.com/Lewinz/lewinz.github.io" target="_blank" aria-label="view source code"> <span class="mega-octicon octicon-mark-github" title="GitHub"></span> </a><ul class="site-footer-links mobile-hidden"><li> <a href="https://lewinz.org/" title="首页" target="">首页</a></li><li> <a href="https://lewinz.org/categories/" title="分类" target="">分类</a></li><li> <a href="https://lewinz.org/wiki/" title="维基" target="">维基</a></li><li> <a href="https://lewinz.org/links/" title="链接" target="">链接</a></li><li> <a href="https://lewinz.org/about/" title="关于" target="">关于</a></li><li><a href="https://lewinz.org/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li></ul><script async src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="mobile-hidden" style="margin-top:8px"> <span id="busuanzi_container_site_pv" style="display:none"> 本站访问量<span id="busuanzi_value_site_pv"></span>次 </span> <span id="busuanzi_container_site_uv" style="display:none"> / 本站访客数<span id="busuanzi_value_site_uv"></span>人 </span> <span id="busuanzi_container_page_pv" style="display:none"> / 本页访问量<span id="busuanzi_value_page_pv"></span>次 / 统计始于2021-04-21 </span></div></div></footer><div class="tools-wrapper"> <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/share.js/dist/js/share.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/geopattern.js"></script> <script> jQuery(document).ready(function($) { $('.geopattern').each(function(){ $(this).geopattern($(this).data('pattern-id')); }); /* hljs.initHighlightingOnLoad(); */ }); </script><div style="display:none"> <script> (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-80669434-1', 'auto'); ga('send', 'pageview'); </script></div></body></html>
