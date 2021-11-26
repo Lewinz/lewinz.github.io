@@ -7,6 +7,7 @@ keywords: mac, software, keys
 ---
 
 ### Chrome 浏览器
+
 | 操作  | 快捷键|
 | --- | --- |
 | 在无痕模式下打开新窗口  | `⌘ + Shift + n` |
