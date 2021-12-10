@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-11-26T09:54:16+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">golang 并发两种限速方式</title><link href="https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/" rel="alternate" type="text/html" title="golang 并发两种限速方式" /><published>2021-11-23T00:00:00+08:00</published><updated>2021-11-23T00:00:00+08:00</updated><id>https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting</id><content type="html" xml:base="https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/">&lt;h2 id=&quot;引子&quot;&gt;引子&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-12-10T15:51:07+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">gorm/mysql timestamp 异常引发的 debug</title><link href="https://lewinz.org/2021/12/03/mysql-timestamp/" rel="alternate" type="text/html" title="gorm/mysql timestamp 异常引发的 debug" /><published>2021-12-03T00:00:00+08:00</published><updated>2021-12-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/12/03/mysql-timestamp</id><content type="html" xml:base="https://lewinz.org/2021/12/03/mysql-timestamp/">&lt;h2 id=&quot;问题上下文&quot;&gt;问题上下文&lt;/h2&gt;
+&lt;p&gt;因为业务需要，写了一个每小时执行一次的自动任务，用来生成每小时的计量数据&lt;br /&gt;
+计量表存储的数据为每小时&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="gorm" /><category term="timestamp" /><summary type="html">问题上下文 因为业务需要，写了一个每小时执行一次的自动任务，用来生成每小时的计量数据 计量表存储的数据为每小时</summary></entry><entry><title type="html">golang 并发两种限速方式</title><link href="https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/" rel="alternate" type="text/html" title="golang 并发两种限速方式" /><published>2021-11-23T00:00:00+08:00</published><updated>2021-11-23T00:00:00+08:00</updated><id>https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting</id><content type="html" xml:base="https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/">&lt;h2 id=&quot;引子&quot;&gt;引子&lt;/h2&gt;
 &lt;p&gt;golang 提供了 goroutine 快速实现并发编程，在实际环境中，如果 goroutine 中的代码要消耗大量资源时（CPU、内存、带宽等），我们就需要对程序限速，以防止 goroutine 将资源耗尽。
 以下面伪代码为例，看看 goroutine 如何拖垮一台 DB。假设 userList 长度为 10000，先从数据库中查询 userList 中的 user 是否在数据库中存在，存在则忽略，不存在则创建。&lt;/p&gt;
 &lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;//不使用goroutine，程序运行时间长，但数据库压力不大&lt;/span&gt;
@@ -1574,56 +1576,4 @@ main.main&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
 当然如果其中某一层函数定义了 recover () 功能，那么 panic 会在那一层函数里面被截获，然后由 recover () 定义如何处理这个 panic，是丢弃，还是向上再抛出。(是不是和 exception 的处理机制一模一样呢？)&lt;/p&gt;
 
 &lt;h2 id=&quot;其他&quot;&gt;其他&lt;/h2&gt;
-&lt;p&gt;在使用 gin 框架编写代码时，如果手动实现了异步日志，需要注意勿将 panic 级别日志也异步了，否则会导致整个程序中断，原因是 gin 框架中全局对 panic 进行 recover 的部分是捕捉不到这个 panic 的。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="panic" /><category term="fatal" /><summary type="html">os.Exit 在讲两者区别之前我们先看一下 os.Exit () 函数的定义： ``` golang func Exit(code int)</summary></entry><entry><title type="html">golang 文件操作权限位</title><link href="https://lewinz.org/2021/09/02/golang-os-file/" rel="alternate" type="text/html" title="golang 文件操作权限位" /><published>2021-09-02T00:00:00+08:00</published><updated>2021-09-02T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/02/golang-os-file</id><content type="html" xml:base="https://lewinz.org/2021/09/02/golang-os-file/">&lt;h2 id=&quot;openfile&quot;&gt;OpenFile&lt;/h2&gt;
-&lt;p&gt;Go 语言的 os 包下有一个 OpenFile 函数，其原型如下所示：&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OpenFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;flag&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;perm&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FileMode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;file&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;其中 name 是文件的文件名，如果不是在当前路径下运行需要加上具体路径；flag 是文件的处理参数，为 int 类型，根据系统的不同具体值可能有所不同，但是作用是相同的。&lt;/p&gt;
-
-&lt;p&gt;flag 文件处理参数：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;O_RDONLY：只读模式 (read-only)&lt;/li&gt;
-  &lt;li&gt;O_WRONLY：只写模式 (write-only)&lt;/li&gt;
-  &lt;li&gt;O_RDWR：读写模式 (read-write)&lt;/li&gt;
-  &lt;li&gt;O_APPEND：追加模式 (append)&lt;/li&gt;
-  &lt;li&gt;O_CREATE：文件不存在就创建 (create a new file if none exists.)&lt;/li&gt;
-  &lt;li&gt;O_EXCL：与 O_CREATE 一起用，构成一个新建文件的功能，它要求文件必须不存在 (used with O_CREATE, file must not exist)&lt;/li&gt;
-  &lt;li&gt;O_SYNC：同步方式打开，即不使用缓存，直接写入硬盘&lt;/li&gt;
-  &lt;li&gt;O_TRUNC：打开并清空文件&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;perm 参数：&lt;br /&gt;
-除非创建文件时才需要指定，不需要创建新文件时可以将其设定为０. 虽然 go 语言给 perm 权限设定了很多的常量，但是习惯上也可以直接使用数字，如 0666 (具体含义和 Unix 系统的一致).&lt;/p&gt;
-
-&lt;p&gt;示例：&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;bufio&quot;&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;fmt&quot;&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;os&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c&quot;&gt;//创建一个新文件&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;filePath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;./test_open_file.txt&quot;&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;OpenFile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filePath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;O_WRONLY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;O_CREATE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0666&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;文件打开失败&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;c&quot;&gt;//及时关闭file句柄&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-  &lt;span class=&quot;c&quot;&gt;//写入文件时，使用带缓存的 *Writer&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;write&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bufio&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NewWriter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;file&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WriteString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hello Word! &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  
-  &lt;span class=&quot;c&quot;&gt;//Flush将缓存的文件真正写入到文件中&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;write&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Flush&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="file" /><summary type="html">OpenFile Go 语言的 os 包下有一个 OpenFile 函数，其原型如下所示： func OpenFile(name string, flag int, perm FileMode) (file *File, err error)</summary></entry></feed>
+&lt;p&gt;在使用 gin 框架编写代码时，如果手动实现了异步日志，需要注意勿将 panic 级别日志也异步了，否则会导致整个程序中断，原因是 gin 框架中全局对 panic 进行 recover 的部分是捕捉不到这个 panic 的。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="panic" /><category term="fatal" /><summary type="html">os.Exit 在讲两者区别之前我们先看一下 os.Exit () 函数的定义： ``` golang func Exit(code int)</summary></entry></feed>
