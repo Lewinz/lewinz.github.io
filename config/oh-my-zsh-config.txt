@@ -1,7 +1,19 @@
-PROMPT='%(?:%{$fg_bold[blue]%}%D{%T}:%{$fg_bold[red]%}%D{%T})'
-PROMPT+=" %(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"
-PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}git:(%{$fg[red]%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
+if [ $UID -eq 0 ]; then NCOLOR="red"; else NCOLOR="blue"; fi
+if [ $UID -eq 0 ]; then NCOLOR2="red"; else NCOLOR2="green"; fi
+
+PROMPT='%{$fg_bold[blue]%}-------------- $(git_prompt_info)
+'
+PROMPT+='%{$fg_bold[blue]%}%D{%T}'
+PROMPT+=' %{$fg[$NCOLOR2]%}➜'
+PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} '
+
+RPROMPT='%{$fg[cyan]%}%d %{$reset_color%}'
+
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}git:($fg[red]"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[blue]%}) %{$fg[yellow]%}✗"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%})"%
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%})"
+
+# See https://geoff.greer.fm/lscolors/
+export LSCOLORS="cxfxexdxbxegedabagacad"
+export LS_COLORS="di=32:ln=35:so=34:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
