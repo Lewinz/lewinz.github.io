@@ -269,6 +269,7 @@ rpm -ivh mysql-community-server-5.7.22-1.el7.x86_64.rpm
 # http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html
 
 [mysqld]
+port=3307
 #
 # Remove leading # and set to the amount of RAM for the most important data
 # cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
@@ -469,45 +470,145 @@ errNum:
 `yum -y install gcc gcc-c++ pcre pcre-devel zlib zlib-devel openssl openssl-devel gd gd-devel`  
 
 ### 安装 nginx
-
-解压 ngnix 安装包 `tar -zxvf nginx-1.17.3.tar.gz`  
-
-进入解压缩目录,编译监控插件  
-`./configure --add-module=/mnt/nginx/nginx-module-vts`  
-
 ``` shell
+# 下载tar包
+wget http://nginx.org/download/nginx-1.17.3.tar.gz
+tar -xvf nginx-1.17.3.tar.gz
+cd nginx-1.17.3
+
+./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_v2_module
+# prefix 安装目录
+# with-http_stub_status_module 监控状态
+# with-http_ssl_module 开启 ssl
+# with-http_v2_module 开启 http2
+
 make
 make install
 ```
 
-启动  
-`cd /usr/local/nginx/sbin`  
-./nginx  
-
-### 配置
+### nginx 配置
+生成 diffie-hellman 4096 位加密秘钥
 ``` shell
-server {
-    listen 8000;
-    server_name info;
-    client_max_body_size 20M;
-    root /data/info/99-admin-web/info-web;
- 
-    include /etc/nginx/default.d/*.conf;
- 
-    location /{
-        root /data/info/99-admin-web;
-        index index.html index.htm;
-    }
- 
-    location /info-api/ {
-        proxy_pass http://gateway 地址:8080/;
-    }
-    #添加监控接口/status/：
-    location /status {             
-        vhost_traffic_status_display;             
-        vhost_traffic_status_display_format html;         
-    }
+cd /etc/nginx/
+
+openssl dhparam -out dhparam.pem 2048
+```
+
+全局配置
+``` shell
+# /usr/local/nginx/conf/nginx.conf
+user                 root;
+pid                  /var/run/nginx.pid;
+worker_processes     auto;
+worker_rlimit_nofile 65535;
+
+events {
+    multi_accept       on;
+    worker_connections 65535;
 }
+
+http {
+    charset                utf-8;
+    sendfile               on;
+    tcp_nopush             on;
+    tcp_nodelay            on;
+    server_tokens          off;
+    log_not_found          off;
+    types_hash_max_size    2048;
+    types_hash_bucket_size 64;
+    client_max_body_size   16M;
+
+    # MIME
+    include                mime.types;
+    default_type           application/octet-stream;
+
+    # Logging
+    access_log             /var/log/nginx/access.log;
+    error_log              /var/log/nginx/error.log warn;
+
+    # SSL
+    ssl_session_timeout    1d;
+    ssl_session_cache      shared:SSL:10m;
+    ssl_session_tickets    off;
+
+    # Diffie-Hellman parameter for DHE ciphersuites
+    ssl_dhparam            /etc/nginx/dhparam.pem;
+
+    # Mozilla Intermediate configuration
+    ssl_protocols          TLSv1.2 TLSv1.3;
+    ssl_ciphers            ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+
+    # OCSP Stapling
+    ssl_stapling           on;
+    ssl_stapling_verify    on;
+    resolver               1.1.1.1 1.0.0.1 8.8.8.8 8.8.4.4 208.67.222.222 208.67.220.220 valid=60s;
+    resolver_timeout       2s;
+
+    # Connection header for WebSocket reverse proxy
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        ""      close;
+    }
+
+    # Load configs
+    include /etc/nginx/conf.d/*.conf;
+}
+```
+
+详细配置
+``` shell
+# /etc/nginx/conf.d/tracehabit.conf
+server {
+    listen              443 ssl http2;
+    listen              [::]:443 ssl http2;
+    server_name         tracehabit;
+
+    # SSL
+    ssl_certificate     /root/.acme.sh/tracehabit.com.csr;
+    ssl_certificate_key /root/.acme.sh/tracehabit.com.key;
+
+    # security
+    # include             nginxconfig.io/security.conf;
+
+    # logging
+    access_log          /var/log/nginx/tracehabit.access.log;
+    error_log           /var/log/nginx/tracehabit.error.log warn;
+
+    proxy_set_header Authorization $http_authorization;
+    proxy_pass_header  Authorization;
+
+    # reverse proxy
+    location / {
+        proxy_pass http://127.0.0.1:9090;
+       # include    nginxconfig.io/proxy.conf;
+    }
+
+    # additional config
+    #include nginxconfig.io/general.conf;
+}
+
+# HTTP redirect
+server {
+    listen      80;
+    listen      [::]:80;
+    server_name tracehabit;
+    return      301 https://tracehabit$request_uri;
+}
+```
+
+### nginx 启停
+``` shell
+# 检查配置文件是否正确
+/usr/local/nginx/sbin/nginx -t  
+
+# 启动
+/usr/local/nginx/sbin/nginx
+
+# 关闭
+/usr/local/nginx/sbin/nginx -s stop
+
+# 重启
+/usr/local/nginx/sbin/nginx -s reload
 ```
 
 # Nacos
