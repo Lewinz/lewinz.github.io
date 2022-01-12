@@ -769,6 +769,14 @@
     } ,
   
     {
+      "title"    : "nginx 配置文件加载顺序",
+      "category" : "nginx",
+      
+      "url"      : "https://lewinz.org/2022/01/12/nginx-config-load/",
+      "keywords" : "nginx, config, load"
+    } ,
+  
+    {
       "title"    : "端口代理",
       "category" : "server",
       

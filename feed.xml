@@ -1,4 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T22:18:48+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">端口代理</title><link href="https://lewinz.org/2022/01/12/server-port-proxy/" rel="alternate" type="text/html" title="端口代理" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-port-proxy</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-port-proxy/">&lt;h2 id=&quot;术语与约定&quot;&gt;术语与约定&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T22:26:37+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">nginx 配置文件加载顺序</title><link href="https://lewinz.org/2022/01/12/nginx-config-load/" rel="alternate" type="text/html" title="nginx 配置文件加载顺序" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/nginx-config-load</id><content type="html" xml:base="https://lewinz.org/2022/01/12/nginx-config-load/">&lt;p&gt;这几天频繁的创建主机搭建站点，突然碰到个与自己直觉不匹配的情况：&lt;/p&gt;
+
+&lt;p&gt;当没有配置默认的虚拟主机时，用一个无法匹配 server_name 的链接访问服务器时，会如何？&lt;/p&gt;
+
+&lt;p&gt;我直觉认为会显示错误信息。但现实世界是残酷的，nginx 找了一圈都没有匹配后，会直接路由到它找到的第一个配置的虚拟主机上（前提是监听的端口是一样的）。&lt;/p&gt;
+
+&lt;p&gt;何为第一个？是靠虚拟主机的 conf 文件名字的字母表顺序！惊不惊喜？意不意外？？&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://blog.kazaff.me/2018/10/17/nginx%E7%9A%84vhost%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F/&quot;&gt;博客链接&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="nginx" /><category term="config" /><category term="load" /><summary type="html">这几天频繁的创建主机搭建站点，突然碰到个与自己直觉不匹配的情况：</summary></entry><entry><title type="html">端口代理</title><link href="https://lewinz.org/2022/01/12/server-port-proxy/" rel="alternate" type="text/html" title="端口代理" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-port-proxy</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-port-proxy/">&lt;h2 id=&quot;术语与约定&quot;&gt;术语与约定&lt;/h2&gt;
 &lt;p&gt;本地主机：形式为 IP 或域名，你当前正在使用的这台机器；&lt;br /&gt;
 远程主机：形式与本地主机一样。这里的远程并不是指实际的距离有多远，准确地说是另一台；&lt;/p&gt;
 
@@ -1901,29 +1909,4 @@ systemctl status httpd&lt;/p&gt;
         &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;Hello World!&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="apache" /><category term="http" /><category term="server" /><summary type="html">Apache 服务概览 软件包： httpd, httpd-devel, httpd-manual 服务类型：由 systemd 启动的守护进程 配置单元： /usr/lib/systemd/system/httpd.service 守护进程： /usr/sbin/httpd 端口： 80 (http), 443 (https) 配置： /etc/httpd/ Web 文档： /var/www/html/</summary></entry><entry><title type="html">CentOS 6 添加 dns 缓存</title><link href="https://lewinz.org/2021/09/13/centos-6-dnsmasq/" rel="alternate" type="text/html" title="CentOS 6 添加 dns 缓存" /><published>2021-09-13T00:00:00+08:00</published><updated>2021-09-13T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/13/centos-6-dnsmasq</id><content type="html" xml:base="https://lewinz.org/2021/09/13/centos-6-dnsmasq/">&lt;h3 id=&quot;安装-dnsmasq&quot;&gt;安装 dnsmasq&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yum install dnsmasq -y&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;修改配置文件&quot;&gt;修改配置文件：&lt;/h3&gt;
-&lt;h4 id=&quot;修改配置文件etcdnsmasqconf-添加以下内容&quot;&gt;修改配置文件：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/dnsmasq.conf&lt;/code&gt; 添加以下内容：&lt;/h4&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;resolv-file&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/etc/resolv.dnsmasq.conf
-listen-address&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;127.0.0.1
-no-dhcp-interface&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;lo
-bind-interfaces
-no-negcache
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;修改配置文件-etcresolvconf--添加以下内容&quot;&gt;修改配置文件： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/resolv.conf&lt;/code&gt;  添加以下内容：&lt;/h4&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nameserver 127.0.0.1
-nameserver 119.28.28.28
-nameserver 114.114.114.114
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;修改配置文件etcresolvdnsmasqconf--添加以下内容&quot;&gt;修改配置文件：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/resolv.dnsmasq.conf&lt;/code&gt;  添加以下内容：&lt;/h4&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nameserver 119.29.29.29
-nameserver 119.28.28.28
-nameserver 114.114.114.114
-nameserver 114.114.115.115
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h4 id=&quot;重启-dnsmasq-服务&quot;&gt;重启 dnsmasq 服务:&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;service dnsmasq restart&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="centos" /><category term="dns" /><category term="cache" /><summary type="html">安装 dnsmasq yum install dnsmasq -y</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="apache" /><category term="http" /><category term="server" /><summary type="html">Apache 服务概览 软件包： httpd, httpd-devel, httpd-manual 服务类型：由 systemd 启动的守护进程 配置单元： /usr/lib/systemd/system/httpd.service 守护进程： /usr/sbin/httpd 端口： 80 (http), 443 (https) 配置： /etc/httpd/ Web 文档： /var/www/html/</summary></entry></feed>
