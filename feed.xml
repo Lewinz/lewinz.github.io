@@ -1,4 +1,127 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2021-12-27T23:49:33+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">gorm/mysql timestamp 异常引发的 debug</title><link href="https://lewinz.org/2021/12/03/mysql-timestamp/" rel="alternate" type="text/html" title="gorm/mysql timestamp 异常引发的 debug" /><published>2021-12-03T00:00:00+08:00</published><updated>2021-12-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/12/03/mysql-timestamp</id><content type="html" xml:base="https://lewinz.org/2021/12/03/mysql-timestamp/">&lt;h2 id=&quot;问题上下文&quot;&gt;问题上下文&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T20:05:56+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">端口代理</title><link href="https://lewinz.org/2022/01/12/server-port-proxy/" rel="alternate" type="text/html" title="端口代理" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-port-proxy</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-port-proxy/">&lt;h2 id=&quot;术语与约定&quot;&gt;术语与约定&lt;/h2&gt;
+&lt;p&gt;本地主机：形式为 IP 或域名，你当前正在使用的这台机器；&lt;br /&gt;
+远程主机：形式与本地主机一样。这里的远程并不是指实际的距离有多远，准确地说是另一台；&lt;/p&gt;
+
+&lt;h2 id=&quot;ssh-端口代理&quot;&gt;ssh 端口代理&lt;/h2&gt;
+&lt;h3 id=&quot;本地转发&quot;&gt;本地转发&lt;/h3&gt;
+&lt;p&gt;指设置代理后，远程主机的端口被映射到本地端口上&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/server-port-proxy_1.png&quot; alt=&quot;server-port-proxy_1.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;前置条件&quot;&gt;前置条件&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;Host A 能连接 Host B&lt;/li&gt;
+  &lt;li&gt;Host A 不能连接到 Host C&lt;/li&gt;
+  &lt;li&gt;Host B 能连接到 Host C 相应端口&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;示例&quot;&gt;示例&lt;/h4&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh &lt;span class=&quot;nt&quot;&gt;-NL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host A&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.IP:&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host A&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.Port:&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host C&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.IP:&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host C&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.Port root@&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host B&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.IP &amp;lt;&lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host B&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.SSH.Port&amp;gt;
+
+示例：
+Host A: 127.0.0.1
+Host B: 10.23.43.1
+Host C: 10.23.43.2
+
+ssh &lt;span class=&quot;nt&quot;&gt;-NL&lt;/span&gt; :5900:10.23.43.2:5900 root@10.23.43.1
+等于
+ssh &lt;span class=&quot;nt&quot;&gt;-NL&lt;/span&gt; 127.0.0.1:5900:10.23.43.2:5900 root@10.23.43.1 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 22
+
+这时候连接本地 5900 就相当于连接 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host C&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 10.23.43.2:5900
+
+其他场景介绍：
+1. 机器 Host C 有进程监听 8080 端口，但安全组未放开 8080 端口，则可使用以下命令通过此机器的公网 IP 代理出 8080 端口。
+（其他信息：Host C 内网 IP 为 192.168.11.23 ，外网 IP 为 10.23.43.2）
+
+ssh &lt;span class=&quot;nt&quot;&gt;-NL&lt;/span&gt; :8080:192.168.11.23:8080 root@10.23.43.2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;参数解释：&lt;br /&gt;
+-N 告诉 SSH 客户端，这个连接不需要执行任何命令。仅仅做端口转发&lt;/p&gt;
+
+&lt;p&gt;-f 告诉 SSH 客户端在后台运行&lt;/p&gt;
+
+&lt;p&gt;-L 做本地映射端口，被冒号分割的三个部分含义分别是最后一个参数是我们用来建立隧道的中间机器的 IP 地址 (IP: 18.16.200.134)&lt;/p&gt;
+
+&lt;h3 id=&quot;远程转发&quot;&gt;远程转发&lt;/h3&gt;
+&lt;p&gt;指设置代理后，本地的端口被映射到远程主机的端口上&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/server-port-proxy_2.png&quot; alt=&quot;server-port-proxy_2.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;前置条件-1&quot;&gt;前置条件&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;Host A 没有公网 IP&lt;/li&gt;
+  &lt;li&gt;Host A 可以连接到 Host B&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh &lt;span class=&quot;nt&quot;&gt;-NR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host B&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.IP:&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host B&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.Port:&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host A&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.IP:&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host A&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.Port root@&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host B&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.IP &amp;lt;&lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host B&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.SSH.Port&amp;gt;
+
+示例：
+Host A: 127.0.0.1
+Host B: 10.23.43.1
+
+ssh &lt;span class=&quot;nt&quot;&gt;-NL&lt;/span&gt; :5900:127.0.0.1:5900 root@10.23.43.1
+等于
+ssh &lt;span class=&quot;nt&quot;&gt;-NL&lt;/span&gt; 10.23.43.1:5900:127.0.0.1:5900 root@10.23.43.1 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 22
+
+这时候连接 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Host B&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 10.23.43.1:5900 端口就相当于连接本地 5900
+
+可能适合的场景：
+1. 内网渗透
+2. vpn 端口转发
+
+注意：
+本地 sshd_config 里要打开 AllowTcpForwarding 选项，否则 &lt;span class=&quot;nt&quot;&gt;-R&lt;/span&gt; 远程端口转发会失败。
+默认转发到远程主机上的端口绑定的是 127.0.0.1，如要绑定 0.0.0.0 需要打开 sshd_config 里的 GatewayPorts 选项。这个选项如果由于权限没法打开也有办法，可配合 ssh &lt;span class=&quot;nt&quot;&gt;-L&lt;/span&gt; 将端口绑定到 0.0.0.0。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;nc&quot;&gt;nc&lt;/h2&gt;
+&lt;h3 id=&quot;nc-的作用&quot;&gt;nc 的作用&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;实现任意 TCP/UDP 端口的侦听，nc 可以作为 server 以 TCP 或 UDP 方式侦听指定端口&lt;/li&gt;
+  &lt;li&gt;端口的扫描，nc 可以作为 client 发起 TCP 或 UDP 连接&lt;/li&gt;
+  &lt;li&gt;机器之间传输文件&lt;/li&gt;
+  &lt;li&gt;机器之间网络测速&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;nc 的控制参数不少，常用的几个参数如下所列：
+1) -l&lt;br /&gt;
+用于指定 nc 将处于侦听模式。指定该参数，则意味着 nc 被当作 server，侦听并接受连接，而非向其它地址发起连接。&lt;/p&gt;
+
+&lt;p&gt;2) -s&lt;br /&gt;
+指定发送数据的源 IP 地址，适用于多网卡机&lt;/p&gt;
+
+&lt;p&gt;3) -u&lt;br /&gt;
+指定 nc 使用 UDP 协议，默认为 TCP&lt;/p&gt;
+
+&lt;p&gt;4) -v&lt;br /&gt;
+输出交互或出错信息，新手调试时尤为有用&lt;/p&gt;
+
+&lt;p&gt;5) -w&lt;br /&gt;
+超时秒数，后面跟数字&lt;/p&gt;
+
+&lt;p&gt;6) -z&lt;br /&gt;
+表示 zero，表示扫描时不发送任何数据&lt;/p&gt;
+
+&lt;h3 id=&quot;使用示例&quot;&gt;使用示例&lt;/h3&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 测试端口通不通
+nc &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &amp;lt;IP&amp;gt; &amp;lt;Port&amp;gt; &lt;span class=&quot;c&quot;&gt;#tcp&lt;/span&gt;
+nc &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &amp;lt;IP&amp;gt; &amp;lt;Port&amp;gt; &lt;span class=&quot;c&quot;&gt;# udp&lt;/span&gt;
+
+2. 监听和扫描端口
+监听
+nc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &amp;lt;Port&amp;gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;
+
+扫描
+nc &lt;span class=&quot;nt&quot;&gt;-vz&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; 5 &amp;lt;IP&amp;gt; &amp;lt;Port&amp;gt;
+
+3. 收发文件
+接受文件端
+nc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &amp;lt;Port&amp;gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; file.txt
+
+发送文件端
+nc &amp;lt;IP&amp;gt; &amp;lt;Port&amp;gt; &amp;lt; file.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="server" /><category term="port" /><category term="proxy" /><summary type="html">术语与约定 本地主机：形式为 IP 或域名，你当前正在使用的这台机器； 远程主机：形式与本地主机一样。这里的远程并不是指实际的距离有多远，准确地说是另一台；</summary></entry><entry><title type="html">gorm/mysql timestamp 异常引发的 debug</title><link href="https://lewinz.org/2021/12/03/mysql-timestamp/" rel="alternate" type="text/html" title="gorm/mysql timestamp 异常引发的 debug" /><published>2021-12-03T00:00:00+08:00</published><updated>2021-12-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/12/03/mysql-timestamp</id><content type="html" xml:base="https://lewinz.org/2021/12/03/mysql-timestamp/">&lt;h2 id=&quot;问题上下文&quot;&gt;问题上下文&lt;/h2&gt;
 &lt;p&gt;因为业务需要，写了一个每小时执行一次的自动任务，用来生成每小时的计量数据&lt;br /&gt;
 计量表存储的数据为每小时&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="gorm" /><category term="timestamp" /><summary type="html">问题上下文 因为业务需要，写了一个每小时执行一次的自动任务，用来生成每小时的计量数据 计量表存储的数据为每小时</summary></entry><entry><title type="html">golang 并发两种限速方式</title><link href="https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/" rel="alternate" type="text/html" title="golang 并发两种限速方式" /><published>2021-11-23T00:00:00+08:00</published><updated>2021-11-23T00:00:00+08:00</updated><id>https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting</id><content type="html" xml:base="https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/">&lt;h2 id=&quot;引子&quot;&gt;引子&lt;/h2&gt;
 &lt;p&gt;golang 提供了 goroutine 快速实现并发编程，在实际环境中，如果 goroutine 中的代码要消耗大量资源时（CPU、内存、带宽等），我们就需要对程序限速，以防止 goroutine 将资源耗尽。
@@ -1442,138 +1565,4 @@ nameserver 114.114.115.115
 &lt;h4 id=&quot;kb---通信行业&quot;&gt;kb - 通信行业&lt;/h4&gt;
 &lt;p&gt;通信行业的基础是传输，而传输的基本单位是二进制码元，也就是 bit, 所以通信中传输速率的单位是 bps（bit per second），也就是 bit/s。传输是的速率可能为任意整数，不一定为 2 的倍数，所以没有必要使用 K=1024 这种人类不擅长的二进制，而是使用 K=1000 的十进制形式。&lt;/p&gt;
 
-&lt;p&gt;如果记住的话，可以这么想，计算机存储中的数据单位为字节，为 2&lt;sup&gt;3&lt;/sup&gt; 位，跟 2 有关，所以跟字节相关的 KB 中的 K=2&lt;sup&gt;10&lt;/sup&gt;，而通信行业传输的基本的单位为比特，跟 2 没有直接关系，所以 kb 中的 k=1000. 不过硬盘是特殊情况，需要单独记忆。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="KB" /><category term="kb" /><summary type="html">B 和 b 这个其实最容易搞混，哪个是字节，哪个又是比特？虽然知道英文 byte 和 bit，但还是记不住。这里我有两个小技巧：1Byte = 8bit，就是说 8 位为 1 个字节，所以说字节是大 B，因为它 “大” 啊，比特是 b。另一个记忆方法：知道字节跳动吧，它的英文名是 ByteDance，字节这么大的公司肯定是大写的 B 啊，所以大写的 B 对应字节，另一个就剩下小写的 b 对应比特了。</summary></entry><entry><title type="html">golang log 中 panic 和 fatal 区别</title><link href="https://lewinz.org/2021/09/03/golang-panic-fatal/" rel="alternate" type="text/html" title="golang log 中 panic 和 fatal 区别" /><published>2021-09-03T00:00:00+08:00</published><updated>2021-09-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/03/golang-panic-fatal</id><content type="html" xml:base="https://lewinz.org/2021/09/03/golang-panic-fatal/">&lt;h2 id=&quot;osexit&quot;&gt;os.Exit&lt;/h2&gt;
-&lt;p&gt;在讲两者区别之前我们先看一下 os.Exit () 函数的定义：&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;code&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;Exit&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;causes&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;current&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;program&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;exit&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;the&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;given&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Conventionally&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;code&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;zero&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indicates&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;non&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zero&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;an&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;program&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;terminates&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;immediately&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;deferred&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;functions&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;are&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;注意两点：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;应用程序马上退出。&lt;/li&gt;
-  &lt;li&gt;defer 函数不会执行。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;logfatal&quot;&gt;log.Fatal&lt;/h2&gt;
-&lt;p&gt;再来看 log.Fatal 函数定义&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fatal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;Fatal&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;equivalent&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;followed&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;by&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;看源代码：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;go/src/log/log.go&lt;/code&gt;&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// Fatal is equivalent to l.Print() followed by a call to os.Exit(1).&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Logger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Fatal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Sprint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;总结起来 log.Fatal 函数完成：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;打印输出内容&lt;/li&gt;
-  &lt;li&gt;退出应用程序&lt;/li&gt;
-  &lt;li&gt;defer 函数不会执行&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;和 os.Exit () 相比多了第一步。&lt;/p&gt;
-
-&lt;h2 id=&quot;panic&quot;&gt;panic&lt;/h2&gt;
-&lt;p&gt;再来看内置函数 panic () 函数定义：&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;// The panic built-in function stops normal execution of the current&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;// goroutine. When a function F calls panic, normal execution of F stops&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;// immediately. Any functions whose execution was deferred by F are run in&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;// the usual way, and then F returns to its caller. To the caller G, the&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;// invocation of F then behaves like a call to panic, terminating G's&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;// execution and running any deferred functions. This continues until all&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;// functions in the executing goroutine have stopped, in reverse order. At&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;// that point, the program is terminated and the error condition is reported,&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;// including the value of the argument to panic. This termination sequence&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;// is called panicking and can be controlled by the built-in function&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;// recover.&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;panic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;interface&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;注意几点：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;1.函数立刻停止执行 (注意是函数本身，不是应用程序停止)&lt;/li&gt;
-  &lt;li&gt;2.defer 函数被执行&lt;/li&gt;
-  &lt;li&gt;3.返回给调用者 (caller)&lt;/li&gt;
-  &lt;li&gt;4.调用者函数假装也收到了一个 panic 函数，从而&lt;/li&gt;
-  &lt;li&gt;4.1 立即停止执行当前函数&lt;/li&gt;
-  &lt;li&gt;4.2 它 defer 函数被执行&lt;/li&gt;
-  &lt;li&gt;4.3 返回给它的调用者 (caller)&lt;/li&gt;
-  &lt;li&gt;…(递归重复上述步骤，直到最上层函数)&lt;/li&gt;
-  &lt;li&gt;应用程序停止。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;panic-的行为&quot;&gt;panic 的行为&lt;/h3&gt;
-&lt;p&gt;简单的总结 panic () 就有点类似 java 语言的 exception 的处理，因而 panic 的行为和 java 的 exception 处理行为就非常类似，行为结合 catch，和 final 语句块的处理流程。&lt;/p&gt;
-
-&lt;p&gt;下面给几个例子：&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;例子 1&lt;/strong&gt;：log.Fatal&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;log&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;3333&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Fatal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;4444&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1111&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;2222&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;9999&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;运行结果：&lt;/p&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;go build &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./main
-2018/08/20 17:48:44 1111
-2018/08/20 17:48:44 4444
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;可见 defer 函数的内容并没有被执行，程序在 log.Fatal (…) 处直接就退出了。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;例子 2&lt;/strong&gt;：panic () 函数&lt;/p&gt;
-&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&quot;log&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;3333&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;panic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;4444&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1111&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;2222&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;9999&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;运行结果：&lt;/p&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;go build &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; ./main
-2018/08/20 17:49:28 1111
-2018/08/20 17:49:28 3333
-2018/08/20 17:49:28 2222
-panic: 4444
-
-goroutine 1 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;running]:
-main.foo&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-        /home/.../main.go:9 +0x55
-main.main&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-        /home/.../main.go:15 +0x82
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;可见所有的 defer 都被调用到了，函数根据父子调用关系所有的 defer 都被调用直到最上层。
-当然如果其中某一层函数定义了 recover () 功能，那么 panic 会在那一层函数里面被截获，然后由 recover () 定义如何处理这个 panic，是丢弃，还是向上再抛出。(是不是和 exception 的处理机制一模一样呢？)&lt;/p&gt;
-
-&lt;h2 id=&quot;其他&quot;&gt;其他&lt;/h2&gt;
-&lt;p&gt;在使用 gin 框架编写代码时，如果手动实现了异步日志，需要注意勿将 panic 级别日志也异步了，否则会导致整个程序中断，原因是 gin 框架中全局对 panic 进行 recover 的部分是捕捉不到这个 panic 的。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="panic" /><category term="fatal" /><summary type="html">os.Exit 在讲两者区别之前我们先看一下 os.Exit () 函数的定义： ``` golang func Exit(code int)</summary></entry></feed>
+&lt;p&gt;如果记住的话，可以这么想，计算机存储中的数据单位为字节，为 2&lt;sup&gt;3&lt;/sup&gt; 位，跟 2 有关，所以跟字节相关的 KB 中的 K=2&lt;sup&gt;10&lt;/sup&gt;，而通信行业传输的基本的单位为比特，跟 2 没有直接关系，所以 kb 中的 k=1000. 不过硬盘是特殊情况，需要单独记忆。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="KB" /><category term="kb" /><summary type="html">B 和 b 这个其实最容易搞混，哪个是字节，哪个又是比特？虽然知道英文 byte 和 bit，但还是记不住。这里我有两个小技巧：1Byte = 8bit，就是说 8 位为 1 个字节，所以说字节是大 B，因为它 “大” 啊，比特是 b。另一个记忆方法：知道字节跳动吧，它的英文名是 ByteDance，字节这么大的公司肯定是大写的 B 啊，所以大写的 B 对应字节，另一个就剩下小写的 b 对应比特了。</summary></entry></feed>
