@@ -777,6 +777,14 @@
     } ,
   
     {
+      "title"    : "快照实现",
+      "category" : "snapshoot",
+      
+      "url"      : "https://lewinz.org/2022/01/12/server-snapshoot/",
+      "keywords" : "snapshoot"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       

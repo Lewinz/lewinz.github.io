@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T22:04:22+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">端口代理</title><link href="https://lewinz.org/2022/01/12/server-port-proxy/" rel="alternate" type="text/html" title="端口代理" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-port-proxy</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-port-proxy/">&lt;h2 id=&quot;术语与约定&quot;&gt;术语与约定&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T22:18:48+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">端口代理</title><link href="https://lewinz.org/2022/01/12/server-port-proxy/" rel="alternate" type="text/html" title="端口代理" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-port-proxy</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-port-proxy/">&lt;h2 id=&quot;术语与约定&quot;&gt;术语与约定&lt;/h2&gt;
 &lt;p&gt;本地主机：形式为 IP 或域名，你当前正在使用的这台机器；&lt;br /&gt;
 远程主机：形式与本地主机一样。这里的远程并不是指实际的距离有多远，准确地说是另一台；&lt;/p&gt;
 
@@ -224,7 +224,92 @@ ssh &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8888 username@192.168.19.14
 
 &lt;p&gt;提示：LISTEN 和 LISTENING 的状态只有用 - a 或者 - l 才能看到&lt;/p&gt;
 
-&lt;p&gt;查看 LISTEN 相关端口 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;netstat -nat | grep LISTEN&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="server" /><category term="port" /><category term="proxy" /><summary type="html">术语与约定 本地主机：形式为 IP 或域名，你当前正在使用的这台机器； 远程主机：形式与本地主机一样。这里的远程并不是指实际的距离有多远，准确地说是另一台；</summary></entry><entry><title type="html">gorm/mysql timestamp 异常引发的 debug</title><link href="https://lewinz.org/2021/12/03/mysql-timestamp/" rel="alternate" type="text/html" title="gorm/mysql timestamp 异常引发的 debug" /><published>2021-12-03T00:00:00+08:00</published><updated>2021-12-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/12/03/mysql-timestamp</id><content type="html" xml:base="https://lewinz.org/2021/12/03/mysql-timestamp/">&lt;h2 id=&quot;问题上下文&quot;&gt;问题上下文&lt;/h2&gt;
+&lt;p&gt;查看 LISTEN 相关端口 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;netstat -nat | grep LISTEN&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="server" /><category term="port" /><category term="proxy" /><summary type="html">术语与约定 本地主机：形式为 IP 或域名，你当前正在使用的这台机器； 远程主机：形式与本地主机一样。这里的远程并不是指实际的距离有多远，准确地说是另一台；</summary></entry><entry><title type="html">快照实现</title><link href="https://lewinz.org/2022/01/12/server-snapshoot/" rel="alternate" type="text/html" title="快照实现" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-snapshoot</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-snapshoot/">&lt;h2 id=&quot;定义&quot;&gt;定义&lt;/h2&gt;
+&lt;p&gt;存储网络行业协会 SNIA（StorageNetworking Industry Association）快照的定义：关于指定数据集合的一个完全可用拷贝，该拷贝包括相应数据在某个时间点（拷贝开始的时间点）的映像。快照可以是其所表示的数据的一个副本，也可以是数据的一个复制品。&lt;/p&gt;
+
+&lt;p&gt;需要注意的是：快照是完全可用的拷贝，但不是一份完整的拷贝&lt;/p&gt;
+
+&lt;h2 id=&quot;存储快照的使用场景&quot;&gt;存储快照的使用场景&lt;/h2&gt;
+&lt;h3 id=&quot;场景一&quot;&gt;场景一&lt;/h3&gt;
+&lt;p&gt;存储快照，是一种数据保护措施，可以对源数据进行一定程度的保护，通俗地讲，可以理解为 —- 后悔药。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/snapshoot_1.png&quot; alt=&quot;snapshoot_1.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如上图，假设在 t0 时刻，有一份完整的源数据，我们在 t1 时刻，针对这份源数据创建一份快照。&lt;/p&gt;
+
+&lt;p&gt;t2 时刻，若因为各种原因（误操作、系统错误等）导致源数据损毁，那么，我们可以通过回滚（rollback）快照，将源数据恢复至快照创建时的状态（即 t1 时刻），这样，可以尽量降低数据损失（损失的数据，是 t1 到 t2 之间产生的数据）。&lt;/p&gt;
+
+&lt;p&gt;这种功能，常用于银行、公安户籍、科研单位等。操作系统、软件升级或机房设备更替，一般会选择在夜间或其他无生产业务时，进行高危操作，操作前会对数据进行快照，若操作失败，则将快照进行 rollback，将源数据恢复至操作前的状态。&lt;/p&gt;
+
+&lt;h3 id=&quot;场景-2&quot;&gt;场景 2&lt;/h3&gt;
+&lt;p&gt;前言中说过，快照是一份完全可用的副本，那么，它完全可以被上层业务当做源数据。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/snapshoot_2.png&quot; alt=&quot;snapshoot_2.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如上图，针对源数据，创建快照后，将快照卷映射给其他上层业务，可以用于数据挖掘和开发测试等工作，针对快照的读操作不影响源卷的数据。&lt;/p&gt;
+
+&lt;p&gt;这种功能，常用于直播（视频 &amp;amp; 图片）鉴黄、科研数据模拟开发测试等，比如，视频直播平台需要将某一段时间的视频提供给执法机构进行筛查分析，那么可以通过对特定时间点保存的数据创建快照，将快照映射给执法机构的业务主机去进行挖掘分析。&lt;/p&gt;
+
+&lt;h2 id=&quot;存储快照的实现原理&quot;&gt;存储快照的实现原理&lt;/h2&gt;
+&lt;p&gt;目前，快照的实现方式均由各个厂商自行决定，但主要技术分为 2 类，一种是写时拷贝 COW（Copy On Write），另一种，是写重定向 ROW（Redirect On Write）。&lt;/p&gt;
+
+&lt;h3 id=&quot;写时拷贝-cow&quot;&gt;写时拷贝 COW&lt;/h3&gt;
+&lt;p&gt;COW (Copy-On-Write)，写时拷贝，也称为写前拷贝。&lt;/p&gt;
+
+&lt;p&gt;创建快照以后，如果源卷的数据发生了变化，那么快照系统会首先将原始数据拷贝到快照卷上对应的数据块中，然后再对源卷进行改写。&lt;/p&gt;
+
+&lt;h4 id=&quot;写操作&quot;&gt;写操作&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/snapshoot_3.gif&quot; alt=&quot;snapshoot_3.gif&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如上图简要示例，快照创建以后，若上层业务对源卷写数据 X，X 在缓存中排队，快照系统将 X 即将写入的位置（逻辑地址）上的数据 Y，拷贝到快照卷中对应的位置（逻辑地址）上，同时，生成一张映射表，表中一列记录源卷上数据变化的逻辑地址，另一列记录快照卷上数据变化的逻辑地址。我们可以看到，上层业务每下发一个数据块，存储上，发生了两次写操作：一次是源卷将数据写入快照卷（即图中 Y），一次是上层业务将数据写入源卷（即图中 X）。&lt;/p&gt;
+
+&lt;h4 id=&quot;读操作&quot;&gt;读操作&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/snapshoot_4.gif&quot; alt=&quot;snapshoot_4.gif&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如上图，快照卷若映射给上层业务进行数据分析等用途时，针对快照进行读操作时，首先由快照系统判断，上层业务需要读取的数据是否在快照卷中，若在，直接从快照卷读取，若不在，则查询映射表，去对应源卷的逻辑地中读取（这个查表并去源卷读的操作，也叫读重定向）。这一点，恰好就解释了为什么快照是一份完全可用的副本，它没有对源卷进行 100% 的拷贝，但对上层业务来说，却可以将快照看做是和源卷 “一模一样” 的副本。&lt;/p&gt;
+
+&lt;p&gt;针对源卷进行读操作时，与快照卷没有数据交互。&lt;/p&gt;
+
+&lt;p&gt;我们可以看到，快照对源卷的数据具有很好的保护措施，快照可以单独作为一份可以读取的副本，但并没有像简单的镜像那样，一开始就占用了和源卷一样的空间，而是根据创建快照后上层业务产生的数据，来实时占用必需的存储空间。&lt;/p&gt;
+
+&lt;h4 id=&quot;快照回滚rollback&quot;&gt;快照回滚（rollback）&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/snapshoot_5.gif&quot; alt=&quot;snapshoot_5.gif&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如上图，回滚操作的前提条件是，锁定源卷（暂停对待回滚的逻辑地址上的 IO 操作），然后通过查映射表，将快照卷上的对应数据回拷到源卷中。&lt;/p&gt;
+
+&lt;h4 id=&quot;快照删除&quot;&gt;快照删除&lt;/h4&gt;
+&lt;p&gt;采用 COW 技术的快照，其源卷即保存着完整的实时数据，因此，删除快照时，直接销毁了快照卷和映射表，与源卷不存在数据交互。&lt;/p&gt;
+
+&lt;h3 id=&quot;写时重定向-row&quot;&gt;写时重定向 ROW&lt;/h3&gt;
+&lt;p&gt;ROW (Redirect-on-write)，也称为写时重定向。&lt;/p&gt;
+
+&lt;p&gt;创建快照以后，快照系统把对数据卷的写请求重定向给了快照预留的存储空间，直接将新的数据写入快照卷。上层业务读源卷时，创建快照前的数据从源卷读，创建快照后产生的数据，从快照卷读。&lt;/p&gt;
+
+&lt;h4 id=&quot;写操作-1&quot;&gt;写操作&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/snapshoot_6.gif&quot; alt=&quot;snapshoot_6.gif&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如上图简要示例，快照创建以后，若上层业务对源卷写数据 X，X 在缓存中排队，快照系统判断 X 即将写入源卷的逻辑地址，然后将数据 X 写入快照卷中预留的对应逻辑地址中，同时，将源卷和快照卷的逻辑地址写入映射表，即写重定向。我们可以看到，上层针对源卷写入一个数据块 X，存储上只发生一次写操作，只是写之前进行了重定向。&lt;/p&gt;
+
+&lt;h4 id=&quot;读操作-1&quot;&gt;读操作&lt;/h4&gt;
+
+&lt;p&gt;若快照创建以后，上层业务对源卷进行读，则有两种情况：1）若读取的数据，在创建快照前产生，数据是保存在源卷上的，那么，上层就从源卷进行读取；2）若需要读取的数据是创建快照以后才产生的，那么上层就查询映射表，从快照卷进行读取（即读重定向）。&lt;/p&gt;
+
+&lt;p&gt;若快照创建以后，上层业务对快照卷进行读，同样也有两种情况：1）若读取的数据，在创建快照前产生，数据是保存在源卷上的，那么上层就查询映射表，从源卷进行读取；2）若需要读取的数据是创建快照以后才产生的，那么上层就直接从快照卷进行读取。&lt;/p&gt;
+
+&lt;p&gt;我们可以看到，ROW 快照也是根据创建快照后上层业务产生的数据，来实时占用必需的存储空间。&lt;/p&gt;
+
+&lt;h4 id=&quot;快照回滚rollback-1&quot;&gt;快照回滚（rollback）&lt;/h4&gt;
+
+&lt;p&gt;采用 ROW 技术的快照，其源卷始终保存着快照创建前的完整数据，快照创建后，上层业务产生的数据都写入了快照中，因此，快照的回滚只是取消了对源卷的读重定向操作。通俗地说，就是源卷上没有进行任何数据操作，上层业务对源卷的读，仅限于读源卷（即不会去读取快照卷的数据）。&lt;/p&gt;
+
+&lt;h4 id=&quot;快照删除-1&quot;&gt;快照删除&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/snapshoot_7.gif&quot; alt=&quot;snapshoot_7.gif&quot; /&gt;
+采用 ROW 技术的快照，其源卷始终保存着快照创建前的完整数据，快照创建后，上层业务产生的数据都写入了快照中。因此，若要删除快照，必然要先将快照卷中的数据，回拷到源卷中，拷贝完成才能删除，如上图。此时我们可以设想，如果，针对一份源数据，在 18:00 创建了快照，上层业务持续产生大量新的数据，19:00 又创建了快照，20:00 又创建了快照…… 那么，在有多份快照的情况下，如果需要删除快照，就会出现，多个快照向源卷回拷数据的情况，可能导致回拷量非常大，耗时很长。&lt;/p&gt;
+
+&lt;h3 id=&quot;两种技术对比&quot;&gt;两种技术对比&lt;/h3&gt;
+&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/snapshoot_8.png&quot; alt=&quot;snapshoot_8.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如上表，COW 的写时拷贝，导致每次写入都有拷贝操作，大量写入时，源卷的写性能会有所下降，而读源卷是不会受到任何影响的，删除快照时，只是解除了快照和源卷的关系，同时删除了快照卷的数据而已。ROW 在每次写入仅做了重定向操作，这个操作耗时是几乎可以忽略不计的，源卷的写性能几乎不会受到影响，但读源卷时，则需要判断数据是创建快照前还是创建快照后，导致大量读时，性能受到一定影响，比较致命的是，若源卷有多个快照，在删除快照时，所有快照的数据均需要回拷到源卷才可以保证源卷数据的完整性。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="snapshoot" /><summary type="html">定义 存储网络行业协会 SNIA（StorageNetworking Industry Association）快照的定义：关于指定数据集合的一个完全可用拷贝，该拷贝包括相应数据在某个时间点（拷贝开始的时间点）的映像。快照可以是其所表示的数据的一个副本，也可以是数据的一个复制品。</summary></entry><entry><title type="html">gorm/mysql timestamp 异常引发的 debug</title><link href="https://lewinz.org/2021/12/03/mysql-timestamp/" rel="alternate" type="text/html" title="gorm/mysql timestamp 异常引发的 debug" /><published>2021-12-03T00:00:00+08:00</published><updated>2021-12-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/12/03/mysql-timestamp</id><content type="html" xml:base="https://lewinz.org/2021/12/03/mysql-timestamp/">&lt;h2 id=&quot;问题上下文&quot;&gt;问题上下文&lt;/h2&gt;
 &lt;p&gt;因为业务需要，写了一个每小时执行一次的自动任务，用来生成每小时的计量数据&lt;br /&gt;
 计量表存储的数据为每小时为一个计量单位，需要考虑多节点重复在单个计量周期跑自动任务问题。即需要计量数据进行覆盖。&lt;/p&gt;
 
@@ -1841,21 +1926,4 @@ nameserver 114.114.114.114
 nameserver 114.114.115.115
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;h4 id=&quot;重启-dnsmasq-服务&quot;&gt;重启 dnsmasq 服务:&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;service dnsmasq restart&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="centos" /><category term="dns" /><category term="cache" /><summary type="html">安装 dnsmasq yum install dnsmasq -y</summary></entry><entry><title type="html">KB 和 kb 傻傻分不清楚</title><link href="https://lewinz.org/2021/09/10/KB-kb/" rel="alternate" type="text/html" title="KB 和 kb 傻傻分不清楚" /><published>2021-09-10T00:00:00+08:00</published><updated>2021-09-10T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/10/KB-kb</id><content type="html" xml:base="https://lewinz.org/2021/09/10/KB-kb/">&lt;h3 id=&quot;b-和-b&quot;&gt;B 和 b&lt;/h3&gt;
-&lt;p&gt;这个其实最容易搞混，哪个是字节，哪个又是比特？虽然知道英文 byte 和 bit，但还是记不住。这里我有两个小技巧：1Byte = 8bit，就是说 8 位为 1 个字节，所以说字节是大 B，因为它 “大” 啊，比特是 b。另一个记忆方法：知道字节跳动吧，它的英文名是 ByteDance，字节这么大的公司肯定是大写的 B 啊，所以大写的 B 对应字节，另一个就剩下小写的 b 对应比特了。&lt;/p&gt;
-
-&lt;h3 id=&quot;k-和-k&quot;&gt;K 和 k&lt;/h3&gt;
-&lt;p&gt;先说下结论，大 K 和小 k 是一样的，都代表 1024/1000，和大 B 搭配时表示 1024，和小 b 搭配时，表示 1000，但是大 K 和小 k 是没有区别的。这两个也可以通过英文记忆。kilo = 千，KB 为 Kilobyte，我没有找到 kb 的英文，不过也可以这么理解：kilobit。&lt;/p&gt;
-
-&lt;h3 id=&quot;应用场景&quot;&gt;应用场景&lt;/h3&gt;
-&lt;p&gt;K,k 和 B,b 搭配有 4 个情况：KB, kB, Kb, kb, 通过上边的介绍可以知道 KB=kB, Kb=kb，但是一般来说常用的写法为 KB 和 kb，至于为什么我也不知道。它们的应用场景其实是不同的，下面就说下它们的应用场景。&lt;/p&gt;
-
-&lt;h4 id=&quot;kb---计算机存储&quot;&gt;KB - 计算机存储&lt;/h4&gt;
-&lt;p&gt;计算机行业的基础是数据处理，而数据的基本单位是字节，1 字节 = 8 比特。在计算机领域中，普遍使用的为 2 进制形式，而人类熟悉的 10 进制是非常不方便的。作为计算机数据存储中的单位，KB 也是需要满足二进制的，因此 KB 中的大 K 代表 1024，即 2&lt;sup&gt;10&lt;/sup&gt;。 比如 1KB=2&lt;sup&gt;10&lt;/sup&gt;B，1MB=2&lt;sup&gt;20&lt;/sup&gt;B，1GB=2&lt;sup&gt;30&lt;/sup&gt;B.&lt;/p&gt;
-
-&lt;p&gt;注意： 虽然硬盘也属于计算机存储，但是它使用的 K＝1000. 至于为什么，为一方便和节省成本。方便：人类还是更喜欢和 1000 打交道，1024 还得思考下；至于节约成本：硬盘宣传的容量和实际的容量有所出入，实际的容量会小一些。比如一个写着 1TB 的硬盘，实际大小只有 1000&lt;sup&gt;3&lt;/sup&gt;B/1024&lt;sup&gt;3&lt;/sup&gt;B=0.93TB。&lt;/p&gt;
-
-&lt;h4 id=&quot;kb---通信行业&quot;&gt;kb - 通信行业&lt;/h4&gt;
-&lt;p&gt;通信行业的基础是传输，而传输的基本单位是二进制码元，也就是 bit, 所以通信中传输速率的单位是 bps（bit per second），也就是 bit/s。传输是的速率可能为任意整数，不一定为 2 的倍数，所以没有必要使用 K=1024 这种人类不擅长的二进制，而是使用 K=1000 的十进制形式。&lt;/p&gt;
-
-&lt;p&gt;如果记住的话，可以这么想，计算机存储中的数据单位为字节，为 2&lt;sup&gt;3&lt;/sup&gt; 位，跟 2 有关，所以跟字节相关的 KB 中的 K=2&lt;sup&gt;10&lt;/sup&gt;，而通信行业传输的基本的单位为比特，跟 2 没有直接关系，所以 kb 中的 k=1000. 不过硬盘是特殊情况，需要单独记忆。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="KB" /><category term="kb" /><summary type="html">B 和 b 这个其实最容易搞混，哪个是字节，哪个又是比特？虽然知道英文 byte 和 bit，但还是记不住。这里我有两个小技巧：1Byte = 8bit，就是说 8 位为 1 个字节，所以说字节是大 B，因为它 “大” 啊，比特是 b。另一个记忆方法：知道字节跳动吧，它的英文名是 ByteDance，字节这么大的公司肯定是大写的 B 啊，所以大写的 B 对应字节，另一个就剩下小写的 b 对应比特了。</summary></entry></feed>
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;service dnsmasq restart&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="centos" /><category term="dns" /><category term="cache" /><summary type="html">安装 dnsmasq yum install dnsmasq -y</summary></entry></feed>
