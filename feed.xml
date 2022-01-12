@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T20:09:30+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">端口代理</title><link href="https://lewinz.org/2022/01/12/server-port-proxy/" rel="alternate" type="text/html" title="端口代理" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-port-proxy</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-port-proxy/">&lt;h2 id=&quot;术语与约定&quot;&gt;术语与约定&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T21:41:02+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">端口代理</title><link href="https://lewinz.org/2022/01/12/server-port-proxy/" rel="alternate" type="text/html" title="端口代理" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-port-proxy</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-port-proxy/">&lt;h2 id=&quot;术语与约定&quot;&gt;术语与约定&lt;/h2&gt;
 &lt;p&gt;本地主机：形式为 IP 或域名，你当前正在使用的这台机器；&lt;br /&gt;
 远程主机：形式与本地主机一样。这里的远程并不是指实际的距离有多远，准确地说是另一台；&lt;/p&gt;
 
@@ -121,7 +121,110 @@ nc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &amp;lt;Port&amp;gt; &lt;spa
 
 发送文件端
 nc &amp;lt;IP&amp;gt; &amp;lt;Port&amp;gt; &amp;lt; file.txt
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="server" /><category term="port" /><category term="proxy" /><summary type="html">术语与约定 本地主机：形式为 IP 或域名，你当前正在使用的这台机器； 远程主机：形式与本地主机一样。这里的远程并不是指实际的距离有多远，准确地说是另一台；</summary></entry><entry><title type="html">gorm/mysql timestamp 异常引发的 debug</title><link href="https://lewinz.org/2021/12/03/mysql-timestamp/" rel="alternate" type="text/html" title="gorm/mysql timestamp 异常引发的 debug" /><published>2021-12-03T00:00:00+08:00</published><updated>2021-12-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/12/03/mysql-timestamp</id><content type="html" xml:base="https://lewinz.org/2021/12/03/mysql-timestamp/">&lt;h2 id=&quot;问题上下文&quot;&gt;问题上下文&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;代理场景&quot;&gt;代理场景&lt;/h3&gt;
+&lt;p&gt;** nc 命令在第一个远程连接结束后会结束监听。如果需要保持运行，需要添加 -k 参数 **&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;主机&lt;/th&gt;
+      &lt;th&gt;IP&lt;/th&gt;
+      &lt;th&gt;类型&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;macOS&lt;/td&gt;
+      &lt;td&gt;192.168.10.100&lt;/td&gt;
+      &lt;td&gt;攻击机&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;kali&lt;/td&gt;
+      &lt;td&gt;192.168.19.147&lt;/td&gt;
+      &lt;td&gt;跳板机&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Ubuntu&lt;/td&gt;
+      &lt;td&gt;192.168.19.153&lt;/td&gt;
+      &lt;td&gt;目标机&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;正向转发1&lt;br /&gt;
+macOS 能访问 kali，但是不能访问 Ubuntu。kali 能访问 Ubuntu 任意端口。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;目标：macOS 想访问到 Ubuntu 的 22 端口。&lt;br /&gt;
+思路：用 kali 做跳板机，把访问 kali 8888 端口的数据转发到 Ubuntu 的 22 端口&lt;br /&gt;
+方法：在 kali 上执行一条 nc 转发命令即可&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8888 &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;nc 192.168.19.153 22&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#或者使用管道符&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;mkfifo&lt;/span&gt; /tmp/pipe &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; nc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8888 &amp;lt;/tmp/pipe | nc 192.168.19.153 22 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;/tmp/pipe
+&lt;span class=&quot;c&quot;&gt;#or&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;mknod&lt;/span&gt; /tmp/pipe p &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; nc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8888 &amp;lt; /tmp/pipe | nc 192.168.19.153 22 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;/tmp/pipe
+此时在 macOS 上用 ssh 连接 kali 的 8888 端口，或者直接在 kali 上 ssh 连接本地 8888 端口，即可登陆 Ubuntu 的 22 端口。
+
+ssh &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8888 username@192.168.19.147
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;正向转发2
+macOS 能访问 kali，但是不能访问 Ubuntu。Ubuntu 防火墙有过滤，kali 不能访问 Ubuntu 的 22 端口，但是可以访问其他端口如 9999。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;目标：macOS 想访问到 Ubuntu 的 22 端口。&lt;br /&gt;
+思路：&lt;br /&gt;
+目标机器 Ubuntu 上用 nc 把 22 端口转发到 9999 端口
+kali 上监听 8888 端口，并使用 nc 把访问 kali 8888 端口的数据转发到 Ubuntu 的 9999 端口
+macOS 通过访问 kali 的 8888 端口，即可正向连接到 ubuntu 的 22 端口。
+操作：&lt;/p&gt;
+
+&lt;p&gt;目标 Ubuntu：&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 9999 &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;nc 127.0.0.1 22&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#如果没有-c参数&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;mkfifo&lt;/span&gt; /tmp/pipe &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; nc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 9999 &amp;lt;/tmp/pipe | nc 192.168.19.153 22 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;/tmp/pipe
+&lt;span class=&quot;c&quot;&gt;# or&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;mkfifo&lt;/span&gt; /tmp/pipe &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; nc &lt;span class=&quot;nt&quot;&gt;-k&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; 9999 0&amp;lt;/tmp/pipe | nc localhost 22 | &lt;span class=&quot;nb&quot;&gt;tee&lt;/span&gt; /tmp/pipe
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;跳板机 kali：&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8888 &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;nc 192.168.19.153 9999&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#或者使用管道符&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;mkfifo&lt;/span&gt; /tmp/pipe &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; nc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8888 &amp;lt;/tmp/pipe | nc 192.168.19.153 9999 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;/tmp/pipe
+&lt;span class=&quot;c&quot;&gt;#or&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;mknod&lt;/span&gt; /tmp/pipe p &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; nc &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8888 &amp;lt;/tmp/pipe | nc 192.168.19.153 9999 &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;/tmp/pipe
+攻击机：macOS：
+
+ssh &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8888 username@192.168.19.147
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;其他&quot;&gt;其他&lt;/h2&gt;
+&lt;h3 id=&quot;端口占用情况&quot;&gt;端口占用情况&lt;/h3&gt;
+&lt;h4 id=&quot;netstat&quot;&gt;netstat&lt;/h4&gt;
+&lt;p&gt;参数&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;-a (all) 显示所有选项，默认不显示 LISTEN 相关&lt;/li&gt;
+  &lt;li&gt;-t (tcp) 仅显示 tcp 相关选项&lt;/li&gt;
+  &lt;li&gt;-u (udp) 仅显示 udp 相关选项&lt;/li&gt;
+  &lt;li&gt;-n 拒绝显示别名，能显示数字的全部转化成数字。&lt;/li&gt;
+  &lt;li&gt;-l 仅列出有在 Listen (监听) 的服務状态&lt;/li&gt;
+  &lt;li&gt;-p 显示建立相关链接的程序名&lt;/li&gt;
+  &lt;li&gt;-r 显示路由信息，路由表&lt;/li&gt;
+  &lt;li&gt;-e 显示扩展信息，例如 uid 等&lt;/li&gt;
+  &lt;li&gt;-s 按各个协议进行统计&lt;/li&gt;
+  &lt;li&gt;-c 每隔一个固定时间，执行该 netstat 命令。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;提示：LISTEN 和 LISTENING 的状态只有用 - a 或者 - l 才能看到&lt;/p&gt;
+
+&lt;p&gt;查看 LISTEN 相关端口 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;netstat -nat | grep LISTEN&lt;/code&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="server" /><category term="port" /><category term="proxy" /><summary type="html">术语与约定 本地主机：形式为 IP 或域名，你当前正在使用的这台机器； 远程主机：形式与本地主机一样。这里的远程并不是指实际的距离有多远，准确地说是另一台；</summary></entry><entry><title type="html">gorm/mysql timestamp 异常引发的 debug</title><link href="https://lewinz.org/2021/12/03/mysql-timestamp/" rel="alternate" type="text/html" title="gorm/mysql timestamp 异常引发的 debug" /><published>2021-12-03T00:00:00+08:00</published><updated>2021-12-03T00:00:00+08:00</updated><id>https://lewinz.org/2021/12/03/mysql-timestamp</id><content type="html" xml:base="https://lewinz.org/2021/12/03/mysql-timestamp/">&lt;h2 id=&quot;问题上下文&quot;&gt;问题上下文&lt;/h2&gt;
 &lt;p&gt;因为业务需要，写了一个每小时执行一次的自动任务，用来生成每小时的计量数据&lt;br /&gt;
 计量表存储的数据为每小时&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="gorm" /><category term="timestamp" /><summary type="html">问题上下文 因为业务需要，写了一个每小时执行一次的自动任务，用来生成每小时的计量数据 计量表存储的数据为每小时</summary></entry><entry><title type="html">golang 并发两种限速方式</title><link href="https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/" rel="alternate" type="text/html" title="golang 并发两种限速方式" /><published>2021-11-23T00:00:00+08:00</published><updated>2021-11-23T00:00:00+08:00</updated><id>https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting</id><content type="html" xml:base="https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/">&lt;h2 id=&quot;引子&quot;&gt;引子&lt;/h2&gt;
 &lt;p&gt;golang 提供了 goroutine 快速实现并发编程，在实际环境中，如果 goroutine 中的代码要消耗大量资源时（CPU、内存、带宽等），我们就需要对程序限速，以防止 goroutine 将资源耗尽。
