@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T20:05:56+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">端口代理</title><link href="https://lewinz.org/2022/01/12/server-port-proxy/" rel="alternate" type="text/html" title="端口代理" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-port-proxy</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-port-proxy/">&lt;h2 id=&quot;术语与约定&quot;&gt;术语与约定&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T20:09:30+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">端口代理</title><link href="https://lewinz.org/2022/01/12/server-port-proxy/" rel="alternate" type="text/html" title="端口代理" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-port-proxy</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-port-proxy/">&lt;h2 id=&quot;术语与约定&quot;&gt;术语与约定&lt;/h2&gt;
 &lt;p&gt;本地主机：形式为 IP 或域名，你当前正在使用的这台机器；&lt;br /&gt;
 远程主机：形式与本地主机一样。这里的远程并不是指实际的距离有多远，准确地说是另一台；&lt;/p&gt;
 
@@ -84,7 +84,7 @@ ssh &lt;span class=&quot;nt&quot;&gt;-NL&lt;/span&gt; 10.23.43.1:5900:127.0.0.1:
   &lt;li&gt;机器之间网络测速&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;nc 的控制参数不少，常用的几个参数如下所列：
+&lt;p&gt;nc 的控制参数不少，常用的几个参数如下所列：&lt;br /&gt;
 1) -l&lt;br /&gt;
 用于指定 nc 将处于侦听模式。指定该参数，则意味着 nc 被当作 server，侦听并接受连接，而非向其它地址发起连接。&lt;/p&gt;
 
