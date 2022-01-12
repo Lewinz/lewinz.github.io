@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T22:26:37+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">nginx 配置文件加载顺序</title><link href="https://lewinz.org/2022/01/12/nginx-config-load/" rel="alternate" type="text/html" title="nginx 配置文件加载顺序" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/nginx-config-load</id><content type="html" xml:base="https://lewinz.org/2022/01/12/nginx-config-load/">&lt;p&gt;这几天频繁的创建主机搭建站点，突然碰到个与自己直觉不匹配的情况：&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T22:36:35+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">nginx 配置文件加载顺序</title><link href="https://lewinz.org/2022/01/12/nginx-config-load/" rel="alternate" type="text/html" title="nginx 配置文件加载顺序" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/nginx-config-load</id><content type="html" xml:base="https://lewinz.org/2022/01/12/nginx-config-load/">&lt;p&gt;这几天频繁的创建主机搭建站点，突然碰到个与自己直觉不匹配的情况：&lt;/p&gt;
 
 &lt;p&gt;当没有配置默认的虚拟主机时，用一个无法匹配 server_name 的链接访问服务器时，会如何？&lt;/p&gt;
 
@@ -6,7 +6,279 @@
 
 &lt;p&gt;何为第一个？是靠虚拟主机的 conf 文件名字的字母表顺序！惊不惊喜？意不意外？？&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://blog.kazaff.me/2018/10/17/nginx%E7%9A%84vhost%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F/&quot;&gt;博客链接&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="nginx" /><category term="config" /><category term="load" /><summary type="html">这几天频繁的创建主机搭建站点，突然碰到个与自己直觉不匹配的情况：</summary></entry><entry><title type="html">端口代理</title><link href="https://lewinz.org/2022/01/12/server-port-proxy/" rel="alternate" type="text/html" title="端口代理" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-port-proxy</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-port-proxy/">&lt;h2 id=&quot;术语与约定&quot;&gt;术语与约定&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://blog.kazaff.me/2018/10/17/nginx%E7%9A%84vhost%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F/&quot;&gt;博客链接&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="nginx" /><category term="config" /><category term="load" /><summary type="html">这几天频繁的创建主机搭建站点，突然碰到个与自己直觉不匹配的情况：</summary></entry><entry><title type="html">OpenStack 实例宕机恢复</title><link href="https://lewinz.org/2022/01/12/openstack-recover-vm/" rel="alternate" type="text/html" title="OpenStack 实例宕机恢复" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/openstack-recover-vm</id><content type="html" xml:base="https://lewinz.org/2022/01/12/openstack-recover-vm/">&lt;h2 id=&quot;环境信息&quot;&gt;环境信息&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;OS –&amp;gt; CentOS7.2-1511&lt;/li&gt;
+  &lt;li&gt;OpenStack –&amp;gt; Mikata&lt;/li&gt;
+  &lt;li&gt;Ceph –&amp;gt;j 版
+虽然 OpenStack 自带有迁移和疏散机制，但并不一定保证 100% 成功，本文基于疏散失败的情况，来恢复实例。&lt;br /&gt;
+起因客户那边，物理机系统盘故障，导致数据全部丢失，最开始想到的方法是疏散，直接在 dashboard 或者控制节点终端执行疏散命令&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nova evacuate  node09&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;然而事情并没有到此结束，有 2 台虚拟机，一直疏散不了，没办法，数据最重要，由于 nova，glance，cinder 使用的都是 ceph，即数据都存放在 ceph 中，这样恢复起来就有了可能，&lt;br /&gt;
+具体步骤如下：&lt;/p&gt;
+
+&lt;h2 id=&quot;重建-libvirtxml-文件&quot;&gt;重建 libvirt.xml 文件&lt;/h2&gt;
+&lt;p&gt;首先查看一下拟机信息
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nova show 6bb3bc65-91c3-486c-b853-2a5c879a5395&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;具体信息如下：&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+--------------------------------------+----------------------------------------------------------+
+| Property                             | Value                                                    |
++--------------------------------------+----------------------------------------------------------+
+|  network                             | 192.168.10.25, xx.xx.xx.xx                              |
+| OS-DCF:diskConfig                    | AUTO                                                     |
+| OS-EXT-AZ:availability_zone          | nova                                                     |
+| OS-EXT-SRV-ATTR:host                 | node03                                                   |
+| OS-EXT-SRV-ATTR:hypervisor_hostname  | node03                                                   |
+| OS-EXT-SRV-ATTR:instance_name        | instance-000001ae                                        |
+| OS-EXT-STS:power_state               | 1                                                        |
+| OS-EXT-STS:task_state                | -                                                        |
+| OS-EXT-STS:vm_state                  | active                                                   |
+| OS-SRV-USG:launched_at               | 2017-06-23T06:03:20.000000                               |
+| OS-SRV-USG:terminated_at             | -                                                        |
+| accessIPv4                           |                                                          |
+| accessIPv6                           |                                                          |
+| config_drive                         |                                                          |
+| created                              | 2017-06-23T06:01:44Z                                     |
+| flavor                               | yunwei01 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;d76ea4cd-0c46-423c-9a2a-0ab15c5a1b0a&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;          |
+| hostId                               | 7081812a3c654f417fc545300ecd03252d8ac4bf992b54272bcfee61 |
+| &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;                                   | 6bb3bc65-91c3-486c-b853-2a5c879a5395                     |
+| image                                | centos65 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0488b591-1755-4da0-abe9-8e5c2a6931b5&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;          |
+| key_name                             | -                                                        |
+| metadata                             | &lt;span class=&quot;o&quot;&gt;{}&lt;/span&gt;                                                       |
+| name                                 | rhea-2                                                   |
+| os-extended-volumes:volumes_attached | &lt;span class=&quot;o&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;: &lt;span class=&quot;s2&quot;&gt;&quot;7cd2936a-b4ef-4e85-8159-eace4c1b7981&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}]&lt;/span&gt;         |
+| progress                             | 0                                                        |
+| security_groups                      | default                                                  |
+| status                               | ACTIVE                                                   |
+| tenant_id                            | 290f841df5644709847a51d6604a228f                         |
+| updated                              | 2017-12-21T06:46:13Z                                     |
+| user_id                              | d158732076c740aead5286969273faea                         |
++-------------------------------------+----------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;记录这些信息，后面有大用&lt;/p&gt;
+
+&lt;p&gt;在平台上，找一个 flavor 和 image 相同的实例，找到此实例 uuid&lt;/p&gt;
+
+&lt;p&gt;查看该实例信息
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nova show uuid&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;进入到相应节点，拷贝 libvirt.xml 和 console.log&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /var/lib/nova/instance/&lt;span class=&quot;nv&quot;&gt;$uuid&lt;/span&gt;/
+&lt;span class=&quot;nb&quot;&gt;cp&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; /mnt/bakrecovery
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /mnt/bakrecovery
+more libvirt.xml
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;信息如下：&lt;/p&gt;
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;domain&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;kvm&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;uuid&amp;gt;&lt;/span&gt;6bb3bc65-91c3-486c-b853-2a5c879a5395&lt;span class=&quot;nt&quot;&gt;&amp;lt;/uuid&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;name&amp;gt;&lt;/span&gt;instance-000001ae&lt;span class=&quot;nt&quot;&gt;&amp;lt;/name&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;memory&amp;gt;&lt;/span&gt;16777216&lt;span class=&quot;nt&quot;&gt;&amp;lt;/memory&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;vcpu&amp;gt;&lt;/span&gt;16&lt;span class=&quot;nt&quot;&gt;&amp;lt;/vcpu&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;metadata&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:instance&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;xmlns:nova=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;http://openstack.org/xmlns/libvirt/nova/1.0&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:package&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;version=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;13.1.0-1.el7&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:name&amp;gt;&lt;/span&gt;rhea-2&lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:name&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:creationTime&amp;gt;&lt;/span&gt;2017-12-21 06:46:11&lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:creationTime&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:flavor&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;yunwei01&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:memory&amp;gt;&lt;/span&gt;16384&lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:memory&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:disk&amp;gt;&lt;/span&gt;40&lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:disk&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:swap&amp;gt;&lt;/span&gt;2048&lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:swap&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:ephemeral&amp;gt;&lt;/span&gt;0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:ephemeral&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:vcpus&amp;gt;&lt;/span&gt;16&lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:vcpus&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:flavor&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:owner&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:user&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uuid=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;3eb5de8526c14da495488f1a264915f6&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;admin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:user&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:project&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uuid=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;10d0b378c82d4b5da2288ef852ca5bd1&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;admin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:project&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:owner&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;nova:root&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;image&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uuid=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;0488b591-1755-4da0-abe9-8e5c2a6931b5&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/nova:instance&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/metadata&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;sysinfo&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;smbios&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;system&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;entry&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;manufacturer&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Fedora Project&lt;span class=&quot;nt&quot;&gt;&amp;lt;/entry&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;entry&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;product&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;OpenStack Nova&lt;span class=&quot;nt&quot;&gt;&amp;lt;/entry&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;entry&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;version&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;13.1.0-1.el7&lt;span class=&quot;nt&quot;&gt;&amp;lt;/entry&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;entry&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;serial&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;d3c7a080-2534-4b5f-9d86-9cd152acc671&lt;span class=&quot;nt&quot;&gt;&amp;lt;/entry&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;entry&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;uuid&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;6bb3bc65-91c3-486c-b853-2a5c879a5395&lt;span class=&quot;nt&quot;&gt;&amp;lt;/entry&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;entry&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;family&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;Virtual Machine&lt;span class=&quot;nt&quot;&gt;&amp;lt;/entry&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/system&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/sysinfo&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;os&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;type&amp;gt;&lt;/span&gt;hvm&lt;span class=&quot;nt&quot;&gt;&amp;lt;/type&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;boot&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;dev=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hd&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;smbios&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;mode=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;sysinfo&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/os&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;features&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;acpi/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;apic/&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/features&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;cputune&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;shares&amp;gt;&lt;/span&gt;16384&lt;span class=&quot;nt&quot;&gt;&amp;lt;/shares&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/cputune&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;clock&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;offset=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;utc&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;timer&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pit&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;tickpolicy=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;delay&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;timer&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;rtc&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;tickpolicy=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;catchup&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;timer&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;hpet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;present=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;no&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/clock&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;cpu&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;mode=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;host-model&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;match=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;exact&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;topology&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;sockets=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;16&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;cores=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;threads=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/cpu&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;devices&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;disk&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;network&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;device=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;disk&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;driver&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;raw&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;cache=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;writeback&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;source&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;protocol=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;rbd&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;vms/6bb3bc65-91c3-486c-b853-2a5c879a5395_disk&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;host&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;172.16.2.5&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;port=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;6789&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;host&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;172.16.2.6&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;port=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;6789&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;host&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;172.16.2.7&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;port=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;6789&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/source&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;auth&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;username=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;cinder&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;secret&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ceph&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uuid=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;14fdf1bb-44d7-40ad-a98a-16fe7e65115b&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/auth&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;target&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;bus=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;virtio&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;dev=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;vda&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/disk&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;disk&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;network&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;device=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;disk&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;driver&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;raw&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;cache=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;writeback&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;source&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;protocol=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;rbd&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;vms/6bb3bc65-91c3-486c-b853-2a5c879a5395_disk.swap&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;host&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;172.16.2.5&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;port=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;6789&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;host&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;172.16.2.6&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;port=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;6789&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;host&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;172.16.2.7&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;port=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;6789&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/source&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;auth&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;username=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;cinder&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;secret&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ceph&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uuid=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;14fdf1bb-44d7-40ad-a98a-16fe7e65115b&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/auth&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;target&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;bus=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;virtio&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;dev=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;vdb&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/disk&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;disk&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;network&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;device=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;disk&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;driver&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;qemu&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;raw&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;cache=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;writeback&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;source&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;protocol=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;rbd&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;volumes/volume-7cd2936a-b4ef-4e85-8159-eace4c1b7981&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;host&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;172.16.2.5&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;port=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;6789&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;host&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;172.16.2.6&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;port=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;6789&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;host&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;172.16.2.7&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;port=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;6789&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/source&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;auth&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;username=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;cinder&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;secret&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ceph&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;uuid=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;14fdf1bb-44d7-40ad-a98a-16fe7e65115b&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;/auth&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;target&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;bus=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;virtio&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;dev=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;vdc&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;serial&amp;gt;&lt;/span&gt;7cd2936a-b4ef-4e85-8159-eace4c1b7981&lt;span class=&quot;nt&quot;&gt;&amp;lt;/serial&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/disk&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;interface&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;bridge&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;mac&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;address=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;fa:16:3e:34:e3:fe&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;model&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;virtio&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;source&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;bridge=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;qbrff441fbc-bb&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;target&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;dev=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;tapff441fbc-bb&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/interface&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;serial&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;file&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;source&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;path=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/var/lib/nova/instances/6bb3bc65-91c3-486c-b853-2a5c879a5395/console.log&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/serial&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;serial&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;pty&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;input&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;tablet&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;bus=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;usb&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;graphics&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;vnc&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;autoport=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;yes&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;keymap=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;en-us&quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;listen=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;0.0.0.0&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;video&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;model&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;cirrus&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/video&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;memballoon&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;model=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;virtio&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;lt;stats&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;period=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;10&quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;/&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/memballoon&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;/devices&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/domain&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;需要修改如下部分：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;name 和 uuid&lt;br /&gt;
+``` xml&lt;/li&gt;
+&lt;/ol&gt;
+&lt;uuid&gt;6bb3bc65-91c3-486c-b853-2a5c879a5395&lt;/uuid&gt;
+&lt;name&gt;instance-000001ae&lt;/name&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;前面记录信息，刚好派上用场
+
+2. name 和创建时间  
+``` xml
+&amp;lt;nova:name&amp;gt;rhea-2&amp;lt;/nova:name&amp;gt;
+&amp;lt;nova:creationTime&amp;gt;2017-12-21 06:46:11&amp;lt;/nova:creationTime&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;这个 name 是创建实例的时候，我们起的名字，上面的那个，是随机生成的名字&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;修改相应 uuid（包括 image，project，user）
+``` xml&lt;/li&gt;
+&lt;/ol&gt;
+&lt;nova:user uuid=&quot;3eb5de8526c14da495488f1a264915f6&quot;&gt;admin&lt;/nova:user&gt;
+&lt;nova:project uuid=&quot;10d0b378c82d4b5da2288ef852ca5bd1&quot;&gt;admin&lt;/nova:project&gt;
+&lt;p&gt;&amp;lt;/nova:owner&amp;gt;&lt;/p&gt;
+&lt;nova:root type=&quot;image&quot; uuid=&quot;0488b591-1755-4da0-abe9-8e5c2a6931b5&quot; /&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+3. 修改虚拟机 uuid，和 serial，serial 通过比对发现，同一个计算节点这个号相同
+``` xml
+&amp;lt;entry name=&quot;serial&quot;&amp;gt;d3c7a080-2534-4b5f-9d86-9cd152acc671&amp;lt;/entry&amp;gt;
+&amp;lt;entry name=&quot;uuid&quot;&amp;gt;6bb3bc65-91c3-486c-b853-2a5c879a5395&amp;lt;/entry&amp;gt;
+&amp;lt;entry name=&quot;family&quot;&amp;gt;Virtual Machine&amp;lt;/entry&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;块设备 id，格式为虚拟机 uuid_disk,uuid_swap
+``` xml&lt;/li&gt;
+&lt;/ol&gt;
+&lt;source protocol=&quot;rbd&quot; name=&quot;vms/6bb3bc65-91c3-486c-b853-2a5c879a5395_disk&quot; /&gt;
+
+&lt;source protocol=&quot;rbd&quot; name=&quot;vms/6bb3bc65-91c3-486c-b853-2a5c879a5395_disk.swap&quot; /&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+5. 通过 cinder 划分的卷 id
+``` xml
+&amp;lt;target bus=&quot;virtio&quot; dev=&quot;vdc&quot;/&amp;gt;
+&amp;lt;serial&amp;gt;7cd2936a-b4ef-4e85-8159-eace4c1b7981&amp;lt;/serial&amp;gt;
+&amp;lt;/disk&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;虚拟机网卡 mac 地址，还有端口，这里，mac 地址可通过 dashboard 查看，admin 账户下，管理员–&amp;gt; 网络–&amp;gt;（网络）uuid–&amp;gt; 端口
+``` xml&lt;/li&gt;
+&lt;/ol&gt;
+&lt;interface type=&quot;bridge&quot;&gt;
+&lt;mac address=&quot;fa:16:3e:34:e3:fe&quot; /&gt;
+&lt;model type=&quot;virtio&quot; /&gt;
+&lt;source bridge=&quot;qbrff441fbc-bb&quot; /&gt;
+&lt;target dev=&quot;tapff441fbc-bb&quot; /&gt;
+```
+
+7. console 日志路径
+``` xml
+&lt;source path=&quot;/var/lib/nova/instances/6bb3bc65-91c3-486c-b853-2a5c879a5395/console.log&quot; /&gt;
+```
+8. 对比修改完后，一定要仔细确认，以免出现问题
+``` shell
+mkdir -p /var/lib/nova/instance/$uuid
+cp libvirt.xml  /var/lib/nova/instance/$uuid
+cp console.log /var/lib/nova/instance/$uuid
+```
+
+## 修改权限
+``` shell
+chown nova.nova /var/lib/nova/instance/$uuid/xml
+chown qemu.qemu /var/lib/nova/instance/$uuid/console.log
+```
+
+## 在数据库中修改节点信息
+``` shell
+update instances set host='node10',node='node10' where uuid='6bb3bc65-91c3-486c-b853-2a5c879a5395';
+```
+
+## 重启相应节点 nova-coompute 服务
+``` shell
+systemctl restart openstack-nova-compute
+```
+
+## 启动实例，启动后网络可能不通，这时可以通过迁移来解决，
+
+[博客链接](https://www.its404.com/article/H_haow/80287192)
+&lt;/interface&gt;</content><author><name>Lewin</name></author><category term="OpenStack" /><category term="recover" /><category term="instance" /><summary type="html">环境信息 OS –&amp;gt; CentOS7.2-1511 OpenStack –&amp;gt; Mikata Ceph –&amp;gt;j 版 虽然 OpenStack 自带有迁移和疏散机制，但并不一定保证 100% 成功，本文基于疏散失败的情况，来恢复实例。 起因客户那边，物理机系统盘故障，导致数据全部丢失，最开始想到的方法是疏散，直接在 dashboard 或者控制节点终端执行疏散命令</summary></entry><entry><title type="html">端口代理</title><link href="https://lewinz.org/2022/01/12/server-port-proxy/" rel="alternate" type="text/html" title="端口代理" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/server-port-proxy</id><content type="html" xml:base="https://lewinz.org/2022/01/12/server-port-proxy/">&lt;h2 id=&quot;术语与约定&quot;&gt;术语与约定&lt;/h2&gt;
 &lt;p&gt;本地主机：形式为 IP 或域名，你当前正在使用的这台机器；&lt;br /&gt;
 远程主机：形式与本地主机一样。这里的远程并不是指实际的距离有多远，准确地说是另一台；&lt;/p&gt;
 
@@ -1819,94 +2091,4 @@ bin  c     etc  info  lib    lost+found  lsrrotab  media     n    proc  run   sr
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;      &lt;/div&gt;
     &lt;/blockquote&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="linux" /><category term="shell" /><category term="Pipe" /><summary type="html">命令执行顺序控制 通常情况下，我们在终端只能执行一条命令，然后按下回车执行，那么如何执行多条命令呢？</summary></entry><entry><title type="html">Apache http server</title><link href="https://lewinz.org/2021/09/15/apache-http-server/" rel="alternate" type="text/html" title="Apache http server" /><published>2021-09-15T00:00:00+08:00</published><updated>2021-09-15T00:00:00+08:00</updated><id>https://lewinz.org/2021/09/15/apache-http-server</id><content type="html" xml:base="https://lewinz.org/2021/09/15/apache-http-server/">&lt;h2 id=&quot;apache-服务概览&quot;&gt;Apache 服务概览&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;软件包： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;httpd&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;httpd-devel&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;httpd-manual&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;服务类型：由 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemd&lt;/code&gt; 启动的守护进程&lt;/li&gt;
-  &lt;li&gt;配置单元： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/lib/systemd/system/httpd.service&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;守护进程： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/sbin/httpd&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;端口： 80 (http), 443 (https)&lt;/li&gt;
-  &lt;li&gt;配置： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/httpd/&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Web 文档： &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/html/&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Apache 日志记录目录：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/log/httpd/&lt;/code&gt;&lt;br /&gt;
-该目录下有两种文件：&lt;/p&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;access_log      &lt;span class=&quot;c&quot;&gt;# 记录客户端访问Apache的信息，比如客户端的ip&lt;/span&gt;
-error_log       &lt;span class=&quot;c&quot;&gt;# 记录访问页面错误信息&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Apache 服务启动的记录日志：&lt;/p&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/var/log/messages   &lt;span class=&quot;c&quot;&gt;# 这个日志是系统的大集合&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;centos&quot;&gt;CentOS&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;安装 Apache&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yum &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;httpd &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;设置 httpd 服务开机启动&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;httpd
-Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;启动 Apache&lt;/strong&gt;
-systemctl start httpd&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;查看 Apache 的状态&lt;/strong&gt;
-systemctl status httpd&lt;/p&gt;
-
-&lt;h3 id=&quot;ubuntu&quot;&gt;Ubuntu&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;安装 Apache&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;apt &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;apache2 &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;设置 httpd 服务开机启动&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;httpd
-Created symlink from /etc/systemd/system/multi-user.target.wants/httpd.service to /usr/lib/systemd/system/httpd.service.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;配置 UFW 防火墙&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ufw allow &lt;span class=&quot;s1&quot;&gt;'Apache'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;启动 Apache&lt;/strong&gt;
-systemctl start httpd&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;查看 Apache 的状态&lt;/strong&gt;
-systemctl status httpd&lt;/p&gt;
-
-&lt;p&gt;即可通过服务器 IP 直接访问，端口分别是 80 (http)、443 (https)&lt;/p&gt;
-
-&lt;h2 id=&quot;apache-命令&quot;&gt;Apache 命令&lt;/h2&gt;
-&lt;h3 id=&quot;停止-apache-服务&quot;&gt;停止 Apache 服务&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl stop httpd&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;启动-apache-服务&quot;&gt;启动 Apache 服务&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl start httpd&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;重启-apache-服务&quot;&gt;重启 Apache 服务&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl restart httpd&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;禁用-apache-开机自启动&quot;&gt;禁用 Apache 开机自启动&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl disable httpd&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;apache-开机自启动&quot;&gt;Apache 开机自启动&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl enable httpd&lt;/code&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;更改配置后重新加载-apache-服务&quot;&gt;更改配置后重新加载 Apache 服务&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;systemctl reload httpd&lt;/code&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;apache-的主配置文件&quot;&gt;Apache 的主配置文件&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/httpd/conf/httpd.conf&lt;/code&gt; 安装完后就可以到 Apache 的默认目录 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/html&lt;/code&gt; 添加一个简单的 index.html&lt;/p&gt;
-
-&lt;div class=&quot;language-html highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;head&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;title&amp;gt;&lt;/span&gt;test&lt;span class=&quot;nt&quot;&gt;&amp;lt;/title&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/head&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;lt;p&amp;gt;&lt;/span&gt;Hello World!&lt;span class=&quot;nt&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="apache" /><category term="http" /><category term="server" /><summary type="html">Apache 服务概览 软件包： httpd, httpd-devel, httpd-manual 服务类型：由 systemd 启动的守护进程 配置单元： /usr/lib/systemd/system/httpd.service 守护进程： /usr/sbin/httpd 端口： 80 (http), 443 (https) 配置： /etc/httpd/ Web 文档： /var/www/html/</summary></entry></feed>
+&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="linux" /><category term="shell" /><category term="Pipe" /><summary type="html">命令执行顺序控制 通常情况下，我们在终端只能执行一条命令，然后按下回车执行，那么如何执行多条命令呢？</summary></entry></feed>

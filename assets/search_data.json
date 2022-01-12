@@ -777,6 +777,14 @@
     } ,
   
     {
+      "title"    : "OpenStack 实例宕机恢复",
+      "category" : "OpenStack",
+      
+      "url"      : "https://lewinz.org/2022/01/12/openstack-recover-vm/",
+      "keywords" : "OpenStack, recover, instance"
+    } ,
+  
+    {
       "title"    : "端口代理",
       "category" : "server",
       

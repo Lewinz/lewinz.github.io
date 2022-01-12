@@ -1,0 +1,168 @@
+<!DOCTYPE html><html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" /><title>OpenStack 实例宕机恢复 &mdash; 阿嫂</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/primer-css/css/primer.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/collection.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/repo-card.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/sections/repo-list.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/components/boxed-group.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/common.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/globals/responsive.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/css/posts/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/octicons/octicons/octicons.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/rouge-themes@master/dist/github.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/share.js/dist/css/share.min.css"><link rel="canonical" href="https://lewinz.org/2022/01/12/openstack-recover-vm/"><link rel="alternate" type="application/atom+xml" title="阿嫂" href="https://lewinz.org/feed.xml"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/favicon.ico"><meta property="og:title" content="OpenStack 实例宕机恢复"><meta name="keywords" content="OpenStack, recover, instance"><meta name="og:keywords" content="OpenStack, recover, instance"><meta name="description" content="环境信息 OS –&gt; CentOS7.2-1511 OpenStack –&gt; Mikata Ceph –&gt;j 版虽然 OpenStack 自带有迁移和疏散机制，但并不一定保证 100% 成功，本文基于疏散失败的情况，来恢复实例。起因客户那边，物理机系统盘故障，导致数据全部丢失，最开始想到的方法是疏散，直接在 dashboard 或者控制节点终端执行疏散命令"><meta name="og:description" content="环境信息 OS –&gt; CentOS7.2-1511 OpenStack –&gt; Mikata Ceph –&gt;j 版虽然 OpenStack 自带有迁移和疏散机制，但并不一定保证 100% 成功，本文基于疏散失败的情况，来恢复实例。起因客户那边，物理机系统盘故障，导致数据全部丢失，最开始想到的方法是疏散，直接在 dashboard 或者控制节点终端执行疏散命令"><meta property="og:url" content="https://lewinz.org/2022/01/12/openstack-recover-vm/"><meta property="og:site_name" content="阿嫂"><meta property="og:type" content="article"><meta property="og:locale" content="zh_CN" /><meta property="article:published_time" content="2022-01-12"> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/jquery/dist/jquery.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery-ui.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/main.js"></script> <script data-ad-client="ca-pub-7093222719567591" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script></head><body class="" data-mz=""><header class="site-header"><div class="container"><h1><a href="https://lewinz.org/" title="阿嫂"><span class="octicon octicon-mark-github"></span> 阿嫂</a></h1><button class="collapsed mobile-visible" type="button" onclick="toggleMenu();"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button><nav class="site-header-nav" role="navigation"> <a href="https://lewinz.org/" class=" site-header-nav-item" target="" title="首页">首页</a> <a href="https://lewinz.org/categories/" class=" site-header-nav-item" target="" title="分类">分类</a> <a href="https://lewinz.org/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a> <a href="https://lewinz.org/links/" class=" site-header-nav-item" target="" title="链接">链接</a> <a href="https://lewinz.org/about/" class=" site-header-nav-item" target="" title="关于">关于</a></nav></div></header><section class="collection-head small geopattern" data-pattern-id="OpenStack 实例宕机恢"><div class="container"><div class="columns"><div class="column three-fourths"><div class="collection-title"><h1 class="collection-header">OpenStack 实例宕机恢复</h1><div class="collection-info"> <span class="meta-info"> <span class="octicon octicon-calendar"></span> 2022/01/12 </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#OpenStack" title="OpenStack">OpenStack</a> </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#recover" title="recover">recover</a> </span> <span class="meta-info"> <span class="octicon octicon-file-directory"></span> <a href="https://lewinz.org/categories/#instance" title="instance">instance</a> </span> <span class="meta-info"> <span class="octicon octicon-clock"></span> 共 7243 字，约 21 分钟 </span></div></div></div><div class="column one-fourth mobile-hidden"><div class="collection-title"></div></div></div></div></section><section class="container content"><div class="columns"><div class="column three-fourths" > <ins class="adsbygoogle content-header-ad" data-ad-client="ca-pub-7093222719567591" data-ad-slot="1650902835"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script> <br /><article class="article-content markdown-body"><h2 id="环境信息">环境信息</h2><ul><li>OS –&gt; CentOS7.2-1511</li><li>OpenStack –&gt; Mikata</li><li>Ceph –&gt;j 版 虽然 OpenStack 自带有迁移和疏散机制，但并不一定保证 100% 成功，本文基于疏散失败的情况，来恢复实例。<br /> 起因客户那边，物理机系统盘故障，导致数据全部丢失，最开始想到的方法是疏散，直接在 dashboard 或者控制节点终端执行疏散命令</li></ul><p><code class="language-plaintext highlighter-rouge">nova evacuate node09</code></p><p>然而事情并没有到此结束，有 2 台虚拟机，一直疏散不了，没办法，数据最重要，由于 nova，glance，cinder 使用的都是 ceph，即数据都存放在 ceph 中，这样恢复起来就有了可能，<br /> 具体步骤如下：</p><h2 id="重建-libvirtxml-文件">重建 libvirt.xml 文件</h2><p>首先查看一下拟机信息 <code class="language-plaintext highlighter-rouge">nova show 6bb3bc65-91c3-486c-b853-2a5c879a5395</code></p><p>具体信息如下：</p><div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+--------------------------------------+----------------------------------------------------------+
+| Property                             | Value                                                    |
++--------------------------------------+----------------------------------------------------------+
+|  network                             | 192.168.10.25, xx.xx.xx.xx                              |
+| OS-DCF:diskConfig                    | AUTO                                                     |
+| OS-EXT-AZ:availability_zone          | nova                                                     |
+| OS-EXT-SRV-ATTR:host                 | node03                                                   |
+| OS-EXT-SRV-ATTR:hypervisor_hostname  | node03                                                   |
+| OS-EXT-SRV-ATTR:instance_name        | instance-000001ae                                        |
+| OS-EXT-STS:power_state               | 1                                                        |
+| OS-EXT-STS:task_state                | -                                                        |
+| OS-EXT-STS:vm_state                  | active                                                   |
+| OS-SRV-USG:launched_at               | 2017-06-23T06:03:20.000000                               |
+| OS-SRV-USG:terminated_at             | -                                                        |
+| accessIPv4                           |                                                          |
+| accessIPv6                           |                                                          |
+| config_drive                         |                                                          |
+| created                              | 2017-06-23T06:01:44Z                                     |
+| flavor                               | yunwei01 <span class="o">(</span>d76ea4cd-0c46-423c-9a2a-0ab15c5a1b0a<span class="o">)</span>          |
+| hostId                               | 7081812a3c654f417fc545300ecd03252d8ac4bf992b54272bcfee61 |
+| <span class="nb">id</span>                                   | 6bb3bc65-91c3-486c-b853-2a5c879a5395                     |
+| image                                | centos65 <span class="o">(</span>0488b591-1755-4da0-abe9-8e5c2a6931b5<span class="o">)</span>          |
+| key_name                             | -                                                        |
+| metadata                             | <span class="o">{}</span>                                                       |
+| name                                 | rhea-2                                                   |
+| os-extended-volumes:volumes_attached | <span class="o">[{</span><span class="s2">"id"</span>: <span class="s2">"7cd2936a-b4ef-4e85-8159-eace4c1b7981"</span><span class="o">}]</span>         |
+| progress                             | 0                                                        |
+| security_groups                      | default                                                  |
+| status                               | ACTIVE                                                   |
+| tenant_id                            | 290f841df5644709847a51d6604a228f                         |
+| updated                              | 2017-12-21T06:46:13Z                                     |
+| user_id                              | d158732076c740aead5286969273faea                         |
++-------------------------------------+----------------------------------------------------------+
+</code></pre></div></div><p>记录这些信息，后面有大用</p><p>在平台上，找一个 flavor 和 image 相同的实例，找到此实例 uuid</p><p>查看该实例信息 <code class="language-plaintext highlighter-rouge">nova show uuid</code></p><p>进入到相应节点，拷贝 libvirt.xml 和 console.log</p><div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> /var/lib/nova/instance/<span class="nv">$uuid</span>/
+<span class="nb">cp</span> <span class="k">*</span> /mnt/bakrecovery
+<span class="nb">cd</span> /mnt/bakrecovery
+more libvirt.xml
+</code></pre></div></div><p>信息如下：</p><div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;domain</span> <span class="na">type=</span><span class="s">"kvm"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;uuid&gt;</span>6bb3bc65-91c3-486c-b853-2a5c879a5395<span class="nt">&lt;/uuid&gt;</span>
+  <span class="nt">&lt;name&gt;</span>instance-000001ae<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;memory&gt;</span>16777216<span class="nt">&lt;/memory&gt;</span>
+  <span class="nt">&lt;vcpu&gt;</span>16<span class="nt">&lt;/vcpu&gt;</span>
+  <span class="nt">&lt;metadata&gt;</span>
+    <span class="nt">&lt;nova:instance</span> <span class="na">xmlns:nova=</span><span class="s">"http://openstack.org/xmlns/libvirt/nova/1.0"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;nova:package</span> <span class="na">version=</span><span class="s">"13.1.0-1.el7"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;nova:name&gt;</span>rhea-2<span class="nt">&lt;/nova:name&gt;</span>
+      <span class="nt">&lt;nova:creationTime&gt;</span>2017-12-21 06:46:11<span class="nt">&lt;/nova:creationTime&gt;</span>
+      <span class="nt">&lt;nova:flavor</span> <span class="na">name=</span><span class="s">"yunwei01"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;nova:memory&gt;</span>16384<span class="nt">&lt;/nova:memory&gt;</span>
+        <span class="nt">&lt;nova:disk&gt;</span>40<span class="nt">&lt;/nova:disk&gt;</span>
+        <span class="nt">&lt;nova:swap&gt;</span>2048<span class="nt">&lt;/nova:swap&gt;</span>
+        <span class="nt">&lt;nova:ephemeral&gt;</span>0<span class="nt">&lt;/nova:ephemeral&gt;</span>
+        <span class="nt">&lt;nova:vcpus&gt;</span>16<span class="nt">&lt;/nova:vcpus&gt;</span>
+      <span class="nt">&lt;/nova:flavor&gt;</span>
+      <span class="nt">&lt;nova:owner&gt;</span>
+        <span class="nt">&lt;nova:user</span> <span class="na">uuid=</span><span class="s">"3eb5de8526c14da495488f1a264915f6"</span><span class="nt">&gt;</span>admin<span class="nt">&lt;/nova:user&gt;</span>
+        <span class="nt">&lt;nova:project</span> <span class="na">uuid=</span><span class="s">"10d0b378c82d4b5da2288ef852ca5bd1"</span><span class="nt">&gt;</span>admin<span class="nt">&lt;/nova:project&gt;</span>
+      <span class="nt">&lt;/nova:owner&gt;</span>
+      <span class="nt">&lt;nova:root</span> <span class="na">type=</span><span class="s">"image"</span> <span class="na">uuid=</span><span class="s">"0488b591-1755-4da0-abe9-8e5c2a6931b5"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/nova:instance&gt;</span>
+  <span class="nt">&lt;/metadata&gt;</span>
+  <span class="nt">&lt;sysinfo</span> <span class="na">type=</span><span class="s">"smbios"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;system&gt;</span>
+      <span class="nt">&lt;entry</span> <span class="na">name=</span><span class="s">"manufacturer"</span><span class="nt">&gt;</span>Fedora Project<span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry</span> <span class="na">name=</span><span class="s">"product"</span><span class="nt">&gt;</span>OpenStack Nova<span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry</span> <span class="na">name=</span><span class="s">"version"</span><span class="nt">&gt;</span>13.1.0-1.el7<span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry</span> <span class="na">name=</span><span class="s">"serial"</span><span class="nt">&gt;</span>d3c7a080-2534-4b5f-9d86-9cd152acc671<span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry</span> <span class="na">name=</span><span class="s">"uuid"</span><span class="nt">&gt;</span>6bb3bc65-91c3-486c-b853-2a5c879a5395<span class="nt">&lt;/entry&gt;</span>
+      <span class="nt">&lt;entry</span> <span class="na">name=</span><span class="s">"family"</span><span class="nt">&gt;</span>Virtual Machine<span class="nt">&lt;/entry&gt;</span>
+    <span class="nt">&lt;/system&gt;</span>
+  <span class="nt">&lt;/sysinfo&gt;</span>
+  <span class="nt">&lt;os&gt;</span>
+    <span class="nt">&lt;type&gt;</span>hvm<span class="nt">&lt;/type&gt;</span>
+    <span class="nt">&lt;boot</span> <span class="na">dev=</span><span class="s">"hd"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;smbios</span> <span class="na">mode=</span><span class="s">"sysinfo"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/os&gt;</span>
+  <span class="nt">&lt;features&gt;</span>
+    <span class="nt">&lt;acpi/&gt;</span>
+    <span class="nt">&lt;apic/&gt;</span>
+  <span class="nt">&lt;/features&gt;</span>
+  <span class="nt">&lt;cputune&gt;</span>
+    <span class="nt">&lt;shares&gt;</span>16384<span class="nt">&lt;/shares&gt;</span>
+  <span class="nt">&lt;/cputune&gt;</span>
+  <span class="nt">&lt;clock</span> <span class="na">offset=</span><span class="s">"utc"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;timer</span> <span class="na">name=</span><span class="s">"pit"</span> <span class="na">tickpolicy=</span><span class="s">"delay"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;timer</span> <span class="na">name=</span><span class="s">"rtc"</span> <span class="na">tickpolicy=</span><span class="s">"catchup"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;timer</span> <span class="na">name=</span><span class="s">"hpet"</span> <span class="na">present=</span><span class="s">"no"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/clock&gt;</span>
+  <span class="nt">&lt;cpu</span> <span class="na">mode=</span><span class="s">"host-model"</span> <span class="na">match=</span><span class="s">"exact"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;topology</span> <span class="na">sockets=</span><span class="s">"16"</span> <span class="na">cores=</span><span class="s">"1"</span> <span class="na">threads=</span><span class="s">"1"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/cpu&gt;</span>
+  <span class="nt">&lt;devices&gt;</span>
+    <span class="nt">&lt;disk</span> <span class="na">type=</span><span class="s">"network"</span> <span class="na">device=</span><span class="s">"disk"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;driver</span> <span class="na">type=</span><span class="s">"raw"</span> <span class="na">cache=</span><span class="s">"writeback"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;source</span> <span class="na">protocol=</span><span class="s">"rbd"</span> <span class="na">name=</span><span class="s">"vms/6bb3bc65-91c3-486c-b853-2a5c879a5395_disk"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;host</span> <span class="na">name=</span><span class="s">"172.16.2.5"</span> <span class="na">port=</span><span class="s">"6789"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;host</span> <span class="na">name=</span><span class="s">"172.16.2.6"</span> <span class="na">port=</span><span class="s">"6789"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;host</span> <span class="na">name=</span><span class="s">"172.16.2.7"</span> <span class="na">port=</span><span class="s">"6789"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;/source&gt;</span>
+      <span class="nt">&lt;auth</span> <span class="na">username=</span><span class="s">"cinder"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;secret</span> <span class="na">type=</span><span class="s">"ceph"</span> <span class="na">uuid=</span><span class="s">"14fdf1bb-44d7-40ad-a98a-16fe7e65115b"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;/auth&gt;</span>
+      <span class="nt">&lt;target</span> <span class="na">bus=</span><span class="s">"virtio"</span> <span class="na">dev=</span><span class="s">"vda"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/disk&gt;</span>
+    <span class="nt">&lt;disk</span> <span class="na">type=</span><span class="s">"network"</span> <span class="na">device=</span><span class="s">"disk"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;driver</span> <span class="na">type=</span><span class="s">"raw"</span> <span class="na">cache=</span><span class="s">"writeback"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;source</span> <span class="na">protocol=</span><span class="s">"rbd"</span> <span class="na">name=</span><span class="s">"vms/6bb3bc65-91c3-486c-b853-2a5c879a5395_disk.swap"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;host</span> <span class="na">name=</span><span class="s">"172.16.2.5"</span> <span class="na">port=</span><span class="s">"6789"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;host</span> <span class="na">name=</span><span class="s">"172.16.2.6"</span> <span class="na">port=</span><span class="s">"6789"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;host</span> <span class="na">name=</span><span class="s">"172.16.2.7"</span> <span class="na">port=</span><span class="s">"6789"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;/source&gt;</span>
+      <span class="nt">&lt;auth</span> <span class="na">username=</span><span class="s">"cinder"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;secret</span> <span class="na">type=</span><span class="s">"ceph"</span> <span class="na">uuid=</span><span class="s">"14fdf1bb-44d7-40ad-a98a-16fe7e65115b"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;/auth&gt;</span>
+      <span class="nt">&lt;target</span> <span class="na">bus=</span><span class="s">"virtio"</span> <span class="na">dev=</span><span class="s">"vdb"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/disk&gt;</span>
+    <span class="nt">&lt;disk</span> <span class="na">type=</span><span class="s">"network"</span> <span class="na">device=</span><span class="s">"disk"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;driver</span> <span class="na">name=</span><span class="s">"qemu"</span> <span class="na">type=</span><span class="s">"raw"</span> <span class="na">cache=</span><span class="s">"writeback"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;source</span> <span class="na">protocol=</span><span class="s">"rbd"</span> <span class="na">name=</span><span class="s">"volumes/volume-7cd2936a-b4ef-4e85-8159-eace4c1b7981"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;host</span> <span class="na">name=</span><span class="s">"172.16.2.5"</span> <span class="na">port=</span><span class="s">"6789"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;host</span> <span class="na">name=</span><span class="s">"172.16.2.6"</span> <span class="na">port=</span><span class="s">"6789"</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;host</span> <span class="na">name=</span><span class="s">"172.16.2.7"</span> <span class="na">port=</span><span class="s">"6789"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;/source&gt;</span>
+      <span class="nt">&lt;auth</span> <span class="na">username=</span><span class="s">"cinder"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;secret</span> <span class="na">type=</span><span class="s">"ceph"</span> <span class="na">uuid=</span><span class="s">"14fdf1bb-44d7-40ad-a98a-16fe7e65115b"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;/auth&gt;</span>
+      <span class="nt">&lt;target</span> <span class="na">bus=</span><span class="s">"virtio"</span> <span class="na">dev=</span><span class="s">"vdc"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;serial&gt;</span>7cd2936a-b4ef-4e85-8159-eace4c1b7981<span class="nt">&lt;/serial&gt;</span>
+    <span class="nt">&lt;/disk&gt;</span>
+    <span class="nt">&lt;interface</span> <span class="na">type=</span><span class="s">"bridge"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;mac</span> <span class="na">address=</span><span class="s">"fa:16:3e:34:e3:fe"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;model</span> <span class="na">type=</span><span class="s">"virtio"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;source</span> <span class="na">bridge=</span><span class="s">"qbrff441fbc-bb"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;target</span> <span class="na">dev=</span><span class="s">"tapff441fbc-bb"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/interface&gt;</span>
+    <span class="nt">&lt;serial</span> <span class="na">type=</span><span class="s">"file"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;source</span> <span class="na">path=</span><span class="s">"/var/lib/nova/instances/6bb3bc65-91c3-486c-b853-2a5c879a5395/console.log"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/serial&gt;</span>
+    <span class="nt">&lt;serial</span> <span class="na">type=</span><span class="s">"pty"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"tablet"</span> <span class="na">bus=</span><span class="s">"usb"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;graphics</span> <span class="na">type=</span><span class="s">"vnc"</span> <span class="na">autoport=</span><span class="s">"yes"</span> <span class="na">keymap=</span><span class="s">"en-us"</span> <span class="na">listen=</span><span class="s">"0.0.0.0"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;video&gt;</span>
+      <span class="nt">&lt;model</span> <span class="na">type=</span><span class="s">"cirrus"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/video&gt;</span>
+    <span class="nt">&lt;memballoon</span> <span class="na">model=</span><span class="s">"virtio"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;stats</span> <span class="na">period=</span><span class="s">"10"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/memballoon&gt;</span>
+  <span class="nt">&lt;/devices&gt;</span>
+<span class="nt">&lt;/domain&gt;</span>
+</code></pre></div></div><p>需要修改如下部分：</p><ol><li>name 和 uuid<br /> ``` xml</li></ol><uuid>6bb3bc65-91c3-486c-b853-2a5c879a5395</uuid> <name>instance-000001ae</name><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>前面记录信息，刚好派上用场
+
+2. name 和创建时间  
+``` xml
+&lt;nova:name&gt;rhea-2&lt;/nova:name&gt;
+&lt;nova:creationTime&gt;2017-12-21 06:46:11&lt;/nova:creationTime&gt;
+</code></pre></div></div><p>这个 name 是创建实例的时候，我们起的名字，上面的那个，是随机生成的名字</p><ol><li>修改相应 uuid（包括 image，project，user） ``` xml</li></ol><nova:user uuid="3eb5de8526c14da495488f1a264915f6">admin</nova:user> <nova:project uuid="10d0b378c82d4b5da2288ef852ca5bd1">admin</nova:project><p>&lt;/nova:owner&gt;</p><nova:root type="image" uuid="0488b591-1755-4da0-abe9-8e5c2a6931b5" /><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+3. 修改虚拟机 uuid，和 serial，serial 通过比对发现，同一个计算节点这个号相同
+``` xml
+&lt;entry name="serial"&gt;d3c7a080-2534-4b5f-9d86-9cd152acc671&lt;/entry&gt;
+&lt;entry name="uuid"&gt;6bb3bc65-91c3-486c-b853-2a5c879a5395&lt;/entry&gt;
+&lt;entry name="family"&gt;Virtual Machine&lt;/entry&gt;
+</code></pre></div></div><ol><li>块设备 id，格式为虚拟机 uuid_disk,uuid_swap ``` xml</li></ol><source protocol="rbd" name="vms/6bb3bc65-91c3-486c-b853-2a5c879a5395_disk" /> <source protocol="rbd" name="vms/6bb3bc65-91c3-486c-b853-2a5c879a5395_disk.swap" /><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+5. 通过 cinder 划分的卷 id
+``` xml
+&lt;target bus="virtio" dev="vdc"/&gt;
+&lt;serial&gt;7cd2936a-b4ef-4e85-8159-eace4c1b7981&lt;/serial&gt;
+&lt;/disk&gt;
+</code></pre></div></div><ol><li>虚拟机网卡 mac 地址，还有端口，这里，mac 地址可通过 dashboard 查看，admin 账户下，管理员–&gt; 网络–&gt;（网络）uuid–&gt; 端口 ``` xml</li></ol><interface type="bridge"> <mac address="fa:16:3e:34:e3:fe" /> <model type="virtio" /> <source bridge="qbrff441fbc-bb" /> <target dev="tapff441fbc-bb" /> ``` 7. console 日志路径 ``` xml <source path="/var/lib/nova/instances/6bb3bc65-91c3-486c-b853-2a5c879a5395/console.log" /> ``` 8. 对比修改完后，一定要仔细确认，以免出现问题 ``` shell mkdir -p /var/lib/nova/instance/$uuid cp libvirt.xml /var/lib/nova/instance/$uuid cp console.log /var/lib/nova/instance/$uuid ``` ## 修改权限 ``` shell chown nova.nova /var/lib/nova/instance/$uuid/xml chown qemu.qemu /var/lib/nova/instance/$uuid/console.log ``` ## 在数据库中修改节点信息 ``` shell update instances set host='node10',node='node10' where uuid='6bb3bc65-91c3-486c-b853-2a5c879a5395'; ``` ## 重启相应节点 nova-coompute 服务 ``` shell systemctl restart openstack-nova-compute ``` ## 启动实例，启动后网络可能不通，这时可以通过迁移来解决， [博客链接](https://www.its404.com/article/H_haow/80287192) </interface><div style="margin-top:2em;padding:0 1.5em;border:1px solid #d3d3d3;background-color:#deebf7"><h3>文档信息</h3><ul><li>本文作者：<a href="https://lewinz.org" target="_blank">Lewin</a></li><li>本文链接：<a href="https://lewinz.org/2022/01/12/openstack-recover-vm/" target="_blank">https://lewinz.org/2022/01/12/openstack-recover-vm/</a></li><li>版权声明：自由转载-非商用-非衍生-保持署名</li></ul></div></article><div class="share"><div class="share-component" data-disabled='qq,weibo,qzone'></div></div><div class="comment"><div id="gitalk-container"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/gitalk/gitalk.css"> <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> <script> var gitalk = new Gitalk({ id: '/2022/01/12/openstack-recover-vm/', clientID: '831a35f6d4f6fc049209', clientSecret: '6e80f9a3e9b50b498553e32179ad3adbd893ab7e', repo: 'blog-comments', owner: 'Lewinz', admin: ['Lewinz'], labels: ['gitment'], perPage: 50, }); gitalk.render('gitalk-container'); </script></div></div><div class="column one-fourth"><h3>Search</h3><div id="site_search"> <input style="width:96%" type="text" id="search_box" placeholder="Search"></div><ul id="search_results" style="font-size:14px;list-style-type:none;padding-top:10px;padding-left:10px;"></ul><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/simple-jekyll-search.min.js"></script> <script type="text/javascript"> SimpleJekyllSearch({ searchInput: document.getElementById('search_box'), resultsContainer: document.getElementById('search_results'), json: 'https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@built/assets/search_data.json?v=1641998198', searchResultTemplate: '<li><a href="{url}" title="{title}">{title}</a></li>', noResultsText: 'No results found', limit: 10, fuzzy: false, exclude: ['Welcome'] }) </script><h3 class="post-directory-title mobile-hidden">Table of Contents</h3><div id="post-directory-module" class="mobile-hidden"><section class="post-directory"><dl></dl></section></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/jquery.toc.js"></script></div></div></section><footer class="container"> <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-7093222719567591" data-ad-slot="5263168187" data-ad-format="auto" data-full-width-responsive="true"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); </script><div class="site-footer" role="contentinfo"><div class="copyright left mobile-block"> © 2021 <span title="Lewin">Lewin</span> <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a></div><ul class="site-footer-links right mobile-hidden"><li> <a href="javascript:window.scrollTo(0,0)" >TOP</a></li></ul><a href="https://github.com/Lewinz/lewinz.github.io" target="_blank" aria-label="view source code"> <span class="mega-octicon octicon-mark-github" title="GitHub"></span> </a><ul class="site-footer-links mobile-hidden"><li> <a href="https://lewinz.org/" title="首页" target="">首页</a></li><li> <a href="https://lewinz.org/categories/" title="分类" target="">分类</a></li><li> <a href="https://lewinz.org/wiki/" title="维基" target="">维基</a></li><li> <a href="https://lewinz.org/links/" title="链接" target="">链接</a></li><li> <a href="https://lewinz.org/about/" title="关于" target="">关于</a></li><li><a href="https://lewinz.org/feed.xml"><span class="octicon octicon-rss" style="color:orange;"></span></a></li></ul><script async src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/busuanzi/2.3/busuanzi.pure.mini.js"></script><div class="mobile-hidden" style="margin-top:8px"> <span id="busuanzi_container_site_pv" style="display:none"> 本站访问量<span id="busuanzi_value_site_pv"></span>次 </span> <span id="busuanzi_container_site_uv" style="display:none"> / 本站访客数<span id="busuanzi_value_site_uv"></span>人 </span> <span id="busuanzi_container_page_pv" style="display:none"> / 本页访问量<span id="busuanzi_value_page_pv"></span>次 / 统计始于2021-04-21 </span></div></div></footer><div class="tools-wrapper"> <a class="gotop" href="#" title="回到顶部"><span class="octicon octicon-arrow-up"></span></a></div><script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/vendor/share.js/dist/js/share.min.js"></script> <script src="https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/assets/js/geopattern.js"></script> <script> jQuery(document).ready(function($) { $('.geopattern').each(function(){ $(this).geopattern($(this).data('pattern-id')); }); /* hljs.initHighlightingOnLoad(); */ }); </script><div style="display:none"> <script> (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-80669434-1', 'auto'); ga('send', 'pageview'); </script></div></body></html>
