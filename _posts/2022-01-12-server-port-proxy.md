@@ -126,3 +126,82 @@ nc -l <Port> > file.txt
 发送文件端
 nc <IP> <Port> < file.txt
 ```
+
+### 代理场景
+** nc 命令在第一个远程连接结束后会结束监听。如果需要保持运行，需要添加 -k 参数 **
+
+| 主机  | IP  | 类型  |
+| --- | --- | --- |
+| macOS |	192.168.10.100  |	攻击机  |
+| kali  |	192.168.19.147	| 跳板机  |
+| Ubuntu  |	192.168.19.153  |	目标机  |
+
+1. 正向转发1  
+macOS 能访问 kali，但是不能访问 Ubuntu。kali 能访问 Ubuntu 任意端口。
+
+目标：macOS 想访问到 Ubuntu 的 22 端口。  
+思路：用 kali 做跳板机，把访问 kali 8888 端口的数据转发到 Ubuntu 的 22 端口  
+方法：在 kali 上执行一条 nc 转发命令即可  
+
+``` shell
+nc -l -p 8888 -c "nc 192.168.19.153 22"
+
+#或者使用管道符
+mkfifo /tmp/pipe && nc -l -p 8888 </tmp/pipe | nc 192.168.19.153 22 >/tmp/pipe
+#or
+mknod /tmp/pipe p && nc -l -p 8888 < /tmp/pipe | nc 192.168.19.153 22 >/tmp/pipe
+此时在 macOS 上用 ssh 连接 kali 的 8888 端口，或者直接在 kali 上 ssh 连接本地 8888 端口，即可登陆 Ubuntu 的 22 端口。
+
+ssh -p 8888 username@192.168.19.147
+```
+
+2. 正向转发2
+macOS 能访问 kali，但是不能访问 Ubuntu。Ubuntu 防火墙有过滤，kali 不能访问 Ubuntu 的 22 端口，但是可以访问其他端口如 9999。
+
+目标：macOS 想访问到 Ubuntu 的 22 端口。  
+思路：  
+目标机器 Ubuntu 上用 nc 把 22 端口转发到 9999 端口
+kali 上监听 8888 端口，并使用 nc 把访问 kali 8888 端口的数据转发到 Ubuntu 的 9999 端口
+macOS 通过访问 kali 的 8888 端口，即可正向连接到 ubuntu 的 22 端口。
+操作：  
+
+目标 Ubuntu：
+``` shell
+nc -l -p 9999 -c "nc 127.0.0.1 22"
+
+#如果没有-c参数
+mkfifo /tmp/pipe && nc -l -p 9999 </tmp/pipe | nc 192.168.19.153 22 >/tmp/pipe
+# or
+mkfifo /tmp/pipe && nc -k -l 9999 0</tmp/pipe | nc localhost 22 | tee /tmp/pipe
+```
+跳板机 kali：
+``` shell
+nc -l -p 8888 -c "nc 192.168.19.153 9999"
+
+#或者使用管道符
+mkfifo /tmp/pipe && nc -l -p 8888 </tmp/pipe | nc 192.168.19.153 9999 >/tmp/pipe
+#or
+mknod /tmp/pipe p && nc -l -p 8888 </tmp/pipe | nc 192.168.19.153 9999 >/tmp/pipe
+攻击机：macOS：
+
+ssh -p 8888 username@192.168.19.147
+```
+
+## 其他
+### 端口占用情况
+#### netstat
+参数
+- -a (all) 显示所有选项，默认不显示 LISTEN 相关
+- -t (tcp) 仅显示 tcp 相关选项
+- -u (udp) 仅显示 udp 相关选项
+- -n 拒绝显示别名，能显示数字的全部转化成数字。
+- -l 仅列出有在 Listen (监听) 的服務状态
+- -p 显示建立相关链接的程序名
+- -r 显示路由信息，路由表
+- -e 显示扩展信息，例如 uid 等
+- -s 按各个协议进行统计
+- -c 每隔一个固定时间，执行该 netstat 命令。
+
+提示：LISTEN 和 LISTENING 的状态只有用 - a 或者 - l 才能看到
+
+查看 LISTEN 相关端口 `netstat -nat | grep LISTEN`
