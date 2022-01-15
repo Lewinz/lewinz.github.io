@@ -1,4 +1,454 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-12T22:36:35+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">nginx 配置文件加载顺序</title><link href="https://lewinz.org/2022/01/12/nginx-config-load/" rel="alternate" type="text/html" title="nginx 配置文件加载顺序" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/nginx-config-load</id><content type="html" xml:base="https://lewinz.org/2022/01/12/nginx-config-load/">&lt;p&gt;这几天频繁的创建主机搭建站点，突然碰到个与自己直觉不匹配的情况：&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-15T12:08:05+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">WebSocket 协议</title><link href="https://lewinz.org/2022/01/14/websocket/" rel="alternate" type="text/html" title="WebSocket 协议" /><published>2022-01-14T00:00:00+08:00</published><updated>2022-01-14T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/14/websocket</id><content type="html" xml:base="https://lewinz.org/2022/01/14/websocket/">&lt;h2 id=&quot;原文地址此文档仅做记载备份&quot;&gt;原文地址，此文档仅做记载备份&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/chyingp/p/websocket-deep-in.html&quot;&gt;https://www.cnblogs.com/chyingp/p/websocket-deep-in.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;内容概览&quot;&gt;内容概览&lt;/h2&gt;
+&lt;p&gt;WebSocket 的出现，使得浏览器具备了实时双向通信的能力。本文由浅入深，介绍了 WebSocket 如何建立连接、交换数据的细节，以及数据帧的格式。此外，还简要介绍了针对 WebSocket 的安全攻击，以及协议是如何抵御类似攻击的。&lt;/p&gt;
+
+&lt;h2 id=&quot;什么是-websocket&quot;&gt;什么是 WebSocket&lt;/h2&gt;
+&lt;p&gt;HTML5 开始提供的一种浏览器与服务器进行全双工通讯的网络技术，属于应用层协议。它基于 TCP 传输协议，并复用 HTTP 的握手通道。&lt;/p&gt;
+
+&lt;p&gt;对大部分 web 开发者来说，上面这段描述有点枯燥，其实只要记住几点：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;WebSocket 可以在浏览器里使用&lt;/li&gt;
+  &lt;li&gt;支持双向通信&lt;/li&gt;
+  &lt;li&gt;使用很简单&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;有哪些优点&quot;&gt;有哪些优点&lt;/h3&gt;
+&lt;p&gt;说到优点，这里的对比参照物是 HTTP 协议，概括地说就是：支持双向通信，更灵活，更高效，可扩展性更好。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;支持双向通信，实时性更强。&lt;/li&gt;
+  &lt;li&gt;更好的二进制支持。&lt;/li&gt;
+  &lt;li&gt;较少的控制开销。连接创建后，ws 客户端、服务端进行数据交换时，协议控制的数据包头部较小。在不包含头部的情况下，服务端到客户端的包头只有 2~10 字节（取决于数据包长度），客户端到服务端的的话，需要加上额外的 4 字节的掩码。而 HTTP 协议每次通信都需要携带完整的头部。&lt;/li&gt;
+  &lt;li&gt;支持扩展。ws 协议定义了扩展，用户可以扩展协议，或者实现自定义的子协议。（比如支持自定义压缩算法等）
+对于后面两点，没有研究过 WebSocket 协议规范的同学可能理解起来不够直观，但不影响对 WebSocket 的学习和使用。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;需要学习哪些东西&quot;&gt;需要学习哪些东西&lt;/h3&gt;
+&lt;p&gt;对网络应用层协议的学习来说，最重要的往往就是连接建立过程、数据交换教程。当然，数据的格式是逃不掉的，因为它直接决定了协议本身的能力。好的数据格式能让协议更高效、扩展性更好。&lt;/p&gt;
+
+&lt;p&gt;下文主要围绕下面几点展开：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;如何建立连接&lt;/li&gt;
+  &lt;li&gt;如何交换数据&lt;/li&gt;
+  &lt;li&gt;数据帧格式&lt;/li&gt;
+  &lt;li&gt;如何维持连接
+    &lt;h2 id=&quot;入门例子&quot;&gt;入门例子&lt;/h2&gt;
+    &lt;p&gt;在正式介绍协议细节前，先来看一个简单的例子，有个直观感受。例子包括了 WebSocket 服务端、WebSocket 客户端（网页端）。完整代码可以在 这里 找到。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这里服务端用了 ws 这个库。相比大家熟悉的 socket.io，ws 实现更轻量，更适合学习的目的。&lt;/p&gt;
+
+&lt;h3 id=&quot;服务端&quot;&gt;服务端&lt;/h3&gt;
+&lt;p&gt;代码如下，监听 8080 端口。当有新的连接请求到达时，打印日志，同时向客户端发送消息。当收到到来自客户端的消息时，同样打印日志。&lt;/p&gt;
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;express&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)();&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;WebSocket&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;wss&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;WebSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8080&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;wss&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;connection&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;connection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;server: receive connection.&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    
+    &lt;span class=&quot;nx&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;incoming&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;server: received: %s&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+    &lt;span class=&quot;nx&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;world&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sendfile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;__dirname&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;/index.html&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;客户端&quot;&gt;客户端&lt;/h3&gt;
+&lt;p&gt;代码如下，向 8080 端口发起 WebSocket 连接。连接建立后，打印日志，同时向服务端发送消息。接收到来自服务端的消息后，同样打印日志。&lt;/p&gt;
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;script&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ws&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;WebSocket&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;ws://localhost:8080&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;onopen&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;ws onopen&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;from client: hello&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;ws&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;onmessage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;ws onmessage&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;from server: &lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/script&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;运行结果&quot;&gt;运行结果&lt;/h3&gt;
+&lt;p&gt;可分别查看服务端、客户端的日志，这里不展开。&lt;/p&gt;
+
+&lt;p&gt;服务端输出：&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server: receive connection.
+server: received hello
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;客户端输出：&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;client: ws connection is open
+client: received world
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;如何建立连接&quot;&gt;如何建立连接&lt;/h2&gt;
+&lt;p&gt;前面提到，WebSocket 复用了 HTTP 的握手通道。具体指的是，客户端通过 HTTP 请求与 WebSocket 服务端协商升级协议。协议升级完成后，后续的数据交换则遵照 WebSocket 的协议。&lt;/p&gt;
+
+&lt;h3 id=&quot;客户端申请协议升级&quot;&gt;客户端：申请协议升级&lt;/h3&gt;
+&lt;p&gt;首先，客户端发起协议升级请求。可以看到，采用的是标准的 HTTP 报文格式，且只支持 GET 方法。&lt;/p&gt;
+
+&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET / HTTP/1.1
+Host: localhost:8080
+Origin: http://127.0.0.1:3000
+Connection: Upgrade
+Upgrade: websocket
+Sec-WebSocket-Version: 13
+Sec-WebSocket-Key: w4v7O6xFTi36lq3RNcgctw==
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;重点请求首部意义如下：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Connection: Upgrade：表示要升级协议&lt;/li&gt;
+  &lt;li&gt;Upgrade: websocket：表示要升级到 websocket 协议。&lt;/li&gt;
+  &lt;li&gt;Sec-WebSocket-Version: 13：表示 websocket 的版本。如果服务端不支持该版本，需要返回一个 Sec-WebSocket-Versionheader，里面包含服务端支持的版本号。&lt;/li&gt;
+  &lt;li&gt;Sec-WebSocket-Key：与后面服务端响应首部的 Sec-WebSocket-Accept 是配套的，提供基本的防护，比如恶意的连接，或者无意的连接。
+注意，上面请求省略了部分非重点请求首部。由于是标准的 HTTP 请求，类似 Host、Origin、Cookie 等请求首部会照常发送。在握手阶段，可以通过相关请求首部进行 安全限制、权限校验等。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;服务端响应协议升级&quot;&gt;服务端：响应协议升级&lt;/h3&gt;
+&lt;p&gt;服务端返回内容如下，状态代码 101 表示协议切换。到此完成协议升级，后续的数据交互都按照新的协议来。&lt;/p&gt;
+
+&lt;div class=&quot;language-text highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;HTTP/1.1 101 Switching Protocols
+Connection:Upgrade
+Upgrade: websocket
+Sec-WebSocket-Accept: Oy4NRAQ13jhfONC7bP8dTKb4PTU=
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;备注：每个 header 都以 \r\n 结尾，并且最后一行加上一个额外的空行 \r\n。此外，服务端回应的 HTTP 状态码只能在握手阶段使用。过了握手阶段后，就只能采用特定的错误码。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;sec-websocket-accept-的计算&quot;&gt;Sec-WebSocket-Accept 的计算&lt;/h3&gt;
+&lt;p&gt;Sec-WebSocket-Accept 根据客户端请求首部的 Sec-WebSocket-Key 计算出来。&lt;/p&gt;
+
+&lt;p&gt;计算公式为：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;将 Sec-WebSocket-Key 跟 258EAFA5-E914-47DA-95CA-C5AB0DC85B11 拼接。&lt;/li&gt;
+  &lt;li&gt;通过 SHA1 计算出摘要，并转成 base64 字符串。
+伪代码如下：
+    &lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;toBase64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sha1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Sec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;WebSocket&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;258&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;EAFA5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;E914&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;47&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;DA&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;95&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;CA&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;C5AB0DC85B11&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;验证下前面的返回结果：&lt;/p&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;crypto&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;crypto&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;magic&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;258EAFA5-E914-47DA-95CA-C5AB0DC85B11&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;secWebSocketKey&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;w4v7O6xFTi36lq3RNcgctw==&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;secWebSocketAccept&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;crypto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;createHash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;sha1&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;update&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;secWebSocketKey&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;magic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;digest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;base64&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;secWebSocketAccept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// Oy4NRAQ13jhfONC7bP8dTKb4PTU=&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;数据帧格式&quot;&gt;数据帧格式&lt;/h2&gt;
+&lt;p&gt;客户端、服务端数据的交换，离不开数据帧格式的定义。因此，在实际讲解数据交换之前，我们先来看下 WebSocket 的数据帧格式。&lt;/p&gt;
+
+&lt;p&gt;WebSocket 客户端、服务端通信的最小单位是帧（frame），由 1 个或多个帧组成一条完整的消息（message）。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;发送端：将消息切割成多个帧，并发送给服务端；&lt;/li&gt;
+  &lt;li&gt;接收端：接收消息帧，并将关联的帧重新组装成完整的消息；
+本节的重点，就是讲解数据帧的格式。详细定义可参考 RFC6455 5.2 节 。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;数据帧格式概览&quot;&gt;数据帧格式概览&lt;/h3&gt;
+&lt;p&gt;下面给出了 WebSocket 数据帧的统一格式。熟悉 TCP/IP 协议的同学对这样的图应该不陌生。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;从左到右，单位是比特。比如 FIN、RSV1 各占据 1 比特，opcode 占据 4 比特。&lt;/li&gt;
+  &lt;li&gt;内容包括了标识、操作代码、掩码、数据、数据长度等。（下一小节会展开）&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-------+-+-------------+-------------------------------+
+ |F|R|R|R| opcode|M| Payload len |    Extended payload length    |
+ |I|S|S|S|  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  |A|     &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;7&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;     |             &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;16/64&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;           |
+ |N|V|V|V|       |S|             |   &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;payload &lt;span class=&quot;nv&quot;&gt;len&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;126/127&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   |
+ | |1|2|3|       |K|             |                               |
+ +-+-+-+-+-------+-+-------------+ - - - - - - - - - - - - - - - +
+ |     Extended payload length continued, &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;payload len &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; 127  |
+ + - - - - - - - - - - - - - - - +-------------------------------+
+ |                               |Masking-key, &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;MASK &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;to 1  |
+ +-------------------------------+-------------------------------+
+ | Masking-key &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;continued&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;       |          Payload Data         |
+ +-------------------------------- - - - - - - - - - - - - - - - +
+ :                     Payload Data continued ...                :
+ + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+ |                     Payload Data continued ...                |
+ +---------------------------------------------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;数据帧格式详解&quot;&gt;数据帧格式详解&lt;/h3&gt;
+&lt;p&gt;针对前面的格式概览图，这里逐个字段进行讲解，如有不清楚之处，可参考协议规范，或留言交流。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;FIN&lt;/strong&gt;：1 个比特。&lt;/p&gt;
+
+&lt;p&gt;如果是 1，表示这是消息（message）的最后一个分片（fragment），如果是 0，表示不是是消息（message）的最后一个分片（fragment）。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;RSV1, RSV2, RSV3&lt;/strong&gt;：各占 1 个比特。&lt;/p&gt;
+
+&lt;p&gt;一般情况下全为 0。当客户端、服务端协商采用 WebSocket 扩展时，这三个标志位可以非 0，且值的含义由扩展进行定义。如果出现非零的值，且并没有采用 WebSocket 扩展，连接出错。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Opcode&lt;/strong&gt;: 4 个比特。&lt;/p&gt;
+
+&lt;p&gt;操作代码，Opcode 的值决定了应该如何解析后续的数据载荷（data payload）。如果操作代码是不认识的，那么接收端应该断开连接（fail the connection）。可选的操作代码如下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;% x0：表示一个延续帧。当 Opcode 为 0 时，表示本次数据传输采用了数据分片，当前收到的数据帧为其中一个数据分片。&lt;/li&gt;
+  &lt;li&gt;% x1：表示这是一个文本帧（frame）&lt;/li&gt;
+  &lt;li&gt;% x2：表示这是一个二进制帧（frame）&lt;/li&gt;
+  &lt;li&gt;% x3-7：保留的操作代码，用于后续定义的非控制帧。&lt;/li&gt;
+  &lt;li&gt;% x8：表示连接断开。&lt;/li&gt;
+  &lt;li&gt;% x9：表示这是一个 ping 操作。&lt;/li&gt;
+  &lt;li&gt;% xA：表示这是一个 pong 操作。&lt;/li&gt;
+  &lt;li&gt;% xB-F：保留的操作代码，用于后续定义的控制帧。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Mask&lt;/strong&gt;: 1 个比特。&lt;/p&gt;
+
+&lt;p&gt;表示是否要对数据载荷进行掩码操作。从客户端向服务端发送数据时，需要对数据进行掩码操作；从服务端向客户端发送数据时，不需要对数据进行掩码操作。&lt;/p&gt;
+
+&lt;p&gt;如果服务端接收到的数据没有进行过掩码操作，服务端需要断开连接。&lt;/p&gt;
+
+&lt;p&gt;如果 Mask 是 1，那么在 Masking-key 中会定义一个掩码键（masking key），并用这个掩码键来对数据载荷进行反掩码。所有客户端发送到服务端的数据帧，Mask 都是 1。&lt;/p&gt;
+
+&lt;p&gt;掩码的算法、用途在下一小节讲解。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Payload length&lt;/strong&gt;：数据载荷的长度，单位是字节。为 7 位，或 7+16 位，或 1+64 位。&lt;/p&gt;
+
+&lt;p&gt;假设数 Payload length === x，如果&lt;/p&gt;
+
+&lt;p&gt;x 为 0~126：数据的长度为 x 字节。
+x 为 126：后续 2 个字节代表一个 16 位的无符号整数，该无符号整数的值为数据的长度。
+x 为 127：后续 8 个字节代表一个 64 位的无符号整数（最高位为 0），该无符号整数的值为数据的长度。
+此外，如果 payload length 占用了多个字节的话，payload length 的二进制表达采用网络序（big endian，重要的位在前）。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Masking-key&lt;/strong&gt;：0 或 4 字节（32 位）&lt;/p&gt;
+
+&lt;p&gt;所有从客户端传送到服务端的数据帧，数据载荷都进行了掩码操作，Mask 为 1，且携带了 4 字节的 Masking-key。如果 Mask 为 0，则没有 Masking-key。&lt;/p&gt;
+
+&lt;p&gt;备注：载荷数据的长度，不包括 mask key 的长度。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Payload data&lt;/strong&gt;：(x+y) 字节&lt;/p&gt;
+
+&lt;p&gt;载荷数据：包括了扩展数据、应用数据。其中，扩展数据 x 字节，应用数据 y 字节。&lt;/p&gt;
+
+&lt;p&gt;扩展数据：如果没有协商使用扩展的话，扩展数据数据为 0 字节。所有的扩展都必须声明扩展数据的长度，或者可以如何计算出扩展数据的长度。此外，扩展如何使用必须在握手阶段就协商好。如果扩展数据存在，那么载荷数据长度必须将扩展数据的长度包含在内。&lt;/p&gt;
+
+&lt;p&gt;应用数据：任意的应用数据，在扩展数据之后（如果存在扩展数据），占据了数据帧剩余的位置。载荷数据长度 减去 扩展数据长度，就得到应用数据的长度。&lt;/p&gt;
+
+&lt;h3 id=&quot;掩码算法&quot;&gt;掩码算法&lt;/h3&gt;
+&lt;p&gt;掩码键（Masking-key）是由客户端挑选出来的 32 位的随机数。掩码操作不会影响数据载荷的长度。掩码、反掩码操作都采用如下算法：&lt;/p&gt;
+
+&lt;p&gt;首先，假设：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;original-octet-i：为原始数据的第 i 字节。&lt;/li&gt;
+  &lt;li&gt;transformed-octet-i：为转换后的数据的第 i 字节。&lt;/li&gt;
+  &lt;li&gt;j：为 i mod 4 的结果。&lt;/li&gt;
+  &lt;li&gt;masking-key-octet-j：为 mask key 第 j 字节。
+算法描述为： original-octet-i 与 masking-key-octet-j 异或后，得到 transformed-octet-i。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;j = i MOD 4
+transformed-octet-i = original-octet-i XOR masking-key-octet-j&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;数据传递&quot;&gt;数据传递&lt;/h2&gt;
+&lt;p&gt;一旦 WebSocket 客户端、服务端建立连接后，后续的操作都是基于数据帧的传递。&lt;/p&gt;
+
+&lt;p&gt;WebSocket 根据 opcode 来区分操作的类型。比如 0x8 表示断开连接，0x0-0x2 表示数据交互。&lt;/p&gt;
+
+&lt;h3 id=&quot;数据分片&quot;&gt;数据分片&lt;/h3&gt;
+&lt;p&gt;WebSocket 的每条消息可能被切分成多个数据帧。当 WebSocket 的接收方收到一个数据帧时，会根据 FIN 的值来判断，是否已经收到消息的最后一个数据帧。&lt;/p&gt;
+
+&lt;p&gt;FIN=1 表示当前数据帧为消息的最后一个数据帧，此时接收方已经收到完整的消息，可以对消息进行处理。FIN=0，则接收方还需要继续监听接收其余的数据帧。&lt;/p&gt;
+
+&lt;p&gt;此外，opcode 在数据交换的场景下，表示的是数据的类型。0x01 表示文本，0x02 表示二进制。而 0x00 比较特殊，表示延续帧（continuation frame），顾名思义，就是完整消息对应的数据帧还没接收完。&lt;/p&gt;
+
+&lt;h3 id=&quot;数据分片例子&quot;&gt;数据分片例子&lt;/h3&gt;
+&lt;p&gt;直接看例子更形象些。下面例子来自 MDN，可以很好地演示数据的分片。客户端向服务端两次发送消息，服务端收到消息后回应客户端，这里主要看客户端往服务端发送的消息。&lt;/p&gt;
+
+&lt;h4 id=&quot;第一条消息&quot;&gt;第一条消息&lt;/h4&gt;
+
+&lt;p&gt;FIN=1, 表示是当前消息的最后一个数据帧。服务端收到当前数据帧后，可以处理消息。opcode=0x1，表示客户端发送的是文本类型。&lt;/p&gt;
+
+&lt;h4 id=&quot;第二条消息&quot;&gt;第二条消息&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;FIN=0，opcode=0x1，表示发送的是文本类型，且消息还没发送完成，还有后续的数据帧。&lt;/li&gt;
+  &lt;li&gt;FIN=0，opcode=0x0，表示消息还没发送完成，还有后续的数据帧，当前的数据帧需要接在上一条数据帧之后。&lt;/li&gt;
+  &lt;li&gt;FIN=1，opcode=0x0，表示消息已经发送完成，没有后续的数据帧，当前的数据帧需要接在上一条数据帧之后。服务端可以将关联的数据帧组装成完整的消息。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Client: &lt;span class=&quot;nv&quot;&gt;FIN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1, &lt;span class=&quot;nv&quot;&gt;opcode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0x1, &lt;span class=&quot;nv&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hello&quot;&lt;/span&gt;
+Server: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;process &lt;span class=&quot;nb&quot;&gt;complete &lt;/span&gt;message immediately&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Hi.
+Client: &lt;span class=&quot;nv&quot;&gt;FIN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;opcode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0x1, &lt;span class=&quot;nv&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;and a&quot;&lt;/span&gt;
+Server: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;listening, new message containing text started&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Client: &lt;span class=&quot;nv&quot;&gt;FIN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;opcode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0x0, &lt;span class=&quot;nv&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;happy new&quot;&lt;/span&gt;
+Server: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;listening, payload concatenated to previous message&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Client: &lt;span class=&quot;nv&quot;&gt;FIN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1, &lt;span class=&quot;nv&quot;&gt;opcode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0x0, &lt;span class=&quot;nv&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;year!&quot;&lt;/span&gt;
+Server: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;process &lt;span class=&quot;nb&quot;&gt;complete &lt;/span&gt;message&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Happy new year to you too!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;连接保持--心跳&quot;&gt;连接保持 + 心跳&lt;/h2&gt;
+&lt;p&gt;WebSocket 为了保持客户端、服务端的实时双向通信，需要确保客户端、服务端之间的 TCP 通道保持连接没有断开。然而，对于长时间没有数据往来的连接，如果依旧长时间保持着，可能会浪费包括的连接资源。&lt;/p&gt;
+
+&lt;p&gt;但不排除有些场景，客户端、服务端虽然长时间没有数据往来，但仍需要保持连接。这个时候，可以采用心跳来实现。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;发送方 -&amp;gt; 接收方：ping&lt;/li&gt;
+  &lt;li&gt;接收方 -&amp;gt; 发送方：pong
+ping、pong 的操作，对应的是 WebSocket 的两个控制帧，opcode 分别是 0x9、0xA。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;举例，WebSocket 服务端向客户端发送 ping，只需要如下代码（采用 ws 模块）&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ws.ping('', false, true);&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;sec-websocket-keyaccept-的作用&quot;&gt;Sec-WebSocket-Key/Accept 的作用&lt;/h2&gt;
+&lt;p&gt;前面提到了，Sec-WebSocket-Key/Sec-WebSocket-Accept 在主要作用在于提供基础的防护，减少恶意连接、意外连接。&lt;/p&gt;
+
+&lt;p&gt;作用大致归纳如下：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;避免服务端收到非法的 websocket 连接（比如 http 客户端不小心请求连接 websocket 服务，此时服务端可以直接拒绝连接）&lt;/li&gt;
+  &lt;li&gt;确保服务端理解 websocket 连接。因为 ws 握手阶段采用的是 http 协议，因此可能 ws 连接是被一个 http 服务器处理并返回的，此时客户端可以通过 Sec-WebSocket-Key 来确保服务端认识 ws 协议。（并非百分百保险，比如总是存在那么些无聊的 http 服务器，光3. 处理 Sec-WebSocket-Key，但并没有实现 ws 协议。。。）&lt;/li&gt;
+  &lt;li&gt;用浏览器里发起 ajax 请求，设置 header 时，Sec-WebSocket-Key 以及其他相关的 header 是被禁止的。这样可以避免客户端发送 ajax 请求时，意外请求协议升级（websocket upgrade）&lt;/li&gt;
+  &lt;li&gt;可以防止反向代理（不理解 ws 协议）返回错误的数据。比如反向代理前后收到两次 ws 连接的升级请求，反向代理把第一次请求的返回给 cache 住，然后第二次请求到来时直接把 cache 住的请求给返回（无意义的返回）。&lt;/li&gt;
+  &lt;li&gt;Sec-WebSocket-Key 主要目的并不是确保数据的安全性，因为 Sec-WebSocket-Key、Sec-WebSocket-Accept 的转换计算公式是公开的，而且非常简单，最主要的作用是预防一些常见的意外情况（非故意的）。
+    &lt;blockquote&gt;
+      &lt;p&gt;强调：Sec-WebSocket-Key/Sec-WebSocket-Accept 的换算，只能带来基本的保障，但连接是否安全、数据是否安全、客户端 / 服务端是否合法的 ws 客户端、ws 服务端，其实并没有实际性的保证。&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;数据掩码的作用&quot;&gt;数据掩码的作用&lt;/h2&gt;
+&lt;p&gt;WebSocket 协议中，数据掩码的作用是增强协议的安全性。但数据掩码并不是为了保护数据本身，因为算法本身是公开的，运算也不复杂。除了加密通道本身，似乎没有太多有效的保护通信安全的办法。&lt;/p&gt;
+
+&lt;p&gt;那么为什么还要引入掩码计算呢，除了增加计算机器的运算量外似乎并没有太多的收益（这也是不少同学疑惑的点）。&lt;/p&gt;
+
+&lt;p&gt;答案还是两个字：安全。但并不是为了防止数据泄密，而是为了防止早期版本的协议中存在的代理缓存污染攻击（proxy cache poisoning attacks）等问题。&lt;/p&gt;
+
+&lt;h3 id=&quot;代理缓存污染攻击&quot;&gt;代理缓存污染攻击&lt;/h3&gt;
+&lt;p&gt;下面摘自 2010 年关于安全的一段讲话。其中提到了代理服务器在协议实现上的缺陷可能导致的安全问题。猛击出处。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“We show, empirically, that the current version of the WebSocket consent mechanism is vulnerable to proxy cache poisoning attacks. Even though the WebSocket handshake is based on HTTP, which should be understood by most network intermediaries, the handshake uses the esoteric “Upgrade” mechanism of HTTP [5]. In our experiment, we find that many proxies do not implement the Upgrade mechanism properly, which causes the handshake to succeed even though subsequent traffic over the socket will be misinterpreted by the proxy.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;[TALKING] Huang, L-S., Chen, E., Barth, A., Rescorla, E., and C.
+Jackson, “Talking to Yourself for Fun and Profit”, 2010,&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在正式描述攻击步骤之前，我们假设有如下参与者：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;攻击者、攻击者自己控制的服务器（简称 “邪恶服务器”）、攻击者伪造的资源（简称 “邪恶资源”）&lt;/li&gt;
+  &lt;li&gt;受害者、受害者想要访问的资源（简称 “正义资源”）&lt;/li&gt;
+  &lt;li&gt;受害者实际想要访问的服务器（简称 “正义服务器”）&lt;/li&gt;
+  &lt;li&gt;中间代理服务器
+    &lt;h4 id=&quot;攻击步骤一&quot;&gt;攻击步骤一&lt;/h4&gt;
+    &lt;ol&gt;
+      &lt;li&gt;攻击者浏览器 向 邪恶服务器 发起 WebSocket 连接。根据前文，首先是一个协议升级请求。&lt;/li&gt;
+      &lt;li&gt;协议升级请求 实际到达 代理服务器。&lt;/li&gt;
+      &lt;li&gt;代理服务器 将协议升级请求转发到 邪恶服务器。&lt;/li&gt;
+      &lt;li&gt;邪恶服务器 同意连接，代理服务器 将响应转发给 攻击者。
+由于 upgrade 的实现上有缺陷，代理服务器 以为之前转发的是普通的 HTTP 消息。因此，当协议服务器 同意连接，代理服务器 以为本次会话已经结束。&lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;攻击步骤二&quot;&gt;攻击步骤二&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;攻击者 在之前建立的连接上，通过 WebSocket 的接口向 邪恶服务器 发送数据，且数据是精心构造的 HTTP 格式的文本。其中包含了 正义资源 的地址，以及一个伪造的 host（指向正义服务器）。（见后面报文）&lt;/li&gt;
+  &lt;li&gt;请求到达 代理服务器 。虽然复用了之前的 TCP 连接，但 代理服务器 以为是新的 HTTP 请求。&lt;/li&gt;
+  &lt;li&gt;代理服务器 向 邪恶服务器 请求 邪恶资源。&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;邪恶服务器 返回 邪恶资源。代理服务器 缓存住 邪恶资源（url 是对的，但 host 是 正义服务器 的地址）。
+到这里，受害者可以登场了：&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;受害者 通过 代理服务器 访问 正义服务器 的 正义资源。&lt;/li&gt;
+  &lt;li&gt;代理服务器 检查该资源的 url、host，发现本地有一份缓存（伪造的）。&lt;/li&gt;
+  &lt;li&gt;代理服务器 将 邪恶资源 返回给 受害者。&lt;/li&gt;
+  &lt;li&gt;受害者 卒。
+附：前面提到的精心构造的 “HTTP 请求报文”。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Client → Server:
+POST /path/of/attackers/choice HTTP/1.1 Host: host-of-attackers-choice.com Sec-WebSocket-Key: &amp;lt;connection-key&amp;gt;
+Server → Client:
+HTTP/1.1 200 OK
+Sec-WebSocket-Accept: &amp;lt;connection-key&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;当前解决方案&quot;&gt;当前解决方案&lt;/h3&gt;
+&lt;p&gt;最初的提案是对数据进行加密处理。基于安全、效率的考虑，最终采用了折中的方案：对数据载荷进行掩码处理。&lt;/p&gt;
+
+&lt;p&gt;需要注意的是，这里只是限制了浏览器对数据载荷进行掩码处理，但是坏人完全可以实现自己的 WebSocket 客户端、服务端，不按规则来，攻击可以照常进行。&lt;/p&gt;
+
+&lt;p&gt;但是对浏览器加上这个限制后，可以大大增加攻击的难度，以及攻击的影响范围。如果没有这个限制，只需要在网上放个钓鱼网站骗人去访问，一下子就可以在短时间内展开大范围的攻击。&lt;/p&gt;
+
+&lt;h2 id=&quot;写在后面&quot;&gt;写在后面&lt;/h2&gt;
+&lt;p&gt;WebSocket 可写的东西还挺多，比如 WebSocket 扩展。客户端、服务端之间是如何协商、使用扩展的。WebSocket 扩展可以给协议本身增加很多能力和想象空间，比如数据的压缩、加密，以及多路复用等。&lt;/p&gt;
+
+&lt;p&gt;篇幅所限，这里先不展开，感兴趣的同学可以留言交流。文章如有错漏，敬请指出。&lt;/p&gt;
+
+&lt;h2 id=&quot;相关链接&quot;&gt;相关链接&lt;/h2&gt;
+&lt;p&gt;RFC6455：websocket 规范&lt;br /&gt;
+https://tools.ietf.org/html/rfc6455&lt;/p&gt;
+
+&lt;p&gt;规范：数据帧掩码细节&lt;br /&gt;
+https://tools.ietf.org/html/rfc6455#section-5.3&lt;/p&gt;
+
+&lt;p&gt;规范：数据帧格式&lt;br /&gt;
+https://tools.ietf.org/html/rfc6455#section-5.1&lt;/p&gt;
+
+&lt;p&gt;server-example&lt;br /&gt;
+https://github.com/websockets/ws#server-example&lt;/p&gt;
+
+&lt;p&gt;编写 websocket 服务器&lt;br /&gt;
+https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API/Writing_WebSocket_servers&lt;/p&gt;
+
+&lt;p&gt;对网络基础设施的攻击（数据掩码操作所要预防的事情）&lt;br /&gt;
+https://tools.ietf.org/html/rfc6455#section-10.3&lt;/p&gt;
+
+&lt;p&gt;Talking to Yourself for Fun and Profit（含有攻击描述）&lt;br /&gt;
+http://w2spconf.com/2011/papers/websocket.pdf&lt;/p&gt;
+
+&lt;p&gt;What is Sec-WebSocket-Key for?&lt;br /&gt;
+https://stackoverflow.com/questions/18265128/what-is-sec-websocket-key-for&lt;/p&gt;
+
+&lt;p&gt;10.3. Attacks On Infrastructure (Masking)&lt;br /&gt;
+https://tools.ietf.org/html/rfc6455#section-10.3&lt;/p&gt;
+
+&lt;p&gt;Talking to Yourself for Fun and Profit&lt;br /&gt;
+http://w2spconf.com/2011/papers/websocket.pdf&lt;/p&gt;
+
+&lt;p&gt;Why are WebSockets masked?&lt;br /&gt;
+https://stackoverflow.com/questions/33250207/why-are-websockets-masked&lt;/p&gt;
+
+&lt;p&gt;How does websocket frame masking protect against cache poisoning?&lt;br /&gt;
+https://security.stackexchange.com/questions/36930/how-does-websocket-frame-masking-protect-against-cache-poisoning&lt;/p&gt;
+
+&lt;p&gt;What is the mask in a WebSocket frame?&lt;br /&gt;
+https://stackoverflow.com/questions/14174184/what-is-the-mask-in-a-websocket-frame&lt;/p&gt;</content><author><name>Lewin</name></author><category term="WebSocket" /><summary type="html">原文地址，此文档仅做记载备份 https://www.cnblogs.com/chyingp/p/websocket-deep-in.html</summary></entry><entry><title type="html">nginx 配置文件加载顺序</title><link href="https://lewinz.org/2022/01/12/nginx-config-load/" rel="alternate" type="text/html" title="nginx 配置文件加载顺序" /><published>2022-01-12T00:00:00+08:00</published><updated>2022-01-12T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/12/nginx-config-load</id><content type="html" xml:base="https://lewinz.org/2022/01/12/nginx-config-load/">&lt;p&gt;这几天频繁的创建主机搭建站点，突然碰到个与自己直觉不匹配的情况：&lt;/p&gt;
 
 &lt;p&gt;当没有配置默认的虚拟主机时，用一个无法匹配 server_name 的链接访问服务器时，会如何？&lt;/p&gt;
 
@@ -1729,366 +2179,4 @@ Part1 内存布局：&lt;code class=&quot;language-plaintext highlighter-rouge&q
 &lt;span class=&quot;n&quot;&gt;part1&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;align&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;part2&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;align&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;分析过程和上面完全一样。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="memory alignment" /><category term="unsafe" /><summary type="html">unsafe 包简单说明 unsafe，顾名思义，是不安全的，Go 定义这个包名也是这个意思，让我们尽可能的不要使用它，如果你使用它，看到了这个名字，也会想到尽可能的不要使用它，或者更小心的使用它。 使用 unsafe 包的同时也放弃了 Go 语言保证与未来版本的兼容性的承诺，因为它必然会有意无意中使用很多非公开的实现细节，而这些实现的细节在未来的 Go 语言中很可能会被改变。 unsafe 包被广泛地用于比较低级的包，例如 runtime、os、syscall 还有 net 包等，因为它们需要和操作系统密切配合，但是对于普通的程序一般是不需要使用 unsafe 包的。</summary></entry><entry><title type="html">Linux Shell Pipe</title><link href="https://lewinz.org/2021/10/25/linux-shell/" rel="alternate" type="text/html" title="Linux Shell Pipe" /><published>2021-10-25T00:00:00+08:00</published><updated>2021-10-25T00:00:00+08:00</updated><id>https://lewinz.org/2021/10/25/linux-shell</id><content type="html" xml:base="https://lewinz.org/2021/10/25/linux-shell/">&lt;h2 id=&quot;命令执行顺序控制&quot;&gt;命令执行顺序控制&lt;/h2&gt;
-&lt;p&gt;通常情况下，我们在终端只能执行一条命令，然后按下回车执行，那么如何执行多条命令呢？&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;顺序执行多条命令：command1;command2;command3;&lt;br /&gt;
- 简单的顺序指令可以通过 ; 来实现&lt;/li&gt;
-  &lt;li&gt;有条件的执行多条命令：which command1 &amp;amp;&amp;amp; command2 || command3&lt;br /&gt;
- &amp;amp;&amp;amp; : 如果前一条命令执行成功则执行下一条命令，如果 command1 执行成功（返回 0）, 则执行 command2&lt;br /&gt;
- || : 与 &amp;amp;&amp;amp; 命令相反，执行不成功时执行这个命令&lt;/li&gt;
-  &lt;li&gt;$?: 存储上一次命令的返回结果&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子：
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;which git&amp;gt;/dev/null &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; git &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt;  // 如果存在 git 命令，执行 git &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt; 命令
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;管道命令&quot;&gt;管道命令&lt;/h2&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;管道是一种通信机制，通常用于进程间的通信（也可通过 socket 进行网络通信），它表现出来的形式将前面每一个进程的输出（stdout）直接作为下一个进程的输入（stdin）。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;table&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;管道命令使用&lt;/td&gt;
-      &lt;td&gt;作为界定符号，管道命令与上面说的连续执行命令不一样。&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;管道命令仅能处理 standard output, 对于 standard error output 会予以忽略。&lt;br /&gt;
-less,more,head,tail… 都是可以接受 standard input 的命令，所以他们是管道命令&lt;br /&gt;
-ls,cp,mv 并不会接受 standard input 的命令，所以他们就不是管道命令了。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;管道命令必须要能够接受来自前一个命令的数据成为 standard input 继续处理才行。&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;选取命令-cutgrep&quot;&gt;选取命令 「cut」「grep」&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;cut: 从某一行信息中取出某部分我们想要的信息。
-    &lt;blockquote&gt;
-      &lt;p&gt;cut -d ‘分隔字符’ -f field // 用于分隔字符&lt;br /&gt;
-cut -c 字符范围&lt;br /&gt;
-[参数说明]&lt;br /&gt;
--d : 后面接分隔字符, 通常与 -f 一起使用&lt;br /&gt;
--f : 根据 - d 将信息分隔成数段，-f 后接数字 表示取出第几段&lt;br /&gt;
--c : 以字符为单位取出固定字符区间的信息&lt;/p&gt;
-      &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子 1：
-打印 / etc/passwd 文件中以: 为分隔符的第 1 个字段和第 6 个字段分别表示用户名和家目录
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;etc/passwd | &lt;span class=&quot;nb&quot;&gt;cut&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;':'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; 1,6
-root:/root
-bin:/bin
-daemon:/sbin
-adm:/var/adm
-lp:/var/spool/lpd
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;      &lt;/div&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子 2：
-打印 / etc/passwd 文件中每一行的前 10 个字符：
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /etc/passwd | &lt;span class=&quot;nb&quot;&gt;cut&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; 1-10
-root:x:0:0
-bin:x:1:1:
-daemon:x:2
-adm:x:3:4:
-lp:x:4:7:l
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;ps:cut 在处理多空格相连的数据时，比较吃力。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;grep: 分析一行信息，如果其中有我们需要的信息，就将该行拿出来
-    &lt;blockquote&gt;
-      &lt;p&gt;grep [-acinv] [–color=auto] ‘查找字符串’ filename&lt;br /&gt;
-[参数]&lt;br /&gt;
--a : 将 binary 文件以 text 文件的方式查找数据&lt;br /&gt;
--c : 计算找到 ‘查找字符串’的次数&lt;br /&gt;
--i : 忽略大小写的不同&lt;br /&gt;
--n : 输出行号&lt;br /&gt;
--v : 反向选择，显示没有查找内容的行&lt;br /&gt;
-–color=auto : 将找到的关键字部分加上颜色显示&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子 3：
-取出含有 fanco 的 / etc/passwd 文件的行
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;etc/passwd | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'fanco'&lt;/span&gt;
-1
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;etc/passwd | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'fanco'&lt;/span&gt;
-23:fanco:x:1001:1001::/home/fanco:/bin/bash
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;etc/passwd | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'fanco'&lt;/span&gt;
-1:root:x:0:0:root:/root:/bin/bash
-2:bin:x:1:1:bin:/bin:/sbin/nologin
-3:daemon:x:2:2:daemon:/sbin:/sbin/nologin
-4:adm:x:3:4:adm:/var/adm:/sbin/nologin
-5:lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
-...
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;排序命令-sortuniqwc&quot;&gt;排序命令 「sort」「uniq」「wc」&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;sort
-    &lt;blockquote&gt;
-      &lt;p&gt;sort [-fbMnrtuk] [file or stdin]&lt;br /&gt;
-[参数]&lt;br /&gt;
--f ：忽略大小写的差异，例如 A 与 a 视为编码相同&lt;br /&gt;
--b ：忽略最前面的空格部分&lt;br /&gt;
--M ：以月份的名字来排序，例如 JAN, DEC 等等的排序方法&lt;br /&gt;
--n ：使用『纯数字』进行排序默认是以文字型态来排序的)&lt;br /&gt;
--r ：反向排序&lt;br /&gt;
--u ：就是 uniq ，相同的资料中，仅出现一行代表&lt;br /&gt;
--t ：分隔符号，预设是用 [tab] 键来分隔&lt;br /&gt;
--k ：以那个区间 (field) 来进行排序的意思&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子 4：
-对 / etc/passwd 的账号进行排序
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /etc/passwd | &lt;span class=&quot;nb&quot;&gt;sort
-&lt;/span&gt;adm:x:3:4:adm:/var/adm:/sbin/nologin
-bin:x:1:1:bin:/bin:/sbin/nologin
-chrony:x:998:996::/var/lib/chrony:/sbin/nologin
-...
-通过 / etc/passwd 第 5 列来进行排序
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;etc/passwd | &lt;span class=&quot;nb&quot;&gt;sort&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;':'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-k&lt;/span&gt; 3
-root:x:0:0:root:/root:/bin/bash
-fanco:x:1001:1001::/home/fanco:/bin/bash
-operator:x:11:0:operator:/root:/sbin/nologin
-bin:x:1:1:bin:/bin:/sbin/nologin
-games:x:12:100:games:/usr/games:/sbin/nologin
-ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
-这里排序还是按照文字进行排序的，切换成数字排序
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;etc/passwd | &lt;span class=&quot;nb&quot;&gt;sort&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;':'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-k&lt;/span&gt; 3 &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt;
-root:x:0:0:root:/root:/bin/bash
-bin:x:1:1:bin:/bin:/sbin/nologin
-daemon:x:2:2:daemon:/sbin:/sbin/nologin
-adm:x:3:4:adm:/var/adm:/sbin/nologin
-lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;uniq
-    &lt;blockquote&gt;
-      &lt;p&gt;uniq [-ic]&lt;br /&gt;
-[参数]&lt;br /&gt;
--i ：忽略大小写的不同&lt;br /&gt;
--c ：进行计数&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子 5
-使用 last 取出历史登录信息的账号，排序，去重
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# last | &lt;span class=&quot;nb&quot;&gt;cut&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;' '&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; 1 | &lt;span class=&quot;nb&quot;&gt;sort&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;uniq&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt;
-      1 
-      7 reboot
-     19 root
-      1 wtmp
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;wc
-    &lt;blockquote&gt;
-      &lt;p&gt;wc [-lwm]&lt;br /&gt;
-[参数]&lt;br /&gt;
--l ：仅列出行&lt;br /&gt;
--w ：仅列出多少字 (英文单字)&lt;br /&gt;
--m ：多少字符&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子 6
-查看 etc/passwd 中有多少账号
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /etc/passwd | &lt;span class=&quot;nb&quot;&gt;wc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
-23
-计算最近登录系统的人次
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# last | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;a-zA-Z] | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'wtmp'&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;wc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
-2
-查看某个文件的行数 字数 字符数
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;etc/passwd | &lt;span class=&quot;nb&quot;&gt;wc
-     &lt;/span&gt;23      32     997
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;双向重定向命令-tee&quot;&gt;双向重定向命令 「tee」&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;tee：在数据流的处理过程中将某段信息保存下来，使其既能输出到屏幕又能保存到某一个文件中。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux_shell_1.png&quot; alt=&quot;linux_shell_1&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;tee [-a] file&lt;br /&gt;
-[参数]&lt;br /&gt;
--a : 以累加的方式，将数据加入 file 中&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子 7
-查询最近用户登录情况，并将其保存到文件中
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# last | &lt;span class=&quot;nb&quot;&gt;tee &lt;/span&gt;info | &lt;span class=&quot;nb&quot;&gt;cut&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;' '&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; 1
-root
-...
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# less info
-root     pts/0        112.28.181.159   Sun Jul  1 14:28   still logged &lt;span class=&quot;k&quot;&gt;in   
-&lt;/span&gt;root     pts/0        112.28.181.159   Sun Jul  1 14:24 - 14:27  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;00:03&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    
-root     pts/0        112.28.181.159   Sun Jul  1 13:19 - 14:24  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;01:04&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    
-root     tty1                          Sun Jul  1 12:46   still logged &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;如果 tee 后接的文件已存在，内容会被覆盖掉，加上 -a 参数则会累加&lt;/p&gt;
-
-&lt;h3 id=&quot;字符转换命令-trcoljoinpasteexpand&quot;&gt;字符转换命令 「tr」「col」「join」「paste」「expand」&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;tr：用来删除一段信息当中的文字，或者进行文字信息得替换
-    &lt;blockquote&gt;
-      &lt;p&gt;tr [-ds] set&lt;br /&gt;
-[参数]&lt;br /&gt;
--d : 删除信息当中的 set1 这个字符串&lt;br /&gt;
--s : 替换掉重复的字符&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子 8
-将上一步生成的 info 文件删除掉所有的 root
-删除前
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;info
-root     pts/0        112.28.180.86    Thu May 10 18:01 - 18:12  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;00:11&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    
-reboot   system boot  3.10.0-693.2.2.e Fri May 11 02:00 - 16:31 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;51+14:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  
- 删除后
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;info | &lt;span class=&quot;nb&quot;&gt;tr&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'root'&lt;/span&gt;  
-     ps/0        112.28.180.86    Thu May 10 18:01 - 18:12  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;00:11&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    
-eb   sysem b  3.10.0-693.2.2.e Fi May 11 02:00 - 16:31 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;51+14:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  
-
-删除时并不是只删除连续的字符，reboot 也被删除掉了 root 部分
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;除去 dos 文件留下来的 ^M 符号
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /root/passwd | &lt;span class=&quot;nb&quot;&gt;tr&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'\r'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /root/passwd.linux
-^M 可以用 &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;r 替代
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;col
-    &lt;blockquote&gt;
-      &lt;p&gt;col [-xb]&lt;br /&gt;
-[参数]&lt;br /&gt;
--x ： 将 tab 键换成对等的空格键&lt;br /&gt;
--b : 在文字内有反斜杠 (/) 时，仅保留反斜杠最后接的那个字符&lt;br /&gt;
-``` shell
-栗子 9
-将上图中的 ^I 换成空格键
-[root@izuf6i29flb2df231kt91hz /]# cat info | col -x | cat -A | more
-      root     pts/0        112.28.181.159   Sun Jul  1 14:28   still logged in$
-col 经常被用于将 man page 转存为纯文本文件&lt;/p&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;join: 主要讲两个文件有相同数据的一行，相同字段放在前面
-join [-ti12] file1 file2
-[参数]
--t : join 默认以空格符分隔数据，并且对比第一个字段的数据 , 如果两个文件相同，则将两条数据连成一行
--i : 忽略大小写的差异
--1 : 说明第一个文件通过那个字段来进行分析
--2 : 说明第二个文件通过那个字段来分析&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;``` shell
-栗子 10
-将 / etc/passwd 与  /etc/shadow 相关数据整合成一列
-[root@izuf6i29flb2df231kt91hz /]# head -3 /etc/passwd /etc/shadow
-==&amp;gt; /etc/passwd &amp;lt;==
-root:x:0:0:root:/root:/bin/bash
-bin:x:1:1:bin:/bin:/sbin/nologin
-daemon:x:2:2:daemon:/sbin:/sbin/nologin
-
-==&amp;gt; /etc/shadow &amp;lt;==
-root:$6$RNGEziM7$2e/EJd3hThS8TMqHSgDIfeDf7dJUG1dbJ0ik1goybGYmLGZL.sHNv1Ltb4.1HUksxTI0Cs3PJw5g/YirSImKg1:17643:0:99999:7:::
-bin:*:17110:0:99999:7:::
-daemon:*:17110:0:99999:7:::
-[root@izuf6i29flb2df231kt91hz /]# join -t ':' /etc/passwd /etc/shadow
-root:x:0:0:root:/root:/bin/bash:$6$RNGEziM7$2e/EJd3hThS8TMqHSgDIfeDf7dJUG1dbJ0ik1goybGYmLGZL.sHNv1Ltb4.1HUksxTI0Cs3PJw5g/YirSImKg1:17643:0:99999:7:::
-bin:x:1:1:bin:/bin:/sbin/nologin:*:17110:0:99999:7:::
-daemon:x:2:2:daemon:/sbin:/sbin/nologin:*:17110:0:99999:7:::
-
-将 etc/passwd 按：分隔的第 4 个字段 与 etc/group 的第 3 个字段 比较，如果相同，则将他两同行数据放在一起
-[root@izuf6i29flb2df231kt91hz /]# join -t ':' -1 4 /etc/passwd -2 3 /etc/group
-0:root:x:0:root:/root:/bin/bash:root:x:
-1:bin:x:1:bin:/bin:/sbin/nologin:bin:x:
-2:daemon:x:2:daemon:/sbin:/sbin/nologin:daemon:x:
-4:adm:x:3:adm:/var/adm:/sbin/nologin:adm:x:
-join: /etc/passwd:6: is not sorted: sync:x:5:0:sync:/sbin:/bin/sync
-7:lp:x:4:lp:/var/spool/lpd:/sbin/nologin:lp:x:
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;paste: 直接将两个文件两行贴在一起，中间以 [tab] 键隔开
-    &lt;blockquote&gt;
-      &lt;p&gt;paste [-d] file1 file2&lt;br /&gt;
-[ 参数]&lt;br /&gt;
--d : 后面可以接分隔字符，默认以 [tab] 来分隔的&lt;/p&gt;
-      &lt;ul&gt;
-        &lt;li&gt;: 如果 file 部分写成 -，表示接受 standard input 数据的意思&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子 11
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;paste &lt;/span&gt;info info2
-    root     pts/0        112.28.181.159   Sun Jul  1 14:28   still logged &lt;span class=&quot;k&quot;&gt;in       &lt;/span&gt;root     pts/0        112.28.181.159   Sun Jul  1 14:28   still logged &lt;span class=&quot;k&quot;&gt;in   
-&lt;/span&gt;root     pts/0        112.28.181.159   Sun Jul  1 14:24 - 14:27  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;00:03&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;        root     pts/0        112.28.181.159   Sun Jul  1 14:24 - 14:27  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;00:03&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    
-root     pts/0        112.28.181.159   Sun Jul  1 13:19 - 14:24  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;01:04&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;        root     pts/0        112.28.181.159   Sun Jul  1 13:19 - 14:24  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;01:04&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;expand: 把 tab 键转为空格键
-    &lt;blockquote&gt;
-      &lt;p&gt;expand [-t] file&lt;br /&gt;
-[参数]&lt;br /&gt;
--t : 后面接数字，一般，一个 tab 可以用 8 个空格代替，可以自行定义代表几个空格&lt;/p&gt;
-      &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子 12
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;info | &lt;span class=&quot;nb&quot;&gt;expand&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-3&lt;/span&gt; info
- root     pts/0        112.28.181.159   Sun Jul  1 14:28   still logged &lt;span class=&quot;k&quot;&gt;in   
-&lt;/span&gt;root     pts/0        112.28.181.159   Sun Jul  1 14:24 - 14:27  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;00:03&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    
-root     pts/0        112.28.181.159   Sun Jul  1 13:19 - 14:24  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;01:04&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    
-root     tty1                          Sun Jul  1 12:46   still logged &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;      &lt;/div&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-  &lt;li&gt;切割命令：split, 顾名思义，讲一个大文件依据文件大小或行数切割成为小文件
-    &lt;blockquote&gt;
-      &lt;p&gt;split [-bl] file prefix&lt;br /&gt;
-[参数]&lt;br /&gt;
--b : 后面可接欲切割文件的大小，可加单位，例如 b,k,m 等&lt;br /&gt;
--l : 以行数来进行切割&lt;br /&gt;
-PREFIX : 代表前导符，可作为切割文件的前导文字&lt;/p&gt;
-      &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;栗子 13
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;split&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 300K /etc/passwd
-将 &lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-al&lt;/span&gt; 输出文件  按 10 行分成一个新的文件
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-al&lt;/span&gt; / | &lt;span class=&quot;nb&quot;&gt;split&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; 10 - lsrrot
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;ls 
-&lt;/span&gt;b    boot  dev  home  info2  lib64       lsrrotaa  lsrrotac  mnt  opt   root  sbin  sys  usr
-bin  c     etc  info  lib    lost+found  lsrrotab  media     n    proc  run   srv   tmp  var
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;ls
-&lt;/span&gt;b    boot  dev  home  info2  lib64       lsrrotaa  lsrrotac  mnt  opt   root  sbin  sys  usr
-bin  c     etc  info  lib    lost+found  lsrrotab  media     n    proc  run   srv   tmp  var
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@izuf6i29flb2df231kt91hz /]# &lt;span class=&quot;nb&quot;&gt;wc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; lsrrot&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
-10 lsrrotaa
-10 lsrrotab
- 9 lsrrotac
-29 total
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;      &lt;/div&gt;
-    &lt;/blockquote&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;</content><author><name>Lewin</name></author><category term="linux" /><category term="shell" /><category term="Pipe" /><summary type="html">命令执行顺序控制 通常情况下，我们在终端只能执行一条命令，然后按下回车执行，那么如何执行多条命令呢？</summary></entry></feed>
+&lt;p&gt;分析过程和上面完全一样。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="memory alignment" /><category term="unsafe" /><summary type="html">unsafe 包简单说明 unsafe，顾名思义，是不安全的，Go 定义这个包名也是这个意思，让我们尽可能的不要使用它，如果你使用它，看到了这个名字，也会想到尽可能的不要使用它，或者更小心的使用它。 使用 unsafe 包的同时也放弃了 Go 语言保证与未来版本的兼容性的承诺，因为它必然会有意无意中使用很多非公开的实现细节，而这些实现的细节在未来的 Go 语言中很可能会被改变。 unsafe 包被广泛地用于比较低级的包，例如 runtime、os、syscall 还有 net 包等，因为它们需要和操作系统密切配合，但是对于普通的程序一般是不需要使用 unsafe 包的。</summary></entry></feed>
