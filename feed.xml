@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-15T12:08:05+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">WebSocket 协议</title><link href="https://lewinz.org/2022/01/14/websocket/" rel="alternate" type="text/html" title="WebSocket 协议" /><published>2022-01-14T00:00:00+08:00</published><updated>2022-01-14T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/14/websocket</id><content type="html" xml:base="https://lewinz.org/2022/01/14/websocket/">&lt;h2 id=&quot;原文地址此文档仅做记载备份&quot;&gt;原文地址，此文档仅做记载备份&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-15T12:11:15+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">WebSocket 协议</title><link href="https://lewinz.org/2022/01/14/websocket/" rel="alternate" type="text/html" title="WebSocket 协议" /><published>2022-01-14T00:00:00+08:00</published><updated>2022-01-14T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/14/websocket</id><content type="html" xml:base="https://lewinz.org/2022/01/14/websocket/">&lt;h2 id=&quot;原文地址此文档仅做记载备份&quot;&gt;原文地址，此文档仅做记载备份&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/chyingp/p/websocket-deep-in.html&quot;&gt;https://www.cnblogs.com/chyingp/p/websocket-deep-in.html&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;内容概览&quot;&gt;内容概览&lt;/h2&gt;
@@ -35,11 +35,11 @@
   &lt;li&gt;如何建立连接&lt;/li&gt;
   &lt;li&gt;如何交换数据&lt;/li&gt;
   &lt;li&gt;数据帧格式&lt;/li&gt;
-  &lt;li&gt;如何维持连接
-    &lt;h2 id=&quot;入门例子&quot;&gt;入门例子&lt;/h2&gt;
-    &lt;p&gt;在正式介绍协议细节前，先来看一个简单的例子，有个直观感受。例子包括了 WebSocket 服务端、WebSocket 客户端（网页端）。完整代码可以在 这里 找到。&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;如何维持连接&lt;/li&gt;
 &lt;/ol&gt;
+
+&lt;h2 id=&quot;入门例子&quot;&gt;入门例子&lt;/h2&gt;
+&lt;p&gt;在正式介绍协议细节前，先来看一个简单的例子，有个直观感受。例子包括了 WebSocket 服务端、WebSocket 客户端（网页端）。完整代码可以在 这里 找到。&lt;/p&gt;
 
 &lt;p&gt;这里服务端用了 ws 这个库。相比大家熟悉的 socket.io，ws 实现更轻量，更适合学习的目的。&lt;/p&gt;
 
@@ -159,6 +159,7 @@ Sec-WebSocket-Accept: Oy4NRAQ13jhfONC7bP8dTKb4PTU=
 &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;secWebSocketAccept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;c1&quot;&gt;// Oy4NRAQ13jhfONC7bP8dTKb4PTU=&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
 &lt;h2 id=&quot;数据帧格式&quot;&gt;数据帧格式&lt;/h2&gt;
 &lt;p&gt;客户端、服务端数据的交换，离不开数据帧格式的定义。因此，在实际讲解数据交换之前，我们先来看下 WebSocket 的数据帧格式。&lt;/p&gt;
 
@@ -308,6 +309,7 @@ Server: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;listening, payload concate
 Client: &lt;span class=&quot;nv&quot;&gt;FIN&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1, &lt;span class=&quot;nv&quot;&gt;opcode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0x0, &lt;span class=&quot;nv&quot;&gt;msg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;year!&quot;&lt;/span&gt;
 Server: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;process &lt;span class=&quot;nb&quot;&gt;complete &lt;/span&gt;message&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; Happy new year to you too!
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
 &lt;h2 id=&quot;连接保持--心跳&quot;&gt;连接保持 + 心跳&lt;/h2&gt;
 &lt;p&gt;WebSocket 为了保持客户端、服务端的实时双向通信，需要确保客户端、服务端之间的 TCP 通道保持连接没有断开。然而，对于长时间没有数据往来的连接，如果依旧长时间保持着，可能会浪费包括的连接资源。&lt;/p&gt;
 
@@ -364,17 +366,17 @@ Jackson, “Talking to Yourself for Fun and Profit”, 2010,&lt;/p&gt;
   &lt;li&gt;攻击者、攻击者自己控制的服务器（简称 “邪恶服务器”）、攻击者伪造的资源（简称 “邪恶资源”）&lt;/li&gt;
   &lt;li&gt;受害者、受害者想要访问的资源（简称 “正义资源”）&lt;/li&gt;
   &lt;li&gt;受害者实际想要访问的服务器（简称 “正义服务器”）&lt;/li&gt;
-  &lt;li&gt;中间代理服务器
-    &lt;h4 id=&quot;攻击步骤一&quot;&gt;攻击步骤一&lt;/h4&gt;
-    &lt;ol&gt;
-      &lt;li&gt;攻击者浏览器 向 邪恶服务器 发起 WebSocket 连接。根据前文，首先是一个协议升级请求。&lt;/li&gt;
-      &lt;li&gt;协议升级请求 实际到达 代理服务器。&lt;/li&gt;
-      &lt;li&gt;代理服务器 将协议升级请求转发到 邪恶服务器。&lt;/li&gt;
-      &lt;li&gt;邪恶服务器 同意连接，代理服务器 将响应转发给 攻击者。
-由于 upgrade 的实现上有缺陷，代理服务器 以为之前转发的是普通的 HTTP 消息。因此，当协议服务器 同意连接，代理服务器 以为本次会话已经结束。&lt;/li&gt;
-    &lt;/ol&gt;
-  &lt;/li&gt;
+  &lt;li&gt;中间代理服务器&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h4 id=&quot;攻击步骤一&quot;&gt;攻击步骤一&lt;/h4&gt;
+&lt;ol&gt;
+  &lt;li&gt;攻击者浏览器 向 邪恶服务器 发起 WebSocket 连接。根据前文，首先是一个协议升级请求。&lt;/li&gt;
+  &lt;li&gt;协议升级请求 实际到达 代理服务器。&lt;/li&gt;
+  &lt;li&gt;代理服务器 将协议升级请求转发到 邪恶服务器。&lt;/li&gt;
+  &lt;li&gt;邪恶服务器 同意连接，代理服务器 将响应转发给 攻击者。
+由于 upgrade 的实现上有缺陷，代理服务器 以为之前转发的是普通的 HTTP 消息。因此，当协议服务器 同意连接，代理服务器 以为本次会话已经结束。&lt;/li&gt;
+&lt;/ol&gt;
 
 &lt;h4 id=&quot;攻击步骤二&quot;&gt;攻击步骤二&lt;/h4&gt;
 &lt;ol&gt;
@@ -398,6 +400,7 @@ Server → Client:
 HTTP/1.1 200 OK
 Sec-WebSocket-Accept: &amp;lt;connection-key&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
 &lt;h3 id=&quot;当前解决方案&quot;&gt;当前解决方案&lt;/h3&gt;
 &lt;p&gt;最初的提案是对数据进行加密处理。基于安全、效率的考虑，最终采用了折中的方案：对数据载荷进行掩码处理。&lt;/p&gt;
 
