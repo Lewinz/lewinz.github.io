@@ -39,6 +39,7 @@ HTML5 开始提供的一种浏览器与服务器进行全双工通讯的网络�
 2. 如何交换数据
 3. 数据帧格式
 4. 如何维持连接
+
 ## 入门例子
 在正式介绍协议细节前，先来看一个简单的例子，有个直观感受。例子包括了 WebSocket 服务端、WebSocket 客户端（网页端）。完整代码可以在 这里 找到。
 
@@ -161,6 +162,7 @@ let secWebSocketAccept = crypto.createHash('sha1')
 console.log(secWebSocketAccept);
 // Oy4NRAQ13jhfONC7bP8dTKb4PTU=
 ```
+
 ## 数据帧格式
 客户端、服务端数据的交换，离不开数据帧格式的定义。因此，在实际讲解数据交换之前，我们先来看下 WebSocket 的数据帧格式。
 
@@ -300,6 +302,7 @@ Server: (listening, payload concatenated to previous message)
 Client: FIN=1, opcode=0x0, msg="year!"
 Server: (process complete message) Happy new year to you too!
 ```
+
 ## 连接保持 + 心跳
 WebSocket 为了保持客户端、服务端的实时双向通信，需要确保客户端、服务端之间的 TCP 通道保持连接没有断开。然而，对于长时间没有数据往来的连接，如果依旧长时间保持着，可能会浪费包括的连接资源。
 
@@ -345,6 +348,7 @@ WebSocket 协议中，数据掩码的作用是增强协议的安全性。但数�
 - 受害者、受害者想要访问的资源（简称 “正义资源”）
 - 受害者实际想要访问的服务器（简称 “正义服务器”）
 - 中间代理服务器
+
 #### 攻击步骤一
 1. 攻击者浏览器 向 邪恶服务器 发起 WebSocket 连接。根据前文，首先是一个协议升级请求。
 2. 协议升级请求 实际到达 代理服务器。
@@ -372,6 +376,7 @@ Server → Client:
 HTTP/1.1 200 OK
 Sec-WebSocket-Accept: <connection-key>
 ```
+
 ### 当前解决方案
 最初的提案是对数据进行加密处理。基于安全、效率的考虑，最终采用了折中的方案：对数据载荷进行掩码处理。
 
