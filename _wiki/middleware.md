@@ -264,6 +264,12 @@ rpm -ivh mysql-community-server-5.7.22-1.el7.x86_64.rpm
 
 替换 mysql 配置  
 `vi /etc/my.cnf`
+``` sh
+# 创建慢日志文件
+cp /var/log/mysqld.log /var/log/mysql_slow.log
+
+echo > /var/log/mysql_slow.log
+```
 ```sh
 # For advice on how to change settings please see
 # http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html
@@ -304,6 +310,11 @@ skip-name-resolve
 max_connections=500
 wait_timeout=31536000
 interactive_timeout=31536000
+
+# 开启慢日志
+slow_query_log=ON
+slow_query_log_file=/var/log/mysql_slow.log
+long_query_time=1
 
 # 设置字符编码集 utf8mb4
 [client]
