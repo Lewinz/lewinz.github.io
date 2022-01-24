@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-20T23:01:07+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">WebSocket 协议</title><link href="https://lewinz.org/2022/01/14/websocket/" rel="alternate" type="text/html" title="WebSocket 协议" /><published>2022-01-14T00:00:00+08:00</published><updated>2022-01-14T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/14/websocket</id><content type="html" xml:base="https://lewinz.org/2022/01/14/websocket/">&lt;h2 id=&quot;原文地址此文档仅做记载备份&quot;&gt;原文地址，此文档仅做记载备份&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-01-24T10:40:37+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">WebSocket 协议</title><link href="https://lewinz.org/2022/01/14/websocket/" rel="alternate" type="text/html" title="WebSocket 协议" /><published>2022-01-14T00:00:00+08:00</published><updated>2022-01-14T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/14/websocket</id><content type="html" xml:base="https://lewinz.org/2022/01/14/websocket/">&lt;h2 id=&quot;原文地址此文档仅做记载备份&quot;&gt;原文地址，此文档仅做记载备份&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/chyingp/p/websocket-deep-in.html&quot;&gt;https://www.cnblogs.com/chyingp/p/websocket-deep-in.html&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;内容概览&quot;&gt;内容概览&lt;/h2&gt;
@@ -939,6 +939,140 @@ ssh &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 8888 username@192.168.19.14
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;其他&quot;&gt;其他&lt;/h2&gt;
+&lt;h3 id=&quot;端口扫描&quot;&gt;端口扫描&lt;/h3&gt;
+&lt;h4 id=&quot;nmap&quot;&gt;nmap&lt;/h4&gt;
+&lt;p&gt;参数：&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;参数&lt;/th&gt;
+      &lt;th&gt;描述&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-sP&lt;/td&gt;
+      &lt;td&gt;Ping扫描,效率高,返回信息少.  例: nmap -sP 192.168.1.110&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-P0(Pn)&lt;/td&gt;
+      &lt;td&gt;无Ping扫描,可以躲避防火墙防护,可以在目标主机禁止ping的情况下使用&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-PS&lt;/td&gt;
+      &lt;td&gt;TCP SYN Ping扫描&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-PA&lt;/td&gt;
+      &lt;td&gt;TCP ACK Ping扫描&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;PR&lt;/td&gt;
+      &lt;td&gt;ARP Ping扫描&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-n&lt;/td&gt;
+      &lt;td&gt;禁止DNS反向解析&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-T&lt;/td&gt;
+      &lt;td&gt;时序选项, -TO-T5. 用于IDS逃逸,0=&amp;gt;非常慢,1=&amp;gt;缓慢的,2=&amp;gt;文雅的,3=&amp;gt;普通的,4=&amp;gt;快速的,5=&amp;gt;急速的&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-p&lt;/td&gt;
+      &lt;td&gt;指定端口扫描&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-F&lt;/td&gt;
+      &lt;td&gt;快速扫描&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-f&lt;/td&gt;
+      &lt;td&gt;报文分段&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-D&lt;/td&gt;
+      &lt;td&gt;ip地址欺骗  例 nmap -D RND:5 192.168.1.110  RND:为生成随机ip地址&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-sS&lt;/td&gt;
+      &lt;td&gt;TCP SYN 扫描,速度快, 1秒1000次左右.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-sT&lt;/td&gt;
+      &lt;td&gt;TCP连接扫描&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-sU&lt;/td&gt;
+      &lt;td&gt;UDP扫描,扫描非常慢,容易被忽视&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-sN,-sF&lt;/td&gt;
+      &lt;td&gt;隐蔽扫描&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-sI&lt;/td&gt;
+      &lt;td&gt;空闲扫描,允许端口完全欺骗,可以允许不使用自身ip的情况下发起扫描,非常之隐蔽的扫描.较为隐蔽.但得先寻找空闲主机,指令为 nmap -p80 -open -script ipidseq 192.168……,第二种是往事随机寻找, nmap -p80 -open -script  ipidseq -iR 2000 (iR选项代表随机选择目标.2000带表选择的数量,-open代表只选择端口开放的空闲主机)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-p-&lt;/td&gt;
+      &lt;td&gt;扫描所有端口  1-65535&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-top-ports&lt;/td&gt;
+      &lt;td&gt;只扫描开发概率最高的端口 后面跟上数值  例  nmap -top-ports  100 , 就是扫描概率最高的前100个端口&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;版本探测相关：
+参数 | 描述 
+—– | —– 
+-sV                  |    版本探测 ,通过相应的端口探测对应的服务,根据服务的指纹识别出相应的版本.
+-sV –allports       |    只有使用–allports才能扫描所有的端口,默认情况下回跳过如 TCP9100端口(hp打印机专用端口)
+–version-intersity  |    设置扫描强度 0-9 ,数值越大越有可能被识别,花费时间越多,默认是7
+–version-ligth      |    扫描强度,轻量级扫描(2) ,等用于–version-intersity 2
+–version-all        |    扫描强度,重量级扫描(9)  ,等同于–version-intersity 9
+–version-trace      |    获取详细的版本信息
+-sR                  |    判断开放端口是否为RPC端口, 如果是返回程序和版本号.
+–resaon             |    显示主机存活原因&lt;/p&gt;
+
+&lt;p&gt;实例：&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1.Nmap的纯扫描,默认情况下，nmap会发出一个arp ping扫描，且扫描目标tcp端口,范围为1-10000。
+nmap 127.0.0.1
+2.NMAP普通扫描增加输出冗长（非常详细）
+nmap &lt;span class=&quot;nt&quot;&gt;-vv&lt;/span&gt; 127.0.0.1
+3.端口扫描
+nmap 127.0.0.1 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 80  &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;指定定单个端口）
+nmap 127.0.0.1 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 1-100 （多个端口）
+nmap 127.0.0.1 &lt;span class=&quot;nt&quot;&gt;-p-&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;所有端口&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+nmap &lt;span class=&quot;nt&quot;&gt;-sP&lt;/span&gt; 10.1.112.89 （Ping扫描）
+nmap &lt;span class=&quot;nt&quot;&gt;-sS&lt;/span&gt; 127.0.0.1 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 80 （SYN半连接扫描）
+nmap &lt;span class=&quot;nt&quot;&gt;-sT&lt;/span&gt; 127.0.0.1 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 80  （TCP全连接扫描）
+nmap &lt;span class=&quot;nt&quot;&gt;-sU&lt;/span&gt; 127.0.0.1 （UDP扫描）
+nmap &lt;span class=&quot;nt&quot;&gt;-sF&lt;/span&gt;  127.0.0.1 （FIN，目标可能有IDS/IPS系统的存在，防火墙可能过滤掉SYN数据包，发送一个FIN标志的数据包不需要完成TCP的握手。）
+4.路由追踪
+nmap &lt;span class=&quot;nt&quot;&gt;--traceroute&lt;/span&gt; 127.0.0.1
+5.nmap设置扫描一个网段下的ip
+nmap &lt;span class=&quot;nt&quot;&gt;-sP&lt;/span&gt; 127.0.0.1 /24
+6.扫描目标主机版本（不是很准确）
+nmap &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; 127.0.0.1 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 80
+7.扫描目标服务版本
+nmap &lt;span class=&quot;nt&quot;&gt;-O&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-sV&lt;/span&gt; 127.0.0.1 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 80
+8.全面扫描（包含了1-10000端口ping扫描，操作系统扫描，脚本扫描，路由跟踪，服务探测）
+nmap &lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; 127.0.0.1 &lt;span class=&quot;nt&quot;&gt;-p-&lt;/span&gt;
+9.保存结果
+nmap &lt;span class=&quot;nt&quot;&gt;-A&lt;/span&gt; 127.0.0.1 &lt;span class=&quot;nt&quot;&gt;-p-&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-oN&lt;/span&gt; nmap1
+10.nmap命令混合式扫描
+nmap &lt;span class=&quot;nt&quot;&gt;-vv&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p1-100&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; 127.0.0.1
+11.扫描多个目标
+nmap 127.0.0.1 127.0.0.2
+nmap 127.0.0.1-100 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;扫描IP地址为127.0.0.1-127.0.0.100内的所有主机&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+nmap &lt;span class=&quot;nt&quot;&gt;-iL&lt;/span&gt; target.txt （namp在同一目录下,扫描这个txt内的所有主机）
+
+注：使用时请将127.0.0.1更换为目标IP地址
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;h3 id=&quot;端口占用情况&quot;&gt;端口占用情况&lt;/h3&gt;
 &lt;h4 id=&quot;netstat&quot;&gt;netstat&lt;/h4&gt;
 &lt;p&gt;参数&lt;/p&gt;
