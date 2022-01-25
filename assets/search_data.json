@@ -809,6 +809,14 @@
     } ,
   
     {
+      "title"    : "MySQL 日志篇",
+      "category" : "mysql",
+      
+      "url"      : "https://lewinz.org/2022/01/25/mysql-log/",
+      "keywords" : "mysql,log"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
