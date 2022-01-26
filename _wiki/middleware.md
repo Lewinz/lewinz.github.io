@@ -250,78 +250,72 @@ rpm -ivh mysql-community-libs-5.7.22-1.el7.x86_64.rpm
 rpm -ivh mysql-community-client-5.7.22-1.el7.x86_64.rpm
 rpm -ivh mysql-community-server-5.7.22-1.el7.x86_64.rpm
 ```
-安装如果报错`perl(Getopt::Long) is needed`  
-执行`yum install perl`  
+> 安装如果报错`perl(Getopt::Long) is needed`  
+> 执行`yum install perl`  
 
-如果报错`warning: mysql-community-server-5.7.22-1.el7.x86_64.rpm: Header V3 DSA/SHA1 Signature, key ID 5072e1f5: NOKEY`  
-解决办法：`在 rpm 命令后加上 --force --nodeps`
+> 如果报错`warning: mysql-community-server-5.7.22-1.el7.x86_64.rpm: Header V3 DSA/SHA1 Signature, key ID 5072e1f5: NOKEY`  
+> 解决办法：`在 rpm 命令后加上 --force --nodeps`
 
-初始化数据库，自动创建 data 文件目录  
-`mysqld --initialize-insecure --user=mysql`
+``` shell
+# 初始化数据库，自动创建 data 文件目录
+mysqld --initialize-insecure --user=mysql
 
-将`/var/lib/mysql`文件所有用户修改为 mysql
-`chown mysql:mysql /var/lib/mysql -R`
+# 将`/var/lib/mysql`文件所有用户修改为 mysql
+chown mysql:mysql /var/lib/mysql -R
 
-替换 mysql 配置  
-`vi /etc/my.cnf`
-``` sh
 # 创建慢日志文件
-cp /var/log/mysqld.log /var/log/mysql_slow.log
+cp /var/log/mysqld.log /var/log/mysql-slow.log
 
-echo > /var/log/mysql_slow.log
+echo > /var/log/mysql-slow.log
 ```
-```sh
-# For advice on how to change settings please see
-# http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html
+``` shell
+# 替换 mysql 配置
+vi /etc/my.cnf
 
 [mysqld]
-port=3307
-#
-# Remove leading # and set to the amount of RAM for the most important data
-# cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
-# innodb_buffer_pool_size = 128M
-#
-# Remove leading # to turn on a very important data integrity option: logging
-# changes to the binary log between backups.
-# log_bin
-#
-# Remove leading # to set options mainly useful for reporting servers.
-# The server defaults are faster for transactions and fast SELECTs.
-# Adjust sizes as needed, experiment to find the optimal values.
-# join_buffer_size = 128M
-# sort_buffer_size = 2M
-# read_rnd_buffer_size = 2M
-datadir=/var/lib/mysql
-socket=/var/lib/mysql/mysql.sock
+# 全局配置
+port                                          = 3306                            # 端口
+datadir                                       = /var/lib/mysql                  # 数据存放目录
+socket                                        = /var/lib/mysql/mysql.sock       # 同 host 连接文件
+pid-file                                      = /var/lib/mysql/mysqld.pid       # pid 存储文件
+user                                          = mysql                           # 账号配置
+default_storage_engine                        = InnoDB                          # 默认引擎
+symbolic-links                                = 0                               # 禁用文件软连接
+character-set-client-handshake                = FALSE                           # 在客户端字符集和服务端字符集不同的时候将拒绝连接到服务端执行任何操作
+character-set-server                          = utf8mb4                         # 默认字符集
+collation-server                              = utf8mb4_general_ci              # 默认字符集编码
+init_connect                                  = 'SET NAMES utf8mb4'             # 执行第一次查询之前执行此语句，统一字符集
+wait_timeout                                  = 31536000                        # 连接空闲超时时间，秒
+interactive_timeout                           = 31536000                        # 连接空闲超时时间，秒
 
-# Disabling symbolic-links is recommended to prevent assorted security risks
-symbolic-links=0
+skip_name_resolve                                         # 关闭域名解析，避免dns导致的请求失败(关闭后要使用IP访问mysql)，mysql 会做正向和反向dns查询。一旦失败就会拒绝连接。
 
-log-error=/var/log/mysqld.log
-pid-file=/var/run/mysqld/mysqld.pid
 
-character-set-client-handshake = FALSE
-character-set-server = utf8mb4
-collation-server = utf8mb4_general_ci
-init_connect='SET NAMES utf8mb4'
+# innodb 引擎配置
+innodb_buffer_pool_size = 256M                            # 引擎缓冲池大小，根据实际调整
+innodb_log_file_size    = 50M                             # 引擎日志文件大小，根据实际调整
+innodb_file_per_table   = 1                               # 开启独立表空间，开启后每个表都有自已独立的表空间，每个表的数据和索引都会存在自已的表空间中
+innodb_flush_method     = O_DIRECT                        # innodb 使用 O_DIRECT 打开数据文件，使用 fsync () 刷写数据文件跟 redo log
 
-user=mysql
-skip-name-resolve
-max_connections=500
-wait_timeout=31536000
-interactive_timeout=31536000
+# LOGGING
+log-error               = /var/log/mysql-error.log        # 错误日志存放位置
+slow_query_log          = ON                              # 开启慢日志
+slow_query_log_file     = /var/log/mysql-slow.log         # 慢日志存放位置
+long_query_time         = 3                               # 慢日志阈值，秒
 
-# 开启慢日志
-slow_query_log=ON
-slow_query_log_file=/var/log/mysql_slow.log
-long_query_time=1
+# OTHER
+tmp_table_size          = 32M                             # 临时表内存缓存大小
+max_heap_table_size     = 32M                             # MEMORY 内存引擎的表大小
+max_connections         = 100                             # 最大连接数
+thread_cache_size       = 50                              # 线程池缓存大小
+table_open_cache        = 10                              # 表文件描述符的缓存大小
+open_files_limit        = 65535                           # 文件描述符限制数量
 
-# 设置字符编码集 utf8mb4
 [client]
-default-character-set = utf8mb4
+default-character-set   = utf8mb4                         # 默认字符集
 
 [mysql]
-default-character-set = utf8mb4
+default-character-set   = utf8mb4                         # 默认字符集
 ```
 
 启动 mysql  
