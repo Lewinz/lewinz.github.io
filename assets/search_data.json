@@ -94,6 +94,8 @@
   
   
   
+  
+  
 
   
     {
@@ -814,6 +816,14 @@
       
       "url"      : "https://lewinz.org/2022/01/25/mysql-log/",
       "keywords" : "mysql,log"
+    } ,
+  
+    {
+      "title"    : "Cpu Numa",
+      "category" : "",
+      
+      "url"      : "https://lewinz.org/2022/01/28/cpu-numa/",
+      "keywords" : ""
     } ,
   
     {
