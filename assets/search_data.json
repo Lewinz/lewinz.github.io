@@ -819,11 +819,11 @@
     } ,
   
     {
-      "title"    : "Cpu Numa",
-      "category" : "",
+      "title"    : "CPU NUMA 架构",
+      "category" : "cpu",
       
       "url"      : "https://lewinz.org/2022/01/28/cpu-numa/",
-      "keywords" : ""
+      "keywords" : "cpu, numa"
     } ,
   
     {
