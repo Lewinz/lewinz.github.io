@@ -262,11 +262,6 @@ mysqld --initialize-insecure --user=mysql
 
 # 将`/var/lib/mysql`文件所有用户修改为 mysql
 chown mysql:mysql /var/lib/mysql -R
-
-# 创建慢日志文件
-cp /var/log/mysqld.log /var/log/mysql-slow.log
-
-echo > /var/log/mysql-slow.log
 ```
 ``` shell
 # 替换 mysql 配置
