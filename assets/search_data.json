@@ -115,7 +115,7 @@
     } ,
   
     {
-      "title"    : "aolang 中的值类型和引用类型",
+      "title"    : "golang 中的值类型和引用类型",
       "category" : "go",
       
       "url"      : "https://lewinz.org/2021/04/29/go-type-cite-value/",
