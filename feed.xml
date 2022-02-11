@@ -1,4 +1,155 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-02-10T23:20:44+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">CPU NUMA 架构</title><link href="https://lewinz.org/2022/01/28/cpu-numa/" rel="alternate" type="text/html" title="CPU NUMA 架构" /><published>2022-01-28T00:00:00+08:00</published><updated>2022-01-28T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/28/cpu-numa</id><content type="html" xml:base="https://lewinz.org/2022/01/28/cpu-numa/">&lt;blockquote&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://lewinz.org/feed.xml" rel="self" type="application/atom+xml" /><link href="https://lewinz.org/" rel="alternate" type="text/html" /><updated>2022-02-11T12:01:23+08:00</updated><id>https://lewinz.org/feed.xml</id><title type="html">阿嫂</title><subtitle>阿嫂个人博客</subtitle><author><name>Lewin</name></author><entry><title type="html">记录 golang range 值拷贝的一个坑</title><link href="https://lewinz.org/2022/02/11/record-gorange-pointer/" rel="alternate" type="text/html" title="记录 golang range 值拷贝的一个坑" /><published>2022-02-11T00:00:00+08:00</published><updated>2022-02-11T00:00:00+08:00</updated><id>https://lewinz.org/2022/02/11/record-gorange-pointer</id><content type="html" xml:base="https://lewinz.org/2022/02/11/record-gorange-pointer/">&lt;h2 id=&quot;问题背景&quot;&gt;问题背景&lt;/h2&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StorageTypeInfo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;StorageTypes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageType&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StorageType&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;CategoryType&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Others&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stoTypeAppend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;typeInfo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageTypeInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cateType&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;stoTypeAppend&lt;/code&gt; 函数的作用是在「&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;typeInfo.StorageTypes&lt;/code&gt;」中寻找「&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CategoryType&lt;/code&gt;」与参数「&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cateType&lt;/code&gt;」相等的元素，对字段「&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Others&lt;/code&gt;」进行 append 操作。&lt;/p&gt;
+
+&lt;p&gt;所以我最开始的代码是这样的：&lt;/p&gt;
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StorageTypeInfo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;StorageTypes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageType&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StorageType&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;CategoryType&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;Others&lt;/span&gt;       &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TestPointer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initStorageTypeInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;before append ====== %#v&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;stoTypeAppend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;type1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;after append ====== %#v&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stoTypeAppend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;typeInfo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageTypeInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cateType&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stoType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;typeInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageTypes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stoType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CategoryType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cateType&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;stoType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Others&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stoType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Others&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;appendOther&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initStorageTypeInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageTypeInfo&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageTypeInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;StorageTypes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;CategoryType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;type1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;Others&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+						&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;other1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+				&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;CategoryType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;type2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;Others&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+						&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;other2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+				&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;输出结果：&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;before append &lt;span class=&quot;o&quot;&gt;======&lt;/span&gt; &amp;amp;raccoon.StorageTypeInfo&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;StorageTypes:[]raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;CategoryType:&lt;span class=&quot;s2&quot;&gt;&quot;type1&quot;&lt;/span&gt;, Others:[]raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;Name:&lt;span class=&quot;s2&quot;&gt;&quot;other1&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}}}&lt;/span&gt;, raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;CategoryType:&lt;span class=&quot;s2&quot;&gt;&quot;type2&quot;&lt;/span&gt;, Others:[]raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;Name:&lt;span class=&quot;s2&quot;&gt;&quot;other2&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}}}}}&lt;/span&gt;
+
+after append &lt;span class=&quot;o&quot;&gt;======&lt;/span&gt; &amp;amp;raccoon.StorageTypeInfo&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;StorageTypes:[]raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;CategoryType:&lt;span class=&quot;s2&quot;&gt;&quot;type1&quot;&lt;/span&gt;, Others:[]raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;Name:&lt;span class=&quot;s2&quot;&gt;&quot;other1&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}}}&lt;/span&gt;, raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;CategoryType:&lt;span class=&quot;s2&quot;&gt;&quot;type2&quot;&lt;/span&gt;, Others:[]raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;Name:&lt;span class=&quot;s2&quot;&gt;&quot;other2&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}}}}}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;发现，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;append&lt;/code&gt; 之后 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;CategoryType&lt;/code&gt; 为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;type1&lt;/code&gt; 的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;StorageTypes&lt;/code&gt; 并没有像预期的一样增加长度。&lt;/p&gt;
+
+&lt;h2 id=&quot;排查问题&quot;&gt;排查问题&lt;/h2&gt;
+&lt;p&gt;最开始以为是因为函数值传递的时候，拷贝指针时，参数下字段包含的切片地址传递的是第一个元素的地址（这部分的解释请看前面发布的博客内容），后面经过思考和单测之后，排除了这个可能，因为函数、方法在值传递的时候，只会拷贝值本身，例如这个例子传递的是指针，那么传递时会将指针类型对应的值拷贝一遍，但拷贝之后的值依旧是指向最原始的内存地址。&lt;/p&gt;
+
+&lt;h2 id=&quot;解决问题&quot;&gt;解决问题&lt;/h2&gt;
+&lt;p&gt;经过深（qing）思（jiao）熟（da）虑（lao）之后，发现是因为 for range 时，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;stoType&lt;/code&gt; 是从切片中拷贝出来的值，所以对这个值进行改变，并不能修改切片的值。&lt;/p&gt;
+
+&lt;div class=&quot;language-golang highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StorageTypeInfo&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;StorageTypes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageType&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;StorageType&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;CategoryType&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;Others&lt;/span&gt;       &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TestPointer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initStorageTypeInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;before append ====== %#v&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;stoTypeAppend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;type1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+	&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;after append ====== %#v&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stoTypeAppend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;typeInfo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageTypeInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cateType&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stoType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;typeInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageTypes&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stoType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CategoryType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cateType&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;typeInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageTypes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Others&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;typeInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageTypes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Others&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;appendOther&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;initStorageTypeInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageTypeInfo&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageTypeInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;StorageTypes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;StorageType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;CategoryType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;type1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;Others&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+						&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;other1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+				&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;CategoryType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;type2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+				&lt;span class=&quot;n&quot;&gt;Others&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+						&lt;span class=&quot;n&quot;&gt;Name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;other2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+					&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+				&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+			&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;结果输出：&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;before append &lt;span class=&quot;o&quot;&gt;======&lt;/span&gt; &amp;amp;raccoon.StorageTypeInfo&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;StorageTypes:[]raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;CategoryType:&lt;span class=&quot;s2&quot;&gt;&quot;type1&quot;&lt;/span&gt;, Others:[]raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;Name:&lt;span class=&quot;s2&quot;&gt;&quot;other1&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}}}&lt;/span&gt;, raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;CategoryType:&lt;span class=&quot;s2&quot;&gt;&quot;type2&quot;&lt;/span&gt;, Others:[]raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;Name:&lt;span class=&quot;s2&quot;&gt;&quot;other2&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}}}}}&lt;/span&gt;
+
+after append &lt;span class=&quot;o&quot;&gt;======&lt;/span&gt; &amp;amp;raccoon.StorageTypeInfo&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;StorageTypes:[]raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;CategoryType:&lt;span class=&quot;s2&quot;&gt;&quot;type1&quot;&lt;/span&gt;, Others:[]raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;Name:&lt;span class=&quot;s2&quot;&gt;&quot;other1&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;, raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;Name:&lt;span class=&quot;s2&quot;&gt;&quot;appendOther&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}}}&lt;/span&gt;, raccoon.StorageType&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;CategoryType:&lt;span class=&quot;s2&quot;&gt;&quot;type2&quot;&lt;/span&gt;, Others:[]raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;raccoon.Other&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;Name:&lt;span class=&quot;s2&quot;&gt;&quot;other2&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}}}}}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;其实不止是 slice，map 在 for range 的时候也会进行值拷贝，当我们使用 for range 获取到数据时，最好不要使用指针进行数据修改，以免掉入各种坑。&lt;/p&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="range" /><category term="pointer" /><summary type="html">问题背景 ``` golang type StorageTypeInfo struct{ StorageTypes []StorageType }</summary></entry><entry><title type="html">CPU NUMA 架构</title><link href="https://lewinz.org/2022/01/28/cpu-numa/" rel="alternate" type="text/html" title="CPU NUMA 架构" /><published>2022-01-28T00:00:00+08:00</published><updated>2022-01-28T00:00:00+08:00</updated><id>https://lewinz.org/2022/01/28/cpu-numa</id><content type="html" xml:base="https://lewinz.org/2022/01/28/cpu-numa/">&lt;blockquote&gt;
   &lt;p&gt;作者：卢钧轶 (cenalulu) 本文原文地址：http://cenalulu.github.io/linux/numa&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -2241,151 +2392,4 @@ Got it!
     &lt;span class=&quot;p&quot;&gt;}()&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="goroutine" /><category term="rate-limiting" /><summary type="html">引子 golang 提供了 goroutine 快速实现并发编程，在实际环境中，如果 goroutine 中的代码要消耗大量资源时（CPU、内存、带宽等），我们就需要对程序限速，以防止 goroutine 将资源耗尽。 以下面伪代码为例，看看 goroutine 如何拖垮一台 DB。假设 userList 长度为 10000，先从数据库中查询 userList 中的 user 是否在数据库中存在，存在则忽略，不存在则创建。 ``` golang //不使用goroutine，程序运行时间长，但数据库压力不大 for _,v:=range userList { user:=db.user.Get(v.ID) if user==nil { newUser:=user{ID:v.ID,UserName:v.UserName} db.user.Insert(newUser) } }</summary></entry><entry><title type="html">DNS 信息查询命令「dig」</title><link href="https://lewinz.org/2021/11/22/linux-cli-dig/" rel="alternate" type="text/html" title="DNS 信息查询命令「dig」" /><published>2021-11-22T00:00:00+08:00</published><updated>2021-11-22T00:00:00+08:00</updated><id>https://lewinz.org/2021/11/22/linux-cli-dig</id><content type="html" xml:base="https://lewinz.org/2021/11/22/linux-cli-dig/">&lt;p&gt;dig 命令主要用来从 DNS 域名服务器查询主机地址信息。&lt;/p&gt;
-
-&lt;h2 id=&quot;查询单个域名的-dns-信息&quot;&gt;查询单个域名的 DNS 信息&lt;/h2&gt;
-&lt;p&gt;dig 命令最典型的用法就是查询单个主机的信息。&lt;/p&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig baidu.com
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux-cli-dig-1.png&quot; alt=&quot;linux-cli-dig-1.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;dig 命令默认的输出信息比较丰富，大概可以分为 5 个部分。&lt;br /&gt;
-第一部分显示 dig 命令的版本和输入的参数。&lt;br /&gt;
-第二部分显示服务返回的一些技术详情，比较重要的是 status。如果 status 的值为 NOERROR 则说明本次查询成功结束。&lt;br /&gt;
-第三部分中的 “QUESTION SECTION” 显示我们要查询的域名。&lt;br /&gt;
-第四部分的 “ANSWER SECTION” 是查询到的结果。&lt;br /&gt;
-第五部分则是本次查询的一些统计信息，比如用了多长时间，查询了哪个 DNS 服务器，在什么时间进行的查询等等。&lt;/p&gt;
-
-&lt;p&gt;默认情况下 dig 命令查询 A 记录，上图中显示的 A 即说明查询的记录类型为 A 记录。在尝试查询其它类型的记录前让我们先来了解一下常见的 DNS 记录类型。&lt;/p&gt;
-
-&lt;h2 id=&quot;常见-dns-记录的类型&quot;&gt;常见 DNS 记录的类型&lt;/h2&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;类型&lt;/th&gt;
-      &lt;th&gt;目的&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;A&lt;/td&gt;
-      &lt;td&gt;地址记录，用来指定域名的 IPv4 地址，如果需要将域名指向一个 IP 地址，就需要添加 A 记录。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;AAAA&lt;/td&gt;
-      &lt;td&gt;用来指定主机名 (或域名) 对应的 IPv6 地址记录。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;CNAME&lt;/td&gt;
-      &lt;td&gt;如果需要将域名指向另一个域名，再由另一个域名提供 ip 地址，就需要添加 CNAME 记录。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;MX&lt;/td&gt;
-      &lt;td&gt;如果需要设置邮箱，让邮箱能够收到邮件，需要添加 MX 记录。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;NS&lt;/td&gt;
-      &lt;td&gt;域名服务器记录，如果需要把子域名交给其他 DNS 服务器解析，就需要添加 NS 记录。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;SOA&lt;/td&gt;
-      &lt;td&gt;SOA 这种记录是所有区域性文件中的强制性记录。它必须是一个文件中的第一个记录。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;TXT&lt;/td&gt;
-      &lt;td&gt;可以写任何东西，长度限制为 255。绝大多数的 TXT 记录是用来做 SPF 记录 (反垃圾邮件)。&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&quot;查询-cname-类型的记录&quot;&gt;查询 CNAME 类型的记录&lt;/h2&gt;
-&lt;p&gt;除了 A 记录，常见的 DNS 记录还有 CNAME，我们可以在查询时指定要查询的 DNS 记录类型：&lt;/p&gt;
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig abc.filterinto.com CNAME
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux-cli-dig-2.png&quot; alt=&quot;linux-cli-dig-2.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;这样结果中就只有 CNAME 的记录。其实我们可以在查询中指定任何 DNS 记录的类型。&lt;/p&gt;
-
-&lt;h2 id=&quot;从指定的-dns-服务器上查询&quot;&gt;从指定的 DNS 服务器上查询&lt;/h2&gt;
-&lt;p&gt;由于一些原因，希望从指定的 DNS 服务器上进行查询 (从默认的 DNS 服务器上获得的结果可能不准确)。指定 DNS 服务器的方式为使用 @ 符号：&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig @8.8.8.8 abc.filterinto.com
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux-cli-dig-3.png&quot; alt=&quot;linux-cli-dig-3.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;从上图可以看到本次查询的 DNS 服务器为 8.8.8.8。&lt;/p&gt;
-
-&lt;p&gt;如果不指定 DNS 服务器，dig 会依次使用 /etc/resolv.conf 里的地址作为 DNS 服务器：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux-cli-dig-4.png&quot; alt=&quot;linux-cli-dig-4.png&quot; /&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig abc.filterinto.com
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;上面查询的 DNS 服务器就变成了：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux-cli-dig-5.png&quot; alt=&quot;linux-cli-dig-5.png&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;反向查询&quot;&gt;反向查询&lt;/h2&gt;
-&lt;p&gt;在前面的查询中我们指定了查询服务器为 8.8.8.8，这是谁家的 DNS 服务器？其实我们可以使用 dig 的 -x 选项来反向解析 IP 地址对应的域名：&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig &lt;span class=&quot;nt&quot;&gt;-x&lt;/span&gt; 8.8.8.8 +short
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux-cli-dig-6.png&quot; alt=&quot;linux-cli-dig-6.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;好吧，应该是谷歌家的，可以放心使用了。&lt;/p&gt;
-
-&lt;h2 id=&quot;控制显示结果&quot;&gt;控制显示结果&lt;/h2&gt;
-&lt;p&gt;dig 命令默认返回的结果展示详细的信息，如果要获得精简的结果可以使用 +short 选项：&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig +short abc.filterinto.com
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux-cli-dig-7.png&quot; alt=&quot;linux-cli-dig-7.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;这下显示的结果就清爽多了。&lt;br /&gt;
-其实我们还可以通过更多选项来控制输出的内容，比如只想显示 “ANSWER SECTION” 的内容：&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig abc.filterinto.com +nocomments +noquestion +noauthority +noadditional +nostats
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux-cli-dig-8.png&quot; alt=&quot;linux-cli-dig-8.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;这个结果很不错，就是使用的选项太多了 (dig 命令有很多这样的选项，详情请参考使用手册)。我们可以换一种优雅一些的方式来实现和上面相同的结果：&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig abc.filterinto.com +noall +answer
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;查看-ttl-time-to-live&quot;&gt;查看 TTL (Time to Live)&lt;/h2&gt;
-&lt;p&gt;TTL 是 DNS 解析中很重要的指标，主要是控制 DNS 记录在 DNS 服务器上的缓存时间：&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig abc.filterinto.com
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux-cli-dig-9.png&quot; alt=&quot;linux-cli-dig-9.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;查询结果中的单位是秒。通过下面的命令可以显示精简一些测结果：&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig +nocmd +noall +answer +ttlid abc.filterinto.com
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux-cli-dig-10.png&quot; alt=&quot;linux-cli-dig-10.png&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;跟踪整个查询过程&quot;&gt;跟踪整个查询过程&lt;/h2&gt;
-&lt;p&gt;如果你好奇 dig 命令执行查询时都经历了哪些过程，你可以尝试使用 +trace 选项。它会输出从根域到最终结果的所有信息：&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;dig +trace abc.filterinto.com
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://cdn.jsdelivr.net/gh/Lewinz/lewinz.github.io@master/images/posts/linux-cli-dig-11.png&quot; alt=&quot;linux-cli-dig-11.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;上图中显示的并不是一个完整的结果，感兴趣的朋友可以自己尝试。&lt;/p&gt;
-
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-&lt;p&gt;dig 是一个很给力 DNS 查询工具，本文仅介绍了其常见用法，更多的命令选项及使用方法请查看 man page。&lt;/p&gt;
-
-&lt;h2 id=&quot;原文博客&quot;&gt;原文博客&lt;/h2&gt;
-&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/sparkdev/p/7777871.html&quot;&gt;https://www.cnblogs.com/sparkdev/p/7777871.html&lt;/a&gt;&lt;/p&gt;</content><author><name>Lewin</name></author><category term="dns" /><category term="dig" /><summary type="html">dig 命令主要用来从 DNS 域名服务器查询主机地址信息。</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Lewin</name></author><category term="golang" /><category term="goroutine" /><category term="rate-limiting" /><summary type="html">引子 golang 提供了 goroutine 快速实现并发编程，在实际环境中，如果 goroutine 中的代码要消耗大量资源时（CPU、内存、带宽等），我们就需要对程序限速，以防止 goroutine 将资源耗尽。 以下面伪代码为例，看看 goroutine 如何拖垮一台 DB。假设 userList 长度为 10000，先从数据库中查询 userList 中的 user 是否在数据库中存在，存在则忽略，不存在则创建。 ``` golang //不使用goroutine，程序运行时间长，但数据库压力不大 for _,v:=range userList { user:=db.user.Get(v.ID) if user==nil { newUser:=user{ID:v.ID,UserName:v.UserName} db.user.Insert(newUser) } }</summary></entry></feed>

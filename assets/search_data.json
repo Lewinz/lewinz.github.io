@@ -827,6 +827,14 @@
     } ,
   
     {
+      "title"    : "记录 golang range 值拷贝的一个坑",
+      "category" : "golang",
+      
+      "url"      : "https://lewinz.org/2022/02/11/record-gorange-pointer/",
+      "keywords" : "golang, range, pointer"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
