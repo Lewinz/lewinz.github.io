@@ -61,7 +61,7 @@ func TestErr(t *testing.T) {
 ```
 
 ## 问题二：err == nil 的问题
-想看标准库的一段代码：
+先看标准库的一段代码：
 ``` golang
 func (e *AddrError) Error() string {
     if e == nil { // 请注意，为什么这里会判断是否为 nil
