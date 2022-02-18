@@ -910,13 +910,15 @@ cd /mnt/software
 
 wget http://download.redis.io/releases/redis-5.0.5.tar.gz
 
-tar –zxvf redis-5.0.5.tar.gz
+tar -zxvf redis-5.0.5.tar.gz
 
 mv redis-5.0.5 redis
 ```
 
 编译安装包
 ``` shell
+cd redis
+
 make MALLOC=libc && make install
 ```
 > 如果在此步报错  
