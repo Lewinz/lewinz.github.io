@@ -1041,6 +1041,7 @@ masterauth redis_password
 ```
 
 3. 启动所有实例
+
 ``` shell
 /mnt/software/redis/src/redis-server /mnt/software/redis/redis.conf
 ```
@@ -1070,6 +1071,7 @@ cluster nodes（查看节点列表）
 ```
 
 6. 关闭集群
+
 ``` shell
 # 需要逐个关闭节点
 /mnt/software/redis/src/redis-cli -a xxx -c -h 192.168.0.60 -p 8001 shutdown
