@@ -933,22 +933,32 @@ make MALLOC=libc && make install
 /mnt/software/redis/src/redis-server
 ```
 
-## Redis 配置成服务
+### Redis 配置成服务
 配置文件
 ``` shell
 # 拷贝配置
 cp /mnt/software/redis/redis.conf /etc/redis/redis.conf
 cp /mnt/software/redis/utils/redis_init_script /etc/init.d/redis
 
-vi /etc/redis/redis.conf
-# 修改
-bind 0.0.0.0
+# 后台启动
+daemonize yes
+```
+
+`vi /etc/redis/redis.conf`
+``` shell
+# 去掉 bind 配置
+bind 127.0.0.1
+# 日志存放位置
 logfile /mnt/software/redis/logs/redis.log
+# 数据文件存放位置
 dir /mnt/software/redis/data
+
 # 密码设置
 requirepass redis_password
+```
 
 vi /etc/init.d/redis
+``` shell
 # 修改
 CONF="/etc/redis/redis.conf"
 ```
@@ -992,9 +1002,75 @@ slave-read-only yes
 
 master_host: 10.16.212.224 以及 slave_read_only:1 字样即为配置成功  
 
-## 集群部署    
+## 集群部署
+1. 先部署一个单节点 Redis，将 /mnt/softwore/redis 拷贝到其他机器上
+> 如果是一台机器上部署，可以拷贝在同一文件夹，并修改文件夹名称为占用端口号，便于区分
 
-暂时先参考此文档：https://www.jianshu.com/p/8045b92fafb2
+2. 修改 redis.conf 配置
+``` shell
+# 后台启动
+daemonize yes
+
+# 端口（每个实例都不一样，按需修改）
+port 8001
+
+# 数据文件存放位置，也可以直接使用 ./ 存放在当前目录下，便于区分
+dir /usr/local/redis-cluster/8001/
+
+# 启动集群模式
+cluster-enabled yes
+
+# 集群节点信息文件，每个实例配置不重复即可（每个实例都不一样，按需修改）
+cluster-config-file nodes-8001.conf
+
+# 删除 IP 绑定信息
+bind 127.0.0.1
+
+# 关闭保护模式
+protected-mode no
+
+# 开启数据持久化
+appendonly yes
+
+# 密码
+requirepass redis_password
+
+# 主从复制密码
+masterauth redis_password
+```
+
+3. 启动所有实例
+``` shell
+/mnt/software/redis/src/redis-server /mnt/software/redis/redis.conf
+```
+
+4. 创建集群（使用 redis-cli）
+``` shell
+/mnt/software/redis/src/redis-cli -a xxx --cluster create --cluster-replicas 1 192.168.5.100:8001 192.168.5.100:8002 192.168.5.100:8003 192.168.5.100:8004 192.168.5.100:8005 192.168.5.100:8006
+
+-a 密码
+```
+
+5. 验证
+``` shell
+# 连接任意节点
+./redis-cli -c -a xxx -h 192.168.5.100 -p 8001
+
+-c 表示集群
+-h IP
+-p 端口
+-a 密码
+
+# 查看集群信息与节点列表
+cluster info（查看集群信息）
+cluster nodes（查看节点列表）
+```
+
+6. 关闭集群
+``` shell
+# 需要逐个关闭节点
+/mnt/software/redis/src/redis-cli -a xxx -c -h 192.168.0.60 -p 8001 shutdown
+```
  
 # 监控系统
 ### Prometheus
