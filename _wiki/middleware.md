@@ -1007,6 +1007,7 @@ master_host: 10.16.212.224 以及 slave_read_only:1 字样即为配置成功
 > 如果是一台机器上部署，可以拷贝在同一文件夹，并修改文件夹名称为占用端口号，便于区分
 
 2. 修改 redis.conf 配置
+
 ``` shell
 # 后台启动
 daemonize yes
