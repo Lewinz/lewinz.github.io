@@ -7,14 +7,14 @@ keywords: 中间件, 部署
 ---
 
 
-# **JDK**
+# JDK
 
-### rpm 方式
+## rpm 方式
 上传准备好的离线安装包到服务器 
 安装  
 `rpm -ivh jdk-8u181-linux-x64.rpm`
 
-### 压缩包安装
+## 压缩包安装
 上传准备好的压缩包到服务器  
 
 切换到安装目录  
@@ -34,11 +34,11 @@ export PATH=$PATH:${JAVA_PATH}
 
 重新生效配置  
 `source /etc/profile`
-### 检查
+## 检查
 输入`java -version`出现信息则说明安装成功
 
-# **Postgresql**   
-### 在线安装
+# Postgresql  
+## 在线安装
 
 1. 安装 RPM  
 `yum install`
@@ -49,7 +49,7 @@ export PATH=$PATH:${JAVA_PATH}
 3. 安装服务端  
 `yum install postgresql12-server`
  
-### 离线安装
+## 离线安装
 
 **rpm 包**  
 
@@ -159,7 +159,7 @@ min_wal_size = 100MB
 重启服务  
 `systemctl restart postgresql-12`  
 
-### Postgresql 主从  
+## Postgresql 主从  
 
 安装 PG 从库  
 按照前面的安装操作，在另一台服务器安装从库 pg。    
@@ -230,7 +230,7 @@ primary_conninfo = 'user=repuser password=''1qazXSW@3edc'' host=主库 IP port=5
 
 # MySql
 
-### 单节点安装
+## 单节点安装
 
 检查插件  
 ``` shell
@@ -341,7 +341,7 @@ linux 上 Mysql 登录
 mysql -u root -h 127.0.0.1 -p
 ```
 
-### 主从模式安装
+## 主从模式安装
 
 **主节点修改**  
 
@@ -466,10 +466,10 @@ errNum:
 
 # Nginx
 
-### 安装相关依赖
+## 安装相关依赖
 `yum -y install gcc gcc-c++ pcre pcre-devel zlib zlib-devel openssl openssl-devel gd gd-devel`  
 
-### 安装 nginx
+## 安装 nginx
 ``` shell
 # 下载tar包
 wget http://nginx.org/download/nginx-1.17.3.tar.gz
@@ -486,7 +486,7 @@ make
 make install
 ```
 
-### nginx 配置
+## nginx 配置
 生成 diffie-hellman 4096 位加密秘钥
 ``` shell
 cd /etc/nginx/
@@ -596,7 +596,7 @@ server {
 }
 ```
 
-### nginx 启停
+## nginx 启停
 ``` shell
 # 检查配置文件是否正确
 /usr/local/nginx/sbin/nginx -t  
@@ -613,7 +613,7 @@ server {
 
 # Nacos
 
-### 单机部署
+## 单机部署
 
 **通过源码或者发行包获取**  
 
@@ -640,7 +640,7 @@ cd nacos/bin
 关闭服务
 `sh shutdown.sh`
 
-### 集群部署
+## 集群部署
 
 安装数据库，版本要求：5.6.5+  
 
@@ -670,7 +670,7 @@ xxx.xxx.xxx.18:8848
 
 # Kafka
 
-### zookeeper 单节点安装（可使用 kafka 自带）
+## zookeeper 单节点安装（可使用 kafka 自带）
 
 **解压 zookeeper 压缩包（必须是带"bin"的压缩包，否则启动会报错）**
 ``` shell
@@ -712,7 +712,7 @@ Using config: /usr/local/zookeeper-3.4.13/bin/../conf/zoo.cfg
 Starting zookeeper ... STARTED
 ```
 
-### zookeeper 集群安装
+## zookeeper 集群安装
 
 多台服务器 zookeeper 单节点安装完毕之后
 
@@ -730,7 +730,9 @@ server.3=xx.xx.xx.xx:2888:2888
 
 启动服务。
 
-### kafka 单节点部署
+# kafka
+
+## 单节点部署
 
 解压 kafka 压缩包  
 ``` shell
@@ -793,7 +795,7 @@ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --f
  
 启动先 zookeeper 停止先 kafka  
 
-### kafka 集群部署
+## 集群部署
 复制 kafka 文件夹到其它服务器  
 
 在/mnt/kafka/zookeeper 下添加 myid 文件，写入服务 broker.id 属性值  
@@ -902,7 +904,7 @@ systemctl status elasticsearch
 ```
 
 # Redis
-## 单节点自建
+## 单节点部署
 下载安装包
 ``` shell
 # 创建目录 /mnt/software
@@ -1078,7 +1080,7 @@ cluster nodes（查看节点列表）
 ```
  
 # 监控系统
-### Prometheus
+## Prometheus
 
 节点规划
 ``` shell
