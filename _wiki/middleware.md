@@ -902,73 +902,65 @@ systemctl status elasticsearch
 ```
 
 # Redis
-
-### 单机搭建
-
-解压
+## 单节点自建
+下载安装包
 ``` shell
+# 创建目录 /mnt/software
+cd /mnt/software
+
+wget http://download.redis.io/releases/redis-5.0.5.tar.gz
+
 tar –zxvf redis-5.0.5.tar.gz
 
-cd /mnt/software/redis/
-
-<sudo> make MALLOC=libc && make install
+mv redis-5.0.5 redis
 ```
 
-如果在此步报错  
-cc: 错误：../deps/hiredis/libhiredis.a：没有那个文件或目录  
-cc: 错误：../deps/lua/src/liblua.a：没有那个文件或目录  
-
-切换至 deps/执行  
-
-`<sudo> make lua hiredis linenoise`  
-
-再执行`<sudo> make MALLOC=libc && make install`即可  
-
+编译安装包
 ``` shell
-cd src
-./redis-server
+make MALLOC=libc && make install
+```
+> 如果在此步报错  
+> cc: 错误：../deps/hiredis/libhiredis.a：没有那个文件或目录  
+> cc: 错误：../deps/lua/src/liblua.a：没有那个文件或目录  
+> 切换至 deps/执行  
+> `make lua hiredis linenoise`  
+> 再执行`make MALLOC=libc && make install`即可  
+
+启动 redis 服务
+``` shell
+/mnt/software/redis/src/redis-server
 ```
 
-### Redis 配置成服务
-
-修改配置文件 redis.conf  
-`vim /mnt/software/redis/redis.conf`
-
+## Redis 配置成服务
+配置文件
 ``` shell
-# 三个参数都是修改
+# 拷贝配置
+cp /mnt/software/redis/redis.conf /etc/redis/redis.conf
+cp /mnt/software/redis/utils/redis_init_script /etc/init.d/redis
+
+vi /etc/redis/redis.conf
+# 修改
 bind 0.0.0.0
 logfile /mnt/software/redis/logs/redis.log
 dir /mnt/software/redis/data
+# 密码设置
+requirepass redis_password
+
+vi /etc/init.d/redis
+# 修改
+CONF="/etc/redis/redis.conf"
 ```
 
-将配置文件拷贝到/etc/init.d 目录下  
-
-`cp /mnt/software/redis/redis.conf /etc/redis/redis.conf`
-
-将 redis 启动脚本复制到/etc/init.d 目录下  
-
-`cp /mnt/software/redis/utils/redis_init_script /etc/init.d/redis`
-
-修改启动脚本  
-
-`vim /etc/init.d/redis`
-
+加入 systemctl
 ``` shell
-# 修改参数，文件名为刚刚复制到此目录的 conf 文件
-CONF="/etc/redis/6379.conf"
+systemctl enable redis
+
+# 启停
+systemctl stop redis
+systemctl start redis
 ```
 
-redis 文件添加到 systemctl
-
-`systemctl enable redis`
-
-重启 Redis  
-``` shell
-<sudo> systemctl stop redis
-<sudo> systemctl start redis
-```
-
-### Redis 配置主从复制  
+## Redis 配置主从复制  
 
 1）各结点启动 redis 服务  
 
@@ -998,7 +990,7 @@ slave-read-only yes
 
 master_host: 10.16.212.224 以及 slave_read_only:1 字样即为配置成功  
 
-### 集群部署    
+## 集群部署    
 
 暂时先参考此文档：https://www.jianshu.com/p/8045b92fafb2
  

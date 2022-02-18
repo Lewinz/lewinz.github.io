@@ -278,3 +278,22 @@ nmap -iL target.txt （namp在同一目录下,扫描这个txt内的所有主机�
 提示：LISTEN 和 LISTENING 的状态只有用 - a 或者 - l 才能看到
 
 查看 LISTEN 相关端口 `netstat -nat | grep LISTEN`
+
+#### ps
+查看相关进程
+参数
+- a：显示一个终端的所有进程，除会话引线外；
+- u：显示进程的归属用户及内存的使用情况；
+- x：显示没有控制终端的进程；
+- -l：长格式显示更加详细的信息；
+- -e：显示所有进程；
+
+查看占用端口的进程 `ps aux | grep 6379`
+``` shell
+# 输出格式
+USER PID %CPU %MEM  VSZ  RSS   TTY STAT START TIME COMMAND
+root   1  0.0  0.2 2872 1416   ?   Ss   Jun04 0:02 /sbin/init
+root   2  0.0  0.0    0    0   ?    S   Jun04 0:00 [kthreadd]
+root   3  0.0  0.0    0    0   ?    S   Jun04 0:00 [migration/0]
+root   4  0.0  0.0    0    0   ?    S   Jun04 0:00 [ksoftirqd/0]
+```
