@@ -1046,6 +1046,7 @@ masterauth redis_password
 ```
 
 4. 创建集群（使用 redis-cli）
+
 ``` shell
 /mnt/software/redis/src/redis-cli -a xxx --cluster create --cluster-replicas 1 192.168.5.100:8001 192.168.5.100:8002 192.168.5.100:8003 192.168.5.100:8004 192.168.5.100:8005 192.168.5.100:8006
 
@@ -1053,6 +1054,7 @@ masterauth redis_password
 ```
 
 5. 验证
+
 ``` shell
 # 连接任意节点
 ./redis-cli -c -a xxx -h 192.168.5.100 -p 8001
