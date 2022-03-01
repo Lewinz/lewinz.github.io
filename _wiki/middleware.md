@@ -941,13 +941,18 @@ make MALLOC=libc && make install
 # 拷贝配置
 cp /mnt/software/redis/redis.conf /etc/redis/redis.conf
 cp /mnt/software/redis/utils/redis_init_script /etc/init.d/redis
+```
 
-# 后台启动
-daemonize yes
+创建目录
+``` shell
+mkdir /mnt/software/redis/logs/
+mkdir /mnt/software/redis/data/
 ```
 
 `vi /etc/redis/redis.conf`
 ``` shell
+# 后台启动
+daemonize yes
 # 去掉 bind 配置
 bind 127.0.0.1
 # 日志存放位置
