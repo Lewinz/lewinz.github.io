@@ -843,6 +843,14 @@
     } ,
   
     {
+      "title"    : "vscode 插件开发",
+      "category" : "vscode",
+      
+      "url"      : "https://lewinz.org/2022/03/15/vscode-plug/",
+      "keywords" : "vscode, 插件"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
