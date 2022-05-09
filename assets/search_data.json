@@ -5,7 +5,7 @@
   
     {
       "title"    : "页面没有找到",
-      "url"      : "https://lewinz.org/404.html",
+      "url"      : "https://lewinzheng.com/404.html",
       "keywords" : "404"
     } ,
   
@@ -13,7 +13,7 @@
   
     {
       "title"    : "About",
-      "url"      : "https://lewinz.org/about/",
+      "url"      : "https://lewinzheng.com/about/",
       "keywords" : "Zheng xianglin, 郑祥林"
     } ,
   
@@ -21,7 +21,7 @@
   
     {
       "title"    : "归档",
-      "url"      : "https://lewinz.org/archives/",
+      "url"      : "https://lewinzheng.com/archives/",
       "keywords" : "归档"
     } ,
   
@@ -29,7 +29,7 @@
   
     {
       "title"    : "Categories",
-      "url"      : "https://lewinz.org/categories/",
+      "url"      : "https://lewinzheng.com/categories/",
       "keywords" : "分类"
     } ,
   
@@ -39,7 +39,7 @@
   
     {
       "title"    : "Links",
-      "url"      : "https://lewinz.org/links/",
+      "url"      : "https://lewinzheng.com/links/",
       "keywords" : "友情链接"
     } ,
   
@@ -47,7 +47,7 @@
   
     {
       "title"    : "mindmap",
-      "url"      : "https://lewinz.org/mindmap-viewer/",
+      "url"      : "https://lewinzheng.com/mindmap-viewer/",
       "keywords" : "mindmap"
     } ,
   
@@ -55,7 +55,7 @@
   
     {
       "title"    : "Open Source Projects",
-      "url"      : "https://lewinz.org/open-source/",
+      "url"      : "https://lewinzheng.com/open-source/",
       "keywords" : "开源,open-source,GitHub,开源项目"
     } ,
   
@@ -65,7 +65,7 @@
   
     {
       "title"    : "Wiki",
-      "url"      : "https://lewinz.org/wiki/",
+      "url"      : "https://lewinzheng.com/wiki/",
       "keywords" : "维基, Wiki"
     } ,
   
@@ -102,7 +102,7 @@
       "title"    : "分布式事务解决方案-seate",
       "category" : "分布式",
       
-      "url"      : "https://lewinz.org/2021/04/23/alibaba-seate-summary/",
+      "url"      : "https://lewinzheng.com/2021/04/23/alibaba-seate-summary/",
       "keywords" : "分布式, 事务"
     } ,
   
@@ -110,7 +110,7 @@
       "title"    : "网络协议 TCP 与 UDP 区别",
       "category" : "网络协议",
       
-      "url"      : "https://lewinz.org/2021/04/25/http-tcp-udp/",
+      "url"      : "https://lewinzheng.com/2021/04/25/http-tcp-udp/",
       "keywords" : "网络协议, TCP, UDP"
     } ,
   
@@ -118,7 +118,7 @@
       "title"    : "golang 中的值类型和引用类型",
       "category" : "go",
       
-      "url"      : "https://lewinz.org/2021/04/29/go-type-cite-value/",
+      "url"      : "https://lewinzheng.com/2021/04/29/go-type-cite-value/",
       "keywords" : "go,值类型,引用类型"
     } ,
   
@@ -126,7 +126,7 @@
       "title"    : "gorm 自动创建 database",
       "category" : "gorm",
       
-      "url"      : "https://lewinz.org/2021/05/05/go-gorm-ddl/",
+      "url"      : "https://lewinzheng.com/2021/05/05/go-gorm-ddl/",
       "keywords" : "gorm"
     } ,
   
@@ -134,7 +134,7 @@
       "title"    : "golang 基本类型",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/05/06/go-type-detail/",
+      "url"      : "https://lewinzheng.com/2021/05/06/go-type-detail/",
       "keywords" : "golang,基本类型"
     } ,
   
@@ -142,7 +142,7 @@
       "title"    : "各类文档地址汇总",
       "category" : "文档",
       
-      "url"      : "https://lewinz.org/2021/05/09/document-list/",
+      "url"      : "https://lewinzheng.com/2021/05/09/document-list/",
       "keywords" : "文档,汇总"
     } ,
   
@@ -150,7 +150,7 @@
       "title"    : "Golang Tag 汇总",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/05/17/golang-tag/",
+      "url"      : "https://lewinzheng.com/2021/05/17/golang-tag/",
       "keywords" : "golang,tag,汇总"
     } ,
   
@@ -158,7 +158,7 @@
       "title"    : "虚拟机网络（四种网络连接方式）",
       "category" : "虚拟机网络",
       
-      "url"      : "https://lewinz.org/2021/05/17/network-link-mode/",
+      "url"      : "https://lewinzheng.com/2021/05/17/network-link-mode/",
       "keywords" : "虚拟机网络,连接"
     } ,
   
@@ -166,7 +166,7 @@
       "title"    : "openstack 快照与镜像的区别",
       "category" : "openstack",
       
-      "url"      : "https://lewinz.org/2021/05/17/openstack-snapshoot-image/",
+      "url"      : "https://lewinzheng.com/2021/05/17/openstack-snapshoot-image/",
       "keywords" : "openstack,快照,镜像"
     } ,
   
@@ -174,7 +174,7 @@
       "title"    : "虚拟化技术 KVM",
       "category" : "虚拟化",
       
-      "url"      : "https://lewinz.org/2021/05/17/virtualization-kvm/",
+      "url"      : "https://lewinzheng.com/2021/05/17/virtualization-kvm/",
       "keywords" : "虚拟化,KVM"
     } ,
   
@@ -182,7 +182,7 @@
       "title"    : "性能剖析 PProf",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/05/18/pprof-detail/",
+      "url"      : "https://lewinzheng.com/2021/05/18/pprof-detail/",
       "keywords" : "golang,PProf,性能"
     } ,
   
@@ -190,7 +190,7 @@
       "title"    : "github review",
       "category" : "github",
       
-      "url"      : "https://lewinz.org/2021/05/26/github-review/",
+      "url"      : "https://lewinzheng.com/2021/05/26/github-review/",
       "keywords" : "github,review"
     } ,
   
@@ -198,7 +198,7 @@
       "title"    : "golang test",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/05/26/golang-test/",
+      "url"      : "https://lewinzheng.com/2021/05/26/golang-test/",
       "keywords" : "golang,test"
     } ,
   
@@ -206,7 +206,7 @@
       "title"    : "mtr 命令",
       "category" : "mtr",
       
-      "url"      : "https://lewinz.org/2021/05/26/mtr-instruct/",
+      "url"      : "https://lewinzheng.com/2021/05/26/mtr-instruct/",
       "keywords" : "mtr,路由"
     } ,
   
@@ -214,7 +214,7 @@
       "title"    : "跳板机使用",
       "category" : "OpenSSH",
       
-      "url"      : "https://lewinz.org/2021/05/26/openssh-jump/",
+      "url"      : "https://lewinzheng.com/2021/05/26/openssh-jump/",
       "keywords" : "OpenSSH,ProxyJump"
     } ,
   
@@ -222,7 +222,7 @@
       "title"    : "块存储、文件存储、对象存储",
       "category" : "block storage",
       
-      "url"      : "https://lewinz.org/2021/05/28/block-file-object-storage/",
+      "url"      : "https://lewinzheng.com/2021/05/28/block-file-object-storage/",
       "keywords" : "block storage, file storage, object storage, 块存储, 文件存储, 对象存储"
     } ,
   
@@ -230,7 +230,7 @@
       "title"    : "MySQL 聚集索引和非聚集索引",
       "category" : "MySQL",
       
-      "url"      : "https://lewinz.org/2021/05/30/mysql-clustered-index/",
+      "url"      : "https://lewinzheng.com/2021/05/30/mysql-clustered-index/",
       "keywords" : "MySQL,索引,聚集索引,非聚集索引"
     } ,
   
@@ -238,7 +238,7 @@
       "title"    : "开源协议",
       "category" : "开源协议",
       
-      "url"      : "https://lewinz.org/2021/05/30/open-source-licenses/",
+      "url"      : "https://lewinzheng.com/2021/05/30/open-source-licenses/",
       "keywords" : "开源协议"
     } ,
   
@@ -246,7 +246,7 @@
       "title"    : "Prometheus 监控系统",
       "category" : "Prometheus",
       
-      "url"      : "https://lewinz.org/2021/05/30/prometheus-info/",
+      "url"      : "https://lewinzheng.com/2021/05/30/prometheus-info/",
       "keywords" : "Prometheus,监控"
     } ,
   
@@ -254,7 +254,7 @@
       "title"    : "时间序列数据库（TSDB）",
       "category" : "数据库",
       
-      "url"      : "https://lewinz.org/2021/05/30/time-series-database/",
+      "url"      : "https://lewinzheng.com/2021/05/30/time-series-database/",
       "keywords" : "数据库,时间序列"
     } ,
   
@@ -262,7 +262,7 @@
       "title"    : "golang 依赖循环",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/06/06/golang-depend-loop/",
+      "url"      : "https://lewinzheng.com/2021/06/06/golang-depend-loop/",
       "keywords" : "golang,依赖循环"
     } ,
   
@@ -270,7 +270,7 @@
       "title"    : "golang Json Tag 详细用法",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/06/06/golang-json-tag/",
+      "url"      : "https://lewinzheng.com/2021/06/06/golang-json-tag/",
       "keywords" : "golang,json,tag"
     } ,
   
@@ -278,7 +278,7 @@
       "title"    : "Linux 网卡设置",
       "category" : "linux",
       
-      "url"      : "https://lewinz.org/2021/06/06/linux-network-set/",
+      "url"      : "https://lewinzheng.com/2021/06/06/linux-network-set/",
       "keywords" : "linux,网卡"
     } ,
   
@@ -286,7 +286,7 @@
       "title"    : "MAC 地址与 IP 地址的区别",
       "category" : "MAC",
       
-      "url"      : "https://lewinz.org/2021/06/06/mac-ip-address/",
+      "url"      : "https://lewinzheng.com/2021/06/06/mac-ip-address/",
       "keywords" : "MAC,IP"
     } ,
   
@@ -294,7 +294,7 @@
       "title"    : "openstack 制作标准镜像",
       "category" : "openstack",
       
-      "url"      : "https://lewinz.org/2021/06/06/openstack-image-compress/",
+      "url"      : "https://lewinzheng.com/2021/06/06/openstack-image-compress/",
       "keywords" : "openstack,镜像"
     } ,
   
@@ -302,7 +302,7 @@
       "title"    : "openstack 秘钥上传",
       "category" : "openstack",
       
-      "url"      : "https://lewinz.org/2021/06/06/openstack-keypair-upload/",
+      "url"      : "https://lewinzheng.com/2021/06/06/openstack-keypair-upload/",
       "keywords" : "openstack,秘钥"
     } ,
   
@@ -310,7 +310,7 @@
       "title"    : "网关与路由的区别",
       "category" : "网关",
       
-      "url"      : "https://lewinz.org/2021/06/06/router-getway-distinction/",
+      "url"      : "https://lewinzheng.com/2021/06/06/router-getway-distinction/",
       "keywords" : "网关,路由"
     } ,
   
@@ -318,7 +318,7 @@
       "title"    : "静态 IP/动态 IP/浮动 IP/虚拟 IP 的区别",
       "category" : "静态 IP",
       
-      "url"      : "https://lewinz.org/2021/06/06/static-dynamic-floating-virtual-ip/",
+      "url"      : "https://lewinzheng.com/2021/06/06/static-dynamic-floating-virtual-ip/",
       "keywords" : "静态 IP,动态 IP,浮动 IP,虚拟 IP"
     } ,
   
@@ -326,7 +326,7 @@
       "title"    : "监控测试方法-跑满 CPU",
       "category" : "监控",
       
-      "url"      : "https://lewinz.org/2021/06/11/monitor-cpu-test/",
+      "url"      : "https://lewinzheng.com/2021/06/11/monitor-cpu-test/",
       "keywords" : "监控,CPU"
     } ,
   
@@ -334,7 +334,7 @@
       "title"    : "Golang 基础包",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/06/24/golang-basic-package/",
+      "url"      : "https://lewinzheng.com/2021/06/24/golang-basic-package/",
       "keywords" : "golang, 基础包"
     } ,
   
@@ -342,7 +342,7 @@
       "title"    : "Golang 格式化输出 - fmt",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/06/24/golang-fmt-placeholder/",
+      "url"      : "https://lewinzheng.com/2021/06/24/golang-fmt-placeholder/",
       "keywords" : "golang,格式化,输出"
     } ,
   
@@ -350,7 +350,7 @@
       "title"    : "Golang slice 删除元素性能比较",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/06/24/golang-slice-remove/",
+      "url"      : "https://lewinzheng.com/2021/06/24/golang-slice-remove/",
       "keywords" : "golang,slice"
     } ,
   
@@ -358,7 +358,7 @@
       "title"    : "Golang 字符串拼接性能",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/06/24/golang-string-append/",
+      "url"      : "https://lewinzheng.com/2021/06/24/golang-string-append/",
       "keywords" : "golang,字符串"
     } ,
   
@@ -366,7 +366,7 @@
       "title"    : "Golang 基础类型转换",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/06/24/golang-type-convert/",
+      "url"      : "https://lewinzheng.com/2021/06/24/golang-type-convert/",
       "keywords" : "golang,转换"
     } ,
   
@@ -374,7 +374,7 @@
       "title"    : "时间戳",
       "category" : "时间戳",
       
-      "url"      : "https://lewinz.org/2021/06/29/timestamp/",
+      "url"      : "https://lewinzheng.com/2021/06/29/timestamp/",
       "keywords" : "时间戳"
     } ,
   
@@ -382,7 +382,7 @@
       "title"    : "golang 中的 panic 与 recover",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/06/30/golang-panic-recover/",
+      "url"      : "https://lewinzheng.com/2021/06/30/golang-panic-recover/",
       "keywords" : "golang, panic, recover"
     } ,
   
@@ -390,7 +390,7 @@
       "title"    : "golang 中 Json 转换注意点",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/07/01/golang-json/",
+      "url"      : "https://lewinzheng.com/2021/07/01/golang-json/",
       "keywords" : "golang,json"
     } ,
   
@@ -398,7 +398,7 @@
       "title"    : "golang 字符串中的潜在风险",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/07/01/golang-string-risk/",
+      "url"      : "https://lewinzheng.com/2021/07/01/golang-string-risk/",
       "keywords" : "golang,字符串"
     } ,
   
@@ -406,7 +406,7 @@
       "title"    : "openstack loadbalancer 命令行",
       "category" : "openstack",
       
-      "url"      : "https://lewinz.org/2021/07/01/openstack-loadbalancer-cli/",
+      "url"      : "https://lewinzheng.com/2021/07/01/openstack-loadbalancer-cli/",
       "keywords" : "openstack,命令行,loadbalancer"
     } ,
   
@@ -414,7 +414,7 @@
       "title"    : "OSI 七层模型与 TCP/IP 四层模型",
       "category" : "OSI",
       
-      "url"      : "https://lewinz.org/2021/07/01/osi-tcp-ip/",
+      "url"      : "https://lewinzheng.com/2021/07/01/osi-tcp-ip/",
       "keywords" : "OSI,TCP,IP"
     } ,
   
@@ -422,7 +422,7 @@
       "title"    : "负载均衡-四层负载与七层负载",
       "category" : "lvs",
       
-      "url"      : "https://lewinz.org/2021/07/02/lvs-loading-blance/",
+      "url"      : "https://lewinzheng.com/2021/07/02/lvs-loading-blance/",
       "keywords" : "lvs,负载均衡"
     } ,
   
@@ -430,7 +430,7 @@
       "title"    : "物理机安装 Ubuntu",
       "category" : "install",
       
-      "url"      : "https://lewinz.org/2021/07/03/install-ubuntu-boot/",
+      "url"      : "https://lewinzheng.com/2021/07/03/install-ubuntu-boot/",
       "keywords" : "install,ubuntu"
     } ,
   
@@ -438,7 +438,7 @@
       "title"    : "Golang 内联优化",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/07/05/go-inline-optmization/",
+      "url"      : "https://lewinzheng.com/2021/07/05/go-inline-optmization/",
       "keywords" : "golang,inline optimization,内联优化"
     } ,
   
@@ -446,7 +446,7 @@
       "title"    : "Ubuntu 20.04 设置 root 登录图形界面",
       "category" : "ubuntu",
       
-      "url"      : "https://lewinz.org/2021/07/06/ubuntu-root-login-x-window/",
+      "url"      : "https://lewinzheng.com/2021/07/06/ubuntu-root-login-x-window/",
       "keywords" : "ubuntu,root,login"
     } ,
   
@@ -454,7 +454,7 @@
       "title"    : "frp 搭建过程记录",
       "category" : "frp",
       
-      "url"      : "https://lewinz.org/2021/07/10/frp-install/",
+      "url"      : "https://lewinzheng.com/2021/07/10/frp-install/",
       "keywords" : "frp,搭建"
     } ,
   
@@ -462,7 +462,7 @@
       "title"    : "Linux systemd &amp;&amp; systemctl",
       "category" : "linux",
       
-      "url"      : "https://lewinz.org/2021/07/12/linux-systemctl/",
+      "url"      : "https://lewinzheng.com/2021/07/12/linux-systemctl/",
       "keywords" : "linux, 自启动, systemd, systemctl"
     } ,
   
@@ -470,7 +470,7 @@
       "title"    : "Linux ssh 连接超时断开问题",
       "category" : "linux",
       
-      "url"      : "https://lewinz.org/2021/07/22/linux-connect-timeout/",
+      "url"      : "https://lewinzheng.com/2021/07/22/linux-connect-timeout/",
       "keywords" : "linux, ssh, timeout"
     } ,
   
@@ -478,7 +478,7 @@
       "title"    : "openstack 各服务重启命令",
       "category" : "openstack",
       
-      "url"      : "https://lewinz.org/2021/07/25/openstack-server-restart-cli/",
+      "url"      : "https://lewinzheng.com/2021/07/25/openstack-server-restart-cli/",
       "keywords" : "openstack, restart, cli"
     } ,
   
@@ -486,7 +486,7 @@
       "title"    : "golang 内存分配",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/07/26/golang-memory-allocation/",
+      "url"      : "https://lewinzheng.com/2021/07/26/golang-memory-allocation/",
       "keywords" : "golang, memory, allocation"
     } ,
   
@@ -494,7 +494,7 @@
       "title"    : "golang 黑魔法 (string 与 []byte 转换)",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/07/26/golang-string-covert/",
+      "url"      : "https://lewinzheng.com/2021/07/26/golang-string-covert/",
       "keywords" : "golang, string, byte, coverted"
     } ,
   
@@ -502,7 +502,7 @@
       "title"    : "golang 不安全编程",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/07/26/golang-unsafe-programming/",
+      "url"      : "https://lewinzheng.com/2021/07/26/golang-unsafe-programming/",
       "keywords" : "golang, unsafe, programming"
     } ,
   
@@ -510,7 +510,7 @@
       "title"    : "Makefile",
       "category" : "makefile",
       
-      "url"      : "https://lewinz.org/2021/07/26/makefile/",
+      "url"      : "https://lewinzheng.com/2021/07/26/makefile/",
       "keywords" : "makefile"
     } ,
   
@@ -518,7 +518,7 @@
       "title"    : "OpenStack 社区部署工具 Devstack",
       "category" : "openstack",
       
-      "url"      : "https://lewinz.org/2021/07/26/openstack-devstack/",
+      "url"      : "https://lewinzheng.com/2021/07/26/openstack-devstack/",
       "keywords" : "openstack, devstack"
     } ,
   
@@ -526,7 +526,7 @@
       "title"    : "WebAssembly",
       "category" : "webassembly",
       
-      "url"      : "https://lewinz.org/2021/07/26/webassembly/",
+      "url"      : "https://lewinzheng.com/2021/07/26/webassembly/",
       "keywords" : "webassembly"
     } ,
   
@@ -534,7 +534,7 @@
       "title"    : "http 网络状态码大全",
       "category" : "http",
       
-      "url"      : "https://lewinz.org/2021/07/28/http-status-code/",
+      "url"      : "https://lewinzheng.com/2021/07/28/http-status-code/",
       "keywords" : "http, status"
     } ,
   
@@ -542,7 +542,7 @@
       "title"    : "主流软件负载均衡器对比 (LVS、Nginx、HAproxy)",
       "category" : "lvc",
       
-      "url"      : "https://lewinz.org/2021/07/28/lvs-nginx-haproxy/",
+      "url"      : "https://lewinzheng.com/2021/07/28/lvs-nginx-haproxy/",
       "keywords" : "lvc, nginx, haproxy"
     } ,
   
@@ -550,7 +550,7 @@
       "title"    : "openstack 秒级创建虚机方案",
       "category" : "openstack",
       
-      "url"      : "https://lewinz.org/2021/07/28/openstack-create-nova/",
+      "url"      : "https://lewinzheng.com/2021/07/28/openstack-create-nova/",
       "keywords" : "openstack, nova"
     } ,
   
@@ -558,7 +558,7 @@
       "title"    : "openstack nova 创建虚拟机步骤",
       "category" : "openstack",
       
-      "url"      : "https://lewinz.org/2021/07/28/openstack-nova-step/",
+      "url"      : "https://lewinzheng.com/2021/07/28/openstack-nova-step/",
       "keywords" : "openstack, nova"
     } ,
   
@@ -566,7 +566,7 @@
       "title"    : "Github 装逼指南 Travis CI 和 Codecov",
       "category" : "github",
       
-      "url"      : "https://lewinz.org/2021/07/29/travis-ci-codecov/",
+      "url"      : "https://lewinzheng.com/2021/07/29/travis-ci-codecov/",
       "keywords" : "github, travis, codecov"
     } ,
   
@@ -574,7 +574,7 @@
       "title"    : "Golang 基于 viper 的配置热加载或动态变更方法介绍",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/08/01/golang-viper/",
+      "url"      : "https://lewinzheng.com/2021/08/01/golang-viper/",
       "keywords" : "golang, viper, file, reload"
     } ,
   
@@ -582,7 +582,7 @@
       "title"    : "gRPC",
       "category" : "gRPC",
       
-      "url"      : "https://lewinz.org/2021/08/01/google-grpc/",
+      "url"      : "https://lewinzheng.com/2021/08/01/google-grpc/",
       "keywords" : "gRPC"
     } ,
   
@@ -590,7 +590,7 @@
       "title"    : "nova 虚拟机镜像从创建到文件系统 resize 完整流程",
       "category" : "openstack",
       
-      "url"      : "https://lewinz.org/2021/08/01/openstack-nova-image-resize/",
+      "url"      : "https://lewinzheng.com/2021/08/01/openstack-nova-image-resize/",
       "keywords" : "openstack, nova, image, resize"
     } ,
   
@@ -598,7 +598,7 @@
       "title"    : "SLB 压力测试",
       "category" : "slb",
       
-      "url"      : "https://lewinz.org/2021/08/01/slb-pressure-test/",
+      "url"      : "https://lewinzheng.com/2021/08/01/slb-pressure-test/",
       "keywords" : "slb, pressure, test"
     } ,
   
@@ -606,7 +606,7 @@
       "title"    : "ssl 证书生成",
       "category" : "ssl",
       
-      "url"      : "https://lewinz.org/2021/08/01/ssl-cert/",
+      "url"      : "https://lewinzheng.com/2021/08/01/ssl-cert/",
       "keywords" : "ssl, cert, create"
     } ,
   
@@ -614,7 +614,7 @@
       "title"    : "DNSPod 是什么",
       "category" : "dns",
       
-      "url"      : "https://lewinz.org/2021/08/03/dnspod/",
+      "url"      : "https://lewinzheng.com/2021/08/03/dnspod/",
       "keywords" : "dns, dnspod"
     } ,
   
@@ -622,7 +622,7 @@
       "title"    : "Linux ssh 相关问题",
       "category" : "linux",
       
-      "url"      : "https://lewinz.org/2021/08/03/linux-ssh-setting/",
+      "url"      : "https://lewinzheng.com/2021/08/03/linux-ssh-setting/",
       "keywords" : "linux, ssh"
     } ,
   
@@ -630,7 +630,7 @@
       "title"    : "golang 证书转换",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/08/04/golang-cert-convert/",
+      "url"      : "https://lewinzheng.com/2021/08/04/golang-cert-convert/",
       "keywords" : "golang, certificate, convert"
     } ,
   
@@ -638,7 +638,7 @@
       "title"    : "linux nc 监听 TCP/UDP",
       "category" : "linux",
       
-      "url"      : "https://lewinz.org/2021/08/05/linux-nc-listener/",
+      "url"      : "https://lewinzheng.com/2021/08/05/linux-nc-listener/",
       "keywords" : "linux, nc, listener"
     } ,
   
@@ -646,7 +646,7 @@
       "title"    : "golang channel",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/08/06/golang-channel/",
+      "url"      : "https://lewinzheng.com/2021/08/06/golang-channel/",
       "keywords" : "golang, channel"
     } ,
   
@@ -654,7 +654,7 @@
       "title"    : "linux tee 命令",
       "category" : "linux",
       
-      "url"      : "https://lewinz.org/2021/08/10/linux-tee/",
+      "url"      : "https://lewinzheng.com/2021/08/10/linux-tee/",
       "keywords" : "linux, tee"
     } ,
   
@@ -662,7 +662,7 @@
       "title"    : "linux 与 freeBSD",
       "category" : "linux",
       
-      "url"      : "https://lewinz.org/2021/08/15/linux-freebsd/",
+      "url"      : "https://lewinzheng.com/2021/08/15/linux-freebsd/",
       "keywords" : "linux, FreeBSD"
     } ,
   
@@ -670,7 +670,7 @@
       "title"    : "golang 执行外部命令",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/08/15/linux-run-cmd/",
+      "url"      : "https://lewinzheng.com/2021/08/15/linux-run-cmd/",
       "keywords" : "golang, cli"
     } ,
   
@@ -678,7 +678,7 @@
       "title"    : "mock server 方案",
       "category" : "mock",
       
-      "url"      : "https://lewinz.org/2021/08/26/mock-server-scheme/",
+      "url"      : "https://lewinzheng.com/2021/08/26/mock-server-scheme/",
       "keywords" : "mock, scheme"
     } ,
   
@@ -686,7 +686,7 @@
       "title"    : "golang 文件操作权限位",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/09/02/golang-os-file/",
+      "url"      : "https://lewinzheng.com/2021/09/02/golang-os-file/",
       "keywords" : "golang, file"
     } ,
   
@@ -694,7 +694,7 @@
       "title"    : "golang log 中 panic 和 fatal 区别",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/09/03/golang-panic-fatal/",
+      "url"      : "https://lewinzheng.com/2021/09/03/golang-panic-fatal/",
       "keywords" : "golang, panic, fatal"
     } ,
   
@@ -702,7 +702,7 @@
       "title"    : "KB 和 kb 傻傻分不清楚",
       "category" : "KB",
       
-      "url"      : "https://lewinz.org/2021/09/10/KB-kb/",
+      "url"      : "https://lewinzheng.com/2021/09/10/KB-kb/",
       "keywords" : "KB, kb"
     } ,
   
@@ -710,7 +710,7 @@
       "title"    : "CentOS 6 添加 dns 缓存",
       "category" : "centos",
       
-      "url"      : "https://lewinz.org/2021/09/13/centos-6-dnsmasq/",
+      "url"      : "https://lewinzheng.com/2021/09/13/centos-6-dnsmasq/",
       "keywords" : "centos, dns, cache"
     } ,
   
@@ -718,7 +718,7 @@
       "title"    : "Apache http server",
       "category" : "apache",
       
-      "url"      : "https://lewinz.org/2021/09/15/apache-http-server/",
+      "url"      : "https://lewinzheng.com/2021/09/15/apache-http-server/",
       "keywords" : "apache, http, server"
     } ,
   
@@ -726,7 +726,7 @@
       "title"    : "Linux Shell Pipe",
       "category" : "linux",
       
-      "url"      : "https://lewinz.org/2021/10/25/linux-shell/",
+      "url"      : "https://lewinzheng.com/2021/10/25/linux-shell/",
       "keywords" : "linux, shell, Pipe"
     } ,
   
@@ -734,7 +734,7 @@
       "title"    : "ChinaNet 和 CN2 的区别",
       "category" : "chinanet",
       
-      "url"      : "https://lewinz.org/2021/11/21/chinanet-cn2/",
+      "url"      : "https://lewinzheng.com/2021/11/21/chinanet-cn2/",
       "keywords" : "chinanet, cn2"
     } ,
   
@@ -742,7 +742,7 @@
       "title"    : "golang 中的内存对齐和 unsafe 初探",
       "category" : "memory alignment",
       
-      "url"      : "https://lewinz.org/2021/11/21/golang-memory-alignment/",
+      "url"      : "https://lewinzheng.com/2021/11/21/golang-memory-alignment/",
       "keywords" : "memory alignment, unsafe"
     } ,
   
@@ -750,7 +750,7 @@
       "title"    : "DNS 信息查询命令「dig」",
       "category" : "dns",
       
-      "url"      : "https://lewinz.org/2021/11/22/linux-cli-dig/",
+      "url"      : "https://lewinzheng.com/2021/11/22/linux-cli-dig/",
       "keywords" : "dns, dig"
     } ,
   
@@ -758,7 +758,7 @@
       "title"    : "golang 并发两种限速方式",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/11/23/golang-goroutine-rate-limiting/",
+      "url"      : "https://lewinzheng.com/2021/11/23/golang-goroutine-rate-limiting/",
       "keywords" : "golang, goroutine, rate-limiting"
     } ,
   
@@ -766,7 +766,7 @@
       "title"    : "gorm/mysql timestamp 异常引发的 debug",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2021/12/03/mysql-timestamp/",
+      "url"      : "https://lewinzheng.com/2021/12/03/mysql-timestamp/",
       "keywords" : "golang, gorm, timestamp"
     } ,
   
@@ -774,7 +774,7 @@
       "title"    : "nginx 配置文件加载顺序",
       "category" : "nginx",
       
-      "url"      : "https://lewinz.org/2022/01/12/nginx-config-load/",
+      "url"      : "https://lewinzheng.com/2022/01/12/nginx-config-load/",
       "keywords" : "nginx, config, load"
     } ,
   
@@ -782,7 +782,7 @@
       "title"    : "OpenStack 实例宕机恢复",
       "category" : "OpenStack",
       
-      "url"      : "https://lewinz.org/2022/01/12/openstack-recover-vm/",
+      "url"      : "https://lewinzheng.com/2022/01/12/openstack-recover-vm/",
       "keywords" : "OpenStack, recover, instance"
     } ,
   
@@ -790,7 +790,7 @@
       "title"    : "端口代理",
       "category" : "server",
       
-      "url"      : "https://lewinz.org/2022/01/12/server-port-proxy/",
+      "url"      : "https://lewinzheng.com/2022/01/12/server-port-proxy/",
       "keywords" : "server, port, proxy"
     } ,
   
@@ -798,7 +798,7 @@
       "title"    : "快照实现",
       "category" : "snapshoot",
       
-      "url"      : "https://lewinz.org/2022/01/12/server-snapshoot/",
+      "url"      : "https://lewinzheng.com/2022/01/12/server-snapshoot/",
       "keywords" : "snapshoot"
     } ,
   
@@ -806,7 +806,7 @@
       "title"    : "WebSocket 协议",
       "category" : "WebSocket",
       
-      "url"      : "https://lewinz.org/2022/01/14/websocket/",
+      "url"      : "https://lewinzheng.com/2022/01/14/websocket/",
       "keywords" : "WebSocket"
     } ,
   
@@ -814,7 +814,7 @@
       "title"    : "MySQL 日志篇",
       "category" : "mysql",
       
-      "url"      : "https://lewinz.org/2022/01/25/mysql-log/",
+      "url"      : "https://lewinzheng.com/2022/01/25/mysql-log/",
       "keywords" : "mysql,log"
     } ,
   
@@ -822,7 +822,7 @@
       "title"    : "CPU NUMA 架构",
       "category" : "cpu",
       
-      "url"      : "https://lewinz.org/2022/01/28/cpu-numa/",
+      "url"      : "https://lewinzheng.com/2022/01/28/cpu-numa/",
       "keywords" : "cpu, numa"
     } ,
   
@@ -830,7 +830,7 @@
       "title"    : "记录 golang range 值拷贝的一个坑",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2022/02/11/record-gorange-pointer/",
+      "url"      : "https://lewinzheng.com/2022/02/11/record-gorange-pointer/",
       "keywords" : "golang, range, pointer"
     } ,
   
@@ -838,7 +838,7 @@
       "title"    : "golang nil!=nil 问题",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/2022/02/17/golang-nil!=nil/",
+      "url"      : "https://lewinzheng.com/2022/02/17/golang-nil!=nil/",
       "keywords" : "golang, nil"
     } ,
   
@@ -846,7 +846,7 @@
       "title"    : "vscode 插件开发",
       "category" : "vscode",
       
-      "url"      : "https://lewinz.org/2022/03/15/vscode-plug/",
+      "url"      : "https://lewinzheng.com/2022/03/15/vscode-plug/",
       "keywords" : "vscode, 插件"
     } ,
   
@@ -854,7 +854,7 @@
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
-      "url"      : "https://lewinz.org/wiki/gin-gorm-summary/",
+      "url"      : "https://lewinzheng.com/wiki/gin-gorm-summary/",
       "keywords" : "gin,gorm"
     } ,
   
@@ -862,7 +862,7 @@
       "title"    : "git 命令记录",
       "category" : "git",
       
-      "url"      : "https://lewinz.org/wiki/git_wike/",
+      "url"      : "https://lewinzheng.com/wiki/git_wike/",
       "keywords" : "git"
     } ,
   
@@ -870,7 +870,7 @@
       "title"    : "golang 开发环境部署",
       "category" : "golang",
       
-      "url"      : "https://lewinz.org/wiki/golang_install/",
+      "url"      : "https://lewinzheng.com/wiki/golang_install/",
       "keywords" : "golang, 开发环境"
     } ,
   
@@ -878,7 +878,7 @@
       "title"    : "CDN 缓存-jsdelivr",
       "category" : "CDN",
       
-      "url"      : "https://lewinz.org/wiki/jsdelivr_cdn_refresh/",
+      "url"      : "https://lewinzheng.com/wiki/jsdelivr_cdn_refresh/",
       "keywords" : "CDN, jsdelivr, 缓存"
     } ,
   
@@ -886,7 +886,7 @@
       "title"    : "Linux 命令备忘",
       "category" : "Linux",
       
-      "url"      : "https://lewinz.org/wiki/linux-command-summary/",
+      "url"      : "https://lewinzheng.com/wiki/linux-command-summary/",
       "keywords" : "Linux, 命令， 备忘"
     } ,
   
@@ -894,7 +894,7 @@
       "title"    : "Linux 磁盘分区、格式化、挂载",
       "category" : "linux",
       
-      "url"      : "https://lewinz.org/wiki/linux-fdisk-cli/",
+      "url"      : "https://lewinzheng.com/wiki/linux-fdisk-cli/",
       "keywords" : "Linux 磁盘分区、格式化、挂载"
     } ,
   
@@ -902,7 +902,7 @@
       "title"    : "Mac 各类配置记录",
       "category" : "Mac",
       
-      "url"      : "https://lewinz.org/wiki/mac-some-config/",
+      "url"      : "https://lewinzheng.com/wiki/mac-some-config/",
       "keywords" : "Mac, 配置"
     } ,
   
@@ -910,7 +910,7 @@
       "title"    : "Mac 工具总结",
       "category" : "Mac",
       
-      "url"      : "https://lewinz.org/wiki/mac-tools/",
+      "url"      : "https://lewinzheng.com/wiki/mac-tools/",
       "keywords" : "Mac, tool"
     } ,
   
@@ -918,7 +918,7 @@
       "title"    : "Mac 软件快捷键记录",
       "category" : "mac",
       
-      "url"      : "https://lewinz.org/wiki/mac_software_keys/",
+      "url"      : "https://lewinzheng.com/wiki/mac_software_keys/",
       "keywords" : "mac, software, keys"
     } ,
   
@@ -926,7 +926,7 @@
       "title"    : "中间件部署文档",
       "category" : "中间件",
       
-      "url"      : "https://lewinz.org/wiki/middleware/",
+      "url"      : "https://lewinzheng.com/wiki/middleware/",
       "keywords" : "中间件, 部署"
     } ,
   
@@ -934,7 +934,7 @@
       "title"    : "mysql 记录",
       "category" : "mysql",
       
-      "url"      : "https://lewinz.org/wiki/mysql_some/",
+      "url"      : "https://lewinzheng.com/wiki/mysql_some/",
       "keywords" : "mysql"
     } ,
   
@@ -942,7 +942,7 @@
       "title"    : "Prometheus 监控系统搭建",
       "category" : "Prometheus",
       
-      "url"      : "https://lewinz.org/wiki/prometheus-construct/",
+      "url"      : "https://lewinzheng.com/wiki/prometheus-construct/",
       "keywords" : "Prometheus,监控,搭建"
     } ,
   
@@ -950,7 +950,7 @@
       "title"    : "Wiki Template",
       "category" : "cate1",
       
-      "url"      : "https://lewinz.org/wiki/template/",
+      "url"      : "https://lewinzheng.com/wiki/template/",
       "keywords" : "keyword1, keyword2"
     } ,
   
@@ -958,7 +958,7 @@
       "title"    : "vscode 设置",
       "category" : "vscode",
       
-      "url"      : "https://lewinz.org/wiki/vscode-wike/",
+      "url"      : "https://lewinzheng.com/wiki/vscode-wike/",
       "keywords" : "vscode"
     } 
   
