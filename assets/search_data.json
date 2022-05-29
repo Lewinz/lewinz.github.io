@@ -851,6 +851,14 @@
     } ,
   
     {
+      "title"    : "snmp 协议基础概念",
+      "category" : "snmp",
+      
+      "url"      : "https://lewinzheng.com/2022/05/29/snmp-base/",
+      "keywords" : "snmp, 协议"
+    } ,
+  
+    {
       "title"    : "gin/gorm 使用记录",
       "category" : "gin",
       
