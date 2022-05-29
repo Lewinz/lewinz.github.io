@@ -134,14 +134,14 @@ gitment:
     owner: Lewinz
     repo: blog-comments
     oauth:
-        client_id: 831a35f6d4f6fc049209
-        client_secret: 6e80f9a3e9b50b498553e32179ad3adbd893ab7e
+        client_id: 9aed0261c1a37626eb19
+        client_secret: 1643b93d79e3d1ada6d02938fe50dfa0baedc2dc
 # https://github.com/gitalk/gitalk#install
 gitalk:
     owner: Lewinz
     repo: blog-comments
-    clientID: 831a35f6d4f6fc049209
-    clientSecret: 6e80f9a3e9b50b498553e32179ad3adbd893ab7e
+    clientID: 9aed0261c1a37626eb19
+    clientSecret: 1643b93d79e3d1ada6d02938fe50dfa0baedc2dc
 # 在使用其它评论组件时可点击显示 Disqus
 lazy_load_disqus : false
 
